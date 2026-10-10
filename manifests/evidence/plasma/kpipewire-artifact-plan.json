@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "kpipewire",
+      "package_version": "6.7.5-0supralinux2",
+      "artifact_id": 11459669339,
+      "workflow_run_id": 37559968492,
+      "artifact_sha256": "1e724418d65780f06c75e534455f878bcd57a7b18aa9bd767500ba073f3c4416",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

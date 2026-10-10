@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Actual offline zero-NIC golden preparation lifecycle synthetic proof, no full golden-image build or package certification",
+  "source_commit": "f5e3392fd68f43986eb7fc9efef7b0bd96ce9e30",
+  "package_attempt_consumed": false,
+  "package_execution_started": false,
+  "runner_registered": false,
+  "network_interface_count": 0,
+  "source_image_sha256": "8800651811af9a85465ad1d552add729947bb16488dddb4a9b5305a3d97332b2",
+  "owned_vm_overlay_seed_cleanup": "PASS",
+  "golden_and_milestone_images_preserved": true,
+  "host_network_modified": false,
+  "host_packages_installed": false,
+  "host_firewall_modified": false,
+  "offline_byte_restore_verified": true,
+  "input_source_sha256": {
+    "scripts/check-golden-preparation-lifecycle.sh": "455f1e1a4780b11b38b70d7e71838bd11ebcd2aed1fe9b49005f8814812ffcc6",
+    "scripts/with-libguestfs-runtime.sh": "09d15ab93219d48a2142d52d51ca41ad00129505a68cfa259d19a5943f760ae9",
+    "scripts/verify-ubuntu-cloud-image-provenance.sh": "fa01d3cdabb59648b1cd67a191a8d99e249c5ff7b445fee80d5cea18551427d7"
+  },
+  "files_sha256": {
+    "domain.xml": "172da9999031b0a5be865c6fa75912ec2bdb29ff32470f3e34d3ed1a82bd0e71",
+    "domain-state.txt": "4ac2843107022561129b54a476ecd4001dec7a2f57e73177fdc9cadf28eb19e1",
+    "guest-marker.txt": "3f46ea84fd46dcf96234f2d9e71f878657aa4959c71a29d38c99f1a9a6e64abe",
+    "result.txt": "dd1d9fe8fededd3f5d1d95e32768bb1ae27736d5d53880acbcb6d32b402b615f",
+    "source-image-verification.txt": "1e7e7e34f8cc1547f6f3e4348f062bfa8baa47e190c4fb80a23b5b12dac7bc05",
+    "user-data": "d8151c962e9538a8dab6d2c6d4f4e759ce59cd36a2a8e880dcdd38d59c96ba90",
+    "meta-data": "37cfac87b57f2c27231943e88f8eebfa15a7b26a06e798bc4e4c113460031beb",
+    "network-config": "639b6f419a9ac49312b218e12395dc7e7d623d96202c3315a92dcd19d6fa02ba",
+    "cleanup.json": "d6227d3aef87ca13f03c52c54ef3f12049e2d7a0d7c21e1b014e3a31ab269cad",
+    "local-retention-index.json": "615f1f7d1c2fb7947c003cfbf1fa7279514313470d3c7b4b4e7d59bb582f5589"
+  }
+}

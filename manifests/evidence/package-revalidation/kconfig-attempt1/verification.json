@@ -1,0 +1,171 @@
+{
+  "schema": 1,
+  "scope": "authoritative-package-revalidation",
+  "node": "kconfig",
+  "version": "6.30.0-0supralinux5",
+  "state": "PASS",
+  "source_commit": "b1d20870de39b2d15df1dada83919853a059993b",
+  "workflow_run_id": 37332734736,
+  "workflow_job_id": 111839655088,
+  "artifact_id": 11356455158,
+  "artifact_sha256": "72bbcd2d97d802c973febfb93233156de9461e0c9f1eac8cb41c580403cd733f",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-package-revalidation-20261005t152347z-471210",
+  "host_evidence_manifest_sha256": "beb1291056b27ffebc4e9abea7201e0fa039b0da7effaacc15be30d4c0498245",
+  "package_attempt_consumed": true,
+  "result_path": "manifests/evidence/package-revalidation/kconfig-attempt1/result.json",
+  "result_sha256": "d0374f9507a568dcf5fa1204aa2702f0b6c6bd90e7d4cb2ca7810e96e1e6d93a",
+  "contract_path": "manifests/evidence/package-revalidation/kconfig-attempt1/build-contract.json",
+  "archive_path": ".artifacts/package-revalidation/kconfig-attempt1/sha256/72bbcd2d97d802c973febfb93233156de9461e0c9f1eac8cb41c580403cd733f.zip",
+  "inspection": {
+    "node": "kconfig",
+    "package_version": "6.30.0-0supralinux5",
+    "artifact_sha256": "72bbcd2d97d802c973febfb93233156de9461e0c9f1eac8cb41c580403cd733f",
+    "payload_prefix": "packages/",
+    "source_package": "kf6-kconfig",
+    "binaries": [
+      {
+        "package": "libkf6config-bin-dbgsym",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "libkf6config-bin-dbgsym_6.30.0-0supralinux5_amd64.ddeb",
+        "sha256": "9e01fd1a143f411319d4bb454b0d92155818ce28ff460058858453871860e478",
+        "size": 626156
+      },
+      {
+        "package": "libkf6config-bin",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "libkf6config-bin_6.30.0-0supralinux5_amd64.deb",
+        "sha256": "e2ec5c0108ddec37acbe5aef9ba7ad415fcafbfb674a774ad5bc1f8e4460fd8a",
+        "size": 33572
+      },
+      {
+        "package": "libkf6config-data",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "all",
+        "file": "libkf6config-data_6.30.0-0supralinux5_all.deb",
+        "sha256": "11383e2d047ef865e61a01b887b7b1fa72ab8ceca12e45779b99488fd18c1eb7",
+        "size": 175316
+      },
+      {
+        "package": "libkf6config-dev-bin-dbgsym",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "libkf6config-dev-bin-dbgsym_6.30.0-0supralinux5_amd64.ddeb",
+        "sha256": "1f47a33a03c07c176d4745cfc4bb5ed8593717da5b9c069a73a221b34cf4f8d8",
+        "size": 1248100
+      },
+      {
+        "package": "libkf6config-dev-bin",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "libkf6config-dev-bin_6.30.0-0supralinux5_amd64.deb",
+        "sha256": "d7e10cf7629c68a93fa65a320ca868870e4f9f9446b580da70360233aebf8fe5",
+        "size": 80788
+      },
+      {
+        "package": "libkf6config-dev",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "libkf6config-dev_6.30.0-0supralinux5_amd64.deb",
+        "sha256": "d92bf4fed918165562d93f2512d36298ef014fa9191f53a51eab3a64286ce3a9",
+        "size": 54064
+      },
+      {
+        "package": "libkf6config-doc",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "all",
+        "file": "libkf6config-doc_6.30.0-0supralinux5_all.deb",
+        "sha256": "e2afd9e730e03931a916d976315ea0d82e76b66a2c696cf46532e489c819bf77",
+        "size": 8304
+      },
+      {
+        "package": "libkf6configcore6-dbgsym",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "libkf6configcore6-dbgsym_6.30.0-0supralinux5_amd64.ddeb",
+        "sha256": "0da81d2dbd5d103df08b4e1d844bbf4dfe8bde3590fb85e5a1db3ab44344c9cb",
+        "size": 3339116
+      },
+      {
+        "package": "libkf6configcore6",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "libkf6configcore6_6.30.0-0supralinux5_amd64.deb",
+        "sha256": "fd21f8ffec2c9a1092f4f1a823fc9ad117c8453a4cbd796d1997cb38bf9577c0",
+        "size": 183168
+      },
+      {
+        "package": "libkf6configgui6-dbgsym",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "libkf6configgui6-dbgsym_6.30.0-0supralinux5_amd64.ddeb",
+        "sha256": "4e1c02f612d58d49d9c548c19d5482b02968b7b8ba0575b30073e796df1c6dca",
+        "size": 1926720
+      },
+      {
+        "package": "libkf6configgui6",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "libkf6configgui6_6.30.0-0supralinux5_amd64.deb",
+        "sha256": "994d74a35f900487bce4b5ffa838fa428fd00fe7a713f6441b6659992c65c711",
+        "size": 76206
+      },
+      {
+        "package": "libkf6configqml6-dbgsym",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "libkf6configqml6-dbgsym_6.30.0-0supralinux5_amd64.ddeb",
+        "sha256": "1ced063c5dadd515dd6dc72674aa453f82225203f8464a8aa9e6c819f263050c",
+        "size": 761172
+      },
+      {
+        "package": "libkf6configqml6",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "libkf6configqml6_6.30.0-0supralinux5_amd64.deb",
+        "sha256": "4a15fb6c5b9a95c49bc8910b81f5e7d14b1d5d125041a1b43e918c978241a949",
+        "size": 22832
+      },
+      {
+        "package": "qml6-module-org-kde-config-dbgsym",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "qml6-module-org-kde-config-dbgsym_6.30.0-0supralinux5_amd64.ddeb",
+        "sha256": "67a93268638b538e90e3ea9849ae1e988de0be770577fe28c93007743653140d",
+        "size": 155506
+      },
+      {
+        "package": "qml6-module-org-kde-config",
+        "version": "6.30.0-0supralinux5",
+        "architecture": "amd64",
+        "file": "qml6-module-org-kde-config_6.30.0-0supralinux5_amd64.deb",
+        "sha256": "ab1ce3ccf930a368faccdd7c5aca19acea87f355d888169d5f0cefa2524fd069",
+        "size": 13250
+      }
+    ],
+    "source_payload_verified": true,
+    "buildinfo_verified": true,
+    "changes_payload_complete": true,
+    "missing_debug_packages": [],
+    "evidence_scope": "retained-build-evidence; not new authoritative certification"
+  },
+  "offline_restore_verified": true,
+  "requires_github_for_restore": false,
+  "files_sha256": {
+    "artifact-meta.json": "88e7b38c0002b50c77e01211105db84807590857f07eceac315c1d46ec6f92e6",
+    "autopkgtest/summary": "73c01090c6d24bc509023831429c4e223f6135f36e30b3f45e770f7d52ccf05d",
+    "build-contract.json": "1363a8e31f1f7b49f44e450a55e725b3648ad7ceb88197bf87fe9b68e9f3d083",
+    "cache-probe/result.json": "6f7e5865703570b1575c929f582ac7f0459bfe881712ef16aa9968e303cc25b3",
+    "host-evidence-sha256.txt": "beb1291056b27ffebc4e9abea7201e0fa039b0da7effaacc15be30d4c0498245",
+    "host-result.json": "e4b7224a5faab24d95d336b9a694ed72a1d7a76e4a6f68c333b7051f68e63627",
+    "result.json": "d0374f9507a568dcf5fa1204aa2702f0b6c6bd90e7d4cb2ca7810e96e1e6d93a",
+    "retained-upgrade/summary": "395e7ef074d37121c7f4ef5607f0b45b4e28814a64fea4e2f93b5d3d6bd4a6c9",
+    "retained-upgrade-inputs.json": "386b882a34dffa43324e55a3d1736feda8c55ccc9d0a5af76705a6053624b566",
+    "rootfs-admission.json": "5783e30612993edbc41e434581c71f7aba1e139c6028d1d240ef66f53dafe365",
+    "signature.log": "0b3c7d88799054831886b834606aeb3027bf53fd5d4838468773aeef861bcc0e",
+    "ubuntu-baseline-preflight/result.json": "cddd1a55f2b391da2651e8c176a86d6c8e79c14839875a03851b594de77110fe",
+    "upstream-tests.json": "bede5a062370400567691d28443ec6a23a324e334c3dd64070f88f95ee8f3045",
+    "workflow-job.json": "be22fa3c8a04ff886d85a07fa62875a550197c232a52b0cff4065bc3883e41aa"
+  }
+}

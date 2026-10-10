@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.16)
+project(OriginalUbuntuExportProbe LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+find_package(Qt6 6.10 REQUIRED COMPONENTS Core Gui Widgets DBus)
+find_package(KF6GlobalAccel REQUIRED)
+if(REPAIR)
+ find_package(Qt6GuiPrivate 6.10 REQUIRED NO_MODULE)
+ # Relocate only private include directories to the extracted, exact Ubuntu SDK.
+ # Original target definitions, libraries and dependencies remain unchanged.
+ foreach(t Qt6::CorePrivate Qt6::GuiPrivate)
+  get_target_property(paths ${t} INTERFACE_INCLUDE_DIRECTORIES)
+  string(REPLACE "/usr/include/" "${SDK}/usr/include/" paths "${paths}")
+  set_property(TARGET ${t} PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${paths}")
+ endforeach()
+endif()
+find_package(KGlobalAccelD REQUIRED)
+add_executable(original-export-probe main.cpp)
+target_link_libraries(original-export-probe PRIVATE K::KGlobalAccelD Qt6::Core)

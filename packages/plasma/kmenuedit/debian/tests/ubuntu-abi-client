@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-kmenuedit-baseline
+sha256sum --check --strict "${BASE}/ubuntu-client.sha256"
+[[ $(dpkg-query -W -f='${Version}' kmenuedit) == 4:6.7.5-0supralinux1 ]]
+dpkg --compare-versions 4:6.7.5-0supralinux1 gt "$(cat "${BASE}/ubuntu-version")"
+dpkg-query -W -f='${Package} ${Architecture} ${Version}\n' libqt6core6t64 libqt6gui6 libqt6dbus6 libqt6widgets6 > "${AUTOPKGTEST_TMP}/providers"
+cmp "${BASE}/ubuntu-provider-versions" "${AUTOPKGTEST_TMP}/providers"
+python3 "${BASE}/source/run-private.py" editor "${AUTOPKGTEST_ARTIFACTS}/unchanged-ubuntu-client" --public-client "${BASE}/build/menu-client"
+apt-get check
+cp -a "${BASE}" "${AUTOPKGTEST_ARTIFACTS}/ubuntu-client-baseline"

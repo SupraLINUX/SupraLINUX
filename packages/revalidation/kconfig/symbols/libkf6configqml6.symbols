@@ -1,0 +1,25 @@
+# SymbolsHelper-Confirmed: 6.3.0 amd64
+libKF6ConfigQml.so.6 libkf6configqml6 #MINVER#
+* Build-Depends-Package: libkf6config-dev
+ _Z33qml_register_types_org_kde_configv@Base 6.3.0
+ _ZN18KConfigPropertyMap11qt_metacallEN11QMetaObject4CallEiPPv@Base 6.0.0
+ _ZN18KConfigPropertyMap11qt_metacastEPKc@Base 6.0.0
+ _ZN18KConfigPropertyMap11updateValueERK7QStringRK8QVariant@Base 6.0.0
+ _ZN18KConfigPropertyMap11writeConfigEv@Base 6.0.0
+ _ZN18KConfigPropertyMap16staticMetaObjectE@Base 6.0.0
+ _ZN18KConfigPropertyMap9setNotifyEb@Base 6.0.0
+ _ZN18KConfigPropertyMapC1EP19KCoreConfigSkeletonP7QObject@Base 6.0.0
+ _ZN18KConfigPropertyMapC2EP19KCoreConfigSkeletonP7QObject@Base 6.0.0
+ _ZN18KConfigPropertyMapD0Ev@Base 6.0.0
+ _ZN18KConfigPropertyMapD1Ev@Base 6.0.0
+ _ZN18KConfigPropertyMapD2Ev@Base 6.0.0
+ _ZNK18KConfigPropertyMap10metaObjectEv@Base 6.0.0
+ _ZNK18KConfigPropertyMap11isImmutableERK7QString@Base 6.0.0
+ _ZNK18KConfigPropertyMap8isNotifyEv@Base 6.0.0
+ _ZTI18KConfigPropertyMap@Base 6.0.0
+ _ZTIFP7QObjectP10QQmlEngineP9QJSEngineE@Base 6.3.0
+ _ZTIPFP7QObjectP10QQmlEngineP9QJSEngineE@Base 6.3.0
+ _ZTS18KConfigPropertyMap@Base 6.0.0
+ _ZTSFP7QObjectP10QQmlEngineP9QJSEngineE@Base 6.3.0
+ _ZTSPFP7QObjectP10QQmlEngineP9QJSEngineE@Base 6.3.0
+ _ZTV18KConfigPropertyMap@Base 6.0.0

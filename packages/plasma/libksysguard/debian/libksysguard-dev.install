@@ -1,0 +1,7 @@
+usr/include/ksysguard/
+usr/lib/*/cmake/KSysGuard/
+usr/lib/*/libKSysGuardFormatter.so
+usr/lib/*/libKSysGuardSensorFaces.so
+usr/lib/*/libKSysGuardSensors.so
+usr/lib/*/libKSysGuardSystemStats.so
+usr/lib/*/libprocesscore.so

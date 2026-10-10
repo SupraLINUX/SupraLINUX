@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "large-reviewed-autopkgtest-baseline-transport",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "source_commit": "4e8607346dea9f2596871bba9051eacac0c4a13b",
+  "workflow_run_id": 37292928896,
+  "workflow_job_id": 111707360642,
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-runner-contract-20261005t095143z-2738299",
+  "host_evidence_seal_sha256": "130420abd8f62913375dfbe9f39c054351d1284a3588aa7fa703846318889e92",
+  "inputs_sha256": {
+    "scripts/probe-autopkgtest-baseline-transport.py": "ba0e04801360f18d6c596ad686376834fb2a8295de63ed27ae40dd70780ca0d0",
+    "scripts/plasma-package-testing.py": "6babb4d2b9936b34e6c6b63024fd1a9c581139f37bddc6234b1c78a4c1f0e381",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d"
+  },
+  "files_sha256": {
+    "result.json": "68fbc2f59f51645fd9d9e01e8b2e1155b7340f7c2e56355fd9e1059688719cbb",
+    "summary": "816ea4170834334cd6414bbb1eda51044049070892ecc96dd227ff619f5e425c",
+    "evidence-sha256.txt": "130420abd8f62913375dfbe9f39c054351d1284a3588aa7fa703846318889e92",
+    "host-result.json": "29ea4837776ed1ea0487c7e1ac7a6ef84db5be4ea799a4144655943763549bdd",
+    "workflow-job.json": "ab6ea2457848e31e0da4c5a9d8c9351762ffbe3621ad43f53080329937f7bc51"
+  },
+  "local_archive_path": ".artifacts/infrastructure/baseline-transport-probe2.zip",
+  "local_archive_sha256": "ce04bb4a0ca1d4be98f42fbadd7b26e093e2f1705c11cb2fe742552ac2aedf0a",
+  "all_original_guest_hashes_verified": true
+}

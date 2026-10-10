@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "state": "ORIGINAL UBUNTU MODEL FAILURE REPRODUCED; DIAGNOSTIC ONLY",
+  "scope": "Same unchanged official SensorTreeModel native test against original Ubuntu6.6.5 and Qt6.10.2, owned local provider/bus; not authoritative candidate certification",
+  "original_model_result": "FAIL",
+  "test_exit_code": 1,
+  "test_skipped": false,
+  "same_changeInFlight_assertions_as_candidate": true,
+  "actual_provider_metadata": "Four reviewed valid nonempty sensor IDs from unchanged private fixture",
+  "private_runtime_absent": true,
+  "original_provider_and_test_process_absent": true,
+  "qt_standard_model_control": "PASS",
+  "qt_standard_model_control_exit_code": 0,
+  "original_local_socket_sandbox_failure_preserved": true,
+  "host_packages_installed": false,
+  "host_network_modified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false,
+  "checked_at": "2026-10-10T17:40:59.504128+00:00"
+}

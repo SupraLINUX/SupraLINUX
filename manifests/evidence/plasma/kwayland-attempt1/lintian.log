@@ -1,0 +1,6 @@
+E: libkwaylandclient6: symbols-file-contains-current-version-with-debian-revision on symbol _ZN8KWayland6Client20PlasmaVirtualDesktop13outputEnteredERK7QString@Base and 4 others (libKWaylandClient.so.6) [symbols]
+W: kwayland-dev: old-fsf-address-in-copyright-file
+W: kwayland-doc: old-fsf-address-in-copyright-file
+W: kwayland6-data: old-fsf-address-in-copyright-file
+W: libkwaylandclient6: old-fsf-address-in-copyright-file
+W: kwayland source: orig-tarball-missing-upstream-signature kwayland_6.7.5.orig.tar.xz

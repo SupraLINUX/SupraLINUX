@@ -1,0 +1,91 @@
+{
+  "state": "PASS",
+  "kind": "actual-build-predecessor-version-verification",
+  "source_package": "kpipewire",
+  "version": "6.7.5-0supralinux2",
+  "build_architecture": "amd64",
+  "available_predecessor_count": 12,
+  "required_direct_predecessors": [
+    "extra-cmake-modules",
+    "libkf6coreaddons-dev",
+    "libkf6i18n-dev"
+  ],
+  "installed_predecessors": [
+    {
+      "package": "extra-cmake-modules",
+      "node": "extra-cmake-modules",
+      "version": "6.30.0-0supralinux3",
+      "architecture": "all"
+    },
+    {
+      "package": "libkf6coreaddons-data",
+      "node": "kcoreaddons",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "all"
+    },
+    {
+      "package": "libkf6coreaddons-dev",
+      "node": "kcoreaddons",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "amd64"
+    },
+    {
+      "package": "libkf6coreaddons6",
+      "node": "kcoreaddons",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "amd64"
+    },
+    {
+      "package": "libkf6i18n-data",
+      "node": "ki18n",
+      "version": "6.30.0-0supralinux1",
+      "architecture": "all"
+    },
+    {
+      "package": "libkf6i18n-dev",
+      "node": "ki18n",
+      "version": "6.30.0-0supralinux1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "libkf6i18n6",
+      "node": "ki18n",
+      "version": "6.30.0-0supralinux1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "libkf6i18nlocaledata6",
+      "node": "ki18n",
+      "version": "6.30.0-0supralinux1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "libkf6i18nqml6",
+      "node": "ki18n",
+      "version": "6.30.0-0supralinux1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "qml6-module-org-kde-coreaddons",
+      "node": "kcoreaddons",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "amd64"
+    },
+    {
+      "package": "qml6-module-org-kde-i18n-localedata",
+      "node": "ki18n",
+      "version": "6.30.0-0supralinux1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "qml6-module-org-kde-ki18n",
+      "node": "ki18n",
+      "version": "6.30.0-0supralinux1",
+      "architecture": "amd64"
+    }
+  ],
+  "available_predecessors_not_installed": [],
+  "complete_available_input_transport": "certified separately by the infrastructure consumer",
+  "control_sha256": "e1949731ccf41b24f3585228718aba2c1c875ca3ea257be044f832626278a4d2",
+  "buildinfo_sha256": "bbec7ff76df56c659267d2a131f20013edcf9416239aa7fca684254617bbe397"
+}

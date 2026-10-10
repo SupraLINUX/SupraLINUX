@@ -1,0 +1,27 @@
+{
+  "state": "PASS",
+  "scope": "actual original Ubuntu client compiled via original installed CMake exports, private sensor provider/DBus runtime and cleanup; local only",
+  "mechanism_review_sha256": "5118406feb1f274e2f3473debb1006c238e78a7f8a0e44916e3c66ebff7ade12",
+  "client_source_sha256": "d10a8ee64abc82985395243ef58b5a289fe45a877f1de9c85207707d7b9b743e",
+  "provider_source_sha256": "ae76d3a105ab9c466a5da475d05158ffa9b56cb2d1b0657df4141239bddb2841",
+  "client_executable_sha256": "d0cdaeafb717993689356c3f478736b5f76e8ed8af4482dde49110570a46da41",
+  "provider_executable_sha256": "ff7125485d229ccd069c4e5a6d3f7200842a2d89d2e11444f00f7582a72b87e8",
+  "private_wrapper_sha256": "1b81e187c146b4f463972e47f779c31dd51e9402b676f2495d0707b7af80a912",
+  "client_source_matches_proposal": true,
+  "provider_source_matches_proposal": true,
+  "returncode": 0,
+  "cleanup_marker": "Owned sensor provider and D-Bus daemon reaped; runtime directory removed",
+  "logs_sha256": {
+    "functional.stdout": "4621c3976a25b07ffa5a45566d8310119ff2c6341323762c98ce27801c2433ef",
+    "functional.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "functional-results/actual-interface.txt": "c925569475582ac73bf2d62374b2fd438a5e13f3ee3dca6ead52e1631db52d48",
+    "functional-results/bus-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "functional-results/client-stderr": "c61a1ddd8e716dcda2d5aaa17753b8d7b102776ecd39804de3bbead279ab3a97",
+    "functional-results/client-stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "functional-results/provider-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "functional-results/provider-stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "functional-results/sensor-face.png": "2d449314bc1b826eb66a754965585e781ec344969d3d4c051c8a461c576eb0c4"
+  },
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

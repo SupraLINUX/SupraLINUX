@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+import hashlib,json,os,shutil,subprocess
+from pathlib import Path
+base=Path('/var/tmp/supralinux-kwallet-pam-baseline')
+changelog=Path(__file__).resolve().parents[1]/'changelog'
+candidate=subprocess.check_output(['dpkg-parsechangelog','-l',str(changelog),'-S','Version'],text=True).strip()
+for package in ['libpam-kwallet5','libpam-kwallet-common']:
+ assert subprocess.check_output(['dpkg-query','-W','-f=${Version}',package],text=True).strip()==candidate
+subprocess.run(['dpkg','--compare-versions',candidate,'gt',(base/'ubuntu-version').read_text().strip()],check=True)
+assert subprocess.check_output(['dpkg-query','-W','-f=${Version}','libpam0g'],text=True).strip()==(base/'ubuntu-pam-version').read_text().strip()
+subprocess.run(['sha256sum','--check','--strict',str(base/'ubuntu-sdk-binaries.sha256')],check=True)
+output=Path(os.environ['AUTOPKGTEST_ARTIFACTS'])/'candidate-pam-results.json'
+subprocess.run(['python3',str(base/'source/driver.py'),str(base/'ubuntu-client'),str(base/'ubuntu-fixture.so'),str(output)],check=True)
+old=json.loads((base/'ubuntu-results.json').read_text());new=json.loads(output.read_text())
+assert [(r['case'],r['state']) for r in old]==[(r['case'],r['state']) for r in new]
+assert old[0]['private_handoff']['salt_sha256']==new[0]['private_handoff']['salt_sha256']
+module='/usr/lib/x86_64-linux-gnu/security/pam_kwallet5.so'
+assert '/usr/bin/kwalletd6' in subprocess.check_output(['strings',module],text=True).splitlines()
+assert 'not found' not in subprocess.check_output(['ldd',module],text=True)
+assert Path('/usr/lib/systemd/user/plasma-kwallet-pam.service').is_file()
+assert Path('/etc/xdg/autostart/pam_kwallet_init.desktop').is_file()
+assert subprocess.check_output(['dpkg-query','-S','/usr/bin/kwalletd6'],text=True).startswith('kwallet6:')
+subprocess.run(['apt-get','check'],check=True)
+shutil.copytree(base,Path(os.environ['AUTOPKGTEST_ARTIFACTS'])/'ubuntu-sdk-fixture',dirs_exist_ok=True)
+print('Unchanged Ubuntu PAM SDK binaries, actual installed module, preserved salt/key protocol, helper, paths and APT: PASS')

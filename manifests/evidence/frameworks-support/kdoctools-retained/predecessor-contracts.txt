@@ -1,0 +1,2 @@
+karchive|libkf6archive-dev|6.30.0-0supralinux4
+ki18n|libkf6i18n-dev|6.30.0-0supralinux1

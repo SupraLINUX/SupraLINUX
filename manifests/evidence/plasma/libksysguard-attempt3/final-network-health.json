@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "scope": "Read-only final gate host network health",
+  "checked_at": "2026-10-10T17:32:01.303080+00:00",
+  "kernel_carrier_samples": 78,
+  "gateway_samples": 22,
+  "hardware_hang_observed": false,
+  "physical_carrier_loss_observed": false,
+  "gateway_failure_observed": false,
+  "tso_off": true,
+  "gso_off": true,
+  "libvirt_network_definitions": [],
+  "host_network_modified": false,
+  "gateway_observation_scope": "From post-startup runner assignment through original gate result/cleanup; whole kernel/carrier monitor spans gate wrapper",
+  "journal_hang_query_exit_code": 1,
+  "journal_readability_exit_code": 0
+}

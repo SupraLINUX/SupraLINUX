@@ -1,0 +1,102 @@
+{
+  "state": "REVIEW_REQUIRED",
+  "scope": "authenticated original Ubuntu libkglobalacceld0 export-set intersection with actual declared consumer ELF imports; static only",
+  "original_library": {
+    "Package": "libkglobalacceld0",
+    "Version": "6.6.5-0ubuntu0.1",
+    "Architecture": "amd64",
+    "Source": "kglobalacceld",
+    "archive_sha256": "0ccdd572690d3f7257f1dec7f094fa94323c54aa16b43296e3975e9836220fd1",
+    "elf_sha256": "f71d93c392423651f9f7730c3558c3386b94b7ac5f4552b957e1ea53d8fc2dde",
+    "export_count": 201,
+    "authenticated_indexes": [
+      {
+        "index_path": ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_universe_binary-amd64_Packages",
+        "index_sha256": "5205a50a497f3bf1d5707ff78733160d2fa307519af6834bbecc3b51f4162cca",
+        "inrelease_path": ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_InRelease",
+        "inrelease_sha256": "6c634247704301b20293f748e6941efba4d5704d281f355a985b3905bbb6efb7",
+        "signature_verified": true
+      }
+    ]
+  },
+  "prior_consumer_audit_sha256": "e95ca3eef45c79921c2dff548c17ebb83275d167be1b322593692676dfa95bd8",
+  "consumers": [
+    {
+      "package": "kglobalacceld",
+      "version": "6.6.5-0ubuntu0.1",
+      "path": "usr/lib/x86_64-linux-gnu/libexec/kglobalacceld",
+      "sha256": "caaee9ad41f79c4e2b8aa6d9356dcae0beccd6517130ce122821d8eb44c9897a",
+      "imports_from_original_library_export_set": [
+        "_ZN13KGlobalAccelD4initEv",
+        "_ZN13KGlobalAccelDC1EP7QObject",
+        "_ZN13KGlobalAccelDD1Ev"
+      ],
+      "removed_imports": [],
+      "changed_return_imports": []
+    },
+    {
+      "package": "kwin-wayland",
+      "version": "4:6.6.6-0ubuntu0.1",
+      "path": "usr/bin/kwin_wayland",
+      "sha256": "31858ca3969a93efff4909693db543444bd52286dd5f9eb945bc2df5b6d3dbf3",
+      "imports_from_original_library_export_set": [
+        "_ZN21KGlobalAccelInterface11qt_metacallEN11QMetaObject4CallEiPPv",
+        "_ZN21KGlobalAccelInterface11qt_metacastEPKc",
+        "_ZN21KGlobalAccelInterface13axisTriggeredEi",
+        "_ZN21KGlobalAccelInterface14pointerPressedE6QFlagsIN2Qt11MouseButtonEE",
+        "_ZN21KGlobalAccelInterface16staticMetaObjectE",
+        "_ZN21KGlobalAccelInterface22resetModifierOnlyStateEv",
+        "_ZN21KGlobalAccelInterface8keyEventEi16ShortcutKeyState",
+        "_ZN21KGlobalAccelInterfaceC2EP7QObject",
+        "_ZN21KGlobalAccelInterfaceD2Ev",
+        "_ZTI21KGlobalAccelInterface"
+      ],
+      "removed_imports": [],
+      "changed_return_imports": []
+    },
+    {
+      "package": "kwin-wayland",
+      "version": "4:6.6.6-0ubuntu0.1",
+      "path": "usr/bin/kwin_wayland_wrapper",
+      "sha256": "77e1efa55cb1592836b9eabb002c554a4e1e713da02bea29d8e159cd106af5db",
+      "imports_from_original_library_export_set": [],
+      "removed_imports": [],
+      "changed_return_imports": []
+    },
+    {
+      "package": "libkwin6",
+      "version": "4:6.6.6-0ubuntu0.1",
+      "path": "usr/lib/x86_64-linux-gnu/libkwin.so.6.6.6",
+      "sha256": "fb4f9611686fb9e898fd902c0fa579f9c5183952f30580854935ca4ec060775a",
+      "imports_from_original_library_export_set": [
+        "_ZN13KGlobalAccelD4initEv",
+        "_ZN13KGlobalAccelDC1EP7QObject",
+        "_ZNK13KGlobalAccelD9interfaceEv"
+      ],
+      "removed_imports": [],
+      "changed_return_imports": []
+    },
+    {
+      "package": "libkwin-x11-6",
+      "version": "4:6.6.4-0ubuntu1",
+      "path": "usr/lib/x86_64-linux-gnu/libkwin-x11.so.6.6.4",
+      "sha256": "f83c9e2755264124712fb74414ac131bbecae01898110b140a76bc16ab443f21",
+      "imports_from_original_library_export_set": [
+        "_ZN13KGlobalAccelD4initEv",
+        "_ZN13KGlobalAccelDC1EP7QObject",
+        "_ZNK13KGlobalAccelD9interfaceEv"
+      ],
+      "removed_imports": [],
+      "changed_return_imports": []
+    }
+  ],
+  "earlier_library_path_lookup": "Incorrect lowercase filename lookup stopped before import analysis; actual authenticated payload libKGlobalAccelD.so.6.6.5 used here",
+  "runtime_execution": "NOT RUN",
+  "candidate_transition_admitted": false,
+  "canonical_effect": "none",
+  "limitations": [
+    "Name intersections do not prove ABI layout or runtime behavior",
+    "Undeclared consumers and dlopen remain outside declared dependency inventory",
+    "Actual KVM upgrade, private SDK scope and D-Bus/public-client checks remain required"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "state": "PASS",
+  "scope": "local real Ubuntu Wayland wire-client fixture; not compositor or authoritative package certification",
+  "versions": [
+    1,
+    7,
+    8,
+    20
+  ],
+  "outputs": [
+    "Unchanged Ubuntu protocol client, negotiated version 1, candidate server PID event 4242: PASS",
+    "Unchanged Ubuntu protocol client, negotiated version 7, candidate server PID event 4242: PASS",
+    "Unchanged Ubuntu protocol client, negotiated version 8, candidate server PID event 4242: PASS",
+    "Unchanged Ubuntu protocol client, negotiated version 20, candidate server PID event 4242: PASS"
+  ],
+  "baseline_xml_sha256": "fdaa35df538543fba6b7247f25c3e97e1b879d89a6ba3a8b64979d00e6dff051",
+  "candidate_xml_sha256": "febe9d3170d430f2dd81f6e821fb655d5e9eb0cdfb912f07592ecb5478e6f14e",
+  "files_sha256": {
+    "client": "212933c1cf5678df5b87855ae78ee19a7d47efafa4a3a22f03dda3b73df8a4a5",
+    "client.c": "6d580a34b7bfba40b05f7144bdf0652fa5d3bee004428bd67b1fac436ea4a760",
+    "new.c": "d8a4a32c259fd15241e2fa50c74e34e7945580ed3a0dcbffb9db7ac66be785ef",
+    "new.h": "77aa2c267d4acd6d7f7c436d4b03a70666582a03c162bb3313a78cadb59566d5",
+    "old.c": "a31ff50f6b5a4e92997ab883a18ac9f52a6ff3283b8f39e869bad64cc49421b4",
+    "old.h": "13cf267d09000130bdb7db3c253b74ca894d7520d6a551a4ec03405dbc40bc96",
+    "server": "44fbd9a9a6b470e49a0e8ab641d3da9a75b349860a2f800e198463a06d8f630f",
+    "server-v1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "server-v20.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "server-v7.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "server-v8.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "server.c": "abf9a435426f872bd92f38af55a73984f5530a8d7a32a6cdbd9325d60ce8d2d0"
+  }
+}

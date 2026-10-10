@@ -1,0 +1,40 @@
+name: KDE Plasma authoritative KVM package build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  plasma-package-build:
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' ||
+          (github.event.label.name == 'ci:plasma-package-build' &&
+           github.event.pull_request.head.repo.full_name == github.repository) }}
+    name: Reviewed Plasma package on KVM guest
+    runs-on: [self-hosted, linux, x64, supralinux, ubuntu-26.04, kvm, ephemeral]
+    timeout-minutes: 360
+    steps:
+      - name: Checkout exact authorized PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Run current reviewed package
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: scripts/run-authoritative-plasma-package.sh
+
+      - name: Retain package sources, binaries and evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: authoritative-plasma-package-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/authoritative-plasma-package/
+          if-no-files-found: error
+          retention-days: 90
+          include-hidden-files: true

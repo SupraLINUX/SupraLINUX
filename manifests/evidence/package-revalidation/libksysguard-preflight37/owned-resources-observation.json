@@ -1,0 +1,13 @@
+{
+  "vm": "supralinux-plasma-package-build-20261010t101734z-2163558",
+  "vcpus": 6,
+  "current_memory": {
+    "value": 12582912,
+    "unit": "KiB"
+  },
+  "interfaces": [
+    "user"
+  ],
+  "host_network_definitions": [],
+  "scope": "read-only exact owned domain resource description"
+}

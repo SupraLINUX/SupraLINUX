@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-kwallet-pam-baseline
+cc -std=c17 -Wall -Wextra -Werror "${BASE}/source/client.c" -Wl,-z,relro,-z,now -lpam -o "${AUTOPKGTEST_TMP}/consumer"
+cc -std=c17 -Wall -Wextra -Werror -fPIC -shared "${BASE}/source/fixture.c" -lpam -o "${AUTOPKGTEST_TMP}/fixture.so"
+python3 "${BASE}/source/driver.py" "${AUTOPKGTEST_TMP}/consumer" "${AUTOPKGTEST_TMP}/fixture.so" "${AUTOPKGTEST_ARTIFACTS}/rebuilt-pam-results.json"

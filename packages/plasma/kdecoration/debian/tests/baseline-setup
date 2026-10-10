@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+apt-get install -y --no-install-recommends cmake g++ qt6-base-dev libkdecorations3-dev
+BASE=/var/tmp/supralinux-kdecoration-baseline
+mkdir -p "${BASE}/source"
+cat > "${BASE}/source/CMakeLists.txt" <<'EOF'
+cmake_minimum_required(VERSION 3.16)
+project(ubuntu-decoration-client LANGUAGES CXX)
+find_package(KDecoration3 6.6 CONFIG REQUIRED)
+add_executable(ubuntu-decoration-client main.cpp)
+target_link_libraries(ubuntu-decoration-client KDecoration3::KDecoration)
+EOF
+cat > "${BASE}/source/main.cpp" <<'EOF'
+#include <KDecoration3/DecorationShadow>
+#include <QCoreApplication>
+#include <QColor>
+#include <QImage>
+#include <QMarginsF>
+#include <QRectF>
+#include <iostream>
+int main(int argc, char **argv) {
+    QCoreApplication app(argc, argv);
+    KDecoration3::DecorationShadow shadow;
+    int rectSignals = 0;
+    QObject::connect(&shadow, &KDecoration3::DecorationShadow::innerShadowRectChanged,
+                     [&rectSignals]() { ++rectSignals; });
+    QImage image(16, 16, QImage::Format_ARGB32);
+    image.fill(Qt::red);
+    shadow.setShadow(image);
+    const QRectF inner(2, 3, 4, 5);
+    const QMarginsF padding(1.25, 2.5, 3.75, 4.5);
+    shadow.setInnerShadowRect(inner);
+    shadow.setPadding(padding);
+    if (shadow.shadow().pixelColor(0, 0) != QColor(Qt::red) || shadow.innerShadowRect() != inner ||
+        shadow.padding() != padding || rectSignals != 1 ||
+        shadow.topLeftGeometry() != QRectF(0, 0, 2, 3) ||
+        shadow.topGeometry() != QRectF(2, 0, 4, 3)) return 1;
+    std::cout << "Decoration shadow geometry, image, padding and QObject signals: PASS\n";
+}
+EOF
+cmake -S "${BASE}/source" -B "${BASE}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${BASE}/build"
+"${BASE}/build/ubuntu-decoration-client"
+dpkg-query -W -f='${Version}' libkdecorations3-dev > "${BASE}/ubuntu-dev-version"
+sha256sum "${BASE}/build/ubuntu-decoration-client" > "${BASE}/binary-sha256.txt"
+
+printf 'Ubuntu baseline version: '; cat "${BASE}/ubuntu-dev-version"; printf '\n'
+cat "${BASE}/binary-sha256.txt"

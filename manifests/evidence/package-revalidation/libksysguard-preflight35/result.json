@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "node": "libksysguard",
+  "version": "4:6.7.5-0supralinux3",
+  "state": "INFRA_INVALID",
+  "stage": "predecessor-cache-admission",
+  "exit_code": 1,
+  "started_at": "2026-10-09T20:22:09Z",
+  "finished_at": "2026-10-09T20:29:24.624528+00:00",
+  "source_commit": "653323d462526b7a8b1a2c29f280454406bbe14b",
+  "workflow_run_id": "37986310752",
+  "workflow_job": "plasma-package-build",
+  "authoritative": true,
+  "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
+  "package_attempt_consumed": false,
+  "sbuild_result": "not-run",
+  "lintian_result": "not-run",
+  "autopkgtest_result": "not-run",
+  "sbuild_backend": "unshare",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "release_publication": false,
+  "files_sha256": {
+    "actions-runner-runtime.txt": "416d91f8a2392c11d9a03fb0ee0f3cd7c1e97d4a756a72e929eca8425343fd57",
+    "build-contract.json": "351549ddf89893c35eb5fb5f20b72a8e90cdf53c110ed66972a997162c057cb6",
+    "environment.txt": "783b0968129c4ce53cfde7c32825660a05deaab4273688362d5b2397c628fb3c",
+    "nested-kvm-runtime.txt": "ad05b8e25447f9aaa715e6f0ee21f617b61fe60f8cee9539b2ea0ffb260f9ef7",
+    "revalidated-predecessors/breeze-icons/daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577.zip": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-image-sha256.txt": "f3d2c4ecbc75e300b04e963038454cc3791d86cb104c10b69eaf0b832b243805"
+  }
+}

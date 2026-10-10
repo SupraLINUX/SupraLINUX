@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+XML=$1
+OUT=$2
+FIXTURE=$(cd "$(dirname "$0")" && pwd)
+mkdir -p "${OUT}"
+wayland-scanner --strict client-header "${XML}" "${OUT}/old.h"
+wayland-scanner --strict server-header "${XML}" "${OUT}/new.h"
+wayland-scanner --strict private-code "${XML}" "${OUT}/protocol.c"
+cc -Wall -Wextra -Werror -I "${OUT}" "${FIXTURE}/client.c" "${OUT}/protocol.c" -o "${OUT}/client" $(pkg-config --cflags --libs wayland-client)
+cc -Wall -Wextra -Werror -I "${OUT}" "${FIXTURE}/server.c" "${OUT}/protocol.c" -o "${OUT}/server" $(pkg-config --cflags --libs wayland-server)

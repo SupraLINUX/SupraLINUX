@@ -1,0 +1,80 @@
+Source: kdecoration
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               gettext,
+               libkf6i18n-dev (= 6.30.0-0supralinux1),
+               libxkbcommon-dev,
+               qt6-base-dev (>= 6.10.0~),
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/kdecoration
+Vcs-Browser: https://github.com/SupraLINUX/SupraLINUX/tree/architecture/bootstrap-v1/packages/plasma/kdecoration
+Vcs-Git: https://github.com/SupraLINUX/SupraLINUX.git
+Rules-Requires-Root: no
+Testsuite: autopkgtest
+
+Package: libkdecorations3-6
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends}, ${shlibs:Depends},
+Breaks: kwin-common (<< 4:5.26.70),
+        kwin-decoration-oxygen (<< 4:5.26.70),
+        kwin-style-breeze (<< 4:5.26.70),
+        kwin-wayland (<< 4:5.26.70),
+        kwin-wayland-backend-drm (<< 4:5.26.70),
+        kwin-wayland-backend-fbdev (<< 4:5.26.70),
+        kwin-wayland-backend-virtual (<< 4:5.26.70),
+        kwin-wayland-backend-wayland (<< 4:5.26.70),
+        kwin-wayland-backend-x11 (<< 4:5.26.70),
+        kwin-x11 (<< 4:5.26.70),
+        libkdecorations2-5v5,
+        libkdecorations2-6,
+Replaces: libkdecorations2-5v5, libkdecorations2-6,
+Description: library to create window decorations
+ KDecoration3 is a library to create window decorations. These window
+ decorations can be used by for example an X11 based window manager
+ which re-parents a Client window to a window decoration frame.
+
+Package: libkdecorations3-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libkdecorations3-6 (= ${binary:Version}),
+         libkdecorations3private2 (= ${binary:Version}),
+         qt6-base-dev (>= 6.10.0~),
+         ${misc:Depends},
+Breaks: libkdecorations2-dev,
+Replaces: libkdecorations2-dev,
+Description: library to create window decorations - development files
+ KDecoration3 is a library to create window decorations. These window
+ decorations can be used by for example an X11 based window manager
+ which re-parents a Client window to a window decoration frame.
+ .
+ This package contains the development files.
+
+Package: libkdecorations3private2
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends}, ${shlibs:Depends},
+Breaks: kwin-common (<< 4:5.26.70),
+        kwin-wayland (<< 4:5.26.70),
+        kwin-wayland-backend-drm (<< 4:5.26.70),
+        kwin-wayland-backend-fbdev (<< 4:5.26.70),
+        kwin-wayland-backend-virtual (<< 4:5.26.70),
+        kwin-wayland-backend-wayland (<< 4:5.26.70),
+        kwin-wayland-backend-x11 (<< 4:5.26.70),
+        kwin-x11 (<< 4:5.26.70),
+        libkdecorations2private11,
+Replaces: libkdecorations2private11,
+Description: library to create window decorations - private library
+ KDecoration3 is a library to create window decorations. These window
+ decorations can be used by for example an X11 based window manager
+ which re-parents a Client window to a window decoration frame.
+ .
+ This package contains the private library parts that are not considered stable.

@@ -1,0 +1,1 @@
+Installed KGamma sliders, RGB/master values, bounds, defaults, private save/load/reload, six patterns and QWidget rendering: PASS

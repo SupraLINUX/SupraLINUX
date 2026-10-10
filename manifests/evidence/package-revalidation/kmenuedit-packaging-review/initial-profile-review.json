@@ -1,0 +1,8 @@
+{
+  "state": "REVIEW_REQUIRED",
+  "scope": "local source/profile inventory; not package admission",
+  "source_review": "source-input-review.json",
+  "package_attempt_consumed": false,
+  "native_test_definitions": [],
+  "installed_contract_plan": "Actual private XDG menu/application profile, public D-Bus selection and editing/save effects; real desktop and global shortcuts remain QA. Implement and verify the original Ubuntu fixture before admission."
+}

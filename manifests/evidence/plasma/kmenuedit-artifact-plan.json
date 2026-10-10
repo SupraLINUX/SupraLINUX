@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "kmenuedit",
+      "package_version": "4:6.7.5-0supralinux1",
+      "artifact_id": 11680369536,
+      "workflow_run_id": 38081312292,
+      "artifact_sha256": "35ffd6c08671ba67831297aefd24c3ffdf0ee1e2b0145d31d3446da1c7f7acb7",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

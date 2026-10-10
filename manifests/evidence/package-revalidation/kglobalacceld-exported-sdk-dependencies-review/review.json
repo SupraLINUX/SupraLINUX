@@ -1,0 +1,16 @@
+{
+  "state": "REVIEWED",
+  "scope": "staged candidate development metadata dependency completion; not canonical, execution or package certification",
+  "original_development_binary_depends": "libkglobalacceld0 (= 6.6.5-0ubuntu0.1)",
+  "upstream_public_export": "KF6::GlobalAccel;Qt6::GuiPrivate",
+  "original_export_sha256": "c9d4be4fbaeff29953a8512fd62bf4f9b415537f2839025f6b7d6b8d76c01731",
+  "candidate_source_CMake_sha256": "07a79f113b6b503ba5324e6299a55f6086fecfed7636413b5fdd72326acf7fd1",
+  "required_actual_sdks": {
+    "libkf6globalaccel-dev": "6.30.0-0supralinux2",
+    "qt6-base-private-dev": "6.10.2+dfsg-7"
+  },
+  "original_mechanism_proof": "manifests/evidence/package-revalidation/kglobalacceld-preflight29/gui-private-repair/certification.json",
+  "record_sha256": "c415a006032d00138732c78c8a45b93b6ab332923189f8bfc8753f750ac80e9e",
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

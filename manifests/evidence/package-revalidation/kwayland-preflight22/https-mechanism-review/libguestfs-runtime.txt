@@ -1,0 +1,10 @@
+prepared_at=2026-10-06T20:26:10Z
+host_user=chmodmasx
+kernel_version=7.0.0-38-generic
+source_kernel=/boot/vmlinuz-7.0.0-38-generic
+source_kernel_stat=17320328:1788508483:1790995889:21509969
+kernel_sha256=9f55ef7253055a9cf68f8a04323c93dead2fca617386d842fbde9ca7b178b27e
+modules_path=/lib/modules/7.0.0-38-generic
+modules_dep_sha256=8234821f5f82517e705ae176c08054ec1e28f0ea4f87d9d00d11d14840892a69
+kernel_copy=/var/lib/supralinux/images/libguestfs-runtime/7.0.0-38-generic/vmlinuz
+cache_dir=/var/lib/supralinux/images/libguestfs-runtime/7.0.0-38-generic/cache

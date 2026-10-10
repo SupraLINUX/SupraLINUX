@@ -1,0 +1,8 @@
+kpipewire_logging: Failed to query DMA-BUF formats.
+libva info: VA-API version 1.23.0
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/dri/nvidia_drv_video.so
+libva info: va_openDriver() returns -1
+kpipewire_vaapi_logging: VAAPI: Failed to initialize display
+kpipewire_vaapi_logging: DRM device not found
+kpipewire_record_logging: Forcing encoder to "libvpx"
+[libvpx @ 0x7f472803d2c0] v1.16.0

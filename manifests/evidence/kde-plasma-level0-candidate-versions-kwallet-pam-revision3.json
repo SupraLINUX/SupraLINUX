@@ -1,0 +1,434 @@
+{
+  "canonical_package_state_effect": "none",
+  "consumes_package_attempt": false,
+  "materialization_result_sha256": "bf58313053bfa90f33d13b4b66872abea56b2bc6ef9f8f266cde7dde296bc8de",
+  "next_gate": "plasma-level0-packaging-preparation",
+  "nodes": [
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "breeze-grub",
+      "source_package": "breeze-grub",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "breeze-plymouth",
+      "source_package": "breeze-plymouth",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1",
+        "6.6.6-0ubuntu0.1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "discover",
+      "source_package": "plasma-discover",
+      "ubuntu_reference_version": "6.6.6-0ubuntu0.1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1",
+        "6.6.6-0ubuntu0.1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "drkonqi",
+      "source_package": "drkonqi",
+      "ubuntu_reference_version": "6.6.6-0ubuntu0.1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1",
+        "6.6.6-0ubuntu0.1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "flatpak-kcm",
+      "source_package": "flatpak-kcm",
+      "ubuntu_reference_version": "6.6.6-0ubuntu0.1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1",
+        "6.6.6-0ubuntu0.1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "kactivitymanagerd",
+      "source_package": "kactivitymanagerd",
+      "ubuntu_reference_version": "6.6.6-0ubuntu0.1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "kde-cli-tools",
+      "source_package": "kde-cli-tools",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "kdecoration",
+      "source_package": "kdecoration",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "kgamma",
+      "source_package": "kgamma",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1",
+        "6.6.5-0ubuntu0.1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "kglobalacceld",
+      "source_package": "kglobalacceld",
+      "ubuntu_reference_version": "6.6.5-0ubuntu0.1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "kmenuedit",
+      "source_package": "kmenuedit",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1",
+        "6.6.5-0ubuntu0.1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "knighttime",
+      "source_package": "knighttime",
+      "ubuntu_reference_version": "6.6.5-0ubuntu0.1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "kpipewire",
+      "source_package": "kpipewire",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "ksshaskpass",
+      "source_package": "ksshaskpass",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux3",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "kwallet-pam",
+      "source_package": "kwallet-pam",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "kwayland",
+      "source_package": "kwayland",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "kwayland-integration",
+      "source_package": "kwayland-integration",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "kwrited",
+      "source_package": "kwrited",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "layer-shell-qt",
+      "source_package": "layer-shell-qt",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "libkscreen",
+      "source_package": "libkscreen",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1",
+        "4:6.6.5-0ubuntu0.1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "libksysguard",
+      "source_package": "libksysguard",
+      "ubuntu_reference_version": "4:6.6.5-0ubuntu0.1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "ocean-sound-theme",
+      "source_package": "ocean-sound-theme",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "oxygen-sounds",
+      "source_package": "oxygen-sounds",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "plasma-activities",
+      "source_package": "plasma-activities",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "1:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "1:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "plasma-dialer",
+      "source_package": "plasma-dialer",
+      "ubuntu_reference_version": "1:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "plasma-disks",
+      "source_package": "plasma-disks",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "plasma-firewall",
+      "source_package": "plasma-firewall",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "plasma-thunderbolt",
+      "source_package": "plasma-thunderbolt",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "plasma-workspace-wallpapers",
+      "source_package": "plasma-workspace-wallpapers",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "plymouth-kcm",
+      "source_package": "plymouth-kcm",
+      "ubuntu_reference_version": "6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "polkit-kde-agent-1",
+      "source_package": "polkit-kde-agent-1",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "6.6.4-0ubuntu1",
+        "6.6.5-0ubuntu0.1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "qqc2-breeze-style",
+      "source_package": "qqc2-breeze-style",
+      "ubuntu_reference_version": "6.6.5-0ubuntu0.1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "4:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "sddm-kcm",
+      "source_package": "sddm-kcm",
+      "ubuntu_reference_version": "4:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    },
+    {
+      "candidate_package_version": "1:6.7.5-0supralinux1",
+      "captured_ubuntu_versions": [
+        "1:6.6.4-0ubuntu1"
+      ],
+      "epoch_preserved": true,
+      "greater_than_all_captured_ubuntu_versions": true,
+      "node": "spacebar",
+      "source_package": "spacebar",
+      "ubuntu_reference_version": "1:6.6.4-0ubuntu1",
+      "upstream_version": "6.7.5"
+    }
+  ],
+  "package_execution_started": false,
+  "run_kind": "candidate-version-assignment",
+  "schema": 1,
+  "selected_node_count": 34,
+  "state": "PASS",
+  "supersedes": {
+    "path": "manifests/evidence/kde-plasma-level0-candidate-versions-kwallet-pam-revision2.json",
+    "sha256": "bba119d36ae8d04b01f39560efd5bfd7007304166644173942f6d6fcc51780d6",
+    "reason": "Increment KWallet PAM to revision 3 after genuine clean-build failure; complete ECM CoreTools discovery through Ubuntu Qt CMake files. Preserve both previous Attempts and candidate assignments."
+  }
+}

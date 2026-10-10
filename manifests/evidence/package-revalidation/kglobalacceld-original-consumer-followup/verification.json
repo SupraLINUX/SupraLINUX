@@ -1,0 +1,29 @@
+{
+  "state": "REVIEW_REQUIRED",
+  "scope": "follow-up static original Ubuntu consumers and read-only owned KWin CLI preparation; not candidate ABI or runtime certification",
+  "candidate": "kglobalacceld 6.7.5-0supralinux1",
+  "original_package_fail_preserved": true,
+  "canonical_hold_unchanged": true,
+  "candidate_transition_admitted": false,
+  "original_library_export_intersection": "Five actual ELF files from four authenticated declared consumer packages; no removed-symbol or changed-getter imports",
+  "installed_plugin_interface_headers": "byte-identical original Ubuntu/signed candidate",
+  "kwin_cli": "--help only PASS with owned cleanup; no compositor started",
+  "remaining_gates": [
+    "explicit scoped private SDK transition contract",
+    "unchanged original public application after candidate APT upgrade",
+    "actual original Ubuntu daemon/KWin consumer execution in owned KVM",
+    "private SDK rebuild and legacy D-Bus coverage",
+    "preserve unaffected symbol guards and complete packaging tests"
+  ],
+  "files_sha256": {
+    "followup-retention-index.json": "8ed6cc527a03a648724ef14db8c4f5f34099b3e399fe3ae86163564b5a1465f7",
+    "original-consumer-inventory.json": "3f638138cbb5f58fec45298c5fcab8d319d32422b34c94daa627e5a0b1827f41",
+    "original-input-retention-index.json": "62236521a0e95055aee230cb2e61ec0c01852fb9934ba4f8aed722a28b3be56a",
+    "original-interface-header-review.json": "089761bf1e4e9e8ea530c1e2ab574872055b38cd2920dbcad664320791cdf13f",
+    "original-kwin-help-review.json": "c48259ba1c4f7f6ef6d13fca2c52036c02966ff7d3033b3f6b4cbb13f204d959",
+    "original-kwin-help.stderr": "c61e96a9178ab73232e305dd710a4640e3b6782d3bdc2b38f9b145713b8690a9",
+    "original-kwin-help.stdout": "fa4ba234346a5ca4192d5fc757edce386169ac428bc0b3ae4c1764524ccce344",
+    "original-library-dynsyms.txt": "d7d870e6c72d41ca5a7e83dfc4d606fc6e737d36953343b0bbd7de27498cafc7",
+    "original-library-membership-review.json": "92e44640387541539f5689e83e9d44955d4fd97aedb01afe9011888c25d238eb"
+  }
+}

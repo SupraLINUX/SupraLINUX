@@ -1,0 +1,2 @@
+ libkf6archive-dev (= 6.30.0-0supralinux4),
+ libkf6i18n-dev (= 6.30.0-0supralinux1),

@@ -1,0 +1,33 @@
+SupraLINUX review for KDE CLI Tools 6.7.5
+
+Use unchanged signed KDE source and authenticated Ubuntu packaging. Preserve
+epoch 4, two binary packages, original public CLI/compatibility links, docs,
+translations, completion, KCM, X11 support and Su/WidgetsAddons helpers.
+Use exact eligible Frameworks 6.30 providers and Ubuntu Qt 6.10.2+dfsg-7,
+including its required matching GuiPrivate SDK. No Qt transition.
+
+Enable the original filetypestest and kcm_smoketest; selected KCMUtils 6.30
+provides --smoke-test. Declare kbuildsycoca6, update-mime-database, fonts and
+private-bus prerequisites. Native tests use owned HOME/XDG directories,
+offscreen rendering and a bounded private session with no activation service
+directories; the system bus is unavailable. Original assertions remain.
+
+A public Ubuntu Qt SDK client invokes the actual installed CLI. Against only
+owned files it checks MIME extension/content/stdin detection, rendered SVG
+pixels, KIO cat/copy/move and the original compatibility link. Typed private
+D-Bus fixture interfaces receive four inhibition requests, observe the child
+command and release of caller connections, and receive an actual broadcast
+notification signal. No real desktop inhibition, notification, eject, helper
+authorization or device access occurs. Its bus/process groups/runtime are
+removed and original stdout/stderr retained.
+
+Compile that client against original Ubuntu before candidate installation,
+retain its hash, and rerun the unchanged binary after normal APT upgrade.
+Require both exact candidate versions and unchanged Qt runtimes. Rebuild a
+consumer with the installed SDK, verify CLI/helper/KCM/docs/link payload and
+APT consistency. Local original Ubuntu mechanism passed all ten commands,
+four inhibition calls, one broadcast and own-resource cleanup. Candidate
+native tests, packaging, ABI/upgrade and KVM execution are still pending.
+
+Real authorization, device eject, application/desktop launching, interactive
+filetype editing and real Wayland/X11 sessions remain later desktop QA.

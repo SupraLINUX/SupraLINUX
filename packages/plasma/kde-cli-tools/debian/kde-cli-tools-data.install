@@ -1,0 +1,4 @@
+usr/share/doc/*/*/kdesu/
+usr/share/doc/HTML/*/kcontrol6/
+usr/share/locale/
+usr/share/zsh/site-functions/_kde-inhibit

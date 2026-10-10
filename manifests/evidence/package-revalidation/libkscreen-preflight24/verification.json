@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "scope": "reviewed-package-input-preflight",
+  "node": "libkscreen",
+  "version": "4:6.7.5-0supralinux1",
+  "state": "PASS",
+  "source_commit": "a4f92b3692f09e3a7d9cb17a63cce9d29dd7db6f",
+  "workflow_run_id": 37765156777,
+  "workflow_job_id": 113270890592,
+  "artifact_id": 11545987447,
+  "artifact_sha256": "fa05bf5b87ec435198738d7e2f0ceb213b1802f3cf7b8d345d33d73e41072d6f",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261008t103939z-213882",
+  "host_evidence_manifest_sha256": "ea96d7a4f3c56e22c1f2061668b34688966e7cb1a89dcc5ff1367cc214cbc819",
+  "package_attempt_consumed": false,
+  "result_path": "manifests/evidence/package-revalidation/libkscreen-preflight24/result.json",
+  "result_sha256": "c8842c6f8fe395e6d1cc658c25bfa53b2563e3061a444d8e84a1b4e741cfc8f8",
+  "contract_path": "manifests/evidence/package-revalidation/libkscreen-preflight24/build-contract.json",
+  "archive_path": ".artifacts/package-revalidation/libkscreen-preflight24/sha256/fa05bf5b87ec435198738d7e2f0ceb213b1802f3cf7b8d345d33d73e41072d6f.zip",
+  "inspection": {
+    "source_complete": true,
+    "candidate_binaries_built": false
+  },
+  "offline_restore_verified": true,
+  "requires_github_for_restore": false,
+  "files_sha256": {
+    "artifact-meta.json": "c77b8567e6538627ba2a85fa62455a358b5abae817939f42c96e262af1eda38c",
+    "build-contract.json": "993478ca6286750c1daefd336562ae0f59e0fd2641158f6c59ba0c7cc4b1a846",
+    "build-predecessor-verifier-tests.log": "603db52fd0016ca5cdcf83b2588160ae92bde08c66ba4c61dfc8a2a74cdb95c9",
+    "cache-probe/installed-predecessor-contract.json": "b147599423e8af99c6bb8471f36e9fb5e779a452b597c5afa0be75bb0c8acd2d",
+    "cache-probe/result.json": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+    "cleanup.json": "b67fa0dff276123ffd41a529f9194063d20c94af9dc1d665d8735f36850e06d5",
+    "host-evidence-sha256.txt": "ea96d7a4f3c56e22c1f2061668b34688966e7cb1a89dcc5ff1367cc214cbc819",
+    "host-result.json": "5b7a5a374c750bb080f84eb628638f812d192438af88ec372b3b5e351460b15b",
+    "host-workflow-run.json": "97002880c3d9040438cbd4b06c9123b76821fe49344bc6828b814e4752bc1263",
+    "qemu-cpu-policy.json": "b60213e45f35d74af31f58e6bfa1751c4015da826d17aa86f3088ba3647205b4",
+    "result.json": "c8842c6f8fe395e6d1cc658c25bfa53b2563e3061a444d8e84a1b4e741cfc8f8",
+    "reviewed-baseline-stdout": "d3b4cc1ff51e072e6cdc994df4920876c3641850e045eb736371c334bd043401",
+    "rootfs-admission.json": "532d46aa5d009e375c16c800a5eacd1d8f4d1963591022c44d1ac597c8bfa1d4",
+    "signature.log": "77e84cbc519c3b0226bd540c075a26cdc9670045cfc4c9bd5e5f3de29be4142b",
+    "ubuntu-baseline-preflight/result.json": "47c84c30e3915c5bba1e5ba2263271e77c04dd9b219f25419749646aa551eec4",
+    "workflow-job.json": "b0d06c3675567a1f748483971371ab02b1e5205f56a75a2da537335d6563314b"
+  },
+  "inputs_sha256": {
+    "scripts/run-authoritative-plasma-package.sh": "1e3a32ed3347202189ccb8cec56df996fa7ff77939a07ca2f38ef3246a002600",
+    "scripts/prepare-plasma-package.py": "92732b8a56807d005ba760e367bfc4e06fb3452eb7a77af9955710f8bf91efac",
+    "scripts/plasma-package-testing.py": "1ce68a6a5cfecd43b93943235cddb8a57b00aa531a02b9174cc2363d6650dfbb",
+    "scripts/probe-reviewed-ubuntu-baseline.py": "242b1ad8d6e85027155391d11747f1d2cee77a9a8371bb6d1f4d57d4731dc03b",
+    "scripts/admit-frameworks-cache.py": "0c9b6b0a8bf2cc2894c84ff4c79dd147e48b4a6ef50a353cf035727a3aec37af",
+    "scripts/prepare-milestone-sbuild-rootfs.py": "ae5bd27f2a7c27de9bb926dcc6ed7096bf44095133cdbbfe517f7683b8ffa7f6",
+    "scripts/prepare-retained-package-inputs.py": "3cbd596da45a422981943afc4a2a5bfe072cbe9a9fe432ab19fc81906499b8e6",
+    "scripts/run-kvm-jit-gate-core.sh": "b1ad009fd0db63c03bdc532032293a9332cc48a7df08d943d846d7ae3bbe054d",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "scripts/verify-reviewed-build-predecessors.py": "ffdae9ff1a2505e014a2af2062a366321346606dcf65d7eba7bfbd83a5f44f11",
+    "scripts/test-reviewed-package-contract.py": "b06deb15b71f0c8794d97576d53676792eb33c4164338bacd26994dc6f3ee71a",
+    "scripts/frameworks-revalidation-inputs.py": "178601caec0b1b3715a8194df40d98cb69ab76ff3cccf72a0a04c75fa2a68738",
+    "scripts/prepare-frameworks-revalidation-inputs.py": "4d7cf53b3450c8c1bcecc4a4f9914487aba99edfeb1835058237d9b9adf1be5a",
+    "scripts/probe-frameworks-build-inputs.sh": "ba6be44e97aeae285a00c4ee04f21d11566c2e2f2dd4a535f43ea3e90497d54e",
+    "scripts/freeze-reviewed-package-contract.py": "55082d69f1653f33bf10d1803330393116b23773f811457660fd573c59d6e67b",
+    "scripts/supplementary-package-inputs.py": "e346f50b62f80667e1b88f2986fa63ac1a31b48d66bc2d80713b6411a8dc80b7"
+  },
+  "packaging_sha256": {
+    "README.source": "f646d9f2bbc6ab314547e187eb5bf9b4f80c910003b75bbfb2d180424d55a5ed",
+    "changelog": "56851cb4e30baded6344ddcbeb562ff1fbfdeea2b017a29b2c6a707cfe47b386",
+    "control": "95232e4cda2a9d8f0f06fc86de4a26dbcb4b4e455ef6ab990ccaa3408aab930a",
+    "copyright": "24bd04539fbc827914b913b5549ea399df357f9df6ed4cb8092c51b0e9395368",
+    "libkf6screen8.install": "2e33ea75498761509e6f903fe869a671f9e4bb2e1a478dc9967cab2331e71543",
+    "libkf6screen8.lintian-overrides": "d0694d2ba2eeda14981b0e4e1c987749a9d1fa35373d460fc1550ea87de87a96",
+    "libkf6screen8.symbols": "4300f53f67bcd814a0ae67fcee2f381f900fc6ca92190d07bb668f20a5de324b",
+    "libkf6screendpms8.install": "ea4f1e91a56aafb3315ab497094585496b4dedecb1d11e87309dc71d7b681945",
+    "libkf6screendpms8.symbols": "cf70f903a5a4eb717027ae49e7084c1547f69a14de9d8895b0acddadd03553ed",
+    "libkscreen-bin.install": "2057b800bb541db7a093e1bb28ea8d83ca136395aea980e67bc062116c5e6c8a",
+    "libkscreen-bin.lintian-overrides": "7bf89c5293e3f380948d64d26386c25391dca967db6c70e92cd775dbc1c4bd2c",
+    "libkscreen-data.install": "2a691864a48c09efbcb7646a8f74b4ae3b29c1504874528e61006eb6d78698a4",
+    "libkscreen-dev.install": "2fc1e9ba1cf1f8f8e4699fc683382373717d61ccf8457762e859ebda48f16afd",
+    "libkscreen-doc.install": "2060b90fcc31354d915269709332b573ca287b53b0d4bb780b6059e47fce9e30",
+    "patches/Make-qt6-wayland-optional.patch": "3e3d9fee461b63fbc5b663f0dbefe737f9804b3dbbe897c29c8c8df32f66b21b",
+    "patches/series": "02cb62b94f5a2a3c43f67b7e919d2176624cc8faa746c36213359bfcc28f03d4",
+    "rules": "c65061a3576d8558ac0501790a9276566870fd7b66fd3b5956579804c46c03d1",
+    "salsa-ci.yml": "64bfb6be33af05cd116d8bee786f95e7b2aaa9faa54e90333151a7a05ef03058",
+    "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+    "tests/baseline-setup": "773c238a97285b7298b7925befaa029f5cc5224529c74a42e9ad7f58a9f9fcb9",
+    "tests/client/CMakeLists.txt": "e423f65a208956321b11379d896ccefa3e1d9577d9531592069457c3acc0d1bf",
+    "tests/client/main.cpp": "81f3c7d91100dbeb94a7955394933cb877ec6b5ef44b1bd7fe479c1ac093e510",
+    "tests/client/profile.json": "f58f4fb95b40fdeffc497019208a9d9d283c5008a76251415033e0b95b508898",
+    "tests/client/run-private.py": "c4989e20a147deb1c508a5db44fe07c1fa138612610f8de02d01565cce6320ff",
+    "tests/consumer": "7659a133444640553ffeca058ebeb4c33ef7cbc74d553799b781315a2394cbee",
+    "tests/control": "b5389a5f913a651f6603d4e42e987581ea824789776d082f77fe20d6779caf55",
+    "tests/ubuntu-abi-client": "0940d2d2ab2f7da175c893c3e319ec2a754ddd840bd108badc1084ea84d22278",
+    "tests/upstream-session": "30a934a1e7f4703aaa51ad3b0eb36b55bf739361488cbd7381254c9e0d143d94",
+    "upstream/metadata": "cc3a7b8dbaf700b40056c85c77ec4c3234b53a8a946791952b21446fc69255bb",
+    "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+    "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+  },
+  "frameworks_predecessors": {
+    "extra-cmake-modules": {
+      "source_package": "kf6-extra-cmake-modules",
+      "version": "6.30.0-0supralinux3",
+      "binaries": [
+        {
+          "package": "extra-cmake-modules",
+          "architecture": "all",
+          "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+        }
+      ]
+    }
+  },
+  "supplementary_predecessors": {
+    "plasma-wayland-protocols": {
+      "source_package": "plasma-wayland-protocols",
+      "version": "1.22.0-0supralinux1",
+      "upstream_version": "1.22.0",
+      "cmake_package": "PlasmaWaylandProtocols",
+      "binaries": [
+        {
+          "package": "plasma-wayland-protocols",
+          "architecture": "all",
+          "sha256": "85b989ff73b9b8d4e0797a4f326dbe17df3b14f8026a3ea59856b732110f26e7"
+        }
+      ],
+      "evidence": {
+        "result_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/result.json",
+        "result_sha256": "a8360723475a3973e9676f6f02eb9bea654b1d0dcb3c256093cf490deee76f56",
+        "contract_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/build-contract.json",
+        "artifact_id": 11480891803,
+        "artifact_sha256": "2df8366c884296d8c07c0e4431f11fdefb1b62f2dde12c913e740a7fb8b945d1",
+        "contract_sha256": "d24fbde21fb6fb792a204f6143f865ed4db82641f052ef1f6d2a8584ab4ca40a",
+        "archive_root": ".artifacts/plasma-1.22.0/plasma-wayland-protocols-attempt1",
+        "payload_prefix": "packages/"
+      }
+    }
+  }
+}

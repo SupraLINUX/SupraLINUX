@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "scope": "reviewed-ubuntu-baseline-preflight",
+  "node": "kconfig",
+  "state": "INFRA_INVALID",
+  "exit_code": -15,
+  "source_commit": "bbae6e0bbb806c73195f0698c842c4c2a9a5e2f8",
+  "workflow_run_id": "37327894010",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "candidate_installed": false,
+  "inputs_sha256": {
+    "scripts/probe-reviewed-ubuntu-baseline.py": "bf6e05cbee7372e35cbbd6b39d4d5dd00fbf10cda45bff8a1e0c7b9b77b5c6ba",
+    "scripts/plasma-package-testing.py": "d0af4b36dad45ea121d71094176ba59873d7fb274babb268e586075a9914dd7d",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "packages/revalidation/kconfig/debian/tests/baseline-setup": "d2cbd79f0d94c33ebbebf059464cd0cfd70a8bf459c3d7872528628f9abb41e5"
+  },
+  "files_sha256": {
+    "autopkgtest/log": "84ad96583c5f5b7bf46a340bab8682d5f31bf753042dd13eb6f0ade7dbb9fd33",
+    "autopkgtest/summary": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baseline-setup": "d2cbd79f0d94c33ebbebf059464cd0cfd70a8bf459c3d7872528628f9abb41e5",
+    "reviewed-inputs.json": "088b29dc3d8146531fe41be1b15317f59e92b7a0a60eca719a7ebe9fda0d9b08",
+    "setup-commands.txt": "3d64635714bc601d97e5b09f612d9189f05ce6a1dec8604db39f6aadda7bb8df"
+  }
+}

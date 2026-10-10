@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-26",
+  "node": "kio",
+  "round": 20,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-kio-environment-corrected-residual-test-diagnostic",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "canonical_source_modified": false,
+  "diagnostic_worktree_modified": true,
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "package_revision_allocation": false,
+  "test_suppression": false,
+  "execution_authorized": false,
+  "package_execution_authorized": false,
+  "status": "diagnostic-PASS",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "canonical_kio": {
+    "state": "FAIL",
+    "package_version": "6.30.0-0supralinux8",
+    "downstream_eligible": false
+  },
+  "predecessor_round19": {
+    "status": "diagnostic-PASS",
+    "workflow_run": 36243076879,
+    "job_id": 108407192850,
+    "branch_commit": "0df59eee29ee3c0024d2331a0bc78e503975f72f",
+    "artifact_id": 10906951441,
+    "artifact_sha256": "3395536506ea205ce722a4a9be8962b0f0b3fb7597dbee708a6b7e0dc8ef2611",
+    "conclusion": "inconclusive-methodology-defects-require-environment-corrected-followup",
+    "defects": [
+      "KRecent targeted HOME lacked .qttest/share so recently-used.xbel could not be created",
+      "KDir nominal visible HOME still traversed the hidden .work component"
+    ]
+  },
+  "attempt8_reference": {
+    "workflow_run": 36238357510,
+    "kio_job_id": 108394325161,
+    "kio_artifact_id": 10905267300,
+    "kio_artifact_sha256": "9f95e2b8e3330ee4f1b275eb059736b87fa57d7752602aa598cb313659cae53f",
+    "tests": {
+      "total": 69,
+      "pass": 67,
+      "fail": 2
+    },
+    "krecentdocument_signature": "testXbelBookmarkMaxEntries: actual temp File 11, expected temp File 12",
+    "kdirmodel_signature": "testShowRoot and testShowRootAndExpandToUrl: indexForUrl(homeUrl) invalid"
+  },
+  "source_materialization": {
+    "workflow_run": 36222711238,
+    "job_id": 108350884409,
+    "artifact_id": 10898999142,
+    "artifact_sha256": "c31aafa0d5718a0e8287212b49f35022a58a5519a87a04991424939284d9003d",
+    "package_version": "6.30.0-0supralinux8",
+    "upstream_source_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2"
+  },
+  "corrected_validity_contract": {
+    "krecentdocument": {
+      "fresh_home_per_run": true,
+      "required_directories": [
+        "$HOME/.qttest/share",
+        "$HOME/.qttest/config"
+      ],
+      "xbel_path": "$HOME/.qttest/share/recently-used.xbel",
+      "baseline_validity": "each completed baseline run must retain exactly 3 XBEL bookmark entries",
+      "capture_all_validity": "MaxEntries=50 diagnostic variant must retain exactly 15 XBEL bookmark entries",
+      "delayed_validity": "each completed delayed run must retain exactly 3 XBEL bookmark entries"
+    },
+    "kdirmodel": {
+      "hidden_home": "$SRC/debian/.supralinux-test-home/sbuild",
+      "visible_home": "$RUNNER_TEMP/supralinux-kdir-home/sbuild",
+      "visible_home_must_have_zero_dot_prefixed_components": true,
+      "selected_test_functions": [
+        "testShowRoot",
+        "testShowRootWithTrailingSlash",
+        "testShowRootAndExpandToUrl"
+      ],
+      "exact_attempt8_environment": [
+        "QT_PLUGIN_PATH=$OBJ/bin",
+        "QT_QPA_PLATFORM=xcb",
+        "QT_QPA_SYSTEM_ICON_THEME=breeze",
+        "KDECI_PLATFORM_PATH=$SRC",
+        "dbus-run-session",
+        "xvfb-run"
+      ]
+    }
+  },
+  "diagnostic_scope": {
+    "build_targets": [
+      "kio_file",
+      "kioworker",
+      "krecentdocumenttest",
+      "kdirmodeltest"
+    ],
+    "krecentdocument": {
+      "baseline_repetitions": 30,
+      "capture_all_variant": "diagnostic test-only MaxEntries=50 retaining all 15 XBEL entries",
+      "delayed_variant": "diagnostic test-only QTest::qWait(5) after each add",
+      "delayed_repetitions": 30,
+      "source_restored_byte_for_byte": true
+    },
+    "kdirmodel": {
+      "sequence": [
+        "hidden-home-initial",
+        "truly-visible-home",
+        "hidden-home-repeat"
+      ],
+      "source_modified": false,
+      "selected_functions_only": true,
+      "visible_path_audit_required": true
+    },
+    "invariants": [
+      "canonical KIO 6.30.0-0supralinux8 remains FAIL",
+      "Attempt 9 remains unauthorized",
+      "no Debian package is built",
+      "no package revision is allocated",
+      "no test is suppressed",
+      "canonical DAG and downstream eligibility remain unchanged"
+    ]
+  },
+  "decision_rules": {
+    "invalid_krecent_environment": "any baseline/delayed XBEL entry count differs from 3 or capture-all differs from 15 => DIAG_INVALID for KRecent",
+    "timestamp_collision_confirmed": "valid KRecent environment + baseline failure(s) + duplicate modified timestamps + all delayed runs PASS",
+    "timestamp_collision_rejected": "valid KRecent environment + no duplicate modified timestamps or delayed runs retain the historical semantic failure",
+    "hidden_home_confirmed": "hidden A and A-repeat show historical failures + audited truly-visible B passes both expansion tests",
+    "hidden_home_rejected": "audited truly-visible B reproduces the historical failures",
+    "no_package_decision": "Round20 evidence alone cannot authorize Attempt 9 or allocate a package revision"
+  },
+  "next_gate": "tier3-round21-kio-krecent-visible-cwd-diagnostic-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "diagnostic_evidence": {
+    "workflow_run": 36244913604,
+    "job_id": 108412266582,
+    "branch_commit": "b86b84dacf00a2c374f79a89766fd68c643897d2",
+    "artifact_id": 10906434669,
+    "artifact_sha256": "2071034608c31411399b656fb4e963cd066bded08e8c52566beea6c186d77fbc",
+    "result": "DIAG_COMPLETE"
+  },
+  "result": {
+    "overall": "partial-causal-resolution",
+    "kdirmodel": {
+      "conclusion": "hidden-home-component-controls-kdirmodel-showroot-failure",
+      "hidden_initial": {
+        "show_root_fail": true,
+        "show_root_expand_fail": true,
+        "trailing_slash_pass": true
+      },
+      "visible": {
+        "show_root_fail": false,
+        "show_root_expand_fail": false,
+        "trailing_slash_pass": true
+      },
+      "hidden_repeat": {
+        "show_root_fail": true,
+        "show_root_expand_fail": true,
+        "trailing_slash_pass": true
+      },
+      "visible_home": "/home/runner/work/_temp/supralinux-kdir-home/sbuild",
+      "visible_path_hidden_components": []
+    },
+    "krecentdocument": {
+      "conclusion": "DIAG_INVALID-hidden-working-directory-and-post-test-cleanup",
+      "baseline_runs": 30,
+      "baseline_failures": 30,
+      "delayed_runs": 30,
+      "delayed_failures": 30,
+      "capture_all_entries": 0,
+      "defects": [
+        "the test creates its local temp File N inputs below QDir::currentPath(); Round20 executed from a .work path",
+        "KRecentDocument::add ignores local URLs containing '/.' when IgnoreHidden is true, so Round20 discarded the test inputs before XBEL creation",
+        "QTest invokes KRecentDocumentTest::cleanup after the selected test and that cleanup removes m_xbelPath, so post-process XBEL capture also required explicit diagnostic preservation"
+      ]
+    }
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-04",
+  "authority": "kde-upstream-source-plus-ubuntu-reference-packaging",
+  "provider_platform": "ubuntu-resolute",
+  "plasma_version": "6.7.5",
+  "role": "plasma-level0-materialization",
+  "state": "PASS",
+  "execution_authorized": false,
+  "materialization_authorized": false,
+  "package_execution_authorized": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "input": {
+    "level0_manifest": "manifests/kde-plasma-level0.json",
+    "selected_level": 0,
+    "selected_node_count": 34,
+    "preflight_manifest": "manifests/kde-plasma-level0-materialization-preflight.json",
+    "preflight_result": "PASS",
+    "preflight_artifact_id": 11286979140,
+    "preflight_result_json_sha256": "cb8e6471aa1149e8335cde8d4d43c1d84916151187ecb11fda3b3d7f2cf9ed4f"
+  },
+  "source_authority": {
+    "upstream": "KDE Plasma 6.7.5",
+    "sha256": "must-match-manifests/kde-plasma-level0.json",
+    "signature": "verify detached .sig",
+    "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+    "signing_key_source": "keys/kde-plasma-release.asc",
+    "signing_key_url": "https://kde.org/info/plasma-signing-keys.pgp",
+    "signing_key_fingerprint_authority": "https://kde.org/info/plasma-6.7.5/",
+    "signing_key_sha256": "b4007ced96841a5553d670dd63130df97e6faa9b47d151b842a810ebe5ea9917"
+  },
+  "ubuntu_packaging_reference": {
+    "role": "technical-reference-only",
+    "suites": [
+      "resolute",
+      "resolute-updates",
+      "resolute-security"
+    ],
+    "components": [
+      "main",
+      "universe"
+    ],
+    "mechanism": "apt-get-source-download-only-plus-dpkg-source-extract",
+    "retained_payload": "deterministic-debian-tree-tar-plus-source-metadata",
+    "explicit_source_aliases": {
+      "discover": "plasma-discover"
+    },
+    "semantic_guard": {
+      "source_field_must_match_selected_reference": true,
+      "selected_version_must_exist_in_apt_source_records": true,
+      "expected_kde_plasma_major": "6",
+      "same_name_alone_is_not_identity_proof": true
+    }
+  },
+  "execution": {
+    "runner": "github-hosted-ubuntu-26.04",
+    "authoritative_package_build": false,
+    "max_parallel_nodes": 6,
+    "fail_fast": false,
+    "package_execution_started": false
+  },
+  "output": {
+    "evidence_dir": "evidence/kde-plasma-level0-materialization",
+    "artifact_name_template": "kde-plasma-level0-materialization-${commit}",
+    "retention_days": 90,
+    "retain_verified_kde_source_tarballs": true,
+    "retain_detached_signatures": true,
+    "retain_ubuntu_debian_trees": true,
+    "retain_ubuntu_full_source_payload": false
+  },
+  "failure_semantics": {
+    "infrastructure_or_transport": "INFRA_INVALID",
+    "missing_or_semantically_incoherent_reference": "REVIEW_REQUIRED",
+    "package_fail_effect": "none",
+    "consumes_package_attempt": false
+  },
+  "next_gate_on_pass": "plasma-level0-candidate-version-assignment",
+  "next_gate_on_nonpass": "plasma-level0-materialization-review",
+  "infrastructure_incidents": [
+    {
+      "workflow_run_id": 37226420206,
+      "workflow_job_id": 111507147158,
+      "workflow_head_sha": "a37f50452d7df97f7026dcf85a51b755e50d7789",
+      "result": "INFRA_INVALID",
+      "mechanism": "release-key-selection",
+      "reason": "Frameworks keyring did not contain the Plasma release primary fingerprint; rejected before source/package execution.",
+      "package_execution_started": false,
+      "consumes_package_attempt": false,
+      "remediation": "Retain the exact Plasma primary key from the official release-manager keyring and validate it in repository policy before materialization.",
+      "retained_log": {
+        "path": ".work/ci/run-37226420206-plasma.log",
+        "sha256": "5b8a72b04e8220c4eea05e63975da123d63da3f8612c2bce0d5c6ac074e7c234"
+      }
+    }
+  ],
+  "release_key_preflight": {
+    "result": "PASS",
+    "source": "ksshaskpass-6.7.5.tar.xz",
+    "source_url": "https://download.kde.org/stable/plasma/6.7.5/ksshaskpass-6.7.5.tar.xz",
+    "source_sha256": "deb5698b5682bc15d22446db9cf8641857d0bd7785e145b7b6e9247a68d35fd2",
+    "signature_sha256": "92a094a93ab25dd9fa76d7ad47a7948747885e486fe261506bbc3e8c51c3a985",
+    "evidence_path": "docs/evidence/plasma-release-key-sample.txt",
+    "evidence_sha256": "fb11e7d18123262310ff11a2fe1600a1d3a5cb2f3b2037a493d5eb308c81468f",
+    "package_execution_started": false,
+    "consumes_package_attempt": false,
+    "canonical_package_state_effect": "none"
+  },
+  "evidence": {
+    "result": "PASS",
+    "workflow_run_id": 37226892171,
+    "workflow_job_id": 111508551648,
+    "workflow_head_sha": "3177bcda58c7c426507abe3d100b51025403c480",
+    "artifact_id": 11312113744,
+    "artifact_name": "kde-plasma-level0-materialization-3177bcda58c7c426507abe3d100b51025403c480",
+    "artifact_digest": "sha256:85e5d78bd4f6bba9de810a01894669dee9efde9341b685c8a32f42794e09c3c8",
+    "result_path": "manifests/evidence/kde-plasma-level0-materialization-result.json",
+    "result_json_sha256": "bf58313053bfa90f33d13b4b66872abea56b2bc6ef9f8f266cde7dde296bc8de",
+    "inputs_sha256": {
+      "level0_manifest": "4d4f28ddc04d92962619ef06dbc6f0f3f74d1e996efe012e5bedb596995c3e3e",
+      "materialization_script": "ed2dea5127e266e21c72b036366f53a2cdff08d9790948788775d1fb42023766",
+      "release_signing_key": "b4007ced96841a5553d670dd63130df97e6faa9b47d151b842a810ebe5ea9917"
+    },
+    "counts": {
+      "INFRA_INVALID": 0,
+      "PASS": 34,
+      "REVIEW_REQUIRED": 0
+    },
+    "package_execution_started": false,
+    "consumes_package_attempt": false,
+    "canonical_package_state_effect": "none",
+    "local_retention": {
+      "path": ".artifacts/plasma-level0-3177bcda/artifact.zip",
+      "artifact_zip_sha256_verified": true,
+      "all_source_reference_hashes_verified": true,
+      "all_detached_signatures_reverified": true,
+      "off_host_backup_verified": false
+    }
+  }
+}

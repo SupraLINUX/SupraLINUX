@@ -1,0 +1,10 @@
+{
+  "script_bytes": 4227,
+  "setup_max_line_bytes": 129,
+  "wire_max_line_bytes": 137,
+  "shell_status": "0",
+  "baseline_marker_present": true,
+  "baseline_marker": "complete-script\n",
+  "serial_stdout_bytes": 253,
+  "serial_stdout_sha256": "2796b8c8fedf74e3602abf2ca1428ad55079ddf93ec762f242855bc7dd8458ae"
+}

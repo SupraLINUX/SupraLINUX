@@ -1,0 +1,40 @@
+{
+  "state": "PASS",
+  "scope": "original package FAIL source/log/cleanup byte retention only",
+  "node": "libksysguard",
+  "version": "4:6.7.5-0supralinux2",
+  "source_commit": "bb105c28d175bf9b582c3902f266098f73c47266",
+  "artifact_sha256": "5f7a8bc8268f86d9384f2736d84d94b454174f1d61e26100ff058a5a3cbcc942",
+  "offline_restore_verified": true,
+  "source_payload_verified": true,
+  "raw_file_digest_closure_verified": true,
+  "downstream_eligible": false,
+  "requires_github_for_restore": false,
+  "candidate_binaries_buildinfo_changes": "absent: sbuild stopped at native runtime preparation",
+  "outcomes": {
+    "package": "FAIL",
+    "upstream_compile": "completed",
+    "native_provider_compile": "PASS",
+    "native_tests": "NOT RUN: wrapper output-layout lookup failed",
+    "lintian": "not-run",
+    "installed_candidate_tests": "not-run",
+    "input_probe": "PASS",
+    "original_ubuntu_baseline": "PASS",
+    "direct_cleanup": "PASS"
+  },
+  "files_sha256": {
+    "artifact-meta.json": "156cb5e9a4062d33fb54bf9fb2a1e642e908135ae5507ed1218c7a10174b5014",
+    "build-contract.json": "b76cb232b438052fd0f5d94053a4dc598928c99b51268c9e6c42963926f3c55a",
+    "cache-probe/result.json": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+    "cleanup.json": "7d41bb10f3062b9d89e60c0d72c101dcb9422a4cdee8d6b7fa63c3356b2caf3a",
+    "host-evidence-sha256.txt": "7d81d4f68a5a4e2d560332ce8eb7dec2baf56073f33b243c44212d76b4f48970",
+    "host-result.json": "9baaa308d9d7d686262718b199c409f3c81b5fa00af7e644ac1c4eac43c57f0d",
+    "host-workflow-run.json": "b22bf1c1fd914c1b572cc57fafd08f8a15bfbc24d695107d826eb41cb5648db9",
+    "pipeline.log": "457a446a5fe35e3e7962375ab03ec25888bab7f5fcb829084849267e56add23b",
+    "result.json": "dfda5ffa8d4bbbbccde5a277ee4fbe01c4711b01cf0aaec6f203bce0a42c864f",
+    "sbuild.log": "d685e970e2fdaf90eadf214d90bceb9b33ce80272d386028fccbbcb71f06b709",
+    "ubuntu-baseline-preflight/autopkgtest/log": "3204c818e960a0308ddf5596196a5dadb58676c56f4402f8341c7e68b05deff2",
+    "ubuntu-baseline-preflight/result.json": "f152611009c2e1c7cd063e89fc7da4d31723d3be4bb6edc4c47b66737f039a12",
+    "workflow-job.json": "9d0694d3913520e976a3ca303190eb5c34062eebd95c412ccf92f752607aafa5"
+  }
+}

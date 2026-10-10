@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "kind": "autopkgtest-dbus-stderr-policy-false-negative",
+  "state": "INFRA_INVALID",
+  "original_state": "FAIL",
+  "original_result_sha256": "886a2155d9351916aa53531b3def1fced00c948cbbca12840f3e4bb16749e264",
+  "package_result": "incomplete; repaired harness revalidation required",
+  "sbuild_result": "PASS",
+  "lintian_result": "PASS",
+  "upstream_tests": {
+    "state": "PASS",
+    "expected_tests": [
+      "transition-test",
+      "cycle-test",
+      "schedule-test"
+    ],
+    "executed_tests": [
+      "appstreamtest",
+      "transition-test",
+      "cycle-test",
+      "schedule-test"
+    ],
+    "scope": "CTest suite executed during the clean package build"
+  },
+  "tests": [
+    "ubuntu-abi-client",
+    "consumer"
+  ],
+  "dbus_service": "org.kde.NightTime",
+  "required_client_success_markers": [
+    "KNightTime transitions, progress, timed/solar/polar schedules, cycle extrapolation and state round-trip: PASS",
+    "Real private D-Bus daemon subscription, refresh signal and migrated custom schedule: PASS"
+  ],
+  "raw_autopkgtest_result": "FAIL",
+  "actual_failure": "Expected D-Bus activation stderr rejected by missing allow-stderr restriction. Private daemon startup also races automatic service activation; the repaired harness must prove the owned PID/service remains alive.",
+  "repair": "Declare allow-stderr while retaining exit-code checks and all logs; add bounded service readiness before client construction, then verify and terminate only the owned daemon PID.",
+  "downstream_eligible": false,
+  "files_sha256": {
+    "autopkgtest/consumer-stderr": "4319de4fbdbdccd0b50510cec8c208ed0f1223feb12af0d0e8ced0554321136a",
+    "autopkgtest/consumer-stdout": "5b0c4a76d32f0c764de8552becf59695989105362c8e88202f14855906650437",
+    "autopkgtest/log": "51832fa3be20cfccddc0361cd612c8c90c80d80f440e92482af331ec8d2556e7",
+    "autopkgtest/summary": "aae3e6c355aadcc4c70b5ed2726efd72cb8003f7545f39a26bdfa7fd9d8aab2e",
+    "autopkgtest/ubuntu-abi-client-stderr": "4a54f3dc921dd526ecb27c2169e339b279d08096e349e44d9ef3e93a863ef7e0",
+    "autopkgtest/ubuntu-abi-client-stdout": "ae83292d6f115ae140e2e41e3fc7d40386f3d1ff3895cf325b333b57cfae608f",
+    "upstream-tests.json": "6f270ce657dc27e996837bf3d4b1b4ad4ce35f4e5d6d917065223b31e9197828"
+  }
+}

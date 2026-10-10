@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "breeze-plymouth",
+      "package_version": "6.7.5-0supralinux1",
+      "artifact_id": 11339176423,
+      "workflow_run_id": 37295892875,
+      "artifact_sha256": "02ef7f78c6aa18c316130c142e0edf03b26658e15b07d18c14e324ff1b379d62",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

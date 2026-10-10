@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-layershell-baseline
+cmake -S "${BASE}/source" -B "${AUTOPKGTEST_TMP}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${AUTOPKGTEST_TMP}/build"
+QT_QPA_PLATFORM=offscreen XDG_RUNTIME_DIR="${BASE}/runtime" "${AUTOPKGTEST_TMP}/build/ubuntu-layershell-client"

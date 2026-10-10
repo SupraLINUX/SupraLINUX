@@ -1,0 +1,1168 @@
+kde-cli-tools (4:6.7.5-0supralinux1) resolute; urgency=medium
+
+  * Integrate unchanged official stable KDE Plasma 6.7.5.
+  * Preserve both packages, docs, X11, Su and WidgetsAddons features.
+  * Bind exact eligible Frameworks and matching Ubuntu Qt private SDK.
+  * Enable original MIME/filetypes and KCM native tests with private state;
+    add unchanged Ubuntu SDK CLI consumer before and after normal upgrade.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Thu, 08 Oct 2026 13:24:49 +0000
+
+kde-cli-tools (4:6.6.4-0ubuntu1) resolute; urgency=medium
+
+  * New upstream bugfix release (6.6.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 07 Apr 2026 13:05:21 +0100
+
+kde-cli-tools (4:6.6.3-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.3)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 18 Mar 2026 14:40:53 +0000
+
+kde-cli-tools (4:6.6.2-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 03 Mar 2026 12:21:11 +0000
+
+kde-cli-tools (4:6.6.1-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.0)
+  * New upstream release (6.6.1)
+
+ -- Rik Mills <rikmills@kde.org>  Sat, 28 Feb 2026 22:12:37 +0000
+
+kde-cli-tools (4:6.5.5-0ubuntu3) resolute; urgency=medium
+
+  * No-change rebuild for Qt 6.10.2 private ABI.
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 11 Feb 2026 15:51:28 +0000
+
+kde-cli-tools (4:6.5.5-0ubuntu2) resolute; urgency=medium
+
+  * No-change rebuild for kf6-kio 6.22.1.
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 22 Jan 2026 21:49:48 +0000
+
+kde-cli-tools (4:6.5.5-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 13 Jan 2026 14:54:05 +0000
+
+kde-cli-tools (4:6.5.4-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 09 Dec 2025 11:16:38 +0000
+
+kde-cli-tools (4:6.5.3-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.3)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 18 Nov 2025 12:06:17 +0000
+
+kde-cli-tools (4:6.5.2-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 04 Nov 2025 17:10:57 +0000
+
+kde-cli-tools (4:6.5.1-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.1)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 29 Oct 2025 05:45:11 +0000
+
+kde-cli-tools (4:6.5.0-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.0)
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 20 Oct 2025 18:35:52 +0100
+
+kde-cli-tools (4:6.4.5-0ubuntu2) questing; urgency=medium
+
+  * No-change rebuild for Qt 6.9.2 private ABI.
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 18 Sep 2025 00:11:43 +0100
+
+kde-cli-tools (4:6.4.5-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.4.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 09 Sep 2025 17:00:52 +0100
+
+kde-cli-tools (4:6.4.4-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.4.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 12 Aug 2025 17:27:25 +0100
+
+kde-cli-tools (4:6.3.5-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.3.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 06 May 2025 21:32:51 +0100
+
+kde-cli-tools (4:6.3.4-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.4)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 02 Apr 2025 08:54:06 +0100
+
+kde-cli-tools (4:6.3.3-0ubuntu2) plucky; urgency=medium
+
+  * No-change rebuild for Qt 6.8.3 (LP: #2103945).
+
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Sat, 29 Mar 2025 15:13:49 -0500
+
+kde-cli-tools (4:6.3.3-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.3)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 11 Mar 2025 15:16:09 +0000
+
+kde-cli-tools (4:6.3.2-1ubuntu1) plucky; urgency=medium
+
+  * Merge from Debian unstable. Remaining changes:
+    - Kubuntu Vcs and maintainer fields.
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 10 Mar 2025 14:32:58 +0000
+
+kde-cli-tools (4:6.3.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.3.1).
+  * New upstream release (6.3.2).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 28 Feb 2025 00:50:59 +0100
+
+kde-cli-tools (4:6.3.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.3.0).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 10 Feb 2025 14:51:56 +0100
+
+kde-cli-tools (4:6.2.91-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.91).
+  * Add libkf6widgetsaddons-dev to build dependencies.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 23 Jan 2025 23:50:30 +0100
+
+kde-cli-tools (4:6.2.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.90).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 12 Jan 2025 00:49:35 +0100
+
+kde-cli-tools (4:6.2.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.5).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 05 Jan 2025 10:56:16 +0100
+
+kde-cli-tools (4:6.2.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 03 Dec 2024 16:21:18 +0100
+
+kde-cli-tools (4:6.2.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.3).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 23 Nov 2024 21:57:22 +0100
+
+kde-cli-tools (4:6.2.1-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.1).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 15 Oct 2024 17:43:31 +0200
+
+kde-cli-tools (4:6.2.0-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.90).
+  * Update build-deps and deps with the info from cmake.
+  * New upstream release (6.2.0).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 05 Oct 2024 23:17:39 +0200
+
+kde-cli-tools (4:6.1.5-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 11 Sep 2024 23:27:30 +0200
+
+kde-cli-tools (4:6.1.4-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.4).
+  * Review copyright information.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 11 Aug 2024 23:58:16 +0200
+
+kde-cli-tools (4:6.1.3-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.3).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 22 Jul 2024 08:35:55 +0200
+
+kde-cli-tools (4:6.1.0-2) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * Depend on kio6 instead of kio.
+
+ -- Patrick Franz <deltaone@debian.org>  Sun, 21 Jul 2024 05:27:47 +0200
+
+kde-cli-tools (4:6.1.0-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (6.1.0).
+  * Update build-deps and deps with the info from cmake.
+  * Update list of installed files.
+  * Update lintian-overrides.
+
+ -- Patrick Franz <deltaone@debian.org>  Wed, 19 Jun 2024 23:50:00 +0200
+
+kde-cli-tools (4:5.27.11-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Bump Standards-Version to 4.7.0 (No changes needed).
+  * New upstream release (5.27.11).
+  * Update build-deps and deps with the info from cmake.
+  * Remove inactive uploaders, thanks for your work.
+
+ -- Patrick Franz <deltaone@debian.org>  Sun, 19 May 2024 12:23:58 +0200
+
+kde-cli-tools (4:5.27.10-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.10).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 11 Jan 2024 23:28:20 +0100
+
+kde-cli-tools (4:5.27.9-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.9).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 27 Oct 2023 21:55:21 +0200
+
+kde-cli-tools (4:5.27.8-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.8).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Patrick Franz <deltaone@debian.org>  Wed, 13 Sep 2023 22:31:00 +0200
+
+kde-cli-tools (4:5.27.7-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.7).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 03 Aug 2023 18:56:11 +0200
+
+kde-cli-tools (4:5.27.5.1-2) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 27 May 2023 22:14:51 +0200
+
+kde-cli-tools (4:5.27.5.1-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.5.1).
+
+ -- Patrick Franz <deltaone@debian.org>  Wed, 17 May 2023 12:20:54 +0200
+
+kde-cli-tools (4:5.27.5-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.5).
+  * Update build-deps and deps with the info from cmake.
+  * Update list of installed files.
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 09 May 2023 23:29:25 +0200
+
+kde-cli-tools (4:5.27.3-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.3).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Patrick Franz <deltaone@debian.org>  Wed, 22 Mar 2023 23:20:09 +0100
+
+kde-cli-tools (4:5.27.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.27.1).
+  * Update build-deps and deps with the info from cmake.
+  * New upstream release (5.27.2).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 28 Feb 2023 15:01:25 +0100
+
+kde-cli-tools (4:5.27.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.27.0).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 18 Feb 2023 17:08:46 +0100
+
+kde-cli-tools (4:5.26.90-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.90).
+  * Update build-deps and deps with the info from cmake.
+  * Bump Standards-Version to 4.6.2, no change required.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 23 Jan 2023 21:50:58 +0100
+
+kde-cli-tools (4:5.26.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.5).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 07 Jan 2023 00:22:33 +0100
+
+kde-cli-tools (4:5.26.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.4).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 29 Nov 2022 16:10:05 +0100
+
+kde-cli-tools (4:5.26.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.3).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 08 Nov 2022 16:04:39 +0100
+
+kde-cli-tools (4:5.26.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.1).
+  * Update build-deps and deps with the info from cmake.
+  * New upstream release (5.26.2).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 27 Oct 2022 23:36:38 +0200
+
+kde-cli-tools (4:5.26.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.0).
+  * Update build-deps and deps with the info from cmake.
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 11 Oct 2022 15:44:24 +0200
+
+kde-cli-tools (4:5.25.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.90).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 25 Sep 2022 00:14:26 +0200
+
+kde-cli-tools (4:5.25.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.5).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 09 Sep 2022 23:22:33 +0200
+
+kde-cli-tools (4:5.25.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 02 Aug 2022 17:35:00 +0200
+
+kde-cli-tools (4:5.25.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.2).
+  * Drop now unused build dependency on libkf5declarative-dev and kinit-dev.
+  * Drop obsolete Breaks relations.
+  * Adapt lintian overrides.
+  * Add a Recommends on systemsettings used in several desktop files to
+    open KCMs.
+  * New upstream release (5.25.3).
+  * Release to unstable
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 17 Jul 2022 15:29:30 +0200
+
+kde-cli-tools (4:5.25.1-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.25.1).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 21 Jun 2022 21:47:57 +0200
+
+kde-cli-tools (4:5.25.0-1) experimental; urgency=medium
+
+  * New upstream release (5.25.0).
+  * Update build-deps and deps with the info from cmake.
+  * Bump Standards-Version to 4.6.1, no change required.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 14 Jun 2022 21:27:05 +0200
+
+kde-cli-tools (4:5.24.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.90).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 20 May 2022 11:47:58 +0200
+
+kde-cli-tools (4:5.24.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 12 May 2022 21:40:43 +0200
+
+kde-cli-tools (4:5.24.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 30 Mar 2022 14:08:27 +0200
+
+kde-cli-tools (4:5.24.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.3).
+  * Added myself to the uploaders.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 10 Mar 2022 08:06:37 +0100
+
+kde-cli-tools (4:5.24.2-2) unstable; urgency=medium
+
+  [ Pino Toscano ]
+  * Break kde-runtime, since kde-cli-tools 5.24 ships tools with the same name
+    of the ones provided by kde-runtime (for KDE 4). (Closes: #1006699)
+  * Update lintian overrides.
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 04 Mar 2022 18:54:41 +0100
+
+kde-cli-tools (4:5.24.2-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.24.2).
+  * Re-export signing key without extra signatures.
+  * Update B-Ds and deps with the info from cmake.
+  * Update list of installed files.
+  * Update d/copyright.
+
+ -- Patrick Franz <deltaone@debian.org>  Sat, 26 Feb 2022 21:58:14 +0100
+
+kde-cli-tools (4:5.23.5-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.23.5).
+  * Update B-Ds.
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 07 Jan 2022 18:36:55 +0100
+
+kde-cli-tools (4:5.23.4-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.4).
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 02 Dec 2021 22:58:48 +0100
+
+kde-cli-tools (4:5.23.3-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.3).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 10 Nov 2021 08:37:24 +0900
+
+kde-cli-tools (4:5.23.2-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.1).
+  * New upstream release (5.23.2).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 03 Nov 2021 22:21:01 +0900
+
+kde-cli-tools (4:5.23.0-2) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Update upstream signing-key.
+  * Bump Standards-Version to 4.6.0 (no changes needed).
+
+  [ Norbert Preining ]
+  * Tighten B-D of plasma-workspace.
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 15 Oct 2021 23:19:17 +0200
+
+kde-cli-tools (4:5.23.0-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.0).
+  * Update list of installed files.
+
+ -- Norbert Preining <norbert@preining.info>  Thu, 14 Oct 2021 20:13:13 +0900
+
+kde-cli-tools (4:5.21.5-2) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Release to unstable.
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 17 Aug 2021 03:23:15 +0200
+
+kde-cli-tools (4:5.21.5-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.5).
+  * Tighten inter-plasma B-Ds.
+
+ -- Patrick Franz <patfra71@gmail.com>  Fri, 07 May 2021 19:32:26 +0200
+
+kde-cli-tools (4:5.21.4-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.4).
+  * Tighten inter-plasma B-Ds.
+
+ -- Patrick Franz <patfra71@gmail.com>  Tue, 06 Apr 2021 20:49:44 +0200
+
+kde-cli-tools (4:5.21.3-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.3).
+  * Bump inter-plasma dependencies.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 17 Mar 2021 05:49:40 +0900
+
+kde-cli-tools (4:5.21.2-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.2).
+  * Tigthen inter-plasma B-Ds.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 03 Mar 2021 05:33:48 +0900
+
+kde-cli-tools (4:5.21.1-2) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * Tigthen inter-plasma build-depends.
+
+ -- Norbert Preining <norbert@preining.info>  Thu, 25 Feb 2021 06:18:59 +0900
+
+kde-cli-tools (4:5.21.1-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.1).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 24 Feb 2021 14:36:38 +0900
+
+kde-cli-tools (4:5.21.0-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * Update upstream metadata.
+  * New upstream release (5.21.0).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 17 Feb 2021 05:42:26 +0900
+
+kde-cli-tools (4:5.20.5-2) unstable; urgency=medium
+
+  * Team upload.
+  * Bump the plasma-workspace-dev build dependency to 5.20.5.
+  * Bump Standards-Version to 4.5.1, no changes required.
+  * Update renamed lintian tag names in lintian overrides.
+  * Remove listed license files (COPYING) from copyright.
+  * Remove obsolete fields Contact, Name from debian/upstream/metadata (already
+    present in machine-readable debian/copyright).
+
+ -- Pino Toscano <pino@debian.org>  Thu, 07 Jan 2021 10:08:59 +0100
+
+kde-cli-tools (4:5.20.5-1) unstable; urgency=medium
+
+  * New upstream release (5.20.5).
+  * Update lintian overrides.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 06 Jan 2021 23:50:50 +0900
+
+kde-cli-tools (4:5.20.4-2) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Norbert Preining <norbert@preining.info>  Tue, 22 Dec 2020 11:04:36 +0900
+
+kde-cli-tools (4:5.20.4-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.20.4).
+  * Install kde-inhibit executable.
+  * Rename lintian override according to new tag name.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 09 Dec 2020 14:17:31 +0900
+
+kde-cli-tools (4:5.19.5-3) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Norbert Preining <norbert@preining.info>  Fri, 06 Nov 2020 08:37:21 +0900
+
+kde-cli-tools (4:5.19.5-2) experimental; urgency=medium
+
+  * Rebuild for Qt 5.15
+
+ -- Norbert Preining <norbert@preining.info>  Mon, 02 Nov 2020 09:27:39 +0900
+
+kde-cli-tools (4:5.19.5-1) experimental; urgency=medium
+
+  * New upstream release (5.19.5).
+  * Add Patrick and myself to uploaders.
+  * Bump B-D on plasma-workspace-dev.
+
+ -- Norbert Preining <norbert@preining.info>  Mon, 19 Oct 2020 17:12:00 +0900
+
+kde-cli-tools (4:5.19.4-1) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Norbert Preining ]
+  * Remove Max from Uploaders as requested on IRC, add Scarlett.
+  * Change maintainer in d/control to Debian Qt/KDE Maintainers.
+  * Update build-deps with the info from cmake.
+  * Update list of installed files.
+  * Bump compat level to 13.
+  * Enable team builder to be able to build on salsa.
+  * Add Rules-Requires-Root field to control.
+  * Remove not needed injection of linker flags.
+  * Enable build hardening.
+  * Update Homepage link to point to new invent.kde.org
+  * Update field Source in debian/copyright to invent.kde.org move.
+  * Set field Upstream-Contact in debian/copyright.
+  * Cleanup lintian overrides.
+
+ -- Norbert Preining <norbert@preining.info>  Sat, 17 Oct 2020 00:25:59 +0900
+
+kde-cli-tools (4:5.17.5-2) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+  * Bump Standards-Version to 4.5.0, no changes required.
+
+ -- Pino Toscano <pino@debian.org>  Fri, 14 Feb 2020 23:00:49 +0100
+
+kde-cli-tools (4:5.17.5-1) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.16.5).
+  * Update build-deps and deps with the info from cmake
+
+  [ Pino Toscano ]
+  * New upstream release.
+  * Update the build dependencies according to the upstream build system:
+    - bump KF packages to 5.62.0
+    - explicitly add libxcb1-dev
+  * Bump the debhelper compatibility to 12:
+    - switch the debhelper build dependency to debhelper-compat 12
+    - remove debian/compat
+  * Enable all the variations for reprotest in the salsa CI.
+  * Drop the kde-l10n breaks/replaces, no more needed after two Debian stable
+    releases.
+  * Stop using the non-existing ${shlibs:Depends} substvar in
+    kde-cli-tools-data.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 19 Jan 2020 09:20:12 +0100
+
+kde-cli-tools (4:5.14.5-2) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Maximiliano Curia ]
+  * Salsa CI automatic initialization by Tuco
+
+  [ Pino Toscano ]
+  * Bump Standards-Version to 4.4.1, no changes required.
+  * Remove the unused libkf5kdelibs4support-dev build dependency.
+  * Explicitly add the gettext build dependency.
+  * Drop the migration from kde-cli-tools-dbg, no more needed after two Debian
+    stable releases.
+  * Pass -DBUILD_TESTING=OFF to cmake to disable the build of tests, as they
+    are not run at build time anyway.
+  * Drop the 'testsuite' autopkgtest, as it does not test the installed
+    packages
+    - drop patch shared_mime_cant_be_removed.patch, no more needed now
+  * Drop the commented out/unused 'acc' autopkgtest.
+  * Update lintian overrides.
+
+ -- Pino Toscano <pino@debian.org>  Mon, 14 Oct 2019 23:05:54 +0200
+
+kde-cli-tools (4:5.14.5-1) unstable; urgency=medium
+
+  * New upstream release (5.14.5).
+  * Update build-deps and deps with the info from cmake
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 24 Jan 2019 09:25:43 -0300
+
+kde-cli-tools (4:5.14.3-1) unstable; urgency=medium
+
+  * Update upsteam signing-key
+  * New upstream release (5.14.3).
+  * Update build-deps and deps with the info from cmake
+  * Rediff patches
+  * Bump group breaks (4:5.14)
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 23 Nov 2018 08:50:53 -0300
+
+kde-cli-tools (4:5.13.5-1) unstable; urgency=medium
+
+  * New upstream release (5.13.5).
+  * Update build-deps and deps with the info from cmake
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 06 Sep 2018 20:40:30 +0200
+
+kde-cli-tools (4:5.13.4-1) unstable; urgency=medium
+
+  * New upstream release (5.13.4).
+  * Update build-deps and deps with the info from cmake
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 19 Aug 2018 23:17:53 +0200
+
+kde-cli-tools (4:5.13.1-1) unstable; urgency=medium
+
+  * New upstream release (5.13.1).
+  * Update build-deps and deps with the info from cmake
+  * Drop upstream applied patch
+  * Bump group breaks (4:5.13)
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 26 Jun 2018 13:42:51 +0200
+
+kde-cli-tools (4:5.12.5-1) unstable; urgency=medium
+
+  * New upstream release (5.12.5).
+  * Bump Standards-Version to 4.1.4.
+  * Add new patch: fix-autotests.patch
+  * Use https for the copyright format
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 09 May 2018 13:23:53 +0200
+
+kde-cli-tools (4:5.12.4-1) unstable; urgency=medium
+
+  * New upstream release (5.12.2).
+  * New upstream release (5.12.4).
+  * Update build-deps and deps with the info from cmake
+  * Drop erroneous empty lines in the debian/copyright
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 28 Mar 2018 18:12:40 +0200
+
+kde-cli-tools (4:5.12.1-1) sid; urgency=medium
+
+  * Use the salsa canonical urls
+  * New upstream release (5.12.1).
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 20 Feb 2018 22:08:40 +0100
+
+kde-cli-tools (4:5.12.0-2) sid; urgency=medium
+
+  * New revision
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 12 Feb 2018 16:03:28 +0100
+
+kde-cli-tools (4:5.12.0-1) experimental; urgency=medium
+
+  * Bump debhelper build-dep and compat to 11.
+  * Build without build_stamp
+  * Add link options as-needed
+  * Add Bhushan Shah upstream signing key
+  * New upstream release (5.12.0).
+  * Bump Standards-Version to 4.1.3.
+  * Bump group breaks (5.12)
+  * Use https uri for uscan
+  * Release to experimental
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 08 Feb 2018 15:20:30 +0100
+
+kde-cli-tools (4:5.11.4-1) experimental; urgency=medium
+
+  * New upstream release (5.11.4).
+  * Bump Standards-Version to 4.1.2.
+  * Update build-deps and deps with the info from cmake
+  * Release to experimental
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 03 Jan 2018 16:48:47 -0300
+
+kde-cli-tools (4:5.10.5-2) sid; urgency=medium
+
+  * New revision
+  * Bump Standards-Version to 4.1.0.
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 03 Sep 2017 09:55:15 +0200
+
+kde-cli-tools (4:5.10.5-1) experimental; urgency=medium
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.10.3).
+  * Update build-deps and deps with the info from cmake
+  * Bump Standards-Version to 4.0.0.
+  * Update upstream metadata
+  * Bump group breaks (5.10)
+  * New upstream release (5.10.4).
+  * Update build-deps and deps with the info from cmake
+  * New upstream release (5.10.5).
+  * Release to experimental
+
+  [ Jonathan Riddell ]
+  * update watch file to version=4 with pgp signature checking
+  * update .install
+  * new binary, kbroadcastnotification. sounds fun
+  * install all locale files
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 28 Aug 2017 15:28:08 +0200
+
+kde-cli-tools (4:5.8.7-1) unstable; urgency=medium
+
+  * New upstream release (5.8.7)
+     + Fix query for available modules
+       The old query was bad because two reasons:
+        * it didn't use the same query systemsettings uses
+        * it didn't use exist so if the first property did not exist the
+          second one was not evaluated since the parser bailed out
+       Test Plan: Ran kcmshell5 --list, it's better now
+       This fixes KDE#378548
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 08 Jun 2017 16:15:10 +0200
+
+kde-cli-tools (4:5.8.5-1) experimental; urgency=medium
+
+  * New upstream release (5.8.5).
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 30 Dec 2016 18:46:13 +0100
+
+kde-cli-tools (4:5.8.4-2) unstable; urgency=medium
+
+  * Add libkf5su-bin hard dependency.
+    Thanks to Martin Graesslin for reporting (Closes: 807402)
+
+ -- Maximiliano Curia <maxy@gnuservers.com.ar>  Tue, 28 Mar 2017 13:00:51 +0200
+
+kde-cli-tools (4:5.8.4-1) unstable; urgency=medium
+
+  * New upstream release (5.8.4)
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 23 Nov 2016 18:34:49 +0100
+
+kde-cli-tools (4:5.8.2-1) unstable; urgency=medium
+
+  * New upstream release (5.8.2)
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 19 Oct 2016 15:19:27 +0200
+
+kde-cli-tools (4:5.8.1-1) unstable; urgency=medium
+
+  * New upstream release (5.8.1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 16 Oct 2016 22:54:57 +0200
+
+kde-cli-tools (4:5.8.0-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Update build-deps and deps with the info from cmake
+
+  [ Harald Sitter ]
+  * bdep on pkg-config as per upstream cmake checks
+
+  [ Maximiliano Curia ]
+  * New upstream release. (Closes: #839865)
+    - Fixes CVE-2016-7787
+      https://security-tracker.debian.org/tracker/CVE-2016-7787
+  * Replace dbus-launch with dbus-run-session in tests
+  * Bump group breaks (5.8)
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 07 Oct 2016 14:02:03 +0200
+
+kde-cli-tools (4:5.7.4-1) unstable; urgency=medium
+
+  * New upstream release (5.7.4)
+  * Bump group breaks (5.7)
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 26 Aug 2016 14:47:07 +0200
+
+kde-cli-tools (4:5.7.0-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Refresh patches
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 09 Jul 2016 22:18:01 +0200
+
+kde-cli-tools (4:5.6.5-1) unstable; urgency=medium
+
+  * Add new libkdeinit5_kcmshell5.so lintian-override
+  * Add swrast for the autotests
+  * Update testsuite script
+  * Add new patch: shared_mime_cant_be_removed.patch
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 27 Jun 2016 08:34:18 +0200
+
+kde-cli-tools (4:5.6.4-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Refresh patches
+  * Bump Standards-Version to 3.9.8
+  * Refresh patches
+
+  [ Maximiliano Curia ]
+  * uscan no longer supports this kind of watch files.
+  * New upstream release (5.5.5).
+  * Automatic update with ddeb_migration3.py
+  * Add upstream metadata (DEP-12)
+  * testsuite: Add XDG_DATA_DIRS environment variable
+  * debian/control: Update Vcs-Browser and Vcs-Git fields
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 28 May 2016 01:34:04 +0200
+
+kde-cli-tools (4:5.5.4-1) experimental; urgency=medium
+
+  * New upstream release (5.5.0).
+  * New upstream release (5.5.1).
+  * New upstream release (5.5.2).
+  * New upstream release (5.5.3).
+  * New upstream release (5.5.4).
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 27 Jan 2016 16:49:18 +0100
+
+kde-cli-tools (4:5.4.3-1) unstable; urgency=medium
+
+  * New upstream release (5.4.3).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 01 Dec 2015 11:46:09 +0100
+
+kde-cli-tools (4:5.4.2-1) unstable; urgency=medium
+
+  * New upstream release (5.4.2).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 06 Oct 2015 07:52:28 +0200
+
+kde-cli-tools (4:5.4.1-1) unstable; urgency=medium
+
+  * New upstream release (5.4.1).
+  * New patch: disable_failing_tests
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 11 Sep 2015 18:45:47 +0200
+
+kde-cli-tools (4:5.4.1-0ubuntu2) wily; urgency=medium
+
+  * Depend on kio as kde-open5 uses the kioexec binary
+
+ -- Harald Sitter <sitter@kde.org>  Tue, 08 Sep 2015 15:23:55 +0200
+
+kde-cli-tools (4:5.4.1-0ubuntu1) wily; urgency=medium
+
+  * new upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Tue, 08 Sep 2015 10:12:23 +0100
+
+kde-cli-tools (4:5.4.0-1) unstable; urgency=medium
+
+  * New upstream release (5.4.0).
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 03 Sep 2015 13:50:20 +0200
+
+kde-cli-tools (4:5.4.0-0ubuntu1) wily; urgency=medium
+
+  * new upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 31 Aug 2015 15:47:32 +0100
+
+kde-cli-tools (4:5.3.95-0ubuntu1) wily; urgency=medium
+
+  [ Scarlett Clark ]
+  * Vivid backport
+
+  [ Jonathan Riddell ]
+  * new upstream beta release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 10 Aug 2015 23:12:08 +0200
+
+kde-cli-tools (4:5.3.2-2) unstable; urgency=medium
+
+  * Add the missing Breaks/Replaces. (Closes: #790866)
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 03 Jul 2015 14:07:59 +0200
+
+kde-cli-tools (4:5.3.2-1) unstable; urgency=medium
+
+  * New upstream release (5.3.2).
+  * Update copyright information.
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 30 Jun 2015 20:37:29 +0200
+
+kde-cli-tools (4:5.3.2-0ubuntu1) wily; urgency=medium
+
+  * New upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 02 Jul 2015 12:26:12 +0000
+
+kde-cli-tools (4:5.3.1-0ubuntu1) wily; urgency=medium
+
+  [ Jonathan Riddell ]
+  * Plasma 5.3 beta
+  * new upstream release
+
+  [ Scarlett Clark ]
+  * Vivid backport
+
+  [ Jonathan Riddell ]
+  * New upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Fri, 05 Jun 2015 02:25:47 +0200
+
+kde-cli-tools (4:5.3.1-1) unstable; urgency=medium
+
+  * New upstream release (5.3.0).
+  * New upstream release (5.3.1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 30 Jun 2015 09:45:47 +0200
+
+kde-cli-tools (4:5.2.2-1) experimental; urgency=medium
+
+  * New upstream release (5.2.1).
+  * New upstream release (5.2.2).
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 25 Mar 2015 23:18:02 +0100
+
+kde-cli-tools (4:5.2.2-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Tue, 24 Mar 2015 07:11:35 -0700
+
+kde-cli-tools (4:5.2.1-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Mon, 23 Feb 2015 09:36:26 -0800
+
+kde-cli-tools (4:5.2.0-1) experimental; urgency=medium
+
+  * Prepare initial Debian release.
+  * Add myself as Uploader.
+  * Bump Standards-Version to 3.9.6, no changes needed.
+  * Update build dependencies to build against experimental and to
+    follow cmake.
+  * Update copyright information.
+  * Update install files.
+  * Update watch file.
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 08 Feb 2015 20:58:45 +0100
+
+kde-cli-tools (4:5.2.0-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Harald Sitter <sitter@kde.org>  Tue, 27 Jan 2015 14:50:05 +0100
+
+kde-cli-tools (4:5.1.95-0ubuntu1) vivid; urgency=medium
+
+  * New upstream beta release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 15 Jan 2015 01:21:07 +0100
+
+kde-cli-tools (4:5.1.2-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 15 Dec 2014 13:06:06 +0100
+
+kde-cli-tools (4:5.1.1-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+  [ Harald Sitter ]
+  * Lintian cleanup
+    + Override manpage warnings as we do not generally provide manpages
+    + Override everything to do with kdeinit libraries, kdeinit is a
+      startup helper that is specific to the kinit framework. Kdeinit libs
+      are neither fully qualified libraries nor are they supposed to be.
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Mon, 10 Nov 2014 19:40:44 +0100
+
+kde-cli-tools (4:5.0.2-0ubuntu1) utopic; urgency=medium
+
+  [ Harald Sitter ]
+  * switch to new pkg-kde-tools
+
+  [ Scarlett Clark ]
+  * New upstream release
+  * Remove no-human-maintainers lintian-override per ScottK.
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Wed, 17 Sep 2014 18:12:54 -0700
+
+kde-cli-tools (4:5.0.1-0ubuntu1~ubuntu14.10~ppa2) utopic; urgency=medium
+
+  [ Jonathan Riddell ]
+  * New upstream release
+
+  [ Scarlett Clark ]
+  * Update watch to http://download.kde.org
+
+  [ Jonathan Riddell ]
+  * New upstream bugfix release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Sun, 10 Aug 2014 15:40:48 +0200
+
+kde-cli-tools (4:4.98.0-0ubuntu1) utopic; urgency=medium
+
+  * New upstream RC release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 07 Jul 2014 13:18:04 +0200
+
+kde-cli-tools (4:4.97.0-0ubuntu1) utopic; urgency=medium
+
+  [ Scarlett Clark ]
+  * Initial release.
+
+  [ Jonathan Riddell ]
+  * New upstream beta release
+
+  [ Scarlett Clark ]
+  * Fix copyright file
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 09 Jun 2014 10:20:08 +0100

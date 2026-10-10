@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-thunderbolt-baseline
+sha256sum --check "${BASE}/binary-sha256.txt"
+[[ $(dpkg-query -W -f='${Version}' libqt6core6t64) == $(cat "${BASE}/ubuntu-qt-core-version") ]]
+"${BASE}/run-session" "${BASE}/build/ubuntu-thunderbolt-client" | tee "${AUTOPKGTEST_ARTIFACTS}/unchanged-ubuntu-client-output.txt"
+VERSION=$(dpkg-query -W -f='${Version}' plasma-thunderbolt)
+dpkg --compare-versions "${VERSION}" gt "$(cat "${BASE}/ubuntu-version")"
+apt-cache policy plasma-thunderbolt | tee "${AUTOPKGTEST_ARTIFACTS}/apt-policy.txt" | grep -F "${VERSION}"
+cp -a "${BASE}" "${AUTOPKGTEST_ARTIFACTS}/ubuntu-client-baseline"

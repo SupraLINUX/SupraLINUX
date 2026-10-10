@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-kconfig-baseline
+mapfile -t OLD < <(find /var/tmp/supralinux-retained-packages -maxdepth 1 -name '*.deb' -type f | sort)
+mapfile -t NEW < <(find /var/tmp/supralinux-candidate-packages -maxdepth 1 -name '*.deb' -type f | sort)
+[[ ${#OLD[@]} == 9 && ${#NEW[@]} == 9 ]]
+# This deliberate same-source old-package installation demonstrates the retained
+# Supra layout independently of its previously failing Ubuntu cross-owner move.
+# apt legitimately removes conflicting old Ubuntu ownership before installing
+# this historical baseline; candidate upgrades may never remove packages.
+apt-get remove -y libkf6config-bin libkf6config-dev
+apt-get install -y --no-install-recommends --no-remove "${OLD[@]}"
+test "$(dpkg-query -W -f='${Version}' libkf6configcore6)" = 6.30.0-0supralinux4
+MULTIARCH=$(dpkg-architecture -qDEB_HOST_MULTIARCH)
+dpkg-query -S "/usr/lib/${MULTIARCH}/libexec/kf6/kconf_update" | tee "${AUTOPKGTEST_ARTIFACTS}/previous-owner.txt"
+grep -q '^libkf6configcore6' "${AUTOPKGTEST_ARTIFACTS}/previous-owner.txt"
+"${BASE}/run-session" "${BASE}/build/ubuntu-kconfig-client"
+apt-get install -y --no-install-recommends --no-remove "${NEW[@]}"
+debian/tests/ubuntu-abi-client
+printf 'Retained SupraLINUX revision upgraded without removal, overwrite forcing or install-order workaround: PASS\n'

@@ -1,0 +1,33 @@
+SupraLINUX integration review for KWayland 6.7.5
+
+Official signed upstream sources remain unchanged. The authenticated Ubuntu
+Debian reference retains epoch 4, four ordinary binary packages, SONAME 6,
+public headers, CMake/pkg-config exports, QCH and all original symbol guards.
+The inherited Debian patch continues installing the public xdgforeign_v2.h
+header; it applies cleanly to the signed source.
+
+Build inputs use exact eligible ECM 6.30.0-0supralinux3 and supplementary
+Plasma Wayland Protocols 1.22.0-0supralinux1 artifacts. Ubuntu Qt 6.10.2 and
+Wayland 1.24 providers remain in place; no replacement Qt is authorized.
+
+BUILD_TESTING compiles all upstream manual clients enabled by the upstream
+configuration. Upstream registers no automated CTest cases in this project;
+CTest discovery and build outputs are retained. Manual clients, real Qt QPA
+sessions, compositor, clipboard/input and hardware integration remain later QA.
+
+The private installed fixture checks the public ConnectionThread, Registry,
+EventQueue, compositor/region/surface/frame and Plasma window-management API,
+including PID/UUID, properties/signals, Qt model changes/removal and desktop
+state. It validates actual native protocol requests on its own temporary socket
+without buffers or rendering. The actual Ubuntu SDK client and server first pass
+in a clean Ubuntu baseline. Their immutable binaries are then re-run after the
+normal APT upgrade. The unchanged client also runs against a server generated
+from the candidate protocol provider; a consumer rebuilt from the installed
+candidate verifies exact CMake versions. Qt and Wayland runtime versions, all
+four package versions, SONAME and installed documentation/data are checked.
+Every private server is reaped and its runtime directory removed.
+
+Revision 2 preserves the compiled revision 1 ABI and binds five observed new
+PlasmaVirtualDesktop/output APIs to upstream floor 4:6.7.5. The original Attempt 1
+sbuild PASS and lintian FAIL remain sealed; installed package tests did not run.
+No upstream source, existing symbol floor, Qt provider or build profile changes.

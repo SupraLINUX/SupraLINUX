@@ -1,0 +1,3 @@
+{
+  "virt_server": "autopkgtest-virt-qemu --qemu-command=/opt/actions-runner/_work/SupraLINUX/SupraLINUX/scripts/qemu-kvm-required.sh --qemu-architecture=x86_64 --cpus=2 --ram-size=2048 /var/lib/supralinux/autopkgtest/resolute-amd64.img"
+}

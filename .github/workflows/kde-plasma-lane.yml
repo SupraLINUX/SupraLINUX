@@ -1,0 +1,324 @@
+name: KDE Plasma 6.7.5 lane
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: kde-plasma-lane-${{ github.event.pull_request.number || github.ref }}-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: Select Plasma lane phase
+    runs-on: ubuntu-26.04
+    outputs:
+      phase: ${{ steps.phase.outputs.phase }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Validate Plasma planning contracts
+        run: |
+          python3 scripts/validate_kde_plasma.py
+          python3 scripts/validate_kde_plasma_dag_candidate.py
+          python3 scripts/validate_kde_plasma_dag.py
+          python3 scripts/validate_kde_plasma_level0.py
+
+      - name: Select current Plasma phase
+        id: phase
+        run: |
+          phase="$(python3 -c 'import json; print(json.load(open("manifests/kde-plasma.json"))["planning"]["status"])')"
+          case "${phase}" in
+            dependency-discovery-pending|provider-audit-pending|provider-resolution-pending|provider-resolution-preflight-pending|provider-resolution-review-pending|dag-executable-promoted|level0-materialization-preflight-pending|level0-materialization-pending)
+              ;;
+            *)
+              echo "Unsupported/non-executable Plasma lane phase: ${phase}" >&2
+              exit 1
+              ;;
+          esac
+          echo "phase=${phase}" >> "${GITHUB_OUTPUT}"
+          echo "Plasma lane phase: ${phase}"
+
+  level0-materialization-preflight:
+    name: Level 0 materialization infrastructure preflight
+    needs: plan
+    if: needs.plan.outputs.phase == 'level0-materialization-preflight-pending'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Enable Ubuntu source indexes
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo tee /etc/apt/sources.list.d/supralinux-plasma-level0-src.sources >/dev/null <<'EOF'
+          Types: deb-src
+          URIs: http://archive.ubuntu.com/ubuntu
+          Suites: resolute resolute-updates
+          Components: main universe
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+          Types: deb-src
+          URIs: http://security.ubuntu.com/ubuntu
+          Suites: resolute-security
+          Components: main universe
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          EOF
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends dpkg-dev
+
+      - name: Certify Level 0 source materialization mechanism
+        run: python3 scripts/run-kde-plasma-level0-materialization-preflight.py
+
+      - name: Upload Level 0 materialization preflight evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-plasma-level0-materialization-preflight-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-plasma-level0-materialization-preflight/
+          if-no-files-found: error
+          retention-days: 90
+
+  level0-materialization:
+    name: Level 0 source and packaging materialization
+    needs: plan
+    if: needs.plan.outputs.phase == 'level0-materialization-pending'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Enable Ubuntu source indexes and materialization tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo tee /etc/apt/sources.list.d/supralinux-plasma-level0-src.sources >/dev/null <<'EOF'
+          Types: deb-src
+          URIs: http://archive.ubuntu.com/ubuntu
+          Suites: resolute resolute-updates
+          Components: main universe
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+          Types: deb-src
+          URIs: http://security.ubuntu.com/ubuntu
+          Suites: resolute-security
+          Components: main universe
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          EOF
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends curl dpkg-dev gnupg tar xz-utils
+
+      - name: Materialize Level 0 sources and Ubuntu packaging references
+        env:
+          SUPRALINUX_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 scripts/run-kde-plasma-level0-materialization.py
+
+      - name: Upload Level 0 materialization evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-plasma-level0-materialization-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-plasma-level0-materialization/
+          if-no-files-found: error
+          retention-days: 90
+
+  dependency-discovery:
+    name: Dependency discovery
+    needs: plan
+    if: needs.plan.outputs.phase == 'dependency-discovery-pending'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 50
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - name: Discover upstream source dependencies
+        run: python3 scripts/run-kde-plasma-dependency-discovery.py
+      - name: Upload dependency discovery evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-plasma-dependency-discovery-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-plasma-dependency-discovery/
+          if-no-files-found: error
+          retention-days: 30
+
+  provider-resolution-preflight:
+    name: Provider resolution infrastructure preflight
+    needs: plan
+    if: needs.plan.outputs.phase == 'provider-resolution-preflight-pending'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Enable Ubuntu source indexes and apt-file
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo tee /etc/apt/sources.list.d/supralinux-plasma-provider-src.sources >/dev/null <<'EOF'
+          Types: deb-src
+          URIs: http://archive.ubuntu.com/ubuntu
+          Suites: resolute resolute-updates
+          Components: main universe
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+          Types: deb-src
+          URIs: http://security.ubuntu.com/ubuntu
+          Suites: resolute-security
+          Components: main universe
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          EOF
+          sudo apt-get update
+
+      - name: Download provider inventory evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: kde-plasma-provider-audit-715ff744c019743822e5609773298a65888967b1
+          path: .work/kde-plasma-provider-audit
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 37008092158
+
+      - name: Certify provider lookup mechanism
+        run: python3 scripts/run-kde-plasma-provider-resolution-preflight.py .work/kde-plasma-provider-audit/provider-inventory.json
+
+      - name: Upload provider resolution preflight evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-plasma-provider-resolution-preflight-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-plasma-provider-resolution-preflight/
+          if-no-files-found: error
+          retention-days: 90
+
+  provider-resolution:
+    name: Provider resolution
+    needs: plan
+    if: needs.plan.outputs.phase == 'provider-resolution-pending'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Enable Ubuntu source indexes and apt-file
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo tee /etc/apt/sources.list.d/supralinux-plasma-provider-src.sources >/dev/null <<'EOF'
+          Types: deb-src
+          URIs: http://archive.ubuntu.com/ubuntu
+          Suites: resolute resolute-updates
+          Components: main universe
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+
+          Types: deb-src
+          URIs: http://security.ubuntu.com/ubuntu
+          Suites: resolute-security
+          Components: main universe
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          EOF
+          sudo apt-get update
+
+      - name: Download provider inventory evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: kde-plasma-provider-audit-715ff744c019743822e5609773298a65888967b1
+          path: .work/kde-plasma-provider-audit
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 37008092158
+
+      - name: Download dependency discovery evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: kde-plasma-dependency-discovery-488d96f4d23d3b08be5f317f2cd65dc9889a3a8c
+          path: .work/kde-plasma-discovery
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 36951077374
+
+      - name: Resolve Ubuntu and KDE provider candidates
+        run: python3 scripts/run-kde-plasma-provider-resolution.py .work/kde-plasma-provider-audit/provider-inventory.json .work/kde-plasma-discovery/dependencies.json
+
+      - name: Upload provider resolution evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-plasma-provider-resolution-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-plasma-provider-resolution/
+          if-no-files-found: error
+          retention-days: 90
+
+  provider-resolution-review:
+    name: Provider resolution review
+    needs: plan
+    if: needs.plan.outputs.phase == 'provider-resolution-review-pending'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Download promoted provider resolution evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: kde-plasma-provider-resolution-3c1371fbec26dd2c06fab9fe3364eefe9d29fcfc
+          path: .work/kde-plasma-provider-resolution
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 37086119189
+
+      - name: Review provider resolution decisions
+        run: python3 scripts/run-kde-plasma-provider-resolution-review.py .work/kde-plasma-provider-resolution
+
+      - name: Upload provider resolution review evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-plasma-provider-resolution-review-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-plasma-provider-resolution-review/
+          if-no-files-found: error
+          retention-days: 90
+
+  provider-audit:
+    name: Provider inventory audit
+    needs: plan
+    if: needs.plan.outputs.phase == 'provider-audit-pending'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Download promoted discovery evidence
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: kde-plasma-dependency-discovery-488d96f4d23d3b08be5f317f2cd65dc9889a3a8c
+          path: .work/kde-plasma-discovery
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 36951077374
+
+      - name: Audit external provider inventory
+        run: python3 scripts/run-kde-plasma-provider-audit.py .work/kde-plasma-discovery/dependencies.json
+
+      - name: Upload provider audit evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-plasma-provider-audit-${{ github.event.pull_request.head.sha || github.sha }}
+          path: evidence/kde-plasma-provider-audit/
+          if-no-files-found: error
+          retention-days: 90

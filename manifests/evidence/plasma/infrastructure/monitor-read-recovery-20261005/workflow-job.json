@@ -1,0 +1,122 @@
+{
+  "id": 111591237798,
+  "run_id": 37255396918,
+  "workflow_name": "Authoritative runner contract",
+  "head_branch": "architecture/bootstrap-v1",
+  "run_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/runs/37255396918",
+  "run_attempt": 1,
+  "node_id": "CR_kwDOUW9fLs8AAAAZ-1sopg",
+  "head_sha": "8fe666d45718d429ca47b321ea2b7ef258ab6182",
+  "url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/jobs/111591237798",
+  "html_url": "https://github.com/SupraLINUX/SupraLINUX/actions/runs/37255396918/job/111591237798",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-10-05T02:26:15Z",
+  "started_at": "2026-10-05T02:26:17Z",
+  "completed_at": "2026-10-05T02:26:45Z",
+  "name": "Verify disposable Ubuntu 26.04 KVM build runner",
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1,
+      "started_at": "2026-10-05T02:26:19Z",
+      "completed_at": "2026-10-05T02:26:21Z"
+    },
+    {
+      "name": "Checkout",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2,
+      "started_at": "2026-10-05T02:26:21Z",
+      "completed_at": "2026-10-05T02:26:23Z"
+    },
+    {
+      "name": "Verify effective Actions runner provenance",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3,
+      "started_at": "2026-10-05T02:26:23Z",
+      "completed_at": "2026-10-05T02:26:23Z"
+    },
+    {
+      "name": "Verify operating system and KVM boundary",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4,
+      "started_at": "2026-10-05T02:26:23Z",
+      "completed_at": "2026-10-05T02:26:24Z"
+    },
+    {
+      "name": "Verify build and test tool contract",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5,
+      "started_at": "2026-10-05T02:26:24Z",
+      "completed_at": "2026-10-05T02:26:24Z"
+    },
+    {
+      "name": "Prove nested KVM runtime",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6,
+      "started_at": "2026-10-05T02:26:24Z",
+      "completed_at": "2026-10-05T02:26:26Z"
+    },
+    {
+      "name": "Capture runner contract evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7,
+      "started_at": "2026-10-05T02:26:26Z",
+      "completed_at": "2026-10-05T02:26:38Z"
+    },
+    {
+      "name": "Validate repository invariants",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8,
+      "started_at": "2026-10-05T02:26:38Z",
+      "completed_at": "2026-10-05T02:26:38Z"
+    },
+    {
+      "name": "Upload runner contract evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9,
+      "started_at": "2026-10-05T02:26:38Z",
+      "completed_at": "2026-10-05T02:26:41Z"
+    },
+    {
+      "name": "Post Checkout",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 18,
+      "started_at": "2026-10-05T02:26:41Z",
+      "completed_at": "2026-10-05T02:26:41Z"
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 19,
+      "started_at": "2026-10-05T02:26:41Z",
+      "completed_at": "2026-10-05T02:26:41Z"
+    }
+  ],
+  "check_run_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/check-runs/111591237798",
+  "labels": [
+    "self-hosted",
+    "linux",
+    "x64",
+    "supralinux",
+    "ubuntu-26.04",
+    "kvm",
+    "ephemeral"
+  ],
+  "runner_id": 185,
+  "runner_name": "supralinux-runner-contract-20261005t022506z-212641",
+  "runner_group_id": 3,
+  "runner_group_name": "supralinux authoritative jit"
+}

@@ -1,0 +1,7 @@
+{
+  "scope": "local KVM infrastructure mechanism probe, no package Attempt",
+  "result": "INFRA_INVALID",
+  "stage": "InRelease download output",
+  "reason": "Discardable512MiB probe disk had no free space; original APT error is write28, not certificate rejection. Repeating with a fresh1GiB disk.",
+  "original_qemu_absent_observed": true
+}

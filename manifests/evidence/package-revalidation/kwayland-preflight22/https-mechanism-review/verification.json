@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "scope": "local force-KVM bare Ubuntu rootfs APT trust mechanism diagnosis; not canonical package certification",
+  "state": "PASS",
+  "checked_at": "2026-10-07T21:27:06.596176+00:00",
+  "base_sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+  "rootfs_derivation_sha256": "ae5bd27f2a7c27de9bb926dcc6ed7096bf44095133cdbbfe517f7683b8ffa7f6",
+  "official_suites": [
+    "resolute",
+    "resolute-updates",
+    "resolute-security"
+  ],
+  "signature_fingerprint": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+  "actual_apt_https_download_and_ubuntu_signature": "PASS",
+  "tls_verification_disabled": false,
+  "package_installation_performed": false,
+  "package_attempt_consumed": false,
+  "cleanup": {
+    "owned_qemu_absent": true,
+    "writable_probe_image_removed": true,
+    "runner_created": false,
+    "golden_and_milestone_preserved": true
+  },
+  "requires_authoritative_full_input_preflight": true,
+  "files_sha256": {
+    "resolute.InRelease": "45f95ce276cdba3e41870516a130e03c58b8b7a79e9546b0efe9e526d255740c",
+    "apt-https-and-gpgv.log": "dac3417239169cb28cdf18cc5d0e7fc99445490e82f2d946a79a4ec0221cb705",
+    "rootfs-admission.json": "df5d12b066f5483d714ad9c465228036858c0481683e3d6d216b85d72f0c2d0c",
+    "first-probe-disk-capacity.json": "a4d364cdbf206417cdb35b61c5021b88b996c0d529d25ef5828522df6ef93690",
+    "resolute-security.InRelease": "784d755afe854c7db3834d00aed32037e2672a8b2dcac0b18e9dfeba8cdecaf4",
+    "resolute-updates.InRelease": "3b65e32dc482695bc674c8186f4f3321c011942d1c1744a285570424d7730f53",
+    "first-probe-disk-capacity.log": "7c59fff1d730f9ad8958cc0054d895ec2abe8c8259a14ead6efe9859eeba4186",
+    "libguestfs-runtime.txt": "f33dcb19dccaca367e5076279f5f171929d71f9a13d24c01baa862e6d1f0cab3"
+  }
+}

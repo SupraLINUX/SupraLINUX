@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+state=$(mktemp -d)
+trap 'rm -rf "${state}"' EXIT
+cmake -S "$(dirname "$0")/client" -B "${state}/build" -DCMAKE_BUILD_TYPE=Release -DCANDIDATE_CONSUMER=ON
+cmake --build "${state}/build" --parallel 2
+python3 "$(dirname "$0")/client/run-private.py" "${state}/build/stats-server" "${state}/build/stats-client" "${state}/scene"

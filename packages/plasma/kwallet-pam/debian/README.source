@@ -1,0 +1,25 @@
+SupraLINUX KWallet PAM
+
+Official upstream source remains unchanged. Preserve epoch 4, pam_kwallet5.so,
+common helper, desktop autostart and systemd user service paths. Use the actual
+Ubuntu kwallet6 executable path explicitly, as supported by upstream CMake, and
+declare kwallet6 at runtime. KWallet SDK and xkbcommon do not participate in the
+PAM module build once the executable path is configured. ECM is the sole retained
+Frameworks build input; PAM, libgcrypt and socat remain Ubuntu providers.
+Ubuntu qt6-base-dev supplies the Qt6 CMake configuration required for ECM to
+discover its CoreTools/qtpaths target and installation path queries;
+the PAM module does not link Qt.
+
+Tests run only in disposable QEMU/KVM guests. A synthetic user has a dedicated
+private home. libpam reads a private configuration through pam_start_confdir;
+the fixture does not modify /etc/pam.d or accept real credential prompts. A
+separate PAM fixture supplies synthetic tokens and observes data from the actual
+installed module. Tests dispatch authentication, credentials and session hooks,
+verify empty/root/unknown/non-graphical/no-prior-auth/already-run behavior, derive
+the real salted 56-byte key independently and check its actual pipe handoff.
+A private protocol receiver takes the place of the external wallet daemon; the
+installed socat helper sends the real PAM environment to its Unix socket. This
+certifies the PAM module and its handoff, not a real wallet or login session.
+The unchanged Ubuntu SDK binaries and a rebuilt consumer run after upgrade;
+persistent salt compatibility and installed package paths are required. Full
+wallet, SDDM and Wayland login acceptance remain desktop integration gates.

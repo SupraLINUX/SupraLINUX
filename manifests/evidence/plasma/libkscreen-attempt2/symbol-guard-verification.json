@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "local exact observed binary ABI comparison; no rebuilt package or installed candidate result",
+  "strict_compare_level": 4,
+  "strict_compare_exit_code": 0,
+  "original_template_negative_control_exit_code": 2,
+  "new_symbols_observed": 9,
+  "all_previous_floors_preserved": true,
+  "binary_observation_proof_sha256": "d451cd6e8f93ef06cc2ea12534f8d063453bb45ba2c4c37f5e96cb56f0f6af51",
+  "candidate_package_execution": "NOT-RUN",
+  "package_attempt_consumed": false,
+  "files_sha256": {
+    "original-symbols": "4300f53f67bcd814a0ae67fcee2f381f900fc6ca92190d07bb668f20a5de324b",
+    "strict-generated-symbols": "b007cb25b390264a58a032211b1e743a6d179460af034a3a9a6add4f738c9b83",
+    "strict-guard.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "negative-control.log": "0929d886a7abd3895f15189f63615e56367a537f4e6eab502806520296d9c5a3"
+  }
+}

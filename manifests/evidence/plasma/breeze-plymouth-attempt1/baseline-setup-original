@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+apt-get install -y --no-install-recommends gcc pkgconf libplymouth-dev plymouth-theme-breeze
+BASE=/var/tmp/supralinux-plymouth-baseline
+mkdir -p "${BASE}"
+cat > "${BASE}/client.c" <<'CLIENT'
+#include <assert.h>
+#include <dlfcn.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ply-boot-splash-plugin.h>
+#include <ply-key-file.h>
+#include <ply-buffer.h>
+#include <ply-event-loop.h>
+int main(int argc, char **argv) {
+    if (argc != 3) return 2;
+    void *module = dlopen(argv[1], RTLD_NOW | RTLD_LOCAL);
+    if (!module) { fprintf(stderr, "%s\n", dlerror()); return 3; }
+    ply_boot_splash_plugin_interface_t *(*get_interface)(void) =
+        (ply_boot_splash_plugin_interface_t *(*)(void))dlsym(module, "ply_boot_splash_plugin_get_interface");
+    assert(get_interface);
+    const ply_boot_splash_plugin_interface_t *api = get_interface();
+    assert(api && api->create_plugin && api->destroy_plugin && api->show_splash_screen && api->hide_splash_screen);
+    assert(api->update_status && api->on_boot_progress && api->display_password && api->display_question);
+    assert(api->display_normal && api->display_message && api->add_text_display && api->remove_text_display);
+    ply_key_file_t *key = ply_key_file_new(argv[2]);
+    assert(key && ply_key_file_load(key));
+    char *title = ply_key_file_get_value(key, "breeze-text", "title");
+    assert(title && title[0]);
+    printf("Plymouth text theme title: %s\n", title);
+    free(title);
+    const ply_boot_splash_mode_t modes[] = {PLY_BOOT_SPLASH_MODE_BOOT_UP, PLY_BOOT_SPLASH_MODE_SHUTDOWN, PLY_BOOT_SPLASH_MODE_UPDATES};
+    for (unsigned int i = 0; i < sizeof(modes)/sizeof(modes[0]); ++i) {
+        ply_event_loop_t *loop = ply_event_loop_new();
+        ply_buffer_t *buffer = ply_buffer_new();
+        ply_boot_splash_plugin_t *plugin = api->create_plugin(key);
+        assert(loop && buffer && plugin && api->show_splash_screen(plugin, loop, buffer, modes[i]));
+        api->update_status(plugin, "compatibility-test");
+        api->on_boot_progress(plugin, 2.0, 0.42);
+        api->display_password(plugin, "Unlock", 3);
+        api->display_question(plugin, "Continue?", "yes");
+        api->display_normal(plugin);
+        api->display_message(plugin, "SupraLINUX package compatibility test");
+        api->on_boot_progress(plugin, 4.0, 1.0);
+        api->hide_splash_screen(plugin, loop);
+        api->destroy_plugin(plugin);
+        ply_buffer_free(buffer);
+        ply_event_loop_free(loop);
+    }
+    ply_key_file_free(key);
+    assert(dlclose(module) == 0);
+    puts("Ubuntu Plymouth plugin ABI, lifecycle/progress/prompts in three modes without display views: PASS");
+    return 0;
+}
+CLIENT
+read -r -a PLYMOUTH_CFLAGS <<< "$(pkg-config --cflags ply-splash-core)"
+read -r -a PLYMOUTH_LIBS <<< "$(pkg-config --libs ply-splash-core)"
+gcc -Wall -Wextra -Werror "${PLYMOUTH_CFLAGS[@]}" "${BASE}/client.c" \
+    -o "${BASE}/ubuntu-plymouth-client" "${PLYMOUTH_LIBS[@]}" -ldl
+"${BASE}/ubuntu-plymouth-client" "$(pkg-config --variable=pluginsdir ply-splash-core)/breeze-text.so" \
+    "$(pkg-config --variable=themesdir ply-splash-core)/breeze-text/breeze-text.plymouth" | tee "${BASE}/baseline-output.txt"
+dpkg-query -W -f='${Version}' plymouth-theme-breeze > "${BASE}/ubuntu-theme-version"
+dpkg-query -W -f='${Version}' libplymouth5 > "${BASE}/ubuntu-runtime-version"
+sha256sum "${BASE}/ubuntu-plymouth-client" > "${BASE}/binary-sha256.txt"
+printf 'Ubuntu Plymouth baseline version: '; cat "${BASE}/ubuntu-theme-version"; printf '\n'

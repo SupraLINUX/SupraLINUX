@@ -1,0 +1,24 @@
+Source: plasma-wayland-protocols
+Section: libdevel
+Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Uploaders: Aurélien COUDERC <coucouf@debian.org>,
+           Pino Toscano <pino@debian.org>,
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               libwayland-dev (>= 1.24.0),
+               libwayland-bin,
+               qt6-base-dev,
+Testsuite: autopkgtest
+Standards-Version: 4.7.3
+Homepage: https://invent.kde.org/libraries/plasma-wayland-protocols
+Vcs-Browser: https://salsa.debian.org/qt-kde-team/kde/plasma-wayland-protocols
+Vcs-Git: https://salsa.debian.org/qt-kde-team/kde/plasma-wayland-protocols.git
+
+Package: plasma-wayland-protocols
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: Wayland protocols for Plasma
+ This package contains protocols for Wayland that are not standard, and used
+ in KDE Plasma.

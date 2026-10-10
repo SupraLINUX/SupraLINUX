@@ -1,0 +1,15 @@
+{
+  "state": "PASS",
+  "expected_tests": [
+    "transition-test",
+    "cycle-test",
+    "schedule-test"
+  ],
+  "executed_tests": [
+    "appstreamtest",
+    "transition-test",
+    "cycle-test",
+    "schedule-test"
+  ],
+  "scope": "CTest suite executed during the clean package build"
+}

@@ -1,0 +1,2 @@
+MediaMonitor private source detection, role filtering and reconnection: PASS; legacy MediaMonitor.Music undefined=0
+Actual CPU source frames, independent frame copy, installed QML modules and VP8 recording: PASS; frames=10 size=160x120

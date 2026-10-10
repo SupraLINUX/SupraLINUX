@@ -1,0 +1,13 @@
+SupraLINUX kwrited
+
+Upstream source remains unmodified. The Ubuntu KDED module profile with
+libutempter is preserved. The executable/setuid or setgid fallback is not the
+selected profile; tests require the installed kwrited.so and notification data.
+The actual module is instantiated through public KPluginFactory/KDEDModule APIs,
+then receives text written to its own actual slave PTY. A private D-Bus service
+implements the Notifications interface and captures the real emitted body; no
+notification or message is sent to a user or another session. The test verifies
+carriage-return/bell removal and trimming, then unloads the module and checks
+that the PTY disappears. Authoritative package acceptance runs these tests in disposable KVM guests.
+Local Ubuntu SDK/harness preflight is preparatory and does not certify the
+candidate. Real Plasma/KDED session integration remains a separate gate.

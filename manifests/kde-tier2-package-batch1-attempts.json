@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "batch": "tier2-batch-1",
+  "lane": "core-authorization",
+  "nodes": [
+    "kauth"
+  ],
+  "real_attempts": {
+    "kauth": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "a1b3fc1b05c29d87d60911d4be020072efda95aa",
+        "workflow_run": 35496293561,
+        "job_id": 106039776267,
+        "artifact_id": 10600690671,
+        "artifact_sha256": "8387279d8cdadd05cf73c2c16177f1d2635a331648638ca3397cef77d04c1ac3",
+        "package_attempted": true,
+        "result": "FAIL",
+        "stage": "source-package",
+        "sbuild_started": false,
+        "cause": "Malformed helper-install-dir-cache.patch: the hunk header declared 7 lines but the patch ended after 6, so dpkg-source rejected it before sbuild."
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux2",
+        "commit": "9e047034553f9889f6b734f21dd22b5e7ac12e39",
+        "workflow_run": 35496445770,
+        "job_id": 106040197856,
+        "artifact_id": 10601410551,
+        "artifact_sha256": "4ea7588f1749ce7588cc06fc6bc9dc80350d7fc270bb30688ef173ee6262cfc9",
+        "rootfs_sha256": "bf90d45c1b750369d482757a4521ea3578a5ef8e10835bf008b258ffad49cbcf",
+        "package_attempted": true,
+        "result": "FAIL",
+        "stage": "sbuild-dh_makeshlibs",
+        "sbuild_started": true,
+        "source_package": "PASS",
+        "tests": "6/6 PASS",
+        "backend_profile": "POLKITQT6-1 + DBUS",
+        "technical_reference_symbols_sha256": "77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259",
+        "cause": "dpkg-gensymbols rejected two non-optional RTTI/vtable symbols for implementation-private AuthBackend::Private; two other missing templinst symbols were already optional and not causal."
+      },
+      {
+        "attempt": 3,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "3f67c5446e56d3029551bb5e481882ad3e208cfa",
+        "workflow_run": 35497461178,
+        "job_id": 106043001431,
+        "artifact_id": 10601382235,
+        "artifact_sha256": "443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b",
+        "rootfs_sha256": "15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668",
+        "package_attempted": true,
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "6/6 PASS",
+        "lintian": "PASS-errors",
+        "abi_soname": "libKF6AuthCore.so.6",
+        "abi_export_count": 118,
+        "backend_profile": "POLKITQT6-1 + DBUS",
+        "symbols_reference_sha256": "77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259",
+        "symbols_adjusted_sha256": "b8cf2fa877c94255f015cee08b89816d538cba23f1064d0360a329189fee0b78",
+        "consumer_smoke": "PASS",
+        "apt_check": "PASS",
+        "development_contract": "PASS",
+        "downstream_eligible": true
+      }
+    ]
+  },
+  "validation_incidents": {
+    "kauth": []
+  },
+  "infrastructure_incidents": [
+    {
+      "phase": "attempt-3-preflight",
+      "workflow_run": 35497248424,
+      "job_id": 106042393365,
+      "commit": "75964ab981a7d853f4c309419964b84d8cf6686e",
+      "classification": "infrastructure-validator-stale-revision",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "failed_gate": "validate_kde_tier2.py",
+      "cause": "Tier 2 discovery validator still hardcoded KAuth package_version_candidate 6.30.0-0supralinux1 after the campaign advanced to revision -3.",
+      "remediation": "Require package_version_candidate to equal the current packaging.package_version instead of hardcoding a revision."
+    },
+    {
+      "phase": "attempt-3-superseded-queued-job",
+      "workflow_run": 35497248610,
+      "job_id": 106042424661,
+      "commit": "75964ab981a7d853f4c309419964b84d8cf6686e",
+      "classification": "superseded-run-cancelled",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "cause": "KAuth revision -3 was queued but never entered retained-input download or Build and validate before the validator-fix push superseded the PR run.",
+      "remediation": "Scope selector now keeps any prepared/remediation package revision runnable until that exact revision has package_attempted=true in the real-attempt ledger."
+    },
+    {
+      "phase": "attempt-3-scope-test-validation",
+      "workflow_run": 35497460988,
+      "job_id": 106042987055,
+      "commit": "3f67c5446e56d3029551bb5e481882ad3e208cfa",
+      "classification": "infrastructure-scope-test-fixture",
+      "package_attempted": false,
+      "package_state_effect": "none",
+      "failed_gate": "test-kde-tier2-package-batch1-scope.sh",
+      "cause": "The scope test reset to a commit where the empty docs directory was not tracked, then wrote docs/attempted.md without recreating the directory.",
+      "remediation": "Make the scope test self-contained: synthesize an unattempted remediation baseline, then mkdir -p docs before docs-only assertions."
+    }
+  ],
+  "blocked_events": {
+    "kauth": []
+  }
+}

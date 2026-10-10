@@ -1,0 +1,1 @@
+/home/runner/work/SupraLINUX/SupraLINUX/.work/kde-tier3-support-build-level0/kdoctools/runtime-root/usr/lib/x86_64-linux-gnu/libKF6DocTools.so.6.30.0

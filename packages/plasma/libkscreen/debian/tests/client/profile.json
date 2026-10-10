@@ -1,0 +1,62 @@
+{
+  "screen": {
+    "id": 1,
+    "minSize": {
+      "width": 320,
+      "height": 200
+    },
+    "maxSize": {
+      "width": 8192,
+      "height": 8192
+    },
+    "currentSize": {
+      "width": 1280,
+      "height": 800
+    },
+    "maxActiveOutputsCount": 2
+  },
+  "outputs": [
+    {
+      "id": 1,
+      "name": "SUPRA1",
+      "type": "14",
+      "modes": [
+        {
+          "id": "3",
+          "name": "1280x800",
+          "refreshRate": 60.0,
+          "size": {
+            "width": 1280,
+            "height": 800
+          }
+        },
+        {
+          "id": "2",
+          "name": "1024x768",
+          "refreshRate": 60.0,
+          "size": {
+            "width": 1024,
+            "height": 768
+          }
+        }
+      ],
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "width": 1280,
+        "height": 800
+      },
+      "currentModeId": "3",
+      "preferredModes": [
+        "3"
+      ],
+      "rotation": 1,
+      "connected": true,
+      "enabled": true,
+      "priority": 1,
+      "edid": "AP///////wBNgQEAkhAAAAEkAQSAMh54AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/ABTdXByYVNjcmVlbgogIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHIA"
+    }
+  ]
+}

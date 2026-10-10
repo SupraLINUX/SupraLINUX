@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "official released source authentication and local installed-XML structure review; no package/runtime certification",
+  "as_of": "2026-10-05",
+  "upstream_version": "1.48",
+  "upstream_url": "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/releases/1.48/downloads/wayland-protocols-1.48.tar.xz",
+  "upstream_sha256": "398036ac0eb6484982ddbde7ff86848d753231f9cdeeae983f06b52946625aa1",
+  "upstream_size": 148276,
+  "signature_sha256": "645555033eb12308d4689b3192b43ba686415d10d4eda9d07e4a7738f61cd7eb",
+  "release_announcement": "https://lore.freedesktop.org/wayland-devel/ac0NAPBFafhcgzE3%40gmail.com/",
+  "signature_verification": "PASS",
+  "primary_fingerprint": "8307C0A224BABDA1BABD0EB9A6EEEC9E0136164A",
+  "key_identity_authority": "exact fingerprint in Ubuntu wayland-protocols 1.47-1 packaging authenticated through signed Ubuntu archive chain",
+  "key_refresh_source": "https://gitlab.archlinux.org/archlinux/packaging/packages/xdg-desktop-portal/-/raw/main/keys/pgp/8307C0A224BABDA1BABD0EB9A6EEEC9E0136164A.asc",
+  "key_refresh_validation": "same primary key; valid newer owner self-signature extends expiry to Unix 1849032348; original stale-key EXPKEYSIG results preserved",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "qt_provider_effect": "none",
+  "wayland_runtime_provider_effect": "none",
+  "retention_path": "manifests/evidence/plasma/provider-gaps/provider-source-input-retention-20261005.json",
+  "retention_sha256": "fe4dca62aaf4ea5886501cb354c7e45ea3c8bd88af047a7c63a1e062e878ad8f",
+  "files_sha256": {
+    "schema-review.json": "4a4e2aefcf5abe745fb3f3b81cf77e436a8837aee512606fa05d8a24a80b410c",
+    "signature-status-arch-reference.log": "04d8250137aa8f18d276fa06825346f276d1fccd2ec9ba313af7a56b57d196fb",
+    "signature-status-openpgp.log": "ce12e31aae103dc70dd164d051e99b1b2c4b9afda893ad004ed1194d86cd26f2",
+    "signature-status-refreshed.log": "7e7ed5701d9b2811bb78bd476ef11be79f93b435ddbc61fb5e81b9e4208b7037",
+    "signature-status.log": "33bef0bfd24fb9c67c6fdd2a179b2be3804940dfee766c049d93cce80099a180",
+    "upstream-key-arch-reference.asc": "c985debf708fa23ffee8f385b0b411cd5130305c180cd8c615508bc4acba3689"
+  }
+}

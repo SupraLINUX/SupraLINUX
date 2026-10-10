@@ -1,0 +1,181 @@
+Owned native input staging: {"build_root": "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu", "byte_preserving_private_staging": true, "plugin_build_path": "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/ksysguard_sensorface.so", "plugin_install_namespace": "kf6/packagestructure/ksysguard_sensorface.so", "plugin_sha256": "49625695ac760fd282ec771bc14afd3cc475caa183540afdecd0bc0fd9f0b1a2", "plugin_staged_path": "/tmp/supra-stats-private-y9t4y0j5/qt-plugins/kf6/packagestructure/ksysguard_sensorface.so", "qml_dir_sha256": "49be54c15cca6eea86e6b98b442d5813de7abb754ff91cf85fe5546233ff79f6", "qml_import_root": "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin", "scope": "owned native runtime input staging; no package result", "source_root": "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source"}
+********* Start testing of SensorTreeModelTest *********
+Config: Using QtTest library 6.10.2, Qt 6.10.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 15.2.0), ubuntu 26.04
+PASS   : SensorTreeModelTest::initTestCase()
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)      : 5
+   Expected (ChangeInFlight::None): 0
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(816)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)              : 5
+   Expected (ChangeInFlight::RowsInserted): 6
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(840)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)      : 5
+   Expected (ChangeInFlight::None): 0
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(816)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)              : 5
+   Expected (ChangeInFlight::RowsInserted): 6
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(840)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)      : 5
+   Expected (ChangeInFlight::None): 0
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(816)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)              : 5
+   Expected (ChangeInFlight::RowsInserted): 6
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(840)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)      : 5
+   Expected (ChangeInFlight::None): 0
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(816)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)              : 5
+   Expected (ChangeInFlight::RowsInserted): 6
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(840)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)      : 5
+   Expected (ChangeInFlight::None): 0
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(816)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)              : 5
+   Expected (ChangeInFlight::RowsInserted): 6
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(840)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)      : 5
+   Expected (ChangeInFlight::None): 0
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(816)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)              : 5
+   Expected (ChangeInFlight::RowsInserted): 6
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(840)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)      : 5
+   Expected (ChangeInFlight::None): 0
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(816)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)              : 5
+   Expected (ChangeInFlight::RowsInserted): 6
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(840)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)      : 5
+   Expected (ChangeInFlight::None): 0
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(816)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)              : 5
+   Expected (ChangeInFlight::RowsInserted): 6
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(840)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)      : 5
+   Expected (ChangeInFlight::None): 0
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(816)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)              : 5
+   Expected (ChangeInFlight::RowsInserted): 6
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(840)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)      : 5
+   Expected (ChangeInFlight::None): 0
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(816)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)              : 5
+   Expected (ChangeInFlight::RowsInserted): 6
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(840)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)      : 5
+   Expected (ChangeInFlight::None): 0
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(816)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)              : 5
+   Expected (ChangeInFlight::RowsInserted): 6
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(840)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)      : 5
+   Expected (ChangeInFlight::None): 0
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(816)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+FAIL!  : SensorTreeModelTest::testModel() Compared values are not the same
+   Actual   (changeInFlight)              : 5
+   Expected (ChangeInFlight::RowsInserted): 6
+   Loc: [./src/testlib/qabstractitemmodeltester.cpp(840)]
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+QWARN  : SensorTreeModelTest::testModel() qt.core.qabstractitemmodel.checkindex: Index QModelIndex(-1,-1,0x0,QObject(0x0)) is not valid (expected valid)
+PASS   : SensorTreeModelTest::cleanupTestCase()
+Totals: 2 passed, 1 failed, 0 skipped, 0 blacklisted, 54ms
+********* Finished testing of SensorTreeModelTest *********

@@ -1,0 +1,402 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-29",
+  "batch": "tier3-build-level3",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "selected_nodes": [
+    "ktexteditor",
+    "purpose"
+  ],
+  "campaign_history": [
+    {
+      "attempt": 1,
+      "workflow_run": 36607647059,
+      "commit": "2692489bdb861520181df486c524efb9cdf47d60",
+      "result": "FAIL",
+      "package_attempted": true,
+      "package_state_effect": "2 FAIL; canonical 18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
+      "rootfs": {
+        "job_id": 109541198352,
+        "artifact_id": 11051807633,
+        "artifact_sha256": "08eb26b3d264c79e26dd0f5e1cb6fe543a16e1f2be0f713bab5fee45cabdbd83"
+      },
+      "workflow_jobs": {
+        "success": 0,
+        "fail": 2
+      },
+      "primary_classification": {
+        "PASS": [],
+        "FAIL": [
+          "ktexteditor",
+          "purpose"
+        ],
+        "INFRA_INVALID": []
+      },
+      "canonical_failures": 2,
+      "canonical_promotions": 0,
+      "remediation_findings": {
+        "ktexteditor": "12 encoding *_diff tests failed; katedocument_test::testAboutToSave timed out after 300000ms",
+        "purpose": "alternativesmodeltest failed with Unknown protocol 'file'; menutest aborted because Qt xcb could not connect to a display",
+        "root_cause_status": "not-yet-finalized; define remediation from retained Attempt 1 evidence"
+      },
+      "next_attempt": 2
+    },
+    {
+      "attempt": 2,
+      "workflow_run": 36639418961,
+      "commit": "9fd5041053a176fdafcb3939e57a0ff2dd26d91e",
+      "result": "FAIL",
+      "package_attempted": true,
+      "package_state_effect": "2 FAIL; canonical 18 PASS / 0 pending / 2 current FAIL / 0 BLOCKED",
+      "rootfs": {
+        "job_id": 109648205853,
+        "artifact_id": 11066320451,
+        "artifact_sha256": "d6ec90546a42d24d6561e49c9684ca03716b9c0ce4b98d7d95415571e3f4bb85"
+      },
+      "workflow_jobs": {
+        "success": 0,
+        "fail": 2
+      },
+      "primary_classification": {
+        "PASS": [],
+        "FAIL": [
+          "ktexteditor",
+          "purpose"
+        ],
+        "INFRA_INVALID": []
+      },
+      "canonical_failures": 2,
+      "canonical_promotions": 0,
+      "remediation_findings": {
+        "ktexteditor": "Attempt 1 encoding-race remediation worked: 76/77 CTest PASS; remaining testAboutToSave failure is the reproducible-build-relative __FILE__ fixture.",
+        "purpose": "Attempt 1 KIO-worker and offscreen-display remediations worked; the remaining two tests perform external http://kde.org I/O while sbuild network remains disabled.",
+        "root_cause_status": "closed evidence supports a test-environment portability remediation; Attempt 3 is not yet defined or authorized."
+      },
+      "next_attempt": 3
+    },
+    {
+      "workflow_run": 36645760261,
+      "commit": "a9bb6b507cdf98bbf81f61524ed594a4f1e5e000",
+      "result": "PARTIAL",
+      "package_attempted": true,
+      "package_state_effect": "1 PASS; Purpose validation INFRA_INVALID preserves prior FAIL; canonical 19 PASS / 0 pending / 1 current FAIL / 0 BLOCKED",
+      "rootfs": {
+        "job_id": 109668495106,
+        "artifact_id": 11068855519,
+        "artifact_sha256": "f3a25f7c68905b206281d023530031f01648228d6ca4974d6c478e0746cdc132"
+      },
+      "workflow_jobs": {
+        "success": 1,
+        "fail": 1
+      },
+      "primary_classification": {
+        "PASS": [
+          "ktexteditor"
+        ],
+        "FAIL": [],
+        "INFRA_INVALID": [
+          "purpose"
+        ]
+      },
+      "canonical_promotions": 1,
+      "canonical_failures": 0,
+      "canonical_failures_retained": 1,
+      "node_evidence": {
+        "ktexteditor": {
+          "job_id": 109668677528,
+          "artifact_id": 11068519665,
+          "artifact_sha256": "96361a7771ea352dd01ffb9a032e37ed66399cb538f98137948c595ff043a69e",
+          "package_version": "6.30.0-0supralinux3",
+          "result": "PASS",
+          "stage": "complete",
+          "exit_code": 0,
+          "package_attempted": true,
+          "tests": "77/77 PASS"
+        },
+        "purpose": {
+          "job_id": 109668677478,
+          "artifact_id": 11068364147,
+          "artifact_sha256": "b76383545d2bd8eb7d64cf1fd27e57d081eb05b385f88529ad50069c1e0c49f3",
+          "package_version": "6.30.0-0supralinux3",
+          "classification": "INFRA_INVALID",
+          "raw_result": "FAIL",
+          "build_result": "PASS",
+          "stage": "buildinfo-predecessor-proof",
+          "exit_code": 1,
+          "package_attempted": true,
+          "tests": "3/3 PASS",
+          "package_state_effect": "none",
+          "validation_mechanism": "buildinfo-predecessor-proof-contract"
+        }
+      },
+      "validation_incidents": {
+        "purpose": {
+          "classification": "INFRA_INVALID",
+          "raw_result": "FAIL",
+          "build_result": "PASS",
+          "validation_run": 1,
+          "validation_result": "INFRA_INVALID",
+          "validation_run_kind": "post-build-evidence",
+          "mechanism": "buildinfo-predecessor-proof-contract",
+          "workflow_run": 36645760261,
+          "job_id": 109668677478,
+          "commit": "a9bb6b507cdf98bbf81f61524ed594a4f1e5e000",
+          "artifact_id": 11068364147,
+          "artifact_sha256": "b76383545d2bd8eb7d64cf1fd27e57d081eb05b385f88529ad50069c1e0c49f3",
+          "rootfs_artifact_id": 11068855519,
+          "rootfs_artifact_sha256": "f3a25f7c68905b206281d023530031f01648228d6ca4974d6c478e0746cdc132",
+          "package_version": "6.30.0-0supralinux3",
+          "stage": "buildinfo-predecessor-proof",
+          "exit_code": 1,
+          "package_attempted": true,
+          "tests": "3/3 PASS",
+          "sbuild_status": "successful",
+          "package_state_effect": "none",
+          "canonical_state_effect": "retain-attempt2-FAIL",
+          "incorrect_expected_package": "libkf6prison-dev",
+          "actual_declared_build_dependency": "qml6-module-org-kde-prison",
+          "actual_proven_version": "6.30.0-0supralinux1",
+          "observation": "Purpose sbuild completed successfully with 3/3 CTest PASS. The post-build proof failed because the Level 3 plan mapped the QML-required Prison predecessor to libkf6prison-dev, while Purpose's source Build-Depends and buildinfo use qml6-module-org-kde-prison."
+        }
+      },
+      "next_attempt": 4,
+      "next_gate": "tier3-build-level3-attempt4-planning-validation",
+      "attempt": 3
+    },
+    {
+      "workflow_run": 36655388053,
+      "commit": "cbfa17227fda156e5cccf598b910a36ed4bc8518",
+      "result": "PASS",
+      "package_attempted": true,
+      "package_state_effect": "1 PASS; canonical 20 PASS / 0 pending / 0 current FAIL / 0 BLOCKED",
+      "rootfs": {
+        "job_id": 109698853580,
+        "artifact_id": 11072870340,
+        "artifact_sha256": "345b669578c89f718f69038c0a8e1f0ef78406e802040bea8e6203a03d938172"
+      },
+      "workflow_jobs": {
+        "success": 1,
+        "fail": 0
+      },
+      "primary_classification": {
+        "PASS": [
+          "purpose"
+        ],
+        "FAIL": [],
+        "INFRA_INVALID": []
+      },
+      "canonical_promotions": 1,
+      "canonical_failures": 0,
+      "node_evidence": {
+        "purpose": {
+          "job_id": 109699029883,
+          "artifact_id": 11072881455,
+          "artifact_sha256": "f9429216194b38e34fcd4ac36bb9638bf5c9b134965b445b8520e18ce667eb68",
+          "package_version": "6.30.0-0supralinux3",
+          "result": "PASS",
+          "stage": "complete",
+          "exit_code": 0,
+          "package_attempted": true,
+          "tests": "3/3 PASS",
+          "buildinfo_predecessor_proof": "PASS",
+          "qml_payload": "PASS"
+        }
+      },
+      "next_attempt": null,
+      "next_gate": "authoritative-kvm-runner-certification",
+      "attempt": 4
+    }
+  ],
+  "nodes": {
+    "ktexteditor": [
+      {
+        "attempt": 1,
+        "workflow_run": 36607647059,
+        "commit": "2692489bdb861520181df486c524efb9cdf47d60",
+        "job_id": 109541487937,
+        "artifact_id": 11052302105,
+        "artifact_sha256": "d66ad916ef3f4e38e2ab3dc436fba3ac7dcb6f1e59603399c5debaebfa6a5458",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "failure_substage": "ctest-encoding-diffs-and-katedocument-save-timeout",
+        "exit_code": 2,
+        "package_attempted": true,
+        "package_state_effect": "FAIL",
+        "canonical_state_effect": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 11051807633,
+        "rootfs_artifact_sha256": "08eb26b3d264c79e26dd0f5e1cb6fe543a16e1f2be0f713bab5fee45cabdbd83",
+        "tests": "64/77 PASS",
+        "observation": "12 encoding *_diff tests failed; katedocument_test::testAboutToSave timed out after 300000ms"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 36639418961,
+        "commit": "9fd5041053a176fdafcb3939e57a0ff2dd26d91e",
+        "job_id": 109648411937,
+        "artifact_id": 11066168089,
+        "artifact_sha256": "74fd2819b9110d7a8ce35ca2a2c8a89fb1a9b31548e32e05de2cb0e9426234e6",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "failure_substage": "ctest-katedocument-testAboutToSave-relative-source-path",
+        "exit_code": 2,
+        "package_attempted": true,
+        "package_state_effect": "FAIL",
+        "canonical_state_effect": "FAIL",
+        "package_version": "6.30.0-0supralinux2",
+        "rootfs_artifact_id": 11066320451,
+        "rootfs_artifact_sha256": "d6ec90546a42d24d6561e49c9684ca03716b9c0ce4b98d7d95415571e3f4bb85",
+        "tests": "76/77 PASS",
+        "observation": "Encoding race remediation passed; only katedocument_test::testAboutToSave failed because the test tried to open relative __FILE__ from the reproducible build working directory."
+      },
+      {
+        "attempt": 3,
+        "workflow_run": 36645760261,
+        "commit": "a9bb6b507cdf98bbf81f61524ed594a4f1e5e000",
+        "job_id": 109668677528,
+        "artifact_id": 11068519665,
+        "artifact_sha256": "96361a7771ea352dd01ffb9a032e37ed66399cb538f98137948c595ff043a69e",
+        "result": "PASS",
+        "build_result": "PASS",
+        "stage": "complete",
+        "exit_code": 0,
+        "package_attempted": true,
+        "package_state_effect": "PASS",
+        "canonical_state_effect": "PASS",
+        "package_version": "6.30.0-0supralinux3",
+        "rootfs_artifact_id": 11068855519,
+        "rootfs_artifact_sha256": "f3a25f7c68905b206281d023530031f01648228d6ca4974d6c478e0746cdc132",
+        "tests": "77/77 PASS",
+        "downstream_eligible": true,
+        "artifacts": {
+          "kf6-ktexteditor_6.30.0-0supralinux3.debian.tar.xz": "937156a69bf767da20146ddd9073ad4a813d7c1f1ee0aa08204e3042b489cdc7",
+          "kf6-ktexteditor_6.30.0-0supralinux3.dsc": "0a9f15ff16c211bf0d084a77bde5a5df3e8283d389d7a6dc1465402fb450c496",
+          "kf6-ktexteditor_6.30.0-0supralinux3_amd64.buildinfo": "b626e6548fc09391fa3691e244062c49b8263275e230118c7d5a607148c16d46",
+          "kf6-ktexteditor_6.30.0-0supralinux3_amd64.changes": "04e6819293a140bfad9070a95e1f29f104bcc79693c43bb46fd4b11bf5daabe4",
+          "kf6-ktexteditor_6.30.0.orig.tar.xz": "d90f24e33a7aa0e6a179af253dfdeca0977992adb62bf1b6f7ad11537ab6e3e7",
+          "libkf6texteditor-bin-dbgsym_6.30.0-0supralinux3_amd64.ddeb": "fdf4c05cb697abd93bee97a53df16c862a1c1f2581d4b4f82a598cc7cee71d16",
+          "libkf6texteditor-bin_6.30.0-0supralinux3_amd64.deb": "f9868d20fc914cf1336be9fefb263de4ac0b430e6030f623420b06f70c5b6731",
+          "libkf6texteditor-data_6.30.0-0supralinux3_all.deb": "25135947976192bf833e9da5214e488ba4743b6d782f5868a339ee256fd91256",
+          "libkf6texteditor-dev_6.30.0-0supralinux3_amd64.deb": "516f687ca7e8eb7b15eef93a40c17c2ed0342b64b6f49ae5c38eb330c325f85e",
+          "libkf6texteditor-doc_6.30.0-0supralinux3_all.deb": "c71a6e6a169b9c725c08fdf3f483082c4b88ff5231edfcfaa05dedd408fddf7d",
+          "libkf6texteditor-katepart-dbgsym_6.30.0-0supralinux3_amd64.ddeb": "823456670516616950ae8b8f4b0d3042c7c1e890c64a7048f8e1ae6d9b9c4fce",
+          "libkf6texteditor-katepart_6.30.0-0supralinux3_amd64.deb": "a6d2c915e3f4daca7a1635361bc5e04b6db7e829d9d664511c22c2a02ea8a995",
+          "libkf6texteditor6-dbgsym_6.30.0-0supralinux3_amd64.ddeb": "76372e8b73e03b63afa6fe01f4ccf05d6fafea927d71579d99638221feec19f4",
+          "libkf6texteditor6_6.30.0-0supralinux3_amd64.deb": "4175b1cd921c2489f8004dbbb5f3c5863defe73084f4f991a06edda6eb4b2dd8"
+        }
+      }
+    ],
+    "purpose": [
+      {
+        "attempt": 1,
+        "workflow_run": 36607647059,
+        "commit": "2692489bdb861520181df486c524efb9cdf47d60",
+        "job_id": 109541487871,
+        "artifact_id": 11052225512,
+        "artifact_sha256": "cff8b75aac023985ba5f4c3c4d429665b268cd65865d65969724408ec2cc5122",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "failure_substage": "ctest-kio-file-protocol-and-xcb-display",
+        "exit_code": 2,
+        "package_attempted": true,
+        "package_state_effect": "FAIL",
+        "canonical_state_effect": "FAIL",
+        "package_version": "6.30.0-0supralinux1",
+        "rootfs_artifact_id": 11051807633,
+        "rootfs_artifact_sha256": "08eb26b3d264c79e26dd0f5e1cb6fe543a16e1f2be0f713bab5fee45cabdbd83",
+        "tests": "1/3 PASS",
+        "observation": "alternativesmodeltest failed with Unknown protocol 'file'; menutest aborted because Qt xcb could not connect to a display"
+      },
+      {
+        "attempt": 2,
+        "workflow_run": 36639418961,
+        "commit": "9fd5041053a176fdafcb3939e57a0ff2dd26d91e",
+        "job_id": 109648412196,
+        "artifact_id": 11066102772,
+        "artifact_sha256": "adf13dd09a0ebd4b001f51c83cfe2b19360fa482b6c73c1a1ab579e7914e0a19",
+        "result": "FAIL",
+        "stage": "sbuild",
+        "failure_substage": "ctest-purpose-external-http-under-network-disabled-sbuild",
+        "exit_code": 2,
+        "package_attempted": true,
+        "package_state_effect": "FAIL",
+        "canonical_state_effect": "FAIL",
+        "package_version": "6.30.0-0supralinux2",
+        "rootfs_artifact_id": 11066320451,
+        "rootfs_artifact_sha256": "d6ec90546a42d24d6561e49c9684ca03716b9c0ce4b98d7d95415571e3f4bb85",
+        "tests": "1/3 PASS",
+        "observation": "KIO file workers and the offscreen Qt platform were resolved; alternativesmodeltest and menutest still used http://kde.org and failed under the intentionally network-disabled sbuild environment."
+      },
+      {
+        "attempt": 3,
+        "workflow_run": 36645760261,
+        "commit": "a9bb6b507cdf98bbf81f61524ed594a4f1e5e000",
+        "job_id": 109668677478,
+        "artifact_id": 11068364147,
+        "artifact_sha256": "b76383545d2bd8eb7d64cf1fd27e57d081eb05b385f88529ad50069c1e0c49f3",
+        "result": "INFRA_INVALID",
+        "raw_result": "FAIL",
+        "build_result": "PASS",
+        "stage": "buildinfo-predecessor-proof",
+        "exit_code": 1,
+        "package_attempted": true,
+        "package_state_effect": "none",
+        "canonical_state_effect": "retain-attempt2-FAIL",
+        "package_version": "6.30.0-0supralinux3",
+        "rootfs_artifact_id": 11068855519,
+        "rootfs_artifact_sha256": "f3a25f7c68905b206281d023530031f01648228d6ca4974d6c478e0746cdc132",
+        "tests": "3/3 PASS",
+        "sbuild_status": "successful",
+        "validation_run": 1,
+        "validation_result": "INFRA_INVALID",
+        "validation_run_kind": "post-build-evidence",
+        "validation_mechanism": "buildinfo-predecessor-proof-contract",
+        "incorrect_expected_package": "libkf6prison-dev",
+        "actual_declared_build_dependency": "qml6-module-org-kde-prison",
+        "actual_proven_version": "6.30.0-0supralinux1",
+        "observation": "Purpose sbuild completed successfully with 3/3 CTest PASS. The post-build proof failed because the Level 3 plan mapped the QML-required Prison predecessor to libkf6prison-dev, while Purpose's source Build-Depends and buildinfo use qml6-module-org-kde-prison."
+      },
+      {
+        "attempt": 4,
+        "workflow_run": 36655388053,
+        "commit": "cbfa17227fda156e5cccf598b910a36ed4bc8518",
+        "job_id": 109699029883,
+        "artifact_id": 11072881455,
+        "artifact_sha256": "f9429216194b38e34fcd4ac36bb9638bf5c9b134965b445b8520e18ce667eb68",
+        "result": "PASS",
+        "build_result": "PASS",
+        "stage": "complete",
+        "exit_code": 0,
+        "package_attempted": true,
+        "package_state_effect": "PASS",
+        "canonical_state_effect": "PASS",
+        "package_version": "6.30.0-0supralinux3",
+        "rootfs_artifact_id": 11072870340,
+        "rootfs_artifact_sha256": "345b669578c89f718f69038c0a8e1f0ef78406e802040bea8e6203a03d938172",
+        "tests": "3/3 PASS",
+        "downstream_eligible": true,
+        "buildinfo_predecessor_proof": "PASS",
+        "qml_payload": "PASS",
+        "artifacts": {
+          "kf6-purpose_6.30.0-0supralinux3.debian.tar.xz": "199627a09500e0c9626e271ddb22133cbde83870c01b4e03f5575cfe8082d385",
+          "kf6-purpose_6.30.0-0supralinux3.dsc": "96a127eb4484169d67a23bf36d32aa3a79768f15d3e1f2be3849599de19987b0",
+          "kf6-purpose_6.30.0-0supralinux3_amd64.buildinfo": "5984ec23401eb2e361f9bd0c61ea84bd6f5b4c4abd0d8cff93532b8e4bb9822e",
+          "kf6-purpose_6.30.0-0supralinux3_amd64.changes": "8958d46ef13f07c47b2df514c0bd92717c3d2c7ff557ed1c0f0fe1e67f8ad5d7",
+          "kf6-purpose_6.30.0.orig.tar.xz": "4fda64d235927e3cc230416d5c9304f5d3e040dc2553b77b2c69bf54c6f04862",
+          "libkf6purpose-bin-dbgsym_6.30.0-0supralinux3_amd64.ddeb": "cfd5eed29399827e670e0e0d4916ae4d6ebf87c9347ecb7d931569e191610bd9",
+          "libkf6purpose-bin_6.30.0-0supralinux3_amd64.deb": "a10fe4d06a091f26c71b239e1cc956763545e6a2a100141a4d3eacd1bd205914",
+          "libkf6purpose-data_6.30.0-0supralinux3_all.deb": "e82a6615cd824055c1aa6515a107ae829f5103f778e95c9d612f001938a28863",
+          "libkf6purpose-dev_6.30.0-0supralinux3_amd64.deb": "8e3f56107f72aec285795b7e2acd4d1b6cb719847621115f12d00ec09a84828c",
+          "libkf6purpose6-dbgsym_6.30.0-0supralinux3_amd64.ddeb": "e676018a870bee0d968380cde143786e11fdd2ac6ad70b9b1cb8125833bbb2b7",
+          "libkf6purpose6_6.30.0-0supralinux3_amd64.deb": "833ed3a7d5fa180ffbdcca8b9a8f07bc90a26c4edccccb21771d4043d08ce1f2",
+          "libkf6purposewidgets6-dbgsym_6.30.0-0supralinux3_amd64.ddeb": "b2f1b19b09f1ee8d4df7df49a411889d661a8eafc9765ace2388bc6a6e0b8dcf",
+          "libkf6purposewidgets6_6.30.0-0supralinux3_amd64.deb": "cbf6e4a438e05c91ed549021844c61d0c79e43ef8c3142b4152ca92c570b7a00",
+          "qml6-module-org-kde-purpose-dbgsym_6.30.0-0supralinux3_amd64.ddeb": "7402b1fc6ecdbaef9c85d07e4715796f7854d1672257e794c462e52b7d688c15",
+          "qml6-module-org-kde-purpose_6.30.0-0supralinux3_amd64.deb": "a58c3cb8d58496220f124b1e7491715375fc10baa5796e609bad383c9f48de99"
+        }
+      }
+    ]
+  },
+  "stable_promotion_requires_explicit_user_approval": true
+}

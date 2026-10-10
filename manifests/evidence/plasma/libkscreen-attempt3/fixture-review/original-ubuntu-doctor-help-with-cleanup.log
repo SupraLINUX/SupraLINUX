@@ -1,0 +1,81 @@
+Usage: /usr/bin/kscreen-doctor [options] [output.<name>.<setting> output.<name>.setting [...]]
+kscreen-doctor allows to change the screen setup from the command-line.
+
+Setting the output configuration is done in an atomic fashion, all settings
+are applied in a single command.
+kscreen-doctor can be used to enable and disable outputs, to position screens,
+change resolution (mode setting), etc.. You should put all your options into 
+a single invocation of kscreen-doctor, so they can all be applied at once.
+
+Usage examples:
+
+   Show output information:
+   $ kscreen-doctor -o
+   Output: 1 eDP-1 enabled connected Panel Modes: Modes: 1:800x600@60 [...] Geometry: 0,0 1280x800
+   Output: 70 HDMI-2 enabled connected  HDMI Modes: 1:800x600@60 [...] Geometry: 1280,0 1920x1080
+
+   Disable the hdmi output, enable the laptop panel and set it to a specific mode
+   $ kscreen-doctor output.HDMI-2.disable output.eDP-1.mode.1 output.eDP-1.enable
+
+   Position the hdmi monitor on the right of the laptop panel
+   $ kscreen-doctor output.HDMI-2.position.1280,0 output.eDP-1.position.0,0
+
+   Set resolution mode
+   $ kscreen-doctor output.HDMI-2.mode.1920x1080@60 
+
+   Set scale (note: fractional scaling is only supported on wayland)
+   $ kscreen-doctor output.HDMI-2.scale.2 
+
+   Set rotation (possible values: none, left, right, inverted, flipped, flipped90, flipped180, flipped270)
+   $ kscreen-doctor output.HDMI-2.rotation.left 
+
+   Set HDR mode (possible values: enable, disable)
+   $ kscreen-doctor output.HDMI-2.hdr.enable
+
+   Set SDR brightness (possible values: 100-1000)
+   $ kscreen-doctor output.HDMI-2.sdr-brightness.300
+
+   Set brightness on non HDR screens (possible values: 0-100)
+   $ kscreen-doctor output.HDMI-2.brightness.10
+
+   Set wide color gamut mode (possible values: enable, disable)
+   $ kscreen-doctor output.HDMI-2.wcg.enable
+
+   Set ICC profile path
+   $ kscreen-doctor output.HDMI-2.iccprofile."/path/to/profile.icc"
+
+   Show dpms information:
+   $ kscreen-doctor --dpms show
+
+   Set dpms mode: (possible values: on, off)
+   $ kscreen-doctor --dpms on
+   Add a custom mode: (arguments: width,height,refresh rate in mHz,blanking 'reduced' or 'full')
+   $ kscreen-doctor output.1.addCustomMode.1920.1080.75000.full
+   Remove a custom mode: (arguments: index in the custom mode list)
+   $ kscreen-doctor output.1.removeCustomMode.0
+
+Options:
+  -h, --help                   Displays help on commandline options.
+  --help-all                   Displays help, including generic Qt options.
+  -i, --info                   Show runtime information: backends, logging,
+                               etc.
+  -j, --json                   Show configuration in JSON format
+  -o, --outputs                Show outputs
+  -d, --dpms <off>             Display power management (wayland only)
+  -l, --log <comment>          Write a comment to the log file
+  --dpms-excluded <connector>  Do not apply the dpms change to the output with
+                               said model names
+
+Arguments:
+  config                       Specific output settings are separated by
+                               spaces, each setting is in the form of
+                               output.<name>.<setting>[.<value>]
+                               For example:
+                               $ kscreen-doctor output.HDMI-2.enable \ 
+                                              output.eDP-1.mode.4 \ 
+                                              output.eDP-1.position.1280,0
+                               Multiple settings are passed in order to have
+                               kscreen-doctor apply these settings in one go.
+
+
+Owned installed launcher, private D-Bus and Xvfb reaped; runtime directory removed

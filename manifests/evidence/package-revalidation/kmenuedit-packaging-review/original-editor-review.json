@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "local original Ubuntu Qt public SDK client and actual installed menu editor on private XDG/Xvfb/bus; not candidate certification",
+  "package_attempt_consumed": false,
+  "candidate_package_execution": "NOT-RUN",
+  "canonical_admission": "NOT-ADMITTED",
+  "actual_result": {
+    "state": "PASS",
+    "scope": "original installed editor actual private rename/submenu/new-entry/Exec/save/reopen, typed public selection and software pixels",
+    "seed_unchanged": true,
+    "generated_entry": "supraownedentry.desktop",
+    "show_menu_bar": true,
+    "application_launch": "NOT-RUN",
+    "global_shortcuts": "NOT-RUN"
+  },
+  "actual_cleanup": {
+    "state": "PASS",
+    "owned_process_groups_absent": true,
+    "private_runtime_absent": true,
+    "errors": []
+  },
+  "baseline_versions": [
+    "kmenuedit amd64 4:6.6.4-0ubuntu1",
+    "libqt6core6t64 amd64 6.10.2+dfsg-7",
+    "libqt6dbus6 amd64 6.10.2+dfsg-7",
+    "libqt6gui6 amd64 6.10.2+dfsg-7",
+    "libqt6widgets6 amd64 6.10.2+dfsg-7",
+    "libx11-6 amd64 2:1.8.13-1",
+    "libx11-6 i386 2:1.8.13-1",
+    "libxtst6 amd64 2:1.2.5-1build1"
+  ],
+  "files_sha256": {
+    "run-owned.py": "9ecc91aa1b903a8a062e6aff68163d0d19003ae31900f0cf105f2209dd72266b",
+    "owned-x11-input.py": "bbb9ec2606df91b62e709477f3666821442b19bc0c1cffff74745a6fc3a797ff",
+    "public-client.cpp": "8bda19aaf2ee7066e9a421ae189894dd4d0d4170e63b43834a62531e41e88e33",
+    "ubuntu-public-client": "233d555ceacc4c25ee8e79da42adc72e8ce26776babb230284a32723f63664f5",
+    "kmenuedit_6.6.4.orig.tar.xz": "b098c176623e9d848e80c769c1857ba7309187e2704e53e56c5eff84dc89760f",
+    "local-original-ubuntu-complete/private-editor.png": "b86996f887dbae7b8ec7eec5cd3743d53ed0d601214e5a7cba09168e3789ed15",
+    "local-original-ubuntu-complete/cleanup.json": "5a8bead49bb5073ad36778cbfc13727e8999500d3041ed71b701adfad16baf1e",
+    "local-original-ubuntu-complete/xvfb-stderr": "09af44186174436345e3e1e8877555c5d6aaa892a7414425cd9c2d8bfea148e7",
+    "local-original-ubuntu-complete/created-selection-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "local-original-ubuntu-complete/editor-stderr": "cb7d570b5f85734223c05e1d5349cca2f848767949013c4fd5ea03233ae4f9f8",
+    "local-original-ubuntu-complete/reopened-editor-stderr": "cb7d570b5f85734223c05e1d5349cca2f848767949013c4fd5ea03233ae4f9f8",
+    "local-original-ubuntu-complete/pixels-stdout": "bfbc07082d682eefd5a9e2513c9404721e3cb675b01f4d7386ec51e7e432819f",
+    "local-original-ubuntu-complete/reopened-selection-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "local-original-ubuntu-complete/result.json": "d0035d9624c63b16cdeb636dd984b7e549d6c7939afdaf74699de429c48b88f2",
+    "local-original-ubuntu-complete/reopened-selection-stdout": "b3a6cfe99e81ef4493918cd5c053de472a19cde4c7ac6f83b097a9d01e51030a",
+    "local-original-ubuntu-complete/editor-stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "local-original-ubuntu-complete/bus-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "local-original-ubuntu-complete/created-selection-stdout": "b3a6cfe99e81ef4493918cd5c053de472a19cde4c7ac6f83b097a9d01e51030a",
+    "local-original-ubuntu-complete/pixels-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "local-original-ubuntu-complete/reopened-editor-stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "local-original-ubuntu-complete/payload/config/menus/applications-kmenuedit.menu": "6840cda8425e9f658360937d413299425200ff6a5f4a3505378598faca6f019e",
+    "local-original-ubuntu-complete/payload/data/desktop-directories/supraownedfolder.directory": "9de402caa3e824ca22db7ff5c62c81cab4a64f13fde5c9e8fce934e925ac21e3",
+    "local-original-ubuntu-complete/payload/data/applications/org.supralinux.MenuFixture.desktop": "4383c5f4762e1abab64e8a13271f209050d9030abb9a1bd2f1da3affb9ecc6da",
+    "local-original-ubuntu-complete/payload/data/applications/supraownedentry.desktop": "c3888ad582982f6979f288e01a74a3168dff5a52d3948e7f23101b0cd17139b4"
+  }
+}

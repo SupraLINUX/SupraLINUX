@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-plymouth-baseline
+read -r -a PLYMOUTH_CFLAGS <<< "$(pkg-config --cflags ply-splash-core)"
+read -r -a PLYMOUTH_LIBS <<< "$(pkg-config --libs ply-splash-core)"
+gcc -Wall -Wextra -Werror "${PLYMOUTH_CFLAGS[@]}" "${BASE}/client.c" \
+    -o "${AUTOPKGTEST_TMP}/candidate-plymouth-client" "${PLYMOUTH_LIBS[@]}" -ldl
+"${AUTOPKGTEST_TMP}/candidate-plymouth-client" "$(pkg-config --variable=pluginsdir ply-splash-core)/breeze-text.so" \
+    "$(pkg-config --variable=themesdir ply-splash-core)/breeze-text/breeze-text.plymouth"

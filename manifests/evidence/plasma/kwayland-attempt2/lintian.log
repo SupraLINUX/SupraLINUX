@@ -1,0 +1,9 @@
+W: kwayland-dev: debian-changelog-line-too-long [usr/share/doc/kwayland-dev/changelog.Debian.gz:4]
+W: kwayland-doc: debian-changelog-line-too-long [usr/share/doc/kwayland-doc/changelog.Debian.gz:4]
+W: kwayland6-data: debian-changelog-line-too-long [usr/share/doc/kwayland6-data/changelog.Debian.gz:4]
+W: libkwaylandclient6: debian-changelog-line-too-long [usr/share/doc/libkwaylandclient6/changelog.Debian.gz:4]
+W: kwayland-dev: old-fsf-address-in-copyright-file
+W: kwayland-doc: old-fsf-address-in-copyright-file
+W: kwayland6-data: old-fsf-address-in-copyright-file
+W: libkwaylandclient6: old-fsf-address-in-copyright-file
+W: kwayland source: orig-tarball-missing-upstream-signature kwayland_6.7.5.orig.tar.xz

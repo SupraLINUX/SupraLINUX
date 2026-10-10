@@ -1,0 +1,70 @@
+{
+  "state": "PASS",
+  "scope": "historical-upgrade-baseline-inputs",
+  "eligible_as_build_predecessors": false,
+  "selected": [
+    {
+      "path": "/var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6config-bin_6.30.0-0supralinux4_amd64.deb",
+      "package": "libkf6config-bin",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "amd64",
+      "sha256": "a5a2bfe058aaffd899a3c704fea9794a4c1e86daa2a75695b9a1847b348f3de9"
+    },
+    {
+      "path": "/var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6config-data_6.30.0-0supralinux4_all.deb",
+      "package": "libkf6config-data",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "all",
+      "sha256": "fae22d6df5777929f730211047c0fbd47ca5e39ece62398782ddcd32e6e69e60"
+    },
+    {
+      "path": "/var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6config-dev_6.30.0-0supralinux4_amd64.deb",
+      "package": "libkf6config-dev",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "amd64",
+      "sha256": "71940050496c4baca03102dd1d131dbcd675c7d2e9ee60e887dfc548555422f9"
+    },
+    {
+      "path": "/var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6config-dev-bin_6.30.0-0supralinux4_amd64.deb",
+      "package": "libkf6config-dev-bin",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "amd64",
+      "sha256": "1bb3c373b3fdd212de33c3fd4a1874e75c86684366c74f6bf7b105454f568286"
+    },
+    {
+      "path": "/var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6configcore6_6.30.0-0supralinux4_amd64.deb",
+      "package": "libkf6configcore6",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "amd64",
+      "sha256": "998262610e611e8cebe8630dbe3d13de4daa059ead9c9924287b2bfe994c4b33"
+    },
+    {
+      "path": "/var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6configgui6_6.30.0-0supralinux4_amd64.deb",
+      "package": "libkf6configgui6",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "amd64",
+      "sha256": "2ed506a790a662b0681a040cd10ae39177e5acbe6ada849947adfe387c390729"
+    },
+    {
+      "path": "/var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6configqml6_6.30.0-0supralinux4_amd64.deb",
+      "package": "libkf6configqml6",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "amd64",
+      "sha256": "5d951cf7b3498f02197c5c539d665439b7f9a5d64813c3faf47325afb6be0b24"
+    },
+    {
+      "path": "/var/lib/supralinux/milestones/frameworks-6.30/repo/pool/qml6-module-org-kde-config_6.30.0-0supralinux4_amd64.deb",
+      "package": "qml6-module-org-kde-config",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "amd64",
+      "sha256": "b514993f60fe1f55ac7803ceab42ba0ef8a89dc58ab5d38463bfb63c9601bfd6"
+    },
+    {
+      "path": "/var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6config-doc_6.30.0-0supralinux4_all.deb",
+      "package": "libkf6config-doc",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "all",
+      "sha256": "207a6075b1151d354316433f934d6952d0d304235373a864e930b09b5305b162"
+    }
+  ]
+}

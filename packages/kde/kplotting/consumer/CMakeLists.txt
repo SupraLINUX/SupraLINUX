@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(kplotting-consumer LANGUAGES CXX)
+find_package(KF6Plotting 6.30 REQUIRED)
+add_executable(kplotting-consumer main.cpp)
+target_compile_features(kplotting-consumer PRIVATE cxx_std_17)
+target_link_libraries(kplotting-consumer PRIVATE KF6::Plotting ${CMAKE_DL_LIBS})

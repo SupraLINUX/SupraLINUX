@@ -1,0 +1,6 @@
+usr/include/KF6/KScreen/
+usr/include/KF6/kscreen_version.h
+usr/lib/*/cmake/KF6Screen/
+usr/lib/*/libKF6Screen.so
+usr/lib/*/libKF6ScreenDpms.so
+usr/lib/*/pkgconfig/KF6Screen.pc

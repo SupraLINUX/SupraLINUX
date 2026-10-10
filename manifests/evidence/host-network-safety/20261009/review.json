@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "state": "REVIEW_REQUIRED",
+  "scope": "original host hang investigation, completed network retirement, verified operator runtime mitigation and local bridge-free mechanism review; actual KVM network probe pending",
+  "observed_source_commit": "fd6409a6894ada6522a94699286c1ade2784926a",
+  "first_hardware_hang_utc": "2026-10-09T13:19:21.395467+00:00",
+  "last_hardware_hang_utc": "2026-10-09T16:07:05.395465+00:00",
+  "hardware_hang_records": 5033,
+  "preflight_original_result": "PASS",
+  "preflight_finished_utc": "2026-10-09T13:19:17.477841+00:00",
+  "workflow_transport_result": "FAIL",
+  "workflow_run_id": 37934931142,
+  "package_attempt_consumed": false,
+  "retained_domains_audited": 34,
+  "reported_stale_arp_mac_matches": 0,
+  "stale_arp_owner_and_age": "UNPROVEN",
+  "project_libvirt_network_removed": true,
+  "project_host_bridge_removed": true,
+  "owned_vm_runner_overlay_absent": true,
+  "stable_host_lan_address_and_routes_unchanged": true,
+  "unrelated_docker_networks_untouched": true,
+  "golden_and_milestone_images_preserved": true,
+  "user_applied_tso_gso_runtime_mitigation_verified": true,
+  "persistent_host_nic_configuration_modified": false,
+  "exact_wired_switch_cause": "UNPROVEN",
+  "mechanism_tests": {
+    "local_rejection_tests": 16,
+    "generated_real_virt_install_xml": "PASS, no VM created",
+    "actual_live_host_admission": "PASS after operator mitigation",
+    "actual_guest_firewall_and_rates": "NOT RUN",
+    "actual_kvm_internet_and_private_network_rejection": "NOT RUN"
+  },
+  "next_gate": "small owned bridge-free KVM network infrastructure probe and cleanup before any fresh package input preflight",
+  "private_host_dumps_publicly_published": false,
+  "local_retention_archive_sha256": "0d8cc24b991e25bd2f56abcfc85cf575566e6ab57b619f87d91960b16e7f7fc9",
+  "empty_offline_byte_restore_verified": true,
+  "control_inputs_sha256": {
+    "scripts/check-kvm-network.py": "4d093f7f92a0db9a90ae35ff29f4f948457f499d76d39d57a4cf084eb18c705a",
+    "scripts/configure-kvm-guest-network.py": "8281cb94785e4d0d3572ce09e745f232e24c9e270df401d87c3fbdefb380b000",
+    "scripts/run-kvm-jit-gate-core.sh": "6d6055c68812d0368ca7c84b92c5160caa8d6216b099ec57a41f43a254b53abe",
+    "scripts/check-kvm-host.sh": "27bdeab3e551fa0aa823d908f55799f561498cb4e705bb1536e9dc4a6c4dfa0e",
+    "scripts/provision-kvm-host.sh": "74587522d312a9a3efb4d359047cf5e18df92a506957270c407917c52f0e6cfc",
+    "scripts/test-kvm-network.py": "420797868ec6e6a094e65b5ab3ebd2e330613a4bc1718df572b72473d56b42c2"
+  },
+  "files_sha256": {
+    "local-retention-index.json": "d44794896850c04b9a671f386b7d4fe98a369ed6ca013a53b930697b1e979ce8"
+  },
+  "host_installation_or_firewall_change_permitted_without_specific_approval": false
+}

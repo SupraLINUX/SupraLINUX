@@ -1,0 +1,10 @@
+[GNUPG:] NEWSIG
+gpgv: Signature made Tue Sep  8 10:52:35 2026 UTC
+gpgv:                using RSA key B3CB366552540BE06EE9AD9711968C44928CAEFC
+[GNUPG:] KEY_CONSIDERED 0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D 0
+[GNUPG:] SIG_ID wHZLl2YNgNy9s0SzLuTQUtmslq8 2026-09-08 1788864755
+[GNUPG:] GOODSIG 11968C44928CAEFC Bhushan Shah (mykolab address) <bshah@mykolab.com>
+gpgv: Good signature from "Bhushan Shah (mykolab address) <bshah@mykolab.com>"
+gpgv:                 aka "Bhushan Shah (kde) <bshah@kde.org>"
+gpgv:                 aka "Bhushan Shah <bhush94@gmail.com>"
+[GNUPG:] VALIDSIG B3CB366552540BE06EE9AD9711968C44928CAEFC 2026-09-08 1788864755 0 4 0 1 10 00 0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D

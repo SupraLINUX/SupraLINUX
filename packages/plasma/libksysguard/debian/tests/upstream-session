@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Run official native tests with the built SDK and an owned sensor provider.
+set -Eeuo pipefail
+state=$(mktemp -d)
+trap 'rm -rf "${state}"' EXIT
+mapfile -t builds < <(find . -maxdepth 1 -type d -name 'obj-*')
+[[ ${#builds[@]} == 1 ]]
+export SUPRALINUX_NATIVE_SOURCE_ROOT="${PWD}" SUPRALINUX_NATIVE_BUILD_ROOT="$(realpath "${builds[0]}")"
+cmake -S debian/tests/client -B "${state}/provider" -DNATIVE_PROVIDER_ONLY=ON \
+    -DNATIVE_SOURCE_DIR="${PWD}" -DNATIVE_BUILD_DIR="${SUPRALINUX_NATIVE_BUILD_ROOT}"
+cmake --build "${state}/provider" --parallel 2
+python3 debian/tests/client/run-private.py "${state}/provider/stats-server" "$(command -v "$1")" "${state}/results" "${@:2}"

@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+"""Run the exact binary built against Ubuntu headers before the candidate upgrade."""
+import subprocess
+import os
+import shutil
+from pathlib import Path
+
+base = Path('/var/tmp/supralinux-kdecoration-baseline')
+candidate = '4:6.7.5-0supralinux1'
+baseline = (base/'ubuntu-dev-version').read_text().strip()
+subprocess.run(['dpkg', '--compare-versions', candidate, 'gt', baseline], check=True)
+subprocess.run(['sha256sum','--check','--strict',str(base/'binary-sha256.txt')], check=True)
+subprocess.run([str(base/'build/ubuntu-decoration-client')], check=True)
+for name, soname in [('libkdecorations3-6', 'libkdecorations3.so.6'),
+                     ('libkdecorations3private2', 'libkdecorations3private.so.2')]:
+    assert subprocess.check_output(['dpkg-query','-W','-f=${Version}',name],text=True).strip() == candidate
+    assert subprocess.check_output(['dpkg-query','-W','-f=${Multi-Arch}',name],text=True).strip() == 'same'
+    library = Path('/usr/lib/x86_64-linux-gnu')/soname
+    assert library.resolve().name.endswith('.6.7.5')
+    assert f'Library soname: [{soname}]' in subprocess.check_output(['readelf','-d',str(library)],text=True)
+    assert 'not found' not in subprocess.check_output(['ldd',str(library)],text=True)
+subprocess.run(['apt-get','check'],check=True)
+artifacts = Path(os.environ['AUTOPKGTEST_ARTIFACTS'])
+shutil.copytree(base, artifacts/'ubuntu-compiled-client', dirs_exist_ok=True)
+
+print(f'Ubuntu {baseline} compiled client, unchanged after SupraLINUX {candidate} upgrade: PASS')

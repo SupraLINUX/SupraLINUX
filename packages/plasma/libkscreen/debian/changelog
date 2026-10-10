@@ -1,0 +1,1287 @@
+libkscreen (4:6.7.5-0supralinux4) resolute; urgency=medium
+
+  * Run the CLI smoke check on its owned private Xvfb display and D-Bus.
+    Preserve the original failed Attempt and all native assertions.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Thu, 08 Oct 2026 18:38:29 +0000
+
+libkscreen (4:6.7.5-0supralinux3) resolute; urgency=medium
+
+  * Record observed new upstream ABI symbols at their upstream version floor.
+    Preserve the original failed Attempt and all native assertions.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Thu, 08 Oct 2026 17:38:29 +0000
+
+libkscreen (4:6.7.5-0supralinux2) resolute; urgency=medium
+
+  * Declare missing test data for unchanged native tests in clean builds.
+    Preserve the original failed Attempt and all native assertions.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Thu, 08 Oct 2026 13:19:43 +0000
+
+libkscreen (4:6.7.5-0supralinux1) resolute; urgency=medium
+
+  * Integrate official stable KDE Plasma 6.7.5 on Ubuntu 26.04 LTS.
+  * Preserve epoch 4, both SONAME 8 libraries, helpers, backends and SDK.
+  * Use exact eligible ECM and Plasma Wayland Protocols build inputs.
+  * Enable upstream automated tests and add installed Ubuntu ABI checks
+    using private D-Bus, Fake and XRandR backends on virtual screens.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Wed, 07 Oct 2026 14:30:00 +0000
+
+libkscreen (4:6.6.4-0ubuntu1) resolute; urgency=medium
+
+  * New upstream bugfix release (6.6.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 07 Apr 2026 13:08:26 +0100
+
+libkscreen (4:6.6.3-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.3)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 18 Mar 2026 14:42:42 +0000
+
+libkscreen (4:6.6.2-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 03 Mar 2026 12:22:56 +0000
+
+libkscreen (4:6.6.1-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.0)
+  * Update symbols.
+  * New upstream release (6.6.1)
+
+ -- Rik Mills <rikmills@kde.org>  Sat, 28 Feb 2026 22:14:29 +0000
+
+libkscreen (4:6.5.5-0ubuntu2) resolute; urgency=medium
+
+  * No-change rebuild for Qt 6.10.2 private ABI.
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 10 Feb 2026 15:34:36 +0000
+
+libkscreen (4:6.5.5-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 13 Jan 2026 14:56:32 +0000
+
+libkscreen (4:6.5.4-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 09 Dec 2025 11:18:44 +0000
+
+libkscreen (4:6.5.3-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.3)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 18 Nov 2025 12:07:56 +0000
+
+libkscreen (4:6.5.2-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 04 Nov 2025 17:12:48 +0000
+
+libkscreen (4:6.5.1-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.1)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 29 Oct 2025 05:47:04 +0000
+
+libkscreen (4:6.5.0-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.0)
+  * Bump plasma-wayland-protocols bd to 1.19.0
+  * Update symbols.
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 20 Oct 2025 18:37:45 +0100
+
+libkscreen (4:6.4.5-0ubuntu2) questing; urgency=medium
+
+  * No-change rebuild for Qt 6.9.2 private ABI.
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 16 Sep 2025 14:13:37 +0100
+
+libkscreen (4:6.4.5-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.4.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 09 Sep 2025 17:02:22 +0100
+
+libkscreen (4:6.4.4-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.4.4)
+  * Update symbols from build logs.
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 12 Aug 2025 17:29:19 +0100
+
+libkscreen (4:6.3.5-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.3.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 06 May 2025 21:34:24 +0100
+
+libkscreen (4:6.3.4-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.4)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 02 Apr 2025 08:56:13 +0100
+
+libkscreen (4:6.3.3-0ubuntu2) plucky; urgency=medium
+
+  * No-change rebuild for Qt 6.8.3 (LP: #2103945).
+
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Sat, 29 Mar 2025 15:06:23 -0500
+
+libkscreen (4:6.3.3-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.3)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 11 Mar 2025 15:20:23 +0000
+
+libkscreen (4:6.3.2-2ubuntu1) plucky; urgency=medium
+
+  * Merge from Debian unstable. Remaining changes:
+    - Kubuntu Vcs and maintainer fields.
+    - debian/patches/series: Comment out Make-qt6-wayland-optional.patch,
+      as we do not need this in Ubuntu.
+    - libkscreen-bin Breaks/Replaces against libkf5screen-bin for Ubuntu
+      version history. 
+
+ -- Rik Mills <rikmills@kde.org>  Sun, 02 Mar 2025 17:02:47 +0000
+
+libkscreen (4:6.3.2-2) unstable; urgency=medium
+
+  * Team upload.
+  * Bump Standards-Version to 4.7.2, no changes required.
+  * CI: simplify/improve config.
+  * Drop the private symbols of Wayland interfaces, which are hidden when
+    generated using Qt 6.8.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 02 Mar 2025 17:06:19 +0100
+
+libkscreen (4:6.3.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.3.1).
+  * New upstream release (6.3.2).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 28 Feb 2025 00:51:47 +0100
+
+libkscreen (4:6.3.2-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 25 Feb 2025 18:16:31 +0000
+
+libkscreen (4:6.3.1-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.1)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 18 Feb 2025 14:23:32 +0000
+
+libkscreen (4:6.3.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.3.0).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 10 Feb 2025 14:58:48 +0100
+
+libkscreen (4:6.3.0-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.0)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 11 Feb 2025 12:55:41 +0000
+
+libkscreen (4:6.2.91-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.91).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 23 Jan 2025 23:51:28 +0100
+
+libkscreen (4:6.2.91-0ubuntu2) plucky; urgency=medium
+
+  * No-change rebuild for Qt 6.8.2.
+
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Tue, 04 Feb 2025 14:13:25 -0600
+
+libkscreen (4:6.2.91-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.91)
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 23 Jan 2025 13:42:12 +0000
+
+libkscreen (4:6.2.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.90).
+  * Update build-deps and deps with the info from cmake.
+  * Refresh patches.
+  * Update symbols from build for 6.2.90.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 11 Jan 2025 23:21:42 +0100
+
+libkscreen (4:6.2.90-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.90)
+  * Update symbols from build logs.
+
+ -- Rik Mills <rikmills@kde.org>  Sat, 11 Jan 2025 04:21:47 +0000
+
+libkscreen (4:6.2.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.5).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 05 Jan 2025 10:57:27 +0100
+
+libkscreen (4:6.2.5-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 31 Dec 2024 19:01:25 +0000
+
+libkscreen (4:6.2.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.4).
+  * Update build-deps and deps with the info from cmake.
+  * Refresh patches.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 03 Dec 2024 16:27:33 +0100
+
+libkscreen (4:6.2.4-0ubuntu4) plucky; urgency=medium
+
+  * Update symbols from build logs.
+
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Thu, 05 Dec 2024 00:42:36 -0600
+
+libkscreen (4:6.2.4-0ubuntu3) plucky; urgency=medium
+
+  * No-change rebuild for Qt 6.8.1.
+
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Wed, 04 Dec 2024 18:59:28 -0600
+
+libkscreen (4:6.2.4-0ubuntu2) plucky; urgency=medium
+
+  * No-change rebuild for Qt 6.8.0.
+
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Wed, 04 Dec 2024 18:59:28 -0600
+
+libkscreen (4:6.2.4-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 26 Nov 2024 12:14:17 +0000
+
+libkscreen (4:6.2.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.3).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 23 Nov 2024 21:57:26 +0100
+
+libkscreen (4:6.2.3-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.0)
+  * debian/patches/series: Comment out Make-qt6-wayland-optional.patch,
+    as we do not need this in Ubuntu.
+  * Bump plasma-wayland-protocols build dep to 1.14
+  * Update symbols from build logs.
+  * New upstream release (6.2.1)
+  * New upstream release (6.2.2)
+  * New upstream release (6.2.3)
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 07 Nov 2024 19:57:26 +0000
+
+libkscreen (4:6.2.1-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.1).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 15 Oct 2024 17:47:33 +0200
+
+libkscreen (4:6.2.0-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.90).
+  * Update build-deps and deps with the info from cmake.
+  * Refresh patches.
+  * Update symbols from build for 6.1.90.
+  * New upstream release (6.2.0).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 05 Oct 2024 23:17:42 +0200
+
+libkscreen (4:6.1.5-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 11 Sep 2024 23:27:42 +0200
+
+libkscreen (4:6.1.5-0ubuntu2) plucky; urgency=medium
+
+  * Rebuild against Qt 6.7.2 private-abi.
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 17 Oct 2024 17:07:15 +0100
+
+libkscreen (4:6.1.5-0ubuntu1) oracular; urgency=medium
+
+  * New upstream release (6.1.5)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 11 Sep 2024 05:59:51 +0100
+
+libkscreen (4:6.1.4-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 11 Aug 2024 23:58:19 +0200
+
+libkscreen (4:6.1.4-0ubuntu3) oracular; urgency=medium
+
+  * Fix typo in breaks/replaces.
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 19 Aug 2024 13:00:01 +0100
+
+libkscreen (4:6.1.4-0ubuntu2) oracular; urgency=medium
+
+  * Fix missing replaces version for libkf5screen-bin -> libkscreen-bin.
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 19 Aug 2024 06:24:20 +0100
+
+libkscreen (4:6.1.4-0ubuntu1) oracular; urgency=medium
+
+  * New upstream release (6.1.4)
+  * Breaks replaces conflicting Qt5 binaries.
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 13 Aug 2024 20:06:47 +0100
+
+libkscreen (4:6.1.3-1ubuntu1) UNRELEASED; urgency=medium
+
+  * Update symbols from build logs.
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 29 Jul 2024 12:35:39 +0100
+
+libkscreen (4:6.1.3-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.3).
+  * Update build-deps and deps with the info from cmake.
+  * Rename non-library binary packages from libkf6screen-* to libkscreen-* to
+    make it consistent and explicit that it’s not part of KF6.
+  * Rewrite patch to make Wayland optional.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 21 Jul 2024 23:46:14 +0200
+
+libkscreen (4:6.1.0-2) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * Add missing Breaks+Replaces for libkf6screen-bin against
+    libkf5screen-bin (Closes: #1074071).
+
+ -- Patrick Franz <deltaone@debian.org>  Sun, 23 Jun 2024 00:12:34 +0200
+
+libkscreen (4:6.1.0-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (6.1.0).
+  * Disable patches.
+  * Update build-deps and deps with the info from cmake.
+  * Create new packages.
+  * Update d/copyright.
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 20 Jun 2024 21:35:56 +0200
+
+libkscreen (4:5.27.11-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Bump Standards-Version to 4.7.0 (No changes needed).
+  * New upstream release (5.27.11).
+
+ -- Patrick Franz <deltaone@debian.org>  Sun, 19 May 2024 12:18:02 +0200
+
+libkscreen (4:5.27.10-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.10).
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 11 Jan 2024 23:17:01 +0100
+
+libkscreen (4:5.27.9-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.9).
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 27 Oct 2023 21:52:08 +0200
+
+libkscreen (4:5.27.8-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.8).
+
+ -- Patrick Franz <deltaone@debian.org>  Wed, 13 Sep 2023 20:46:48 +0200
+
+libkscreen (4:5.27.7-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.7).
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 03 Aug 2023 18:49:54 +0200
+
+libkscreen (4:5.27.5-2) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 27 May 2023 18:23:41 +0200
+
+libkscreen (4:5.27.5-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.5).
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 09 May 2023 23:25:49 +0200
+
+libkscreen (4:5.27.3-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.3).
+
+ -- Patrick Franz <deltaone@debian.org>  Wed, 22 Mar 2023 23:14:45 +0100
+
+libkscreen (4:5.27.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.27.1).
+  * New upstream release (5.27.2).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 28 Feb 2023 14:59:29 +0100
+
+libkscreen (4:5.27.0-1) unstable; urgency=medium
+
+  * Add patch to support building with a version of the C++ standard
+    lower than c++17 (thanks Sune Vuorela).
+  * Add patch to restore a transitive include fixing FTBFS in downstream
+    packages (thanks Sune Vuorela).
+  * New upstream release (5.27.0).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 18 Feb 2023 17:08:38 +0100
+
+libkscreen (4:5.26.90-2) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 23 Jan 2023 21:50:53 +0100
+
+libkscreen (4:5.26.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.90).
+  * Update build-deps and deps with the info from cmake.
+  * Refresh patch Make-kwayland-optional.patch.
+  * Bump Standards-Version to 4.6.2, no change required.
+  * Bump soname of libkf5screen to 8.
+  * Add libkf5screendpms8 library package.
+  * Update the list of installed files from build logs.
+  * Update symbols from build for 5.26.90.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 22 Jan 2023 01:38:34 +0100
+
+libkscreen (4:5.26.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 07 Jan 2023 00:20:38 +0100
+
+libkscreen (4:5.26.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 29 Nov 2022 16:00:04 +0100
+
+libkscreen (4:5.26.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.3).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 08 Nov 2022 15:42:56 +0100
+
+libkscreen (4:5.26.2-2) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 03 Nov 2022 00:49:57 +0100
+
+libkscreen (4:5.26.2-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.1).
+  * New upstream release (5.26.2).
+  * Update build-deps and deps with the info from cmake.
+  * Add libkf5screen-data package for the localization files.
+  * Review copyright information.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 01 Nov 2022 22:15:00 +0100
+
+libkscreen (4:5.26.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.0).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 11 Oct 2022 15:44:01 +0200
+
+libkscreen (4:5.25.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.90).
+  * Update build-deps and deps with the info from cmake.
+  * Refresh patch Make-kwayland-optional.patch.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 25 Sep 2022 00:14:21 +0200
+
+libkscreen (4:5.25.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 19 Sep 2022 20:14:02 +0200
+
+libkscreen (4:5.25.4-2) unstable; urgency=medium
+
+  * Team upload.
+  * Remove inactive Uploaders.
+  * rules: switch from "egrep" to "grep -E", as the former has been deprecated
+    for many years.
+  * Modernize building:
+    - add the dh-sequence-kf5 build dependency to use the kf5 addon
+      automatically
+    - drop all the manually specified addons and buildsystem for dh
+  * copyright: remove extra empty line at the beginning of the file.
+  * Restrict the qtwayland5-dev-tools build dependency as linux-any, as done
+    for the other Wayland-related build dependencies.
+
+ -- Pino Toscano <pino@debian.org>  Sat, 10 Sep 2022 09:06:39 +0200
+
+libkscreen (4:5.25.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.4).
+  * Refresh lintian overrides.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 02 Aug 2022 17:31:00 +0200
+
+libkscreen (4:5.25.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.2).
+  * Refresh lintian overrides.
+  * New upstream release (5.25.3).
+  * Release to unstable
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 17 Jul 2022 15:26:34 +0200
+
+libkscreen (4:5.25.1-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.25.1).
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 21 Jun 2022 21:45:09 +0200
+
+libkscreen (4:5.25.0-1) experimental; urgency=medium
+
+  * New upstream release (5.25.0).
+  * Bump Standards-Version to 4.6.1, no change required.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 14 Jun 2022 21:26:13 +0200
+
+libkscreen (4:5.24.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.90).
+  * Refresh patch Make-kwayland-optional.patch.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 20 May 2022 11:33:25 +0200
+
+libkscreen (4:5.24.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 12 May 2022 21:39:20 +0200
+
+libkscreen (4:5.24.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 30 Mar 2022 13:44:44 +0200
+
+libkscreen (4:5.24.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.3).
+  * Added myself to the uploaders.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 10 Mar 2022 07:46:09 +0100
+
+libkscreen (4:5.24.2-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.24.2).
+  * Bump Standards-Version to 4.6.0 (no changes needed).
+  * Re-export signing key without extra signatures.
+  * Update B-Ds and deps with the info from cmake.
+  * Update patches.
+  * Remove autopkgtest.
+  * Update list of installed files.
+  * Update symbols from buildlogs.
+
+ -- Patrick Franz <deltaone@debian.org>  Sat, 26 Feb 2022 21:59:01 +0100
+
+libkscreen (4:5.23.5-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.23.5).
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 07 Jan 2022 15:44:24 +0100
+
+libkscreen (4:5.23.4-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.4).
+
+  [ Patrick Franz ]
+  * Update symbols from buildlog.
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 02 Dec 2021 21:44:14 +0100
+
+libkscreen (4:5.23.3-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.3).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 10 Nov 2021 08:40:01 +0900
+
+libkscreen (4:5.23.2-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Update upstream signing-key.
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.1).
+  * New upstream release (5.23.2).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 03 Nov 2021 22:21:03 +0900
+
+libkscreen (4:5.23.0-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.0).
+  * Update patches.
+  * Update symbols.
+  * Unfuzzify patch.
+
+ -- Norbert Preining <norbert@preining.info>  Thu, 14 Oct 2021 20:13:15 +0900
+
+libkscreen (4:5.21.5-2) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Release to unstable.
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 17 Aug 2021 03:24:13 +0200
+
+libkscreen (4:5.21.5-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.5).
+
+ -- Patrick Franz <patfra71@gmail.com>  Fri, 07 May 2021 13:54:55 +0200
+
+libkscreen (4:5.21.4-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.4).
+
+ -- Patrick Franz <patfra71@gmail.com>  Tue, 06 Apr 2021 17:47:12 +0200
+
+libkscreen (4:5.21.3-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.3).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 17 Mar 2021 05:49:42 +0900
+
+libkscreen (4:5.21.2-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.2).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 03 Mar 2021 05:33:49 +0900
+
+libkscreen (4:5.21.1-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.1).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 24 Feb 2021 14:36:39 +0900
+
+libkscreen (4:5.21.0-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.0).
+  * Update build-deps and deps with the info from cmake.
+  * Update kwayland-optional patch.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 17 Feb 2021 05:42:27 +0900
+
+libkscreen (4:5.20.5-1) unstable; urgency=medium
+
+  * New upstream release (5.20.5).
+  * Update lintian overrides.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 06 Jan 2021 23:50:52 +0900
+
+libkscreen (4:5.20.4-2) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Norbert Preining <norbert@preining.info>  Tue, 22 Dec 2020 11:04:37 +0900
+
+libkscreen (4:5.20.4-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.20.4).
+  * Update build-deps with the info from cmake.
+
+  [ Scarlett Moore ]
+  * Use pkg-kde-tools library-packages to generate
+    strict local shlibs.
+  * Add hardening rules for all.
+  * Update make kwayland optional patch to include
+    Forwarded: not-needed as Debian doesn't ship wayland
+    with all arches.
+  * Refresh upstream/metadata
+    - Remove obsolete fields already defined in d/copyright.
+    - Update repo info to kde.invent.org.
+    - Add Bug* fields.
+    - Update changelog to announcements page.
+  * Tighten build and runtime Qt dependencies and allow for
+    point releases.
+
+  [ Pino Toscano ]
+  * Recommend hwdata in libkf5screen7, as the library can use the pnp.ids file
+    in hwdata to get the vendor name of screens.
+  * Remove obsolete fields Contact, Name from debian/upstream/metadata (already
+    present in machine-readable debian/copyright).
+  * Bump Standards-Version to 4.5.1, no changes required.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 09 Dec 2020 14:17:32 +0900
+
+libkscreen (4:5.19.5-3) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Norbert Preining <norbert@preining.info>  Fri, 06 Nov 2020 08:37:23 +0900
+
+libkscreen (4:5.19.5-2) experimental; urgency=medium
+
+  * Rebuild for Qt 5.15
+
+ -- Norbert Preining <norbert@preining.info>  Mon, 02 Nov 2020 09:27:41 +0900
+
+libkscreen (4:5.19.5-1) experimental; urgency=medium
+
+  [ Scarlett Moore ]
+  * New upstream release (5.19.5).
+
+  [ Norbert Preining ]
+  * Add Patrick and myself to uploaders.
+
+ -- Norbert Preining <norbert@preining.info>  Mon, 19 Oct 2020 13:49:47 +0900
+
+libkscreen (4:5.19.4-1) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Scarlett Moore ]
+  * Bump compat level to 13.
+  * Add Rules-Requires-Root field to control.
+  * New upstream release (5.18.5).
+  * Update build-deps and deps with the info from cmake.
+  * Delete not needed Breaks/Confilcts.
+  * Add myself to Uploaders.
+  * Remove not needed injection of linker flags.
+  * Update Homepage link to point to new invent.kde.org
+  * Update field Source in debian/copyright to invent.kde.org move.
+  * Set/Update field Upstream-Contact in debian/copyright.
+
+  [ Norbert Preining ]
+  * New upstream release (5.19.4).
+  * Remove Maximiliano from Uploaders as requested on IRC.
+  * Change maintainer in d/control to Debian Qt/KDE Maintainers.
+  * Update build-deps and deps according to info from cmake.
+  * Update symbols file.
+  * Update "Make kwayland optional" patch to current sources.
+
+ -- Pino Toscano <pino@debian.org>  Sat, 29 Aug 2020 22:44:41 +0200
+
+libkscreen (4:5.17.5-3) unstable; urgency=medium
+
+  * Team upload.
+  * Update the patch Make-kwayland-optional.patch to the newest codebase.
+
+ -- Pino Toscano <pino@debian.org>  Fri, 21 Feb 2020 07:50:03 +0100
+
+libkscreen (4:5.17.5-2) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+  * Bump Standards-Version to 4.5.0, no changes required.
+
+ -- Pino Toscano <pino@debian.org>  Fri, 14 Feb 2020 20:42:37 +0100
+
+libkscreen (4:5.17.5-1) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.16.5).
+  * Salsa CI automatic initialization by Tuco
+  * Update build-deps and deps with the info from cmake
+
+  [ Pino Toscano ]
+  * New upstream release.
+  * Update the build dependencies according to the upstream build system:
+    - bump KF packages to 5.62.0
+  * Bump the debhelper compatibility to 12:
+    - switch the debhelper build dependency to debhelper-compat 12
+    - remove debian/compat
+  * Drop the migration from libkscreen-dbg, no more needed after two Debian
+    stable releases.
+  * Drop the 'testsuite' autopkgtest, as it does not test the installed
+    packages.
+  * Pass -DBUILD_TESTING=OFF to cmake to disable the build of tests, as they
+    are not run at build time anyway.
+  * Update install files.
+  * Update symbols file.
+  * Update copyright.
+  * Update lintian overrides.
+  * Bump Standards-Version to 4.4.1, no changes required.
+  * Fix typo in the description of libkf5screen-bin.
+  * Remove breaks/replaces for versions older than oldstable.
+
+ -- Pino Toscano <pino@debian.org>  Mon, 13 Jan 2020 07:52:09 +0100
+
+libkscreen (4:5.14.5-1) unstable; urgency=medium
+
+  * New upstream release (5.14.5).
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 24 Jan 2019 09:25:59 -0300
+
+libkscreen (4:5.14.3-1) unstable; urgency=medium
+
+  * Drop debian/meta/upstream_scm.json
+  * Update upsteam signing-key
+  * New upstream release (5.14.3).
+  * Update build-deps and deps with the info from cmake
+  * Rediff patches
+  * Bump group breaks (4:5.14)
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 23 Nov 2018 08:50:45 -0300
+
+libkscreen (4:5.13.4-1) unstable; urgency=medium
+
+  * New upstream release (5.13.4).
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 19 Aug 2018 23:18:08 +0200
+
+libkscreen (4:5.13.1-1) unstable; urgency=medium
+
+  * New upstream release (5.12.2).
+  * New upstream release (5.13.1).
+  * Update build-deps and deps with the info from cmake
+  * Update symbols files
+  * testsuite: add dbus-x11 dependency
+  * Bump group breaks (4:5.13)
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 26 Jun 2018 13:43:09 +0200
+
+libkscreen (4:5.12.1-1) sid; urgency=medium
+
+  * Use the salsa canonical urls
+  * New upstream release (5.12.1).
+  * Refresh "Make kwayland optional" patch
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 20 Feb 2018 22:08:56 +0100
+
+libkscreen (4:5.12.0-2) sid; urgency=medium
+
+  * New revision
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 12 Feb 2018 16:03:44 +0100
+
+libkscreen (4:5.12.0-1) experimental; urgency=medium
+
+  * Bump debhelper build-dep and compat to 11.
+  * Build without build_stamp
+  * Add link options as-needed
+  * Add Bhushan Shah upstream signing key
+  * New upstream release (5.12.0).
+  * Bump Standards-Version to 4.1.3.
+  * Bump group breaks (5.12)
+  * Update symbols files.
+  * Use https uri for uscan
+  * Release to experimental
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 08 Feb 2018 15:20:53 +0100
+
+libkscreen (4:5.11.4-1) experimental; urgency=medium
+
+  * New upstream release (5.11.4).
+  * Bump Standards-Version to 4.1.2.
+  * Release to experimental
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 03 Jan 2018 16:49:05 -0300
+
+libkscreen (4:5.10.5-2) sid; urgency=medium
+
+  * New revision
+  * Bump Standards-Version to 4.1.0.
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 03 Sep 2017 09:55:33 +0200
+
+libkscreen (4:5.10.5-1) experimental; urgency=medium
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.10.3).
+  * Bump Standards-Version to 4.0.0.
+  * Update upstream metadata
+  * Bump group breaks (5.10)
+  * Update symbols files.
+  * New upstream release (5.10.4).
+  * Update build-deps and deps with the info from cmake
+  * New upstream release (5.10.5).
+  * Release to experimental
+
+  [ Jonathan Riddell ]
+  * update watch file to version=4 with pgp signature checking
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 28 Aug 2017 15:28:35 +0200
+
+libkscreen (4:5.8.6-2) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 14 Mar 2017 18:55:01 +0100
+
+libkscreen (4:5.8.6-1) experimental; urgency=medium
+
+  * New upstream release (5.8.6)
+    + Disable kscreen.log logging by default (Closes: 846940)
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 13 Mar 2017 11:33:19 +0100
+
+libkscreen (4:5.8.5-1) experimental; urgency=medium
+
+  * New upstream release (5.8.5).
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 30 Dec 2016 18:46:19 +0100
+
+libkscreen (4:5.8.4-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Refresh patches
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.8.4)
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 23 Nov 2016 18:37:14 +0100
+
+libkscreen (4:5.8.2-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Refresh patches
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.8.2)
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 19 Oct 2016 15:22:51 +0200
+
+libkscreen (4:5.8.1-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Refresh patches
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.8.1)
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 16 Oct 2016 22:58:51 +0200
+
+libkscreen (4:5.8.0-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Refresh patches
+  * Update symbols files.
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.8.0)
+  * Replace dbus-launch with dbus-run-session in tests
+  * Bump group breaks (5.8)
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 07 Oct 2016 14:04:50 +0200
+
+libkscreen (4:5.7.4-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * New upstream release (5.7.4)
+
+  [ Maximiliano Curia ]
+  * Bump group breaks (5.7)
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 26 Aug 2016 15:04:49 +0200
+
+libkscreen (4:5.7.0-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Update build-deps and deps with the info from cmake
+  * Refresh patches
+  * Update symbols files.
+
+  [ Maximiliano Curia ]
+  * Update install files
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 08 Jul 2016 16:08:09 +0200
+
+libkscreen (4:5.6.5-1) unstable; urgency=medium
+
+  [ Automatic packaging ]
+  * Refresh patches
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 21 Jun 2016 19:53:25 +0200
+
+libkscreen (4:5.6.4-3) unstable; urgency=medium
+
+  * New patch: make_kwayland_optional.diff
+  * Build against kwayland only on linux
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 01 Jun 2016 11:45:24 +0200
+
+libkscreen (4:5.6.4-2) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 31 May 2016 17:51:32 +0200
+
+libkscreen (4:5.6.4-1) experimental; urgency=medium
+
+  [ Maximiliano Curia ]
+  * Avoid circular dependencies.
+  * Bump Standards-Version to 3.9.7, no changes needed.
+  * uscan no longer supports this kind of watch files.
+  * New upstream release (5.5.5).
+  * Update symbols files from buildds logs (4:5.5.4-1).
+  * Add upstream metadata (DEP-12)
+  * Follow upstream soversion bump
+
+  [ Automatic packaging ]
+  * Update build-deps and deps with the info from cmake
+  * Update install files
+  * Bump Standards-Version to 3.9.8
+  * Bump -bin version dependency, now the plugins are in the -bin package
+  * Update symbols files for the new soversion
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 19 May 2016 10:24:31 +0200
+
+libkscreen (4:5.5.4-1) experimental; urgency=medium
+
+  * New upstream release (5.5.0).
+  * Split -bin package from libkf5screen6.
+  * New upstream release (5.5.1).
+  * New upstream release (5.5.2).
+  * New upstream release (5.5.3).
+  * New upstream release (5.5.4).
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 27 Jan 2016 16:48:59 +0100
+
+libkscreen (4:5.4.3-1) unstable; urgency=medium
+
+  * New upstream release (5.4.3).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 01 Dec 2015 11:45:49 +0100
+
+libkscreen (4:5.4.2-1) unstable; urgency=medium
+
+  * New upstream release (5.4.2).
+  * Update symbols files from buildds logs (4:5.4.1-1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 06 Oct 2015 07:52:07 +0200
+
+libkscreen (4:5.4.1-1) unstable; urgency=medium
+
+  * New upstream release (5.4.1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 11 Sep 2015 18:45:14 +0200
+
+libkscreen (4:5.4.0-1) unstable; urgency=medium
+
+  * New upstream release (5.4.0).
+  * Update symbols files.
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 03 Sep 2015 17:59:24 +0200
+
+libkscreen (4:5.3.2-2) unstable; urgency=medium
+
+  * Update symbols files for gcc5 compatibility. (Closes: #791728)
+    Thanks to Martin Michlmayr
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 29 Aug 2015 11:37:43 +0200
+
+libkscreen (4:5.3.2-1) unstable; urgency=medium
+
+  * New upstream release (5.3.2).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 30 Jun 2015 22:29:10 +0200
+
+libkscreen (4:5.3.1-1) unstable; urgency=medium
+
+  * New upstream release (5.3.0).
+  * New upstream release (5.3.1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 30 Jun 2015 10:35:03 +0200
+
+libkscreen (4:5.2.2-1) experimental; urgency=medium
+
+  * New upstream release (5.2.1).
+  * New upstream release (5.2.2).
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 25 Mar 2015 23:17:37 +0100
+
+libkscreen (4:5.2.2-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Tue, 24 Mar 2015 07:34:45 -0700
+
+libkscreen (4:5.2.1-0ubuntu1) vivid; urgency=medium
+
+  [ Harald Sitter ]
+  * Use software transition flags for kscreen5->6
+    Using versioned breaks/replaces instead of an unversioned
+    conflicts.
+
+  [ Scarlett Clark ]
+  * New upstream release
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Mon, 23 Feb 2015 09:43:36 -0800
+
+libkscreen (4:5.2.0-1) experimental; urgency=medium
+
+  [ Harald Sitter ]
+  * Use software transition flags for kscreen5->6
+    Using versioned breaks/replaces instead of an unversioned
+    conflicts.
+
+  [ Maximiliano Curia ]
+  * Prepare initial Debian release.
+  * Add myself as Uploader.
+  * Bump Standards-Version to 3.9.6, no changes needed.
+  * Update build dependencies to build against experimental and to
+    follow cmake.
+  * Update copyright information.
+  * Update install files.
+  * Update watch file.
+  * Add basic autopkgtests support.
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 09 Feb 2015 17:18:18 +0100
+
+libkscreen (4:5.2.0-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Harald Sitter <sitter@kde.org>  Tue, 27 Jan 2015 14:55:18 +0100
+
+libkscreen (4:5.1.95-0ubuntu1) vivid; urgency=medium
+
+  [ Jonathan Riddell ]
+  * Update for soversion bump
+
+  [ Philip Muškovac ]
+  * Add plugin symbols to symbols file as they're shipped in the library
+    package
+
+  [ Jonathan Riddell ]
+  * New upstream beta release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 15 Jan 2015 01:32:51 +0100
+
+libkscreen (5.1.1-0ubuntu2) vivid; urgency=medium
+
+  * Add symbols file
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 26 Nov 2014 15:36:31 +0100
+
+libkscreen (5.1.1-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release.
+  * Add missing build depends for various xcb protocols.
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Mon, 10 Nov 2014 19:48:54 +0100
+
+libkscreen (5.0.93-0ubuntu1) utopic; urgency=medium
+
+  * New upstream release
+
+  [ Harald Sitter ]
+  * switch to new pkg-kde-tools
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Thu, 18 Sep 2014 07:13:45 -0700
+
+libkscreen (5.0.91-0ubuntu1) utopic; urgency=medium
+
+  [ Jonathan Riddell ]
+  * New upstream release
+
+  [ Scarlett Clark ]
+  * Fix rules
+  * Update watch to http://download.kde.org
+  * Update extra-cmake-modules depend version
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Thu, 10 Jul 2014 21:20:23 +0200
+
+libkscreen (1.73-0ubuntu1) utopic; urgency=medium
+
+  * New upstream RC release
+  * Upstream renamed to libkscreen
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 07 Jul 2014 14:38:00 +0200
+
+libkscreen2 (1.72-0ubuntu1) utopic; urgency=medium
+
+  [ Scarlett Clark ]
+  * Initial release.
+
+  [ Jonathan Riddell ]
+  * New upstream beta release
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Mon, 09 Jun 2014 10:26:08 +0100

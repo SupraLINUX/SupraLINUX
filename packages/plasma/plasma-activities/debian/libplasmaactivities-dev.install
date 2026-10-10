@@ -1,0 +1,4 @@
+usr/include/PlasmaActivities/
+usr/lib/*/cmake/PlasmaActivities/
+usr/lib/*/libPlasmaActivities.so
+usr/lib/*/pkgconfig/PlasmaActivities.pc

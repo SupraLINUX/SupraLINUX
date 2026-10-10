@@ -1,0 +1,4 @@
+etc/xdg/autostart/kglobalacceld.desktop
+usr/lib/*/libexec/kglobalacceld
+usr/lib/systemd/user/plasma-kglobalaccel.service
+usr/share/qlogging-categories6/kglobalacceld.categories

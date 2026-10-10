@@ -1,0 +1,62 @@
+name: PR CI router
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: pr-ci-router-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: Plan active PR work
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    outputs:
+      run_plasma_lane: ${{ steps.scope.outputs.run_plasma_lane }}
+      run_qt_provider: ${{ steps.scope.outputs.run_qt_provider }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - name: Select active lanes
+        id: scope
+        shell: bash
+        env:
+          EVENT_ACTION: ${{ github.event.action }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          EVENT_AFTER: ${{ github.event.after }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "${EVENT_ACTION}" == "synchronize" ]]; then
+            before="${EVENT_BEFORE}"
+            after="${EVENT_AFTER}"
+          else
+            before="${PR_BASE_SHA}"
+            after="${PR_HEAD_SHA}"
+          fi
+          python3 scripts/plan-pr-ci.py "${before}" "${after}" --github-output "${GITHUB_OUTPUT}"
+
+  repository-policy:
+    name: Repository policy
+    uses: ./.github/workflows/repository-policy.yml
+
+  kde-plasma-lane:
+    name: Active Plasma lane
+    needs: [plan, repository-policy]
+    if: needs.plan.outputs.run_plasma_lane == 'true'
+    uses: ./.github/workflows/kde-plasma-lane.yml
+
+  qt-provider-preflight:
+    name: Qt provider preflight
+    needs: [plan, repository-policy]
+    if: needs.plan.outputs.run_qt_provider == 'true'
+    uses: ./.github/workflows/qt-provider-preflight.yml

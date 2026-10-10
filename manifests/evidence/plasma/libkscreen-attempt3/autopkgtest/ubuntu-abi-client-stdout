@@ -1,0 +1,10 @@
+/var/tmp/supralinux-libkscreen-baseline/build/screen-client: OK
+Installed KScreen D-Bus/Fake backend, get/set configuration, EDID, mode persistence, cloning, monitor signals and hotplug: PASS
+Installed ScreenDpms construction/properties on private Xvfb without DPMS: PASS; power switching and Wayland remain integration QA
+org.kde.kscreen.dpms: DPMS extension not available
+
+Owned installed launcher, private D-Bus and Xvfb reaped; runtime directory removed
+Installed KScreen XRandR backend on private Xvfb, screen/output/mode discovery and unsupported ScreenDpms properties: PASS
+org.kde.kscreen.dpms: DPMS extension not available
+
+Owned installed launcher, private D-Bus and Xvfb reaped; runtime directory removed

@@ -1,0 +1,7 @@
+Tests: ubuntu-abi-client
+Depends: @, python3, binutils, apt, dbus-daemon, kactivitymanagerd, qt6-qpa-plugins, qml6-module-qtcore
+Restrictions: needs-root, allow-stderr
+
+Tests: consumer
+Depends: @, build-essential, cmake, qt6-declarative-dev, dbus-daemon, kactivitymanagerd, qt6-qpa-plugins, qml6-module-qtcore
+Restrictions: needs-root, allow-stderr

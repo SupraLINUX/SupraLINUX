@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "active-bound-monitor-read-outage-recovery",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "source_commit": "8fe666d45718d429ca47b321ea2b7ef258ab6182",
+  "workflow_run_id": 37255396918,
+  "workflow_job_id": 111591237798,
+  "injected_monitor_read_failures": 1,
+  "observed_live_guest_after_read_failure": true,
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-runner-contract-20261005t022506z-212641",
+  "host_evidence_seal_sha256": "6c129bcc12f22738ff2d4534553c7f6836ca9b78883ed84857fa0fd937ba687f",
+  "inputs_sha256": {
+    "scripts/run-kvm-jit-gate-core.sh": "a3efa68495f3f0d64a43b6ed693f7c210996ca0bb8dfbc5ebd8c7913d437ee92",
+    "scripts/test-kvm-monitor-recovery.py": "7d660d7c9bd2b51562cf3df3ef96aa02077d45660a8829c53bf705503fe04477"
+  },
+  "files_sha256": {
+    "workflow-run.json": "b7017b69030e1b5f681cc69b44125046a4a2c166c5d9e9c1ce07a27be008c1a0",
+    "evidence-sha256.txt": "6c129bcc12f22738ff2d4534553c7f6836ca9b78883ed84857fa0fd937ba687f",
+    "monitor-guest-process.json": "46affb51dfe264d62980c8c041e48ea5b998222e707566e1b6892c2e00aaf43f",
+    "monitor-read-outages.txt": "fa83f04d35449e3ccd0c8e26e4dc57cf49423ae638a52e1484aa6f526a71173b",
+    "host-result.json": "04cf97574dfd5798b57c0a0718d3f52403b9938c0a930b5a8ef6ee67a560bd1e",
+    "workflow-job.json": "948c6a01d2c511c84ff0c4665c7a7e551c182ff17ff422d91042da2fe3629489"
+  }
+}

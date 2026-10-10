@@ -1,0 +1,6 @@
+Actions runner runtime provenance verification: PASS
+runtime_version=2.337.0
+runtime_commit=397b032cbf865e9c3ddfab89d533ec19325e1273
+Nested KVM runtime probe: PASS (/opt/actions-runner/_work/SupraLINUX/SupraLINUX/evidence/authoritative-plasma-package/nested-kvm-runtime.txt)
+Executing knighttime reviewed Ubuntu baseline in nested KVM...
+knighttime reviewed Ubuntu baseline: INFRA_INVALID; package Attempts consumed=0

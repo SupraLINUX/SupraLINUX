@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import json,sys
+ROOT=Path(__file__).resolve().parents[1]
+errors=[]
+def req(v,m):
+    if not v: errors.append(m)
+def load(p): return json.loads((ROOT/p).read_text())
+T=load("manifests/kde-frameworks-tier3.json"); L=load("manifests/kde-tier3-build-level1.json")
+C=load("manifests/kde-tier3-package-contracts.json"); M=load("manifests/kde-tier3-materialization.json")
+P=load("manifests/kde-tier3-build-campaign.json"); A=load("manifests/kde-tier3-kio-attempt9-remediation.json"); D=load("manifests/kde-dag.json")
+SNAPSHOT="12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED"; BLOCKED={"baloo","kcmutils","knotifyconfig","kparts","ktexteditor","purpose"}
+VERSION="6.30.0-0supralinux9"; RETAINED="6.30.0-0supralinux5"; RUN=36413768965; JOB=108899950721; COMMIT="0997aa320e2d0a7bbf96cce36ce759cd8433f9b4"; ART=10965892140; ART_SHA="b11e6cf5142aab878578f5d7662b3c0e2cf41fd306b3ecaffbc76e78c1e63f2c"; GATE="tier3-attempt9-kio-planning-validation"; MARKER="attempt9-kio-remediation-source-PASS-pending-planning-validation"
+def check(ev,p):
+    req(ev.get("workflow_run")==RUN and ev.get("job_id")==JOB,p+" run/job"); req(ev.get("artifact_id")==ART and ev.get("artifact_sha256")==ART_SHA,p+" artifact"); req(ev.get("package_version")==VERSION,p+" version")
+pol=T.get("discovery_policy",{})
+req(pol.get("phase")=="build-level1-planning" and pol.get("package_builds")=="tier3-level1-source-PASS-pending-planning-validation" and pol.get("remediation")==MARKER,"Attempt9 planning policy")
+nodes={n["id"]:n for n in T.get("nodes",[])}
+req(nodes["kio"].get("state")=="FAIL" and nodes["kio"].get("packaging",{}).get("package_version")=="6.30.0-0supralinux8" and nodes["kio"].get("packaging",{}).get("downstream_eligible") is False,"canonical KIO FAIL/-8")
+req(nodes["kxmlgui"].get("state")=="PASS" and nodes["kxmlgui"].get("packaging",{}).get("package_version")==RETAINED,"KXMLGui retained PASS/-5")
+req({n for n,v in nodes.items() if v.get("state")=="BLOCKED"}==BLOCKED and "kio" not in D.get("nodes",{}),"canonical blocked/DAG boundary")
+snap=T.get("level1_snapshot",{}); req((snap.get("pass"),snap.get("pending"),snap.get("current_fail"),snap.get("blocked"))==(12,1,1,6),"canonical snapshot")
+ar=T.get("active_remediation",{})
+req(ar.get("round")==11 and ar.get("status")=="materialization-PASS-pending-level1-planning-validation" and ar.get("next_gate")==GATE,"canonical source PASS lifecycle")
+req(ar.get("candidate_package_versions")=={"kio":VERSION,"kxmlgui":RETAINED} and ar.get("source_materialization_complete") is True,"canonical source complete")
+req(ar.get("execution_authorized") is False and ar.get("level1_execution_authorized") is False and ar.get("current_attempt")==8 and ar.get("next_attempt")==9,"canonical Attempt9 paused")
+req(ar.get("materialization_workflow_run")==RUN and ar.get("materialization_commit")==COMMIT and ar.get("materialization_artifacts",{}).get("kio")=={"job_id":JOB,"artifact_id":ART,"artifact_sha256":ART_SHA,"package_version":VERSION},"canonical materialization evidence")
+check(nodes["kio"].get("planning",{}).get("materialization_evidence",{}),"canonical planning")
+lr=L.get("active_remediation",{})
+req(lr.get("global_round")==11 and lr.get("status")=="materialization-PASS-pending-attempt9-planning-validation" and lr.get("source_rematerialization_required") is False,"Level1 source PASS")
+req(L.get("execution_authorized") is False and lr.get("execution_authorized") is False and lr.get("level1_execution_authorized") is False and lr.get("current_attempt")==8 and lr.get("next_attempt")==9 and lr.get("next_gate")==GATE,"Level1 Attempt9 paused")
+req(lr.get("materialization_workflow_run")==RUN and lr.get("materialization_commit")==COMMIT and lr.get("materialization_artifacts",{}).get("kio")=={"job_id":JOB,"artifact_id":ART,"artifact_sha256":ART_SHA,"package_version":VERSION},"Level1 source evidence")
+req(L.get("nodes",{}).get("kio",{}).get("materialization")=={"workflow_run":RUN,"job_id":JOB,"artifact_id":ART,"artifact_sha256":ART_SHA},"Level1 KIO materialization")
+cr=C.get("active_remediation",{})
+req(cr.get("round")==11 and cr.get("status")=="materialization-PASS-pending-level1-planning-validation" and cr.get("next_gate")==GATE,"contracts source PASS")
+req(cr.get("execution_authorized") is False and cr.get("level1_execution_authorized") is False and cr.get("candidate_package_versions")=={"kio":VERSION,"kxmlgui":RETAINED},"contracts paused")
+req(cr.get("materialization_evidence",{}).get("workflow_run")==RUN and cr.get("materialization_evidence",{}).get("commit")==COMMIT and cr.get("materialization_evidence",{}).get("artifacts",{}).get("kio")=={"job_id":JOB,"artifact_id":ART,"artifact_sha256":ART_SHA,"package_version":VERSION},"contracts source evidence")
+req(C.get("nodes",{}).get("kio",{}).get("package_version_candidate")==VERSION,"KIO contract -9")
+req(M.get("state")=="PASS" and "remediation_queue" not in M,"materialization PASS/no queue")
+mr=M.get("active_remediation",{}); req(mr.get("status")=="materialization-PASS-pending-level1-planning-validation" and mr.get("next_gate")==GATE,"materialization lifecycle")
+mk=M.get("nodes",{}).get("kio",{}); req(mk.get("state")=="materialized" and mk.get("package_version")==VERSION,"KIO source materialized -9"); check(mk.get("evidence",{}),"KIO")
+ev=mk.get("evidence",{})
+req(ev.get("dsc_sha256")=="e3cf8fc56b8dce25af5d0c5ce8ce23455d4330f83814e1664375a0b06a63477e" and ev.get("debian_tar_sha256")=="6627dec0cee7294c4398f8faf634672b06725050ebbdd1cdf840a19b14581331","KIO source package hashes")
+req(ev.get("source_tree_sha256")=="ff6b8bd3ff3df12b8a3be332e61e9aa85bdb15c69bcada4e9bc8be5f15fc0beb" and ev.get("materialized_tree_sha256")=="a6a05b5d977c5bdf911cacac87b0310669681935c45bca15ef5a77e8fa9ab8fb","KIO tree hashes")
+req(ev.get("adapted_control_sha256")=="b5f687a50fd97d7ca90871a49610dc35be3ca92c51bfd20d38c9f48af45585a5" and ev.get("adapted_rules_sha256")=="bda27ef4c2d07b790e6eb0473a32abe6c58371e29f909ab7f52ee45e69ed0a3f","KIO packaging hashes")
+sp=ev.get("supralinux_source_patches",[]); req(len(sp)==1 and sp[0].get("patch_sha256")=="8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602" and sp[0].get("patched_source_sha256")=="57d20f3786220178316b31819ba266432207b1f4d55859ccf8d1fad37645021b","KIO exact source patch")
+req(any(x.get("package_version")=="6.30.0-0supralinux8" and x.get("artifact_id")==10898999142 for x in mk.get("evidence_history",[])),"KIO -8 historical source retained")
+pk=P.get("nodes",{}).get("kio",{}); req(P.get("state")=="planned" and P.get("execution_authorized") is False and pk.get("package_version")==VERSION,"campaign KIO -9/non-executable")
+req(pk.get("materialization")=={"workflow_run":RUN,"job_id":JOB,"artifact_id":ART,"artifact_sha256":ART_SHA},"campaign KIO source")
+req(A.get("status")=="source-materialization-PASS-pending-planning-validation" and A.get("source_materialization_complete") is True and A.get("materialization_authorized") is False,"Attempt9 source closed")
+req(A.get("package_execution_authorized") is False and A.get("level1_execution_authorized") is False and A.get("gates",{}).get("current")==GATE,"Attempt9 binary blocked/current gate")
+check(A.get("materialization_evidence",{}),"Attempt9")
+req(A.get("definition_contract",{}).get("status")=="PASS" and A.get("definition_contract",{}).get("repository_policy_workflow_run")==36413768747,"Attempt9 definition retained")
+for obj,name in ((L,"Level1"),(C,"contracts"),(M,"materialization"),(A,"Attempt9")): req(obj.get("stable_promotion_requires_explicit_user_approval") is True,name+" stable policy")
+if errors:
+    for e in errors: print("ERROR:",e,file=sys.stderr)
+    raise SystemExit(1)
+print("KDE Tier 3 KIO Attempt 9 post-materialization planning gate: PASS")
+print(SNAPSHOT)
+print("KIO source=6.30.0-0supralinux9; canonical KIO=FAIL 6.30.0-0supralinux8")
+print("Attempt9=NOT-AUTHORIZED; next_gate="+GATE)

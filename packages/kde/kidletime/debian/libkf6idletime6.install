@@ -1,0 +1,7 @@
+#!/usr/bin/dh-exec
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6IdleTime.so.6
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6IdleTime.so.6.*
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/plugins/kf6/org.kde.kidletime.platforms/KF6IdleTimeXcbPlugin*.so
+[linux-any] usr/lib/${DEB_HOST_MULTIARCH}/qt6/plugins/kf6/org.kde.kidletime.platforms/KF6IdleTimeWaylandPlugin*.so
+usr/share/qlogging-categories6/kidletime.categories
+usr/share/qlogging-categories6/kidletime.renamecategories

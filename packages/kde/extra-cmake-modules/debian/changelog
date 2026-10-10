@@ -1,0 +1,26 @@
+kf6-extra-cmake-modules (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Ship Debian copyright metadata and declare the Python interpreter runtime
+    dependency required by installed ECM helper scripts.
+  * Make post-build Lintian errors an explicit fatal package gate.
+  * Exercise the Qt-integrated ECM consumer smoke with Ubuntu Qt 6.10 provider
+    tooling available on PATH.
+  * Capture built package artifacts before post-build gates so failed attempts
+    retain inspectable .deb, .changes and .buildinfo evidence.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 12:50:00 +0000
+
+kf6-extra-cmake-modules (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Disable debhelper's test target invocation when BUILD_TESTING is disabled;
+    downstream consumer smoke remains mandatory in the package preflight.
+  * Align the reusable sbuild/unshare rootfs with sbuild's expected tar path.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 11:15:00 +0000
+
+kf6-extra-cmake-modules (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Frameworks upstream stable 6.30.0 for SupraLINUX.
+  * Preserve the Ubuntu-compatible binary package name extra-cmake-modules.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 10:45:00 +0000

@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all reproducible=-fixfilepath
+export DEB_PYTHON_INSTALL_LAYOUT = deb
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DBUILD_QCH=OFF -DBUILD_PYTHON_BINDINGS=ON -DBUILD_TESTING=ON -DBUILD_DESIGNERPLUGIN=ON
+
+override_dh_auto_test:
+	if printf ' %s ' "$(DEB_BUILD_OPTIONS)" | grep -q ' nocheck '; then exit 0; fi; LANG=C.UTF-8 LC_ALL=C.UTF-8 xvfb-run -a sh -ec 'build_dir=$$(dirname "$$(find . -maxdepth 2 -type f -name CTestTestfile.cmake -print -quit)"); test -n "$$build_dir"; font_family=$$(fc-match -f "%{family}\\n" sans-serif | head -n1); printf "KWidgetsAddons test fixture sans-serif=%s\\n" "$$font_family"; case "$$font_family" in *"DejaVu Sans"*) ;; *) echo "Expected generic sans-serif to resolve to DejaVu Sans, got: $$font_family" >&2; exit 1 ;; esac; gesture_re="^(ktwofingertaptest|ktwofingerswipetest)$$"; total=$$(ctest --test-dir "$$build_dir" -N | sed -n "s/.*Total Tests: *//p"); nongesture=$$(ctest --test-dir "$$build_dir" -N -E "$$gesture_re" | sed -n "s/.*Total Tests: *//p"); gesture=$$(ctest --test-dir "$$build_dir" -N -R "$$gesture_re" | sed -n "s/.*Total Tests: *//p"); test "$$total" -eq 27; test "$$nongesture" -eq 25; test "$$gesture" -eq 2; ctest --test-dir "$$build_dir" --output-on-failure -j1 -E "$$gesture_re"; openbox >/tmp/kwidgetsaddons-openbox.log 2>&1 & wm_pid=$$!; trap "kill $$wm_pid 2>/dev/null || true; wait $$wm_pid 2>/dev/null || true" EXIT; ready=0; for i in $$(seq 1 50); do if xprop -root _NET_SUPPORTING_WM_CHECK 2>/dev/null | grep -Eq "_NET_SUPPORTING_WM_CHECK\\(WINDOW\\): window id # 0x[0-9a-fA-F]+"; then ready=1; break; fi; sleep 0.1; done; test "$$ready" -eq 1; ctest --test-dir "$$build_dir" --output-on-failure -j1 -R "$$gesture_re"'
+
+execute_before_dh_makeshlibs:
+	grep -Fq '_ZN11KColorCombo14dragEnterEventEP15QDragEnterEvent@Base 6.29.0' debian/libkf6widgetsaddons6.symbols || cat debian/libkf6widgetsaddons6.symbols.supralinux-overlay >> debian/libkf6widgetsaddons6.symbols

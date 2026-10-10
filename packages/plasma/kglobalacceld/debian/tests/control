@@ -1,0 +1,3 @@
+Tests: ubuntu-abi-client consumer
+Depends: @, build-essential, cmake, libkf6globalaccel-dev, libkglobalacceld-dev, libkf6windowsystem-dev, libkf6coreaddons-dev, libkf6config-dev, libkf6service-dev, libkf6kio-dev, libkf6jobwidgets-dev, qt6-base-dev, qt6-base-private-dev (= 6.10.2+dfsg-7), qt6-qpa-plugins, libx11-dev, libxtst-dev, xvfb, dbus, libglib2.0-bin, python3, binutils
+Restrictions: needs-root, allow-stderr

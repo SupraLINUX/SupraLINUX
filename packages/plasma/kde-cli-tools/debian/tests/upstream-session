@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: CC0-1.0
+set -Eeuo pipefail
+state=$(mktemp -d)
+trap 'rm -rf "${state}"' EXIT
+for directory in home runtime config data cache; do mkdir -m 0700 "${state}/${directory}"; done
+unset DISPLAY WAYLAND_DISPLAY SESSION_MANAGER DBUS_SESSION_BUS_ADDRESS DBUS_SYSTEM_BUS_ADDRESS
+unset QML_IMPORT_PATH QML2_IMPORT_PATH QT_PLUGIN_PATH QT_QPA_PLATFORM_PLUGIN_PATH LD_LIBRARY_PATH LD_PRELOAD
+export HOME="${state}/home" XDG_RUNTIME_DIR="${state}/runtime" XDG_CONFIG_HOME="${state}/config"
+export XDG_DATA_HOME="${state}/data" XDG_CACHE_HOME="${state}/cache"
+export DBUS_SYSTEM_BUS_ADDRESS="unix:path=${state}/nonexistent-system-bus"
+export QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software QT_QUICK_CONTROLS_STYLE=Fusion
+# No service directories: native tests cannot activate a real KDED or helper.
+cat > "${state}/bus.conf" <<CONF
+<busconfig>
+  <type>session</type>
+  <listen>unix:path=${state}/runtime/bus</listen>
+  <policy context="default"><allow own="*"/><allow send_destination="*"/><allow receive_sender="*"/></policy>
+</busconfig>
+CONF
+timeout --signal=TERM --kill-after=5s 240s dbus-run-session --config-file="${state}/bus.conf" -- "$@"

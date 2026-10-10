@@ -1,0 +1,303 @@
+{
+  "original": [
+    {
+      "tag": "IHDR",
+      "size": 13,
+      "sha256": "47a5fd99b0b4e2be14af0c15f2ef2a1034ee5b063e4a52c7b9a53020291e46c2",
+      "metadata": null
+    },
+    {
+      "tag": "gAMA",
+      "size": 4,
+      "sha256": "96256bc24f55fcd0b110db9a423c70063b27ea9e62c16789674d212fffa56f27",
+      "metadata": null
+    },
+    {
+      "tag": "cHRM",
+      "size": 32,
+      "sha256": "b287d3e5cf693bc123ec26ad76af3029f572d4b39b4e32979a81f10786a7d047",
+      "metadata": null
+    },
+    {
+      "tag": "pHYs",
+      "size": 9,
+      "sha256": "d47eea60e343a47b6277f7fd2ef043b2b6918291074acdad799822573fa607b6",
+      "metadata": null
+    },
+    {
+      "tag": "bKGD",
+      "size": 6,
+      "sha256": "47e37c66767711a2c885d2042cae4b2969ec800b46bfd45d0b422e62c77c6410",
+      "metadata": null
+    },
+    {
+      "tag": "IDAT",
+      "size": 95872,
+      "sha256": "88c955f38e0df2a090cc1f6b8f95b8513c3790baeaa0c21b06200f5425182bbd",
+      "metadata": null
+    },
+    {
+      "tag": "eXIf",
+      "size": 3356,
+      "sha256": "1a2cf1350b1ead37f2c847791c751151d424cc66a2b28d04747cffa35b5deee7",
+      "metadata": "b'II*\\x00\\x08\\x00\\x00\\x00\\x06\\x00\\x1a\\x01\\x05\\x00\\x01\\x00\\x00\\x00V\\x00\\x00\\x00\\x1b\\x01\\x05\\x00\\x01\\x00\\x00\\x00^\\x00\\x00\\x00(\\x01\\x03\\x00\\x01\\x00\\x00\\x00\\x03\\x00\\x00\\x001\\x01\\x02\\x00\\r\\x00\\x00\\x00f\\x00\\x00\\x002\\x01\\x02\\x00\\x14\\x00\\x00\\x00t\\x00\\x00\\x00i\\x87\\x04\\x00\\x01\\x00\\x00\\x00\\x88\\x00\\x00\\x00\\xb2\\x00\\x00\\x00\\x1c\\x00\\x00\\x00\\x01\\x00\\x00\\x00\\x1c\\x00\\x00\\x00\\x01\\x00\\x00\\x00GIMP 2.10.20\\x00\\x002020:"
+    },
+    {
+      "tag": "tEXt",
+      "size": 37,
+      "sha256": "152fb4ea8a26c4ef406a636449a61a24678a1fea27402827a62649b3e30d0edd",
+      "metadata": "b'date:create\\x002020-09-11T22:08:25+02:00'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 37,
+      "sha256": "d5f571eaede17352637413b874fe61f81e5beebcc21297733a07d4c9c30aad8a",
+      "metadata": "b'date:modify\\x002020-09-11T22:08:12+02:00'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 17,
+      "sha256": "32bb91b79c35a11d98eee24a5001767cc9510b76ed935988ef5d4a3d752bf6f6",
+      "metadata": "b'exif:ColorSpace\\x001'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 33,
+      "sha256": "864ccc5bb0643ca6de2dafee3c74d95295f160d5c5d3b94f51838b26142251d0",
+      "metadata": "b'exif:DateTime\\x002020:09:07 20:13:01'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 19,
+      "sha256": "c6eb252ce73dad95bb328e7d4c590f8f1a4c0a49a33c27f09f78465280e5510c",
+      "metadata": "b'exif:ExifOffset\\x00136'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 24,
+      "sha256": "249abcaf505c4b9b8b176e60440db503260c648fb0af7d5bebd538980ffe8300",
+      "metadata": "b'exif:PixelXDimension\\x00400'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 24,
+      "sha256": "f5507018f6023d28f4ef133d5a239c2eda7a3dac9e45c20265018d7819b1bbd2",
+      "metadata": "b'exif:PixelYDimension\\x00225'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 26,
+      "sha256": "4b404c86ea502f561852ea11b6f4be258e2bf8415fd4ae58a90f9d88693078a7",
+      "metadata": "b'exif:Software\\x00GIMP 2.10.20'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 36,
+      "sha256": "72ffff048e2b283fd5afca96ca0763cd497234510dfd9559602730a78db2c109",
+      "metadata": "b'exif:thumbnail:BitsPerSample\\x008, 8, 8'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 28,
+      "sha256": "9ba1820dae64b57507d4f0f287260f18eaa9fe8151a0c20005b9dfe6a1a3f4db",
+      "metadata": "b'exif:thumbnail:Compression\\x006'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 30,
+      "sha256": "a12cdeb5c6bdd4555e0ed504c7a6b44194fd8c0f2cbfd8ea73ba1e781fe51fca",
+      "metadata": "b'exif:thumbnail:ImageLength\\x00144'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 29,
+      "sha256": "39e0cb55a4354b9c5cb417ec1cc6b1e4c372f2c88bc05d715a9e66aaca8948a9",
+      "metadata": "b'exif:thumbnail:ImageWidth\\x00256'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 40,
+      "sha256": "72e7da27a654e470bd36d0e431ae605c5694385c8d89d4fc62415cbf68729c1a",
+      "metadata": "b'exif:thumbnail:JPEGInterchangeFormat\\x00286'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 47,
+      "sha256": "3c82517a1b44099ef953972adc8def38ddeb7325103b6a8555dee7db3841700c",
+      "metadata": "b'exif:thumbnail:JPEGInterchangeFormatLength\\x003070'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 42,
+      "sha256": "dddda7877b3d46059fe3662d100753033b100ca488a9f165eef7857bf0597287",
+      "metadata": "b'exif:thumbnail:PhotometricInterpretation\\x006'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 32,
+      "sha256": "cd988f2256d495d2db03fd6854cd958c2a2f832fbd867a7b8639722610be5339",
+      "metadata": "b'exif:thumbnail:SamplesPerPixel\\x003'"
+    },
+    {
+      "tag": "IEND",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata": null
+    }
+  ],
+  "installed": [
+    {
+      "tag": "IHDR",
+      "size": 13,
+      "sha256": "47a5fd99b0b4e2be14af0c15f2ef2a1034ee5b063e4a52c7b9a53020291e46c2",
+      "metadata": null
+    },
+    {
+      "tag": "gAMA",
+      "size": 4,
+      "sha256": "96256bc24f55fcd0b110db9a423c70063b27ea9e62c16789674d212fffa56f27",
+      "metadata": null
+    },
+    {
+      "tag": "cHRM",
+      "size": 32,
+      "sha256": "b287d3e5cf693bc123ec26ad76af3029f572d4b39b4e32979a81f10786a7d047",
+      "metadata": null
+    },
+    {
+      "tag": "pHYs",
+      "size": 9,
+      "sha256": "d47eea60e343a47b6277f7fd2ef043b2b6918291074acdad799822573fa607b6",
+      "metadata": null
+    },
+    {
+      "tag": "bKGD",
+      "size": 6,
+      "sha256": "47e37c66767711a2c885d2042cae4b2969ec800b46bfd45d0b422e62c77c6410",
+      "metadata": null
+    },
+    {
+      "tag": "IDAT",
+      "size": 95872,
+      "sha256": "88c955f38e0df2a090cc1f6b8f95b8513c3790baeaa0c21b06200f5425182bbd",
+      "metadata": null
+    },
+    {
+      "tag": "eXIf",
+      "size": 3356,
+      "sha256": "1a2cf1350b1ead37f2c847791c751151d424cc66a2b28d04747cffa35b5deee7",
+      "metadata": "b'II*\\x00\\x08\\x00\\x00\\x00\\x06\\x00\\x1a\\x01\\x05\\x00\\x01\\x00\\x00\\x00V\\x00\\x00\\x00\\x1b\\x01\\x05\\x00\\x01\\x00\\x00\\x00^\\x00\\x00\\x00(\\x01\\x03\\x00\\x01\\x00\\x00\\x00\\x03\\x00\\x00\\x001\\x01\\x02\\x00\\r\\x00\\x00\\x00f\\x00\\x00\\x002\\x01\\x02\\x00\\x14\\x00\\x00\\x00t\\x00\\x00\\x00i\\x87\\x04\\x00\\x01\\x00\\x00\\x00\\x88\\x00\\x00\\x00\\xb2\\x00\\x00\\x00\\x1c\\x00\\x00\\x00\\x01\\x00\\x00\\x00\\x1c\\x00\\x00\\x00\\x01\\x00\\x00\\x00GIMP 2.10.20\\x00\\x002020:"
+    },
+    {
+      "tag": "tEXt",
+      "size": 37,
+      "sha256": "10895ec51c4a389b4cad0ddc9e2f40ef31cf5b547aebed043eea516d6adf71c4",
+      "metadata": "b'date:create\\x002026-10-05T00:00:00-00:00'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 37,
+      "sha256": "2029c4c5a67c75ce26e9cffb1fa4eb3c7698a92f2ef766c2f884162250cef8ec",
+      "metadata": "b'date:modify\\x002026-10-05T00:00:00-00:00'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 17,
+      "sha256": "32bb91b79c35a11d98eee24a5001767cc9510b76ed935988ef5d4a3d752bf6f6",
+      "metadata": "b'exif:ColorSpace\\x001'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 33,
+      "sha256": "864ccc5bb0643ca6de2dafee3c74d95295f160d5c5d3b94f51838b26142251d0",
+      "metadata": "b'exif:DateTime\\x002020:09:07 20:13:01'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 19,
+      "sha256": "c6eb252ce73dad95bb328e7d4c590f8f1a4c0a49a33c27f09f78465280e5510c",
+      "metadata": "b'exif:ExifOffset\\x00136'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 24,
+      "sha256": "249abcaf505c4b9b8b176e60440db503260c648fb0af7d5bebd538980ffe8300",
+      "metadata": "b'exif:PixelXDimension\\x00400'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 24,
+      "sha256": "f5507018f6023d28f4ef133d5a239c2eda7a3dac9e45c20265018d7819b1bbd2",
+      "metadata": "b'exif:PixelYDimension\\x00225'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 26,
+      "sha256": "4b404c86ea502f561852ea11b6f4be258e2bf8415fd4ae58a90f9d88693078a7",
+      "metadata": "b'exif:Software\\x00GIMP 2.10.20'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 36,
+      "sha256": "72ffff048e2b283fd5afca96ca0763cd497234510dfd9559602730a78db2c109",
+      "metadata": "b'exif:thumbnail:BitsPerSample\\x008, 8, 8'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 28,
+      "sha256": "9ba1820dae64b57507d4f0f287260f18eaa9fe8151a0c20005b9dfe6a1a3f4db",
+      "metadata": "b'exif:thumbnail:Compression\\x006'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 30,
+      "sha256": "a12cdeb5c6bdd4555e0ed504c7a6b44194fd8c0f2cbfd8ea73ba1e781fe51fca",
+      "metadata": "b'exif:thumbnail:ImageLength\\x00144'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 29,
+      "sha256": "39e0cb55a4354b9c5cb417ec1cc6b1e4c372f2c88bc05d715a9e66aaca8948a9",
+      "metadata": "b'exif:thumbnail:ImageWidth\\x00256'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 40,
+      "sha256": "72e7da27a654e470bd36d0e431ae605c5694385c8d89d4fc62415cbf68729c1a",
+      "metadata": "b'exif:thumbnail:JPEGInterchangeFormat\\x00286'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 47,
+      "sha256": "3c82517a1b44099ef953972adc8def38ddeb7325103b6a8555dee7db3841700c",
+      "metadata": "b'exif:thumbnail:JPEGInterchangeFormatLength\\x003070'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 42,
+      "sha256": "dddda7877b3d46059fe3662d100753033b100ca488a9f165eef7857bf0597287",
+      "metadata": "b'exif:thumbnail:PhotometricInterpretation\\x006'"
+    },
+    {
+      "tag": "tEXt",
+      "size": 32,
+      "sha256": "cd988f2256d495d2db03fd6854cd958c2a2f832fbd867a7b8639722610be5339",
+      "metadata": "b'exif:thumbnail:SamplesPerPixel\\x003'"
+    },
+    {
+      "tag": "IEND",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "metadata": null
+    }
+  ],
+  "kind": "png-reproducible-timestamp-normalization-diagnosis",
+  "node": "plasma-workspace-wallpapers",
+  "resource": "Shell/contents/screenshot.png",
+  "source_commit": "48d80bfc8edb578478099966567a24de5f428db0",
+  "upstream_sha256": "c481ac4b937a2b1b080c3273e0557cd0c9d57b644156b941902483fd8e1646b5",
+  "candidate_deb_sha256": "bd7142b4e96450f0068424bec4b5cf52bf929f5d26a3026ed5f85ba80313d746",
+  "original_package_state": "FAIL",
+  "corrected_resource_verifier_scope": "host check of the exact retained installed payload; new authoritative execution required",
+  "corrected_local_resource_verifier": "PASS"
+}

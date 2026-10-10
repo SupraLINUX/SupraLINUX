@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -Skf6 -- -DBUILD_TESTING=ON -DBUILD_DOC=ON -DWITH_X11=ON
+
+override_dh_auto_test:
+	debian/tests/upstream-session dh_auto_test -- ARGS="--output-on-failure --verbose"

@@ -1,0 +1,243 @@
+{
+  "Oxygen-Im-Cant-Connect.ogg": {
+    "symlink": "oxygen/stereo/message-connectivity-error.ogg"
+  },
+  "Oxygen-Im-Connection-Lost.ogg": {
+    "symlink": "oxygen/stereo/message-connectivity-lost.ogg"
+  },
+  "Oxygen-Im-Contact-In.ogg": {
+    "symlink": "oxygen/stereo/message-contact-in.ogg"
+  },
+  "Oxygen-Im-Contact-Out.ogg": {
+    "symlink": "oxygen/stereo/message-contact-out.ogg"
+  },
+  "Oxygen-Im-Error-On-Connection.ogg": {
+    "symlink": "oxygen/stereo/message-connectivity-error-serious.ogg"
+  },
+  "Oxygen-Im-Highlight-Msg.ogg": {
+    "symlink": "oxygen/stereo/message-highlight.ogg"
+  },
+  "Oxygen-Im-Internal-Error.ogg": {
+    "symlink": "oxygen/stereo/message-error.ogg"
+  },
+  "Oxygen-Im-Irc-Event.ogg": {
+    "symlink": "oxygen/stereo/message-irc-event.ogg"
+  },
+  "Oxygen-Im-Low-Priority-Message.ogg": {
+    "symlink": "oxygen/stereo/message-lowpriority.ogg"
+  },
+  "Oxygen-Im-Message-In.ogg": {
+    "symlink": "oxygen/stereo/message-new-instant.ogg"
+  },
+  "Oxygen-Im-Message-Out.ogg": {
+    "symlink": "oxygen/stereo/message-sent-instant.ogg"
+  },
+  "Oxygen-Im-Network-Problems.ogg": {
+    "symlink": "oxygen/stereo/message-conectivity-problem.ogg"
+  },
+  "Oxygen-Im-New-Mail.ogg": {
+    "symlink": "oxygen/stereo/message-new-email.ogg"
+  },
+  "Oxygen-Im-Nudge.ogg": {
+    "symlink": "oxygen/stereo/message-attention.ogg"
+  },
+  "Oxygen-Im-Phone-Ring.ogg": {
+    "symlink": "oxygen/stereo/phone-incoming-call.ogg"
+  },
+  "Oxygen-Im-Sms.ogg": {
+    "symlink": "oxygen/stereo/message-new-sms.ogg"
+  },
+  "Oxygen-Im-User-Auth.ogg": {
+    "symlink": "oxygen/stereo/service-login.ogg"
+  },
+  "Oxygen-K3B-Finish-Error.ogg": {
+    "symlink": "oxygen/stereo/complete-media-error.ogg"
+  },
+  "Oxygen-K3B-Finish-Success.ogg": {
+    "symlink": "oxygen/stereo/complete-media-burn.ogg"
+  },
+  "Oxygen-K3B-Insert-Medium.ogg": {
+    "symlink": "oxygen/stereo/device-added.ogg"
+  },
+  "Oxygen-Sys-App-Error-Critical.ogg": {
+    "symlink": "oxygen/stereo/dialog-error-critical.ogg"
+  },
+  "Oxygen-Sys-App-Error-Serious-Very.ogg": {
+    "symlink": "oxygen/stereo/dialog-error-veryserious.ogg"
+  },
+  "Oxygen-Sys-App-Error-Serious.ogg": {
+    "symlink": "oxygen/stereo/dialog-error-serious.ogg"
+  },
+  "Oxygen-Sys-App-Error.ogg": {
+    "symlink": "oxygen/stereo/dialog-error.ogg"
+  },
+  "Oxygen-Sys-App-Message.ogg": {
+    "symlink": "oxygen/stereo/dialog-information.ogg"
+  },
+  "Oxygen-Sys-App-Negative.ogg": {
+    "symlink": "oxygen/stereo/outcome-failure.ogg"
+  },
+  "Oxygen-Sys-App-Positive.ogg": {
+    "symlink": "oxygen/stereo/outcome-success.ogg"
+  },
+  "Oxygen-Sys-Error-Printing.ogg": {
+    "symlink": "oxygen/stereo/print-error.ogg"
+  },
+  "Oxygen-Sys-File-Open-Foes.ogg": {
+    "symlink": "oxygen/stereo/file-error.ogg"
+  },
+  "Oxygen-Sys-List-End.ogg": {
+    "symlink": "oxygen/stereo/completion-rotation.ogg"
+  },
+  "Oxygen-Sys-List-Match-Multiple.ogg": {
+    "symlink": "oxygen/stereo/completion-success.ogg"
+  },
+  "Oxygen-Sys-List-Match-No.ogg": {
+    "symlink": "oxygen/stereo/completion-fail.ogg"
+  },
+  "Oxygen-Sys-Log-In-Long.ogg": {
+    "symlink": "oxygen/stereo/desktop-login-long.ogg"
+  },
+  "Oxygen-Sys-Log-In-Short.ogg": {
+    "symlink": "oxygen/stereo/desktop-login-short.ogg"
+  },
+  "Oxygen-Sys-Log-In.ogg": {
+    "symlink": "oxygen/stereo/desktop-login.ogg"
+  },
+  "Oxygen-Sys-Log-Out-Long.ogg": {
+    "symlink": "oxygen/stereo/desktop-logout.ogg"
+  },
+  "Oxygen-Sys-Log-Out.ogg": {
+    "symlink": "oxygen/stereo/service-logout.ogg"
+  },
+  "Oxygen-Sys-Question.ogg": {
+    "symlink": "oxygen/stereo/dialog-question.ogg"
+  },
+  "Oxygen-Sys-Special.ogg": {
+    "symlink": "oxygen/stereo/dialog-special.ogg"
+  },
+  "Oxygen-Sys-Trash-Emptied.ogg": {
+    "symlink": "oxygen/stereo/trash-empty.ogg"
+  },
+  "Oxygen-Sys-Warning.ogg": {
+    "symlink": "oxygen/stereo/dialog-warning.ogg"
+  },
+  "Oxygen-Window-All-Desktops-Not.ogg": {
+    "symlink": "oxygen/stereo/window-unpin.ogg"
+  },
+  "Oxygen-Window-All-Desktops.ogg": {
+    "symlink": "oxygen/stereo/window-pin.ogg"
+  },
+  "Oxygen-Window-Close.ogg": {
+    "symlink": "oxygen/stereo/window-close.ogg"
+  },
+  "Oxygen-Window-Maximize.ogg": {
+    "symlink": "oxygen/stereo/window-maximized.ogg"
+  },
+  "Oxygen-Window-Minimize.ogg": {
+    "symlink": "oxygen/stereo/window-minimized.ogg"
+  },
+  "Oxygen-Window-Move-Stop.ogg": {
+    "symlink": "oxygen/stereo/window-move-end.ogg"
+  },
+  "Oxygen-Window-Move.ogg": {
+    "symlink": "oxygen/stereo/window-move-start.ogg"
+  },
+  "Oxygen-Window-Shade-Down.ogg": {
+    "symlink": "oxygen/stereo/window-shaded.ogg"
+  },
+  "Oxygen-Window-Shade-Up.ogg": {
+    "symlink": "oxygen/stereo/window-unshaded.ogg"
+  },
+  "oxygen/index.theme": "26c90c0e13c9f2c8446b7da715d41e04c3edac5fe5f1347ac9854eff81b1125f",
+  "oxygen/stereo/alarm-clock-elapsed.ogg": {
+    "symlink": "message-new-sms.ogg"
+  },
+  "oxygen/stereo/battery-caution.ogg": {
+    "symlink": "dialog-warning.ogg"
+  },
+  "oxygen/stereo/battery-full.ogg": {
+    "symlink": "outcome-success.ogg"
+  },
+  "oxygen/stereo/battery-low.ogg": {
+    "symlink": "dialog-error-critical.ogg"
+  },
+  "oxygen/stereo/bell-window-system.ogg": {
+    "symlink": "message-contact-out.ogg"
+  },
+  "oxygen/stereo/bell.ogg": {
+    "symlink": "message-contact-out.ogg"
+  },
+  "oxygen/stereo/camera-shutter.wav": "0b0a2ee5effc28503a828859205210a6064820c6d34db9920e65fd3d58f773b3",
+  "oxygen/stereo/complete-media-burn.ogg": "cebb55aa7e38b2af181ccf0692b649d8ed92731203e5eead61789ba2fa32e9c7",
+  "oxygen/stereo/complete-media-error.ogg": "fc5f6f94da8f7e7b83d349150119b402c50b2a88bb9171c64d8f9c8db2fa1f02",
+  "oxygen/stereo/completion-fail.ogg": "58403e253e5313eb41d7f395ae505591b6bc147d67d90efdb42e15fe49fdebb2",
+  "oxygen/stereo/completion-rotation.ogg": "95f9d6ab09f7ea167ebaa2df4b728593c3abd88ba2bc1c195bbe8d20c003d3a2",
+  "oxygen/stereo/completion-success.ogg": "4f15cf3c72330ce3945e757f03d4e9b5a84dec8a76418f57ffced759f9f4dac7",
+  "oxygen/stereo/desktop-login-long.ogg": "ae36a6729fb6286c45ae8e30e25bf67982cb73f2d1ebfc57ffb88bc8f43d35ce",
+  "oxygen/stereo/desktop-login-short.ogg": "32cb2b0abad9c60a920aef7f68e502d3b3345756ee1156e8973c57e7ad59e196",
+  "oxygen/stereo/desktop-login.ogg": "26c4e3805f80b3650d669d118f6491a510cd0432b9ef7c6c9045bc70451667b4",
+  "oxygen/stereo/desktop-logout.ogg": "9722d015a42d18395de7e661d59ff1398b55ea118ba1b24b9c701c7cbc56e786",
+  "oxygen/stereo/device-added.ogg": "c9e2c9ea23943e0ee6472d0e14b624b6e895ce13732293a883b29f1d7bb3dd38",
+  "oxygen/stereo/device-removed.ogg": {
+    "symlink": "message-new-email.ogg"
+  },
+  "oxygen/stereo/dialog-error-critical.ogg": "d7436f907af74133565d17ef4a13472439da8511c8cdc5db33ca4e4e9ccfe814",
+  "oxygen/stereo/dialog-error-serious.ogg": "d640d9dae449898986eafb04534fec53368baab7e8c56e2d172b6f9135beb0b8",
+  "oxygen/stereo/dialog-error-veryserious.ogg": "b62bb19d9e0e104b1e66a2cd6fe46cd1688aa8658604b7903b6987f1bb39a6b4",
+  "oxygen/stereo/dialog-error.ogg": "1755f07261952e896fce708507a4f01bc844f1d22bf86fd81064ccd788d4673a",
+  "oxygen/stereo/dialog-information.ogg": "68e99007e29f8ed38803ece85e7e6cbbb31f68ffcdccd1e756c17d09ac3b4c53",
+  "oxygen/stereo/dialog-question.ogg": "8cf836e0a0b0be9835dfbe4b00e8160a7a3b5112237d3f65a6323545d9856c41",
+  "oxygen/stereo/dialog-special.ogg": "d67ee2de3d9213c9688568eca01be10b0289b68bb9b8ccc34b6e25e55708a895",
+  "oxygen/stereo/dialog-warning.ogg": "7eb0dd01384f005dabcc55d8b52da9edf0551c77be4fd934d2b395dde5addf86",
+  "oxygen/stereo/file-error.ogg": "0188cf0f8f6e139be04796ab4803de8f54daa8a12831d6ed0a612ee846c5d88d",
+  "oxygen/stereo/game-over-loser.ogg": {
+    "symlink": "message-new-email.ogg"
+  },
+  "oxygen/stereo/game-over-winner.ogg": {
+    "symlink": "outcome-success.ogg"
+  },
+  "oxygen/stereo/media-insert-request.ogg": {
+    "symlink": "device-added.ogg"
+  },
+  "oxygen/stereo/message-attention.ogg": "c8ee46ddfee4784cd50fadf4f94914fc768eacbc54b5337b2ebe54418551a546",
+  "oxygen/stereo/message-conectivity-problem.ogg": "6a5416548c0351fce955bfd75b57bccb44d56f572fb2fe9113d7b9da290ce9ed",
+  "oxygen/stereo/message-connectivity-error-serious.ogg": "a67e8de4f7141e5f96be810ba415aa49a27566b20ec9aab44d6350103d255478",
+  "oxygen/stereo/message-connectivity-error.ogg": "c9682021d13fe9ef93821bbae7f8cab421f50500aea3a4be988dafac9feb389f",
+  "oxygen/stereo/message-connectivity-lost.ogg": "e22b5c3c07090841f25458fe86d6b1bf7103803dbf43cb5fd87a28c9eff4a8a1",
+  "oxygen/stereo/message-contact-in.ogg": "973e31a368c68500eaba033c5879f806a2ae4556130a549b18ecb0bef8afc9b1",
+  "oxygen/stereo/message-contact-out.ogg": "4703c3e0f39e826c2572106725d5fb88e3de7ccf4bd71595c4548bd7f03fdba1",
+  "oxygen/stereo/message-error.ogg": "57ccaa4f44b9903833a9bf946faf63dccc9fb819097292e17beb8f1323ea471d",
+  "oxygen/stereo/message-highlight.ogg": "0ba26835bd696d8a8b0acd760b1112b7f01002e091483b67d458a8ecc0071a34",
+  "oxygen/stereo/message-irc-event.ogg": "05c5e64d6a367a8419b7f69d7a6cc4e699c6b139ec939d52dec01d70b111ba3d",
+  "oxygen/stereo/message-lowpriority.ogg": "75517450e1a9afd66a1961555222c3375f73e37d7afb806a81c22921467f8b68",
+  "oxygen/stereo/message-new-email.ogg": "72e7a16e38214cef70440d7ef82616b53d7600ba593856c0791bcc832bc009f3",
+  "oxygen/stereo/message-new-instant.ogg": "500dbfffb6d6b7cac73cc0b230f077d60a8ce18c94e38e0cc664c3d678fa26f0",
+  "oxygen/stereo/message-new-sms.ogg": "b24058c7b92ad5629d45cd55a6d56d41446d08b6d46b971eb46900c22025afb1",
+  "oxygen/stereo/message-sent-instant.ogg": "ccf407336f79b1259ffc5afdab4d3ae2c19a69743ad8f09575bb74eafc57b8b1",
+  "oxygen/stereo/outcome-failure.ogg": "606c71a10e0a246cc83069a97b2e3d21aba63d89fbb80d420142ab6633471dfb",
+  "oxygen/stereo/outcome-success.ogg": "22b2fce6c08f9f415790d16d253a163182cb937fa907405adad3c6a8dc7f19ef",
+  "oxygen/stereo/phone-incoming-call.ogg": "a3d1f393657f1840ac3118af06088f7a7d6134f745ca368594216f0b8aedf500",
+  "oxygen/stereo/power-plug.ogg": {
+    "symlink": "outcome-success.ogg"
+  },
+  "oxygen/stereo/power-unplug.ogg": {
+    "symlink": "outcome-failure.ogg"
+  },
+  "oxygen/stereo/print-error.ogg": "da8e56e96d7d1e1a18beae1760e4012c04e64c1404339d32722858ddd4591d1f",
+  "oxygen/stereo/service-login.ogg": "e76eddfa2ce378f1d7b04cc9cd334e52acee5f4228169fea9ca004d045f398b0",
+  "oxygen/stereo/service-logout.ogg": "6ebd984198ef37e4e4fa5745a97cb3868e88ed43e94052a5d3ab3c0499b52f61",
+  "oxygen/stereo/theme-demo.ogg": {
+    "symlink": "desktop-login.ogg"
+  },
+  "oxygen/stereo/trash-empty.ogg": "2082bc67c62d593ca9a9975e5a327b1078d545150a6de78769db6a989ecedd6c",
+  "oxygen/stereo/window-close.ogg": "710bb837ff47c7e67cafc01f4cb19b931afa5f4a4989f24d8ffab514fff2fc17",
+  "oxygen/stereo/window-maximized.ogg": "9cbb1bb897be308dd7c10949515c401f3efe43ea91ebed42dd228fd608e4247d",
+  "oxygen/stereo/window-minimized.ogg": "9a2cb6077be1b6fcd37316ddf8ed022221c2a63204140c3d580a493b2f904e9e",
+  "oxygen/stereo/window-move-end.ogg": "48491857b9ebf76aeca8951cb4a46bcd590ac70c201e2009d83e8a9b9c9c5487",
+  "oxygen/stereo/window-move-start.ogg": "c6bd2de0f1ce17b8a786c19767cb8e140930e7624c6641d690d3b366a702c27c",
+  "oxygen/stereo/window-pin.ogg": "62974f2e220e2122081f2a72f27aaf2dfea21d50202e86dbbca3fa5d3afb62db",
+  "oxygen/stereo/window-shaded.ogg": "7bc090189a44be0dca679042db91ba4831b6e209a0b5572214c50756fdf757ae",
+  "oxygen/stereo/window-unpin.ogg": "d3d501abda0b44a3231919369f837fba95c02185c8c9dfa72192a80cfc578c4d",
+  "oxygen/stereo/window-unshaded.ogg": "c87861f289c0effb07d65ce93d62483ee5f26b7e7e2e4462b3b77932a36a2ee3"
+}

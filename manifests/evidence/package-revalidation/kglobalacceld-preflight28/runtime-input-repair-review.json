@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "local exact retained input identity/hash and isolated empty-state Ubuntu APT installability review; no candidate or authoritative package certification",
+  "old_binary_count": 96,
+  "new_binary_count": 106,
+  "unchanged_old_binary_identities_and_digests": true,
+  "added_binaries": [
+    {
+      "package": "breeze-icon-theme",
+      "source_package": "kf6-breeze-icons",
+      "version": "4:6.30.0-0supralinux1",
+      "architecture": "all",
+      "sha256": "308a20089ef387da2d5ba08b42be4299dd62fe5f5535786a0d8881d93b0d1e09"
+    },
+    {
+      "package": "breeze-icon-theme-rcc",
+      "source_package": "kf6-breeze-icons",
+      "version": "4:6.30.0-0supralinux1",
+      "architecture": "all",
+      "sha256": "b5105c4deb0b120b8bd08550f1d79e9db79069503e1eb08992da867380f1df8a"
+    },
+    {
+      "package": "kdoctools6",
+      "source_package": "kf6-kdoctools",
+      "version": "6.30.0-0supralinux1",
+      "architecture": "amd64",
+      "sha256": "e455675b2fe7c3fe730d702b99b882f16f70ce2e3d44394c06774a292ebd3933"
+    },
+    {
+      "package": "kf6-breeze-icon-theme",
+      "source_package": "kf6-breeze-icons",
+      "version": "4:6.30.0-0supralinux1",
+      "architecture": "all",
+      "sha256": "1c598d29fb31ab6fba6a80c041fc81de33b74bcb23cb6f06b2cb37810e2462f3"
+    },
+    {
+      "package": "kf6-breeze-icon-theme-rcc",
+      "source_package": "kf6-breeze-icons",
+      "version": "4:6.30.0-0supralinux1",
+      "architecture": "all",
+      "sha256": "ab05a47bb8ee1d425469a858134a054657b6d7a06192cd4ab4ba0572c5aebbad"
+    },
+    {
+      "package": "libkf6breezeicons-dev",
+      "source_package": "kf6-breeze-icons",
+      "version": "4:6.30.0-0supralinux1",
+      "architecture": "amd64",
+      "sha256": "46974cd2a2e7fb22fabf5332fcf51b560a9c03fca4c1cc3eff014cd5b0336a1b"
+    },
+    {
+      "package": "libkf6breezeicons6",
+      "source_package": "kf6-breeze-icons",
+      "version": "4:6.30.0-0supralinux1",
+      "architecture": "amd64",
+      "sha256": "39843417452315f82dda133b09d1b588a5d23d44095ff821e63ee7943075b232"
+    },
+    {
+      "package": "libkf6doctools-dev",
+      "source_package": "kf6-kdoctools",
+      "version": "6.30.0-0supralinux1",
+      "architecture": "amd64",
+      "sha256": "10ee3bb9a61dcd87645b26f6df46d48e38ec3e29331e07cb983c8a62fcc9e8be"
+    },
+    {
+      "package": "libkf6doctools6",
+      "source_package": "kf6-kdoctools",
+      "version": "6.30.0-0supralinux1",
+      "architecture": "amd64",
+      "sha256": "db37d679c86ac997a8731062e3fa4bc13a87958321569d98bb10014ad37f45fe"
+    },
+    {
+      "package": "python3-kcoreaddons",
+      "source_package": "kf6-kcoreaddons",
+      "version": "6.30.0-0supralinux4",
+      "architecture": "amd64",
+      "sha256": "0aff04f52eb0ad76b3fa2028ab8d04f576059d6a2ec7330d896a1ed8e150460b"
+    }
+  ],
+  "added_source_nodes": [
+    "breeze-icons",
+    "kdoctools"
+  ],
+  "frameworks_input_node_count": 25,
+  "packaging_bytes_changed": false,
+  "candidate_version_changed": false,
+  "ubuntu_qt_provider_changed": false,
+  "all_source_and_evidence_scopes_preserved": true,
+  "candidate_execution": "NOT RUN",
+  "original_ubuntu_baseline_execution": "NOT RUN",
+  "package_attempt_consumed": false,
+  "next_gate": "fresh authoritative KVM input and original Ubuntu client preflight",
+  "local_diagnostic_limit": "Ubuntu package indexes are retained earlier signed snapshots; fresh authoritative KVM admission updates its clean indexes independently"
+}

@@ -1,0 +1,15 @@
+#cloud-config
+package_update: false
+package_upgrade: false
+write_files:
+  - path: /var/lib/supralinux/golden-lifecycle-preflight.txt
+    owner: root:root
+    permissions: '0644'
+    content: |
+      status=PASS
+power_state:
+  delay: now
+  mode: poweroff
+  message: SupraLINUX golden lifecycle synthetic preflight complete
+  timeout: 30
+  condition: true

@@ -1,0 +1,6 @@
+provider=debian
+reference_version=6.28.0
+workflow_run=34708030450
+artifact_id=10301938362
+path=trees/debian/kcoreaddons/debian/libkf6coreaddons6.symbols
+sha256=fe942c30b322dfac41f3907f614603299a2a6b6cbbc4b55f517bf26fa114ccda

@@ -1,0 +1,11 @@
+{
+  "state": "PASS",
+  "expected_tests": [
+    "QFlatSetTest"
+  ],
+  "executed_tests": [
+    "appstreamtest",
+    "QFlatSetTest"
+  ],
+  "scope": "CTest suite executed during the clean package build"
+}

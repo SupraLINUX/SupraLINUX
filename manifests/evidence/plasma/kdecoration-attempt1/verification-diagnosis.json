@@ -1,0 +1,22 @@
+{
+  "kind": "verification-gate-false-negative",
+  "original_state": "FAIL",
+  "original_result_sha256": "84c70e450cb1b6104efd434214c67118a2976a98e669e5c816b7513c3f1504ab",
+  "upstream_tests": {
+    "state": "PASS",
+    "expected_tests": [
+      "kdecoration3-decorationButtonTest",
+      "kdecoration3-decorationTest",
+      "kdecoration3-decorationShadowTest"
+    ],
+    "executed_tests": [
+      "appstreamtest",
+      "kdecoration3-decorationTest",
+      "kdecoration3-decorationShadowTest",
+      "kdecoration3-decorationButtonTest"
+    ],
+    "scope": "CTest suite executed during the clean package build"
+  },
+  "candidate_outputs_retained": false,
+  "package_result": "incomplete; requires remaining package tests"
+}

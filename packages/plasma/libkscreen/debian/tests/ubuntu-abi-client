@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-libkscreen-baseline
+sha256sum --check --strict "${BASE}/ubuntu-client.sha256"
+dpkg-query -W -f='${Package} ${Architecture} ${Version}\n' libqt6core6t64 libqt6gui6 libqt6dbus6 libwayland-client0 libxcb-randr0 libxcb-dpms0 > "${AUTOPKGTEST_TMP}/providers"
+cmp "${BASE}/ubuntu-provider-versions" "${AUTOPKGTEST_TMP}/providers"
+python3 "${BASE}/source/run-private.py" "${BASE}/build/screen-client" "${BASE}/source/profile.json" "${AUTOPKGTEST_ARTIFACTS}/unchanged-ubuntu-fake"
+python3 "${BASE}/source/run-private.py" "${BASE}/build/screen-client" "${BASE}/source/profile.json" "${AUTOPKGTEST_ARTIFACTS}/unchanged-ubuntu-xrandr" xrandr
+version=$(dpkg-query -W -f='${Version}' libkf6screen8)
+[[ "${version}" == 4:6.7.5-0supralinux4 ]]
+dpkg --compare-versions "${version}" gt "$(cat "${BASE}/ubuntu-version")"
+for package in libkscreen-bin libkf6screendpms8 libkscreen-data libkscreen-dev libkscreen-doc; do
+    [[ $(dpkg-query -W -f='${Version}' "${package}") == "${version}" ]]
+done
+for library in KF6Screen KF6ScreenDpms; do ldconfig -p | grep -F "lib${library}.so.8 " >/dev/null; done
+for backend in Fake KWayland XRandR; do test -s "/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)/qt6/plugins/kf6/kscreen/KSC_${backend}.so"; done
+test -s /usr/share/qt6/doc/KF6Screen.qch
+test -s /usr/share/qt6/doc/KF6Screen.tags
+python3 "${BASE}/source/run-private.py" "${BASE}/build/screen-client" "${BASE}/source/profile.json" "${AUTOPKGTEST_ARTIFACTS}/upgraded-doctor-help" doctor-help
+apt-get check
+cp -a "${BASE}" "${AUTOPKGTEST_ARTIFACTS}/ubuntu-client-baseline"

@@ -1,0 +1,24 @@
+# SupraLINUX KWidgetsAddons source/package notes
+
+KDE upstream v6.30.0 is the authority for source, features and build requirements.
+Source: https://download.kde.org/stable/frameworks/6.30/kwidgetsaddons-6.30.0.tar.xz
+Source SHA-256: ab1333c258678caa7562120a1c03bb71779f7232f1a0e75b9525d921dee3e0a3
+Upstream root CMakeLists Git blob: f76e59170f9edb461f097e17049fba9bc6355941
+
+Batch 7 preserves the KDE 6.30 Linux/shared-library defaults: Python bindings and
+tests are enabled; KWidgetsAddons also keeps its Designer plugin enabled. The
+explicit ON flags in debian/rules mirror the verified upstream 6.30 defaults and
+make accidental feature loss fail closed. QCH remains disabled only under the
+already-established common SupraLINUX Frameworks package profile.
+
+Python installation uses DEB_PYTHON_INSTALL_LAYOUT=deb so ECM sysconfig installs
+the extension under /usr/lib/python3/dist-packages rather than /usr/local.
+
+Debian 6.28.0 packaging is retained only as a technical compatibility reference
+for public symbols, package split conventions and copyright metadata.
+Packaging-tree evidence: run 34708030450, artifact 10301938362.
+Symbols baseline SHA-256: 31c352878dc27c56a6357ad35c308acac8871b1a105273721923cc697e68c323
+Copyright baseline SHA-256: 5165a3d00e3f02c151bcc62602ea39ccc45783fcdcf360b9c283967636246647
+Retained signing-key bundle SHA-256: 86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d
+Frameworks 6.30 signer fingerprint in the retained bundle:
+90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1.

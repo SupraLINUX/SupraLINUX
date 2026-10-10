@@ -1,0 +1,37 @@
+Source: kmenuedit
+Section: kde
+Priority: optional
+Maintainer: SupraLINUX Developers <dev@supralinux.org>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               gettext,
+               libkf6crash-dev (= 6.30.0-0supralinux1),
+               libkf6dbusaddons-dev (= 6.30.0-0supralinux3),
+               libkf6doctools-dev (= 6.30.0-0supralinux1),
+               libkf6globalaccel-dev (= 6.30.0-0supralinux2),
+               libkf6i18n-dev (= 6.30.0-0supralinux1),
+               libkf6iconthemes-dev (= 6.30.0-0supralinux3),
+               libkf6itemviews-dev (= 6.30.0-0supralinux1),
+               libkf6kio-dev (= 6.30.0-0supralinux10),
+               libkf6sonnet-dev (= 6.30.0-0supralinux3),
+               libkf6windowsystem-dev (= 6.30.0-0supralinux4),
+               libkf6xmlgui-dev (= 6.30.0-0supralinux5),
+               qt6-base-dev (>= 6.10.0~),
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/kmenuedit
+Vcs-Browser: https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/kmenuedit
+Vcs-Git: https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/kmenuedit
+Rules-Requires-Root: no
+
+Package: kmenuedit
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends},
+Description: XDG menu editor
+ This package provides a menu editor which may be used to edit the KDE Plasma
+ workspaces menu or any other XDG menu.
+ .
+ This package contains the runtime files.

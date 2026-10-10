@@ -1,0 +1,42 @@
+{
+  "id": 114000054375,
+  "run_id": 37983635260,
+  "workflow_name": "KDE Plasma authoritative KVM package build",
+  "head_branch": "architecture/bootstrap-v1",
+  "run_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/runs/37983635260",
+  "run_attempt": 1,
+  "node_id": "CR_kwDOUW9fLs8AAAAaiu7IZw",
+  "head_sha": "4977c7000a8c56ae24bc157b1fe454a45f5ad855",
+  "url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/jobs/114000054375",
+  "html_url": "https://github.com/SupraLINUX/SupraLINUX/actions/runs/37983635260/job/114000054375",
+  "status": "completed",
+  "conclusion": "cancelled",
+  "created_at": "2026-10-09T19:56:34Z",
+  "started_at": "2026-10-09T19:56:36Z",
+  "completed_at": "2026-10-09T20:04:54Z",
+  "name": "Reviewed Plasma package on KVM guest",
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 1,
+      "started_at": "2026-10-09T19:59:07Z",
+      "completed_at": "2026-10-09T20:04:50Z"
+    }
+  ],
+  "check_run_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/check-runs/114000054375",
+  "labels": [
+    "self-hosted",
+    "linux",
+    "x64",
+    "supralinux",
+    "ubuntu-26.04",
+    "kvm",
+    "ephemeral"
+  ],
+  "runner_id": 260,
+  "runner_name": "supralinux-plasma-package-build-20261009t195158z-1325664",
+  "runner_group_id": 3,
+  "runner_group_name": "supralinux authoritative jit"
+}
