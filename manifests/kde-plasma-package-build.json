@@ -9855,7 +9855,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -10032,6 +10032,10 @@
       "sha256": "78f7c06e821911c6dd7419c403fd808b7ba5cd35fdf631bfd66ed92e6625719a",
       "applicable": false,
       "inapplicability_reason": "Revision2 changes reviewed test environment/real-helper waits and packaging version after retained native FAIL. Preserve preflight41 PASS for original inputs; certify current bytes before Attempt2."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kde-cli-tools-preflight42/verification.json",
+      "sha256": "131f21d9011bfe217c90094ecc06c61a4f838edfd5230885b1ff98903aa341a9"
     }
   ],
   "package_input_incidents": [
