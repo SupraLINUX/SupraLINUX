@@ -270,12 +270,7 @@ def validate():
         if backend == 'meson':
             assert record.get('upstream_tests'), 'Reviewed Meson tests required'
             assert re.fullmatch(r'[A-Za-z0-9_.+-]+', record.get('upstream_test_project', '')), 'Reviewed Meson project required'
-        if record.get('sbuild_rootfs_policy'):
-            policy = record['sbuild_rootfs_policy']
-            assert policy['kind'] == 'immutable-bare-milestone'
-            assert campaign['execution_checkpoint'] == 'frameworks-6.30-pass'
-            assert len(policy['sha256']) == 64 and all(c in '0123456789abcdef' for c in policy['sha256'])
-            assert policy['suites'] == ['resolute','resolute-updates','resolute-security']
+        prepare.check_rootfs_policy(record, campaign['execution_checkpoint'], required=name in scope)
         if name in scope:
             assert record["state"] == "build-pending" and campaign["state"] == "execution-authorized"
         if record["state"] == "PASS":

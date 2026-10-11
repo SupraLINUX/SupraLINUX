@@ -28,6 +28,35 @@ admission = importlib.machinery.SourceFileLoader("admission", str(ROOT / "script
 
 
 class InputAdmission(unittest.TestCase):
+    def reviewed_rootfs_policy(self):
+        return copy.deepcopy(json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())['nodes']['kmenuedit']['sbuild_rootfs_policy'])
+
+    def test_current_admission_rejects_original_cli_rootfs_omission_and_policy_drift(self):
+        node = 'kde-cli-tools'
+        frozen = ROOT/'manifests/evidence/package-revalidation/kde-cli-tools-preflight40/build-contract.json'
+        record = copy.deepcopy(json.loads(frozen.read_text())['nodes'][node])
+        record['attempts'] = []
+        level = json.loads((ROOT/'manifests/kde-plasma-level0.json').read_text())
+        material = {item['node']:item for item in json.loads((ROOT/'manifests/evidence/kde-plasma-level0-materialization-result.json').read_text())['nodes']}
+        packaging = ROOT/record['packaging_path']
+        self.assertNotIn('sbuild_rootfs_policy', record)
+        with self.assertRaisesRegex(AssertionError, 'explicit sbuild rootfs policy'):
+            admission.check(node, record, packaging, level, material)
+        record['sbuild_rootfs_policy'] = self.reviewed_rootfs_policy()
+        admission.check(node, record, packaging, level, material)
+        for key,value in [('kind','fresh-buildd'),('sha256','invalid'),('suites',['resolute'])]:
+            bad = copy.deepcopy(record)
+            bad['sbuild_rootfs_policy'][key] = value
+            with self.subTest(key=key),self.assertRaises(AssertionError):
+                admission.check(node, bad, packaging, level, material)
+        with self.assertRaisesRegex(AssertionError, 'requires its Frameworks milestone'):
+            admission.check(node, record, packaging, level, material, execution_checkpoint='none')
+
+    def test_historical_record_without_rootfs_policy_keeps_its_original_scope(self):
+        prepare.check_rootfs_policy({}, 'frameworks-6.30-pass', required=False)
+        with self.assertRaisesRegex(AssertionError, 'explicit sbuild rootfs policy'):
+            prepare.check_rootfs_policy({}, 'frameworks-6.30-pass', required=True)
+
     def test_https_testbed_transport_preserves_ubuntu_signing_and_other_origins(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -94,6 +123,7 @@ class InputAdmission(unittest.TestCase):
         node = 'plasma-wayland-protocols'
         record = copy.deepcopy(json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())['nodes'][node])
         record.update(state='build-pending',attempts=[])
+        record.setdefault('sbuild_rootfs_policy', self.reviewed_rootfs_policy())
         level = json.loads((ROOT/'manifests/kde-plasma-level0.json').read_text())
         material = {item['node']:item for item in json.loads((ROOT/'manifests/evidence/kde-plasma-level0-materialization-result.json').read_text())['nodes']}
         packaging = ROOT/record['packaging_path']
@@ -114,6 +144,7 @@ class InputAdmission(unittest.TestCase):
         node='plasma-workspace-wallpapers'
         record=copy.deepcopy(json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())['nodes'][node])
         record.update(state='build-pending',attempts=[])
+        record.setdefault('sbuild_rootfs_policy', self.reviewed_rootfs_policy())
         level=json.loads((ROOT/'manifests/kde-plasma-level0.json').read_text())
         material={item['node']:item for item in json.loads((ROOT/'manifests/evidence/kde-plasma-level0-materialization-result.json').read_text())['nodes']}
         packaging=ROOT/record['packaging_path']

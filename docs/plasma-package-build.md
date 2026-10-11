@@ -1,5 +1,31 @@
 # Authoritative Plasma package builds
 
+KDE CLI Tools input preflight 40 on
+`94cbf04f18e3a89cf1a0d3a25e4ae574b2c2db2e`,
+[run 38082884077](https://github.com/SupraLINUX/SupraLINUX/actions/runs/38082884077),
+job 114303261695, preserves the original `INFRA_INVALID` result at the
+predecessor transport probe. No candidate sbuild or package Attempt started.
+The frozen CLI record omitted `sbuild_rootfs_policy`, selecting the fresh buildd
+path; all three Ubuntu HTTPS indexes then failed certificate validation and APT
+could not resolve even debhelper. The original rootfs log, contract and sbuild
+log remain unchanged; the discarded fresh rootfs's CA inventory was not captured.
+Delivery and empty offline restoration pass, and the complete host/operator
+archive restores 112 files. Direct checks confirm runner 270, VM and writable
+overlay absence with golden/milestone preserved; 27 kernel/carrier and six
+gateway samples record no incident.
+
+The current CLI record now selects the exact previously certified bare
+Frameworks milestone. Its existing runner CA bootstrap keeps TLS verification,
+Ubuntu archive signatures and all-index APT failure detection, without
+preinstalling Frameworks or Qt SDKs. Local derivation from retained exact inputs
+passes with 123 base packages; this does not certify a fresh KVM run. Generic
+admission, execution-contract preparation and Repository Policy reject a missing
+current rootfs policy; 23 input regression tests pass, including the original
+omission and policy drift controls. Historical contracts keep their original
+scope. Source, version, packaging, 34-node/152-binary inputs and both native tests
+are unchanged. A fresh authoritative input preflight is required after atomic
+publication and hosted Policy; the candidate package remains unbuilt.
+
 KMenuEdit `4:6.7.5-0supralinux1` Attempt 1 on
 `db241f48364af1d8a26b2c1025e3e53d460848ab`,
 [run 38081312292](https://github.com/SupraLINUX/SupraLINUX/actions/runs/38081312292),

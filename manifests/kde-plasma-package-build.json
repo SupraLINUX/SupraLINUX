@@ -9475,6 +9475,15 @@
         "upstream/metadata": "d55afe23039f74e509aefaa6830c854af22483d65cc2e61b38c1e03fc0002a91",
         "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
         "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+      },
+      "sbuild_rootfs_policy": {
+        "kind": "immutable-bare-milestone",
+        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+        "suites": [
+          "resolute",
+          "resolute-updates",
+          "resolute-security"
+        ]
       }
     }
   },
@@ -10048,6 +10057,12 @@
       "inapplicability_reason": "Original infrastructure failure preserved after failed Actions artifact delivery; no package Attempt or current input admission",
       "cause": "Original Ubuntu baseline testbed setup-command timed out at 3021s before the functional client completed; original INFRA_INVALID preserved. Actions artifact upload also failed with Upload progress stalled; artifact count=0. No candidate sbuild or package Attempt.",
       "repair": "Certify published unlimited SLIRP (0/0) using bounded connectivity, unchanged guest private-address guards and direct cleanup, then repeat unchanged baseline with fresh frozen runtime inputs. Retain original sealed result and complete host evidence independently of Actions delivery."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kde-cli-tools-preflight40/verification.json",
+      "sha256": "03331c231b9d817c2768f17a7f61bd2ea8b788e9d9f3d53280563185d1c77291",
+      "cause": "CLI reviewed record omitted the explicit bare milestone rootfs policy. Its fresh buildd rootfs did not use the existing runner CA bootstrap; all three Ubuntu HTTPS indexes failed certificate verification before the predecessor probe could resolve Build-Depends.",
+      "repair": "Select exact previously certified bare milestone rootfs and recorded authoritative Ubuntu CA bootstrap. Generic current admission, contract preparation and Policy now require the explicit policy. Fresh authoritative input preflight remains mandatory; no candidate Attempt consumed."
     }
   ]
 }

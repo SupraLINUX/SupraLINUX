@@ -14,8 +14,9 @@ fields = importlib.machinery.SourceFileLoader('retention',str(ROOT/'scripts/reta
 supplementary = importlib.machinery.SourceFileLoader('supplementary_admission',str(ROOT/'scripts/supplementary-package-inputs.py')).load_module()
 
 
-def check(node,record,packaging,level,material):
+def check(node,record,packaging,level,material,execution_checkpoint='frameworks-6.30-pass'):
     assert record['packaging_review'] == 'PASS' and record['state'] == 'build-pending' and not record['attempts']
+    prepare.check_rootfs_policy(record, execution_checkpoint, required=True)
     assert record['packaging_path'] == f'packages/plasma/{node}/debian'
     if record.get('source_scope') == 'plasma-supplementary-provider':
         assert node not in level['selected_nodes'], 'Provider must not impersonate a Level 0 component'
@@ -65,7 +66,7 @@ def main():
     paths = [ROOT/'manifests/kde-plasma-package-build.json',ROOT/'manifests/kde-plasma.json',ROOT/'manifests/kde-plasma-level0.json']
     campaign,planning,level = [json.loads(path.read_text()) for path in paths]
     material = {item['node']:item for item in json.loads((ROOT/'manifests/evidence/kde-plasma-level0-materialization-result.json').read_text())['nodes']}
-    check(args.node,record,args.packaging,level,material)
+    check(args.node,record,args.packaging,level,material,campaign['execution_checkpoint'])
     if not args.admit:
         print(f'{args.node} reviewed Level 0 overlay: PASS; package execution not started')
         return

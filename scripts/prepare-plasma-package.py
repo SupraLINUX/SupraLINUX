@@ -24,6 +24,18 @@ def packaging_hashes(path):
             for p in sorted(path.rglob("*")) if p.is_file() and "__pycache__" not in p.parts and p.suffix != ".pyc"}
 
 
+def check_rootfs_policy(record, execution_checkpoint, required=False):
+    """Require an explicit clean base for current Plasma execution/admission."""
+    policy = record.get('sbuild_rootfs_policy')
+    if policy is None:
+        assert not required, 'Current Plasma package requires an explicit sbuild rootfs policy'
+        return
+    assert policy['kind'] == 'immutable-bare-milestone', 'Unreviewed sbuild rootfs policy'
+    assert execution_checkpoint == 'frameworks-6.30-pass', 'Rootfs policy requires its Frameworks milestone'
+    assert len(policy['sha256']) == 64 and all(c in '0123456789abcdef' for c in policy['sha256']), 'Invalid bare rootfs digest'
+    assert policy['suites'] == ['resolute', 'resolute-updates', 'resolute-security'], 'Unreviewed Ubuntu rootfs suites'
+
+
 def supplementary_contract(node, record, root=ROOT, packaging=None):
     """Bind a supplementary overlay to the independently reviewed source authority."""
     assert record['source_scope'] == 'plasma-supplementary-provider'
@@ -63,6 +75,7 @@ def contract(node):
     record = campaign["nodes"][node]
     assert record["packaging_review"] == "PASS", "Packaging requires individual review"
     if campaign['role'] == 'reviewed-plasma-package-build':
+        check_rootfs_policy(record, campaign['execution_checkpoint'], required=node in campaign['authorized_nodes'])
         if record.get('source_scope', 'plasma-level0') == 'plasma-supplementary-provider':
             supplementary_contract(node, record)
         else:
