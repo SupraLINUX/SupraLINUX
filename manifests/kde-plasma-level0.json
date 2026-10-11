@@ -271,7 +271,7 @@
         "selection": "latest-available-resolute-family-source-reference-at-materialization",
         "reference_only": true
       },
-      "candidate_package_version": "4:6.7.5-0supralinux1",
+      "candidate_package_version": "4:6.7.5-0supralinux2",
       "package_execution_authorized": true,
       "materialization_result": "PASS",
       "ubuntu_reference_version": "4:6.6.4-0ubuntu1"
@@ -976,8 +976,8 @@
     }
   },
   "candidate_versions_evidence": {
-    "path": "manifests/evidence/kde-plasma-level0-candidate-versions-libksysguard-revision3.json",
-    "sha256": "03a1ab25c5b4e35917965c149a0061bc0f02c496617b8a17671da37935f234f9",
+    "path": "manifests/evidence/kde-plasma-level0-candidate-versions-kde-cli-tools-revision2.json",
+    "sha256": "aba636703fbdff43fb70f9404dbdb56103f930eab0408c2a047863acedbcd55c",
     "state": "PASS",
     "package_execution_started": false,
     "consumes_package_attempt": false

@@ -34,7 +34,12 @@ class InputAdmission(unittest.TestCase):
     def test_current_admission_rejects_original_cli_rootfs_omission_and_policy_drift(self):
         node = 'kde-cli-tools'
         frozen = ROOT/'manifests/evidence/package-revalidation/kde-cli-tools-preflight40/build-contract.json'
-        record = copy.deepcopy(json.loads(frozen.read_text())['nodes'][node])
+        historical = json.loads(frozen.read_text())['nodes'][node]
+        self.assertNotIn('sbuild_rootfs_policy', historical)
+        # Exercise admission using matching current version/packaging inputs.
+        # The immutable preflight40 contract records the original omission only.
+        record = copy.deepcopy(json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())['nodes'][node])
+        record.pop('sbuild_rootfs_policy')
         record['attempts'] = []
         level = json.loads((ROOT/'manifests/kde-plasma-level0.json').read_text())
         material = {item['node']:item for item in json.loads((ROOT/'manifests/evidence/kde-plasma-level0-materialization-result.json').read_text())['nodes']}

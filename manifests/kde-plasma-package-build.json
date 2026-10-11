@@ -8446,7 +8446,7 @@
     "kde-cli-tools": {
       "state": "build-pending",
       "source_package": "kde-cli-tools",
-      "version": "4:6.7.5-0supralinux1",
+      "version": "4:6.7.5-0supralinux2",
       "upstream_version": "6.7.5",
       "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/kde-cli-tools-6.7.5.tar.xz",
       "upstream_sha256": "18f3c421b305003caf73f9e9fbec09fbf30f472dbe81fec328046cca7883a31d",
@@ -8466,10 +8466,11 @@
       "required_executable_files": [
         "rules",
         "tests/baseline-setup",
-        "tests/ubuntu-abi-client",
+        "tests/client/run-private.py",
         "tests/consumer",
-        "tests/upstream-session",
-        "tests/client/run-private.py"
+        "tests/native-cache-helper",
+        "tests/ubuntu-abi-client",
+        "tests/upstream-session"
       ],
       "upstream_tests": [
         "filetypestest",
@@ -9441,40 +9442,62 @@
           ]
         }
       },
-      "attempts": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "FAIL",
+          "original_state": "FAIL",
+          "sbuild_result": "FAIL",
+          "lintian_result": "not-run",
+          "autopkgtest_result": "not-run",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 38161904715,
+          "workflow_job_id": 114536406451,
+          "source_commit": "9447017758302e55da615ef38366a8a38f125290",
+          "artifact_id": 11710817524,
+          "artifact_sha256": "33de7a174a8c54904d5b8befe037511ba1557ec2fa132a4a42a0da6cfb030e82",
+          "result_path": "manifests/evidence/plasma/kde-cli-tools-attempt1/result.json",
+          "result_sha256": "20c190b3b5a7157325a99efb4058de6d8369dff1c96b98a2d98b6711b9a88366",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261011t175712z-306956",
+          "host_evidence_manifest_sha256": "2c2127e7c749c851a26b88e06065c42aab541b9b3809de6c0d229c64bb9f7d9e",
+          "cause": "Clean compilation completed, but the unchanged official FileTypesTest failed testMimeTypePatterns and testAddService. Native totals:8 passed,2 failed,0 skipped; AppStream and kcm_smoketest passed. sbuild stopped at dh_auto_test; candidate binaries, lintian and installed package tests were not completed. Clean retained-input and original Ubuntu functional baseline passed.",
+          "repair": "Preserve original FAIL and all sources/logs. Diagnose unchanged native MIME cache/reload and application association behavior with frozen Qt6.10.2/Frameworks6.30, original source and owned fixture controls. Reenter only after a demonstrated fixture repair or separately reviewed official compatible source; no test skip, assertion change, blind retry or Qt substitution."
+        }
+      ],
       "review": {
         "source": "Official signed source unchanged; original two packages, CLI links, helpers, KCM, docs and translations retained.",
-        "version": "Preserve epoch 4; candidate exceeds authenticated Ubuntu 4:6.6.4-0ubuntu1.",
-        "dependencies": "Exact eligible Frameworks closure, matching Ubuntu Qt/private SDK; preserve X11, Su/WidgetsAddons and documentation. Native MIME/service-cache dependencies declared explicitly. Runtime closure follow-up: 34 exact eligible nodes and 152 binaries, including the selected retained support inputs and Python runtime dependency. All previous identities and original evidence scopes stay unchanged; fresh byte/source/version/architecture, empty-state APT diagnosis and authoritative input preflight remain required.",
-        "tests": "Original two registered native tests enabled; private MIME/HOME state and closed bus. Ten actual CLI commands, typed inhibition/broadcast and cleanup passed locally against original Ubuntu. Hash-bound original public Qt SDK binary reruns after normal upgrade; rebuilt consumer and exact payload/APT checks. Candidate KVM/native/package tests pending.",
+        "version": "Preserve epoch4/upstream6.7.5; revision2 supersedes retained failed revision1 and captured Ubuntu reference. Historical assignments remain immutable.",
+        "dependencies": "Exact eligible Frameworks closure, matching Ubuntu Qt/private SDK; preserve X11, Su/WidgetsAddons and documentation. Native MIME/service-cache dependencies declared explicitly. Runtime closure follow-up: 34 exact eligible nodes and 152 binaries, including the selected retained support inputs and Python runtime dependency. All previous identities and original evidence scopes stay unchanged; fresh byte/source/version/architecture, empty-state APT diagnosis and authoritative input preflight remain required. Requires CMake>=3.29 for the reviewed executable TEST_LAUNCHER; predecessor identities are unchanged.",
+        "tests": "Full unchanged native FileTypesTest10/10 passed in zero-NIC KVM with exact staged CMake executable launcher, private HOME/XDG and closed bus, real helper success and bounded cache waits. Upstream source/assertions, frozen Qt/Frameworks, original Ubuntu functional upgrade client and rebuilt consumer remain unchanged. This proves the native fixture only; clean package, lintian and installed tests remain required.",
         "profile": "No feature disabled. Real helper authorization, device eject, interactive filetype UI, launches and actual compositor/desktop remain later QA.",
         "licensing": "Preserve original KDE and Ubuntu attribution; CC0 applies only to newly authored integration fixture files."
       },
       "packaging_sha256": {
-        "README.source": "8d37ce7e01aa670360ce8cacc5bc51b2183b44a57494eb359ac8a0b325fc3dcf",
-        "changelog": "2aa529bb32c57029bb42ead327833ae17b8b1ddffab8615992d9fbfdb384be76",
-        "control": "65c34ed69391f4bf2384349d7ff1b1161fe953a8ddec1ca9cb41dc8aef5e7c5c",
-        "copyright": "f03fde8c3b47843122eb1739ae23da4d2bdf03646dae1c13ef93f569233c4f98",
-        "kde-cli-tools-data.install": "8d4e78a4b276faa93c2c94c226f9985e9bd685374f964df22b5080d3f158a56d",
-        "kde-cli-tools.install": "71444834108d1b58a8b0e5af447a608bd0da74ba4c013f1d74702ed07e764d3e",
-        "kde-cli-tools.lintian-overrides": "1937929493c478842d2f25f40e8144ceb3881f97cc55e92b1af624374766c307",
-        "not-installed": "484b77843be0a0db7f0b318cf147c413ea8a5a6deabc6ee3017f45bc1c7918e1",
-        "rules": "64fe8948219251714133c4082932732c7a58edac528b9b95bdac5848415450d3",
-        "salsa/extra_repository.list": "412646a06d733ca403c3175d36f1d1e734baaa8a76bb8e5176a0d0fb4bda7d45",
-        "salsa/qt-kde-team.debian.net.asc": "2b218b250b8929ad7055afe891bd29288228cfb6efac0e4ed638d9db8d3c4e77",
         "salsa-ci.yml": "04779f76232c171e1b0094a8bf323543669e75a3131a1d706b8c6f61ec7c2ab0",
-        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
-        "tests/baseline-setup": "8dffa232988eb914e0dd21afdd74dab8ba973f772110832cc687d7607d9479f1",
-        "tests/client/CMakeLists.txt": "6e7623fab4dd950d53619e9f1545895a58954d0009d75dddaf6de4fd2c08dc54",
-        "tests/client/main.cpp": "8b65543d1eee8c1f8fdac6ada4029952a737cd361d9d92326e100fa2d46fca97",
-        "tests/client/run-private.py": "25dfc64848ff8cd9a71c8a3c4cafaafee5bd531e5e24d33045af4974d55e3921",
-        "tests/consumer": "03af7fbf530351494ab70d4466de102e448b552053b9b139dcdea0f87447631c",
-        "tests/control": "45d53676dfc78cfa9eeaae875e251b162240523fc72d7a388643ceda8c9b7505",
-        "tests/ubuntu-abi-client": "4dd413a129801be763c200e693f7b10fecee1cdb19102e11aa19ee7a48dff405",
-        "tests/upstream-session": "2ff5ab41bdd2cd3026c024c036611bd9082994d0765e50e9e4e88b90baa096f8",
+        "kde-cli-tools.install": "71444834108d1b58a8b0e5af447a608bd0da74ba4c013f1d74702ed07e764d3e",
+        "README.source": "d8faa3b7fa23035e93b4edccc226a4f49464658c0d80881301d3451803e27681",
+        "kde-cli-tools.lintian-overrides": "1937929493c478842d2f25f40e8144ceb3881f97cc55e92b1af624374766c307",
+        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b",
+        "copyright": "f03fde8c3b47843122eb1739ae23da4d2bdf03646dae1c13ef93f569233c4f98",
+        "rules": "9f4bd64559ccd6ea29ccfd9c14738ead1b63e2e6ae5edc458ffa4ef97345f7ea",
+        "not-installed": "484b77843be0a0db7f0b318cf147c413ea8a5a6deabc6ee3017f45bc1c7918e1",
+        "changelog": "bd2277a96aac5d93451f60295285e3280ea6cbdd86d92ff142197b2507f65172",
+        "control": "c0a1808f4c6fc00799f45a3af86d5210769561cf804c39aa76c80485c25c5bb8",
+        "kde-cli-tools-data.install": "8d4e78a4b276faa93c2c94c226f9985e9bd685374f964df22b5080d3f158a56d",
         "upstream/metadata": "d55afe23039f74e509aefaa6830c854af22483d65cc2e61b38c1e03fc0002a91",
         "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
-        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+        "tests/native-cache-helper": "f4826f2571bbabd826b74b53dfc9f2fb914695d5c8ff3d07cc8da36a63dfd14d",
+        "tests/baseline-setup": "8dffa232988eb914e0dd21afdd74dab8ba973f772110832cc687d7607d9479f1",
+        "tests/ubuntu-abi-client": "e994bb83637846d2a5143de47efbb9c1db54d44412a1307618007410e3481605",
+        "tests/control": "45d53676dfc78cfa9eeaae875e251b162240523fc72d7a388643ceda8c9b7505",
+        "tests/upstream-session": "94f828e64f793934107d5cbf669566c95f22d44c5f731918b366107c67340b13",
+        "tests/consumer": "03af7fbf530351494ab70d4466de102e448b552053b9b139dcdea0f87447631c",
+        "salsa/qt-kde-team.debian.net.asc": "2b218b250b8929ad7055afe891bd29288228cfb6efac0e4ed638d9db8d3c4e77",
+        "salsa/extra_repository.list": "412646a06d733ca403c3175d36f1d1e734baaa8a76bb8e5176a0d0fb4bda7d45",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/client/main.cpp": "8b65543d1eee8c1f8fdac6ada4029952a737cd361d9d92326e100fa2d46fca97",
+        "tests/client/run-private.py": "25dfc64848ff8cd9a71c8a3c4cafaafee5bd531e5e24d33045af4974d55e3921",
+        "tests/client/CMakeLists.txt": "6e7623fab4dd950d53619e9f1545895a58954d0009d75dddaf6de4fd2c08dc54"
       },
       "sbuild_rootfs_policy": {
         "kind": "immutable-bare-milestone",
@@ -9484,6 +9507,10 @@
           "resolute-updates",
           "resolute-security"
         ]
+      },
+      "native_fixture_review": {
+        "path": "manifests/evidence/plasma/kde-cli-tools-native-fixture-repair/fixture-review.json",
+        "sha256": "0b01a46291616bfe8ad627a066e1c1497699668d84cdf287f426ff45b5c5803c"
       }
     }
   },
@@ -9742,6 +9769,12 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/kmenuedit-attempt1",
       "archive_index_sha256": "d0e03c98c522b51ba90c5a3ee593f4cb0aa3c5609710a727b186c6185138d12b"
+    },
+    {
+      "node": "kde-cli-tools",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/kde-cli-tools-attempt1",
+      "archive_index_sha256": "c924c9e29265ef6f3148a9d77f2b8f08135e0489fbd2ee5cc36fbce246b794d8"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -9822,7 +9855,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -9996,7 +10029,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/kde-cli-tools-preflight41/verification.json",
-      "sha256": "78f7c06e821911c6dd7419c403fd808b7ba5cd35fdf631bfd66ed92e6625719a"
+      "sha256": "78f7c06e821911c6dd7419c403fd808b7ba5cd35fdf631bfd66ed92e6625719a",
+      "applicable": false,
+      "inapplicability_reason": "Revision2 changes reviewed test environment/real-helper waits and packaging version after retained native FAIL. Preserve preflight41 PASS for original inputs; certify current bytes before Attempt2."
     }
   ],
   "package_input_incidents": [

@@ -45,6 +45,9 @@ jobs:
       - name: Test current package contract scope
         run: python3 scripts/test-reviewed-package-contract.py
 
+      - name: Test reviewed native fixture admission
+        run: python3 scripts/test-native-fixture-review.py
+
       - name: Test historical preflight delivery recovery
         run: python3 scripts/test-preflight-delivery.py
 

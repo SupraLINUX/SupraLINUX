@@ -1,0 +1,56 @@
+[
+  {
+    "path": ".artifacts/plasma-frontier/kde-cli-tools-mime-delay-native-kvm-control-20261011/index.json",
+    "index_sha256": "c1d84a6fc85fdad2c05440f400bf56ef839c0c8f723401d06889580d653003c7",
+    "archive_sha256": "dfdf0679f60d18f35a64a31b66e7a653818f51fc8278f430b320af0547aad958",
+    "retained_files": 1999,
+    "empty_offline_byte_restore_verified": true,
+    "requires_github_for_restore": false,
+    "off_host_backup_verified": false
+  },
+  {
+    "path": ".artifacts/plasma-frontier/kde-cli-tools-directory-and-cache-native-kvm-controls-20261011/index.json",
+    "index_sha256": "e5239e4011bda90ce241956298763156b7e450c7db6a7f4b96170306bf9420ff",
+    "archive_sha256": "77e5d7457b644aa361ec6d8da15bf469e2c927f301b41695007f88ab7aff6d84",
+    "retained_files": 1992,
+    "empty_offline_byte_restore_verified": true,
+    "requires_github_for_restore": false,
+    "off_host_backup_verified": false
+  },
+  {
+    "path": ".artifacts/plasma-frontier/kde-cli-tools-helper-file-read-native-kvm-control-20261011/index.json",
+    "index_sha256": "b63d94543a9738956726f78b1edab9d4d10c66609adce92e7aab557282c7b9cf",
+    "archive_sha256": "50166c830bfb87fb29dcfdd97b29791140e9ef046de512bbf7023fd908e59d0e",
+    "retained_files": 1024,
+    "empty_offline_byte_restore_verified": true,
+    "requires_github_for_restore": false,
+    "off_host_backup_verified": false
+  },
+  {
+    "path": ".artifacts/plasma-frontier/kde-cli-tools-official-menu-native-kvm-control-20261011/index.json",
+    "index_sha256": "c9a511000ed9c3589149e4bf471febf67ebf3515e5250a755b1566c698c1df82",
+    "archive_sha256": "2c74771a11d20b6d0ba0da7df43159a94c1adb49d9497db527ca40dc4e9337e5",
+    "retained_files": 1022,
+    "empty_offline_byte_restore_verified": true,
+    "requires_github_for_restore": false,
+    "off_host_backup_verified": false
+  },
+  {
+    "path": ".artifacts/plasma-frontier/kde-cli-tools-cache-settle-native-kvm-control-20261011/index.json",
+    "index_sha256": "397af79f5f91a5d8dfbc85bcb2bda32f17baa6aba60fa23a499f68dc8b25fb13",
+    "archive_sha256": "65ff136a100d8603a991ebae1fafa2233c9c39452531b55f1a3fa9c01852391f",
+    "retained_files": 1021,
+    "empty_offline_byte_restore_verified": true,
+    "requires_github_for_restore": false,
+    "off_host_backup_verified": false
+  },
+  {
+    "path": ".artifacts/plasma-frontier/kde-cli-tools-staged-native-fixture-kvm-certification-20261011/index.json",
+    "index_sha256": "882eafd80691475670bba753edb75dba3e11335e50958c179936d60bc762fa79",
+    "archive_sha256": "628d570e039642958940cdba0af19e0a67d5ce6d8db027eceb4a4cd2fde1ce04",
+    "retained_files": 1033,
+    "empty_offline_byte_restore_verified": true,
+    "requires_github_for_restore": false,
+    "off_host_backup_verified": false
+  }
+]

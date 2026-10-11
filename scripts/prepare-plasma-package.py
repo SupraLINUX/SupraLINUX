@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import tarfile
@@ -22,6 +23,63 @@ def load_campaign():
 def packaging_hashes(path):
     return {str(p.relative_to(path)): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in sorted(path.rglob("*")) if p.is_file() and "__pycache__" not in p.parts and p.suffix != ".pyc"}
+
+
+def check_native_fixture_review(record, root=ROOT):
+    """Bind an optional native fixture repair to its unchanged-source KVM evidence."""
+    reference = record.get('native_fixture_review')
+    if reference is None:
+        return
+    original = root / reference['path']
+    path = original.resolve()
+    assert path.is_relative_to(root.resolve()) and path.is_file() and not original.is_symlink()
+    payload = path.read_bytes()
+    assert hashlib.sha256(payload).hexdigest() == reference['sha256'], 'Native fixture review digest'
+    proof = json.loads(payload)
+    assert proof['state'] == 'PASS' and proof['candidate_certification'] is False
+    assert proof['scope'] == 'unchanged-native-test-fixture-repair'
+    assert proof['version'] == record['version'] and proof['source_package'] == record['source_package']
+    assert proof['upstream_sha256'] == record['upstream_sha256']
+    assert proof['signature_sha256'] == record['signature_sha256']
+    assert proof['packaging_sha256'] == record['packaging_sha256']
+    assert proof['tested_target'] in record['upstream_tests']
+    assert proof['upstream_source_unchanged'] is True and proof['native_assertions_unchanged'] is True
+    assert proof['frozen_provider_inputs_unchanged'] is True and proof['package_attempt_consumed'] is False
+    assert proof['files_sha256']
+    for name, digest in proof['files_sha256'].items():
+        original_file = path.parent / name
+        file = original_file.resolve()
+        assert file.is_relative_to(path.parent.resolve()) and file.is_file() and not original_file.is_symlink()
+        assert hashlib.sha256(file.read_bytes()).hexdigest() == digest, 'Native fixture evidence file: ' + name
+    for name in (proof['native_result'], proof['native_stdout'], proof['host_result'], proof['direct_cleanup'], proof['helper_calls']):
+        assert name in proof['files_sha256'], 'Unbound native fixture result'
+    stdout = (path.parent / proof['native_stdout']).read_text()
+    totals = re.findall(r'Totals: (\d+) passed, (\d+) failed, (\d+) skipped, (\d+) blacklisted', stdout)
+    assert totals == [(str(proof['native_test_rows']), '0', '0', '0')] and 'FAIL!' not in stdout
+    assert len(re.findall(r'^PASS\s+: ' + re.escape(proof['native_test_class']) + r'::', stdout, re.M)) == proof['native_test_rows']
+    calls = json.loads((path.parent / proof['helper_calls']).read_text())
+    assert calls and all(call['exit_code'] == 0 for call in calls), 'Actual native helper failure'
+    result = json.loads((path.parent / proof['native_result']).read_text())
+    assert result['state'] == 'NATIVE_CONTROL_MATRIX_COMPLETED'
+    assert all(result['checks'][name] == 'PASS' for name in (
+        'unchanged_critical_inputs_before', 'unchanged_critical_inputs_after', 'guest_loader_prerequisites'))
+    assert len(result['controls']) == 1
+    native = next(iter(result['controls'].values()))
+    assert native['state'] == 'PASS' and native['exit_code'] == 0
+    assert native['passed'] == proof['native_test_rows'] and proof['native_test_rows'] > 0
+    assert native['failed'] == native['skipped'] == native['blacklisted'] == 0
+    assert native['all_source_assertions_unchanged'] is True and not native['failed_functions']
+    host = json.loads((path.parent / proof['host_result']).read_text())
+    assert host['state'] == 'PASS' and host['diagnostic_exit_code'] == 0
+    assert host['network_interfaces_requested'] == 0 and host['package_attempt_consumed'] is False
+    assert host['cleanup_verified'] and host['vm_absent'] and host['overlay_absent'] and host['golden_preserved']
+    cleanup = json.loads((path.parent / proof['direct_cleanup']).read_text())
+    assert cleanup['state'] == 'PASS'
+    assert cleanup['vm_uuid'] == host['vm_uuid'] and cleanup['vm_name'] == host['vm_name']
+    assert all(cleanup[name] for name in (
+        'direct_domain_absent', 'direct_uuid_absent', 'direct_state_dir_and_overlay_absent', 'golden_preserved'))
+    assert cleanup['libvirt_networks_before_after'] == []
+    assert cleanup['exact_payload_iso_sha256'] == host['payload_iso_sha256'] == proof['payload_iso_sha256']
 
 
 def check_rootfs_policy(record, execution_checkpoint, required=False):
@@ -90,6 +148,7 @@ def contract(node):
         assert record['source_package'] == original['source_package']
         subprocess.run(['dpkg', '--compare-versions', record['version'], 'gt', record['supersedes']['version']], check=True)
     assert packaging_hashes(ROOT / record["packaging_path"]) == record["packaging_sha256"], "Packaging inputs changed"
+    check_native_fixture_review(record)
     return campaign, record
 
 
