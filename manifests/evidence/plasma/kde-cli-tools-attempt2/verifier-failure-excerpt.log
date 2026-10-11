@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/opt/actions-runner/_work/SupraLINUX/SupraLINUX/scripts/verify-reviewed-build-predecessors.py", line 90, in <module>
+    main()
+    ~~~~^^
+  File "/opt/actions-runner/_work/SupraLINUX/SupraLINUX/scripts/verify-reviewed-build-predecessors.py", line 83, in main
+    result = verify(record, control.read_text(), args.buildinfo.read_text())
+  File "/opt/actions-runner/_work/SupraLINUX/SupraLINUX/scripts/verify-reviewed-build-predecessors.py", line 52, in verify
+    assert matched, f'Review an unconditional exact SDK relation: {alternative}'
+           ^^^^^^^
+AssertionError: Review an unconditional exact SDK relation: 
+libkf6kcmutils-bin (= 6.30.0-0supralinux3) <!nocheck>

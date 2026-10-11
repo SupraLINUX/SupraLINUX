@@ -14,6 +14,24 @@ RELATION = re.compile(r'([a-z0-9][a-z0-9+.-]*)(?::([a-z0-9-]+))?\s*\(=\s*([^\s)]
 NAME = re.compile(r'([a-z0-9][a-z0-9+.-]*)(?::[a-z0-9-]+)?\b')
 
 
+def recorded_test_profiles(buildinfo):
+    """Require the build's recorded environment before interpreting <!nocheck>."""
+    environment = buildinfo.get('Environment', '').splitlines()
+    values = {}
+    for variable in ['DEB_BUILD_PROFILES', 'DEB_BUILD_OPTIONS']:
+        rows = [line.strip() for line in environment if line.strip().startswith(variable + '=')]
+        assert len(rows) <= 1, f'Duplicate recorded {variable}'
+        if rows:
+            raw = rows[0].partition('=')[2]
+            assert re.fullmatch(r'"[^"\\]*"', raw), f'Invalid recorded {variable}'
+            values[variable] = raw[1:-1].split()
+    assert 'DEB_BUILD_PROFILES' in values, 'Conditional test SDK requires recorded build profiles'
+    profiles = values['DEB_BUILD_PROFILES']
+    assert all(re.fullmatch(r'[a-z0-9+./-]+', item) for item in profiles), 'Invalid recorded build profile'
+    assert 'nocheck' not in profiles and 'nocheck' not in values.get('DEB_BUILD_OPTIONS', []), 'Test SDK requires checks enabled'
+    return sorted(set(profiles))
+
+
 def verify(record, control_text, buildinfo_text):
     control = retention.fields(control_text.split('\n\n')[0])
     buildinfo = retention.fields(buildinfo_text)
@@ -39,6 +57,8 @@ def verify(record, control_text, buildinfo_text):
             assert version == wanted[name]['version'], f'{name}: installed {version}, reviewed {wanted[name]["version"]}'
             assert architecture is None or architecture == wanted[name]['architecture'], f'{name}: wrong installed architecture'
     required = set()
+    conditional = []
+    profiles = None
     for field in ['Build-Depends', 'Build-Depends-Arch', 'Build-Depends-Indep']:
         for group in control.get(field, '').split(','):
             reviewed = []
@@ -46,9 +66,15 @@ def verify(record, control_text, buildinfo_text):
                 name = NAME.match(alternative.strip())
                 if name is None or name[1] not in wanted:
                     continue
-                # Conditional reviewed SDK relations need an explicit scope
-                # review rather than an assumption about active build profiles.
-                matched = RELATION.fullmatch(alternative.strip())
+                relation = alternative.strip()
+                if relation.endswith('<!nocheck>'):
+                    if profiles is None:
+                        profiles = recorded_test_profiles(buildinfo)
+                    relation = relation.removesuffix('<!nocheck>').strip()
+                    conditional.append(name[1])
+                # Other profile formulas and architecture restrictions still
+                # require their own review. Never discard a condition silently.
+                matched = RELATION.fullmatch(relation)
                 assert matched, f'Review an unconditional exact SDK relation: {alternative}'
                 package, _, version = matched.groups()
                 assert version == wanted[package]['version'], f'{package}: unreviewed direct SDK version'
@@ -60,7 +86,7 @@ def verify(record, control_text, buildinfo_text):
     assert not wanted or required, 'No reviewed direct build predecessor'
     used = sorted(set(installed) & set(wanted))
     unused = sorted(set(wanted) - set(installed))
-    return {'state': 'PASS', 'kind': 'actual-build-predecessor-version-verification',
+    result = {'state': 'PASS', 'kind': 'actual-build-predecessor-version-verification',
             'source_package': record['source_package'], 'version': record['version'],
             'build_architecture': 'amd64', 'available_predecessor_count': len(wanted),
             'required_direct_predecessors': sorted(required),
@@ -69,6 +95,11 @@ def verify(record, control_text, buildinfo_text):
             'complete_available_input_transport': 'certified separately by the infrastructure consumer',
             'control_sha256': hashlib.sha256(control_text.encode()).hexdigest(),
             'buildinfo_sha256': hashlib.sha256(buildinfo_text.encode()).hexdigest()}
+    if conditional:
+        result.update(recorded_build_profiles=profiles,
+                      required_test_profile_predecessors=sorted(set(conditional)),
+                      test_profile_condition='<!nocheck>; recorded checks enabled')
+    return result
 
 
 def main():

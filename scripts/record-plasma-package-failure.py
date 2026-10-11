@@ -141,7 +141,10 @@ def main():
             else:
                 assert result['stage'] == 'artifact-capture'
                 assert result['lintian_result'] == result['autopkgtest_result'] == 'not-run'
-                assert 'AssertionError: Wrong build predecessor version' in archive.read('pipeline.log').decode()
+                pipeline = archive.read('pipeline.log').decode()
+                old_version_failure = 'AssertionError: Wrong build predecessor version' in pipeline
+                profile_failure = 'AssertionError: Review an unconditional exact SDK relation:' in pipeline and '<!nocheck>' in pipeline
+                assert old_version_failure or profile_failure, 'Unreviewed predecessor verifier failure'
                 names = [name for name in archive.namelist() if name.startswith('packages/') and name.endswith('.buildinfo')]
                 assert len(names) == 1
                 buildinfo = archive.read(names[0])
@@ -149,6 +152,8 @@ def main():
                 verifier = importlib.machinery.SourceFileLoader('build_predecessor_diagnosis', str(ROOT/'scripts/verify-reviewed-build-predecessors.py')).load_module()
                 corrected = verifier.verify(record, control.decode(), buildinfo.decode())
                 assert corrected['state'] == 'PASS' and corrected['available_predecessors_not_installed']
+                if profile_failure:
+                    assert corrected['required_test_profile_predecessors'] and corrected['test_profile_condition'] == '<!nocheck>; recorded checks enabled'
                 inspection = retention.inspect(args.zip, {'node': args.node, 'package_version': record['version'],
                                                'artifact_sha256': closure.sha(args.zip), 'payload_prefix': 'packages/'}, record['source_package'])
                 assert inspection['source_payload_verified'] and inspection['changes_payload_complete'] and inspection['buildinfo_verified']

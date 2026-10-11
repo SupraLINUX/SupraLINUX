@@ -9462,13 +9462,35 @@
           "host_evidence_manifest_sha256": "2c2127e7c749c851a26b88e06065c42aab541b9b3809de6c0d229c64bb9f7d9e",
           "cause": "Clean compilation completed, but the unchanged official FileTypesTest failed testMimeTypePatterns and testAddService. Native totals:8 passed,2 failed,0 skipped; AppStream and kcm_smoketest passed. sbuild stopped at dh_auto_test; candidate binaries, lintian and installed package tests were not completed. Clean retained-input and original Ubuntu functional baseline passed.",
           "repair": "Preserve original FAIL and all sources/logs. Diagnose unchanged native MIME cache/reload and application association behavior with frozen Qt6.10.2/Frameworks6.30, original source and owned fixture controls. Reenter only after a demonstrated fixture repair or separately reviewed official compatible source; no test skip, assertion change, blind retry or Qt substitution."
+        },
+        {
+          "attempt": 2,
+          "state": "INFRA_INVALID",
+          "original_state": "FAIL",
+          "sbuild_result": "PASS",
+          "lintian_result": "not-run",
+          "autopkgtest_result": "not-run",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 38174409155,
+          "workflow_job_id": 114573596816,
+          "source_commit": "c60d9405d1b4b333a74fac2ec46e4fd305cf5c10",
+          "artifact_id": 11715950727,
+          "artifact_sha256": "643dab2f195665699d01abd87f95c50120eb0d74f8acbdf42679ac264d353675",
+          "result_path": "manifests/evidence/plasma/kde-cli-tools-attempt2/result.json",
+          "result_sha256": "80c2db8a32793470183cfdfd26498e3021680ed3ed22fd6a69036afc1ada8fc4",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261011t205608z-1296440",
+          "host_evidence_manifest_sha256": "8e4d77e4fa924faf184700f8dc5accc704a7154b8883daa3d3c0548d7041b588",
+          "cause": "Clean sbuild and unchanged native FileTypesTest10/10 completed, but the post-build predecessor verifier rejected exact installed libkf6kcmutils-bin/libkf6service-bin relations carrying <!nocheck>. Original result FAIL at artifact-capture is preserved; corrected verification of original buildinfo PASS with recorded profiles derivative.ubuntu/noudeb and checks enabled. Separate lintian and installed package tests did not run.",
+          "repair": "Retain original sources, binaries, buildinfo, changes, logs, full sealed host and direct cleanup. Repair only the generic checks-enabled profile verifier with rejection controls. Fresh input preflight remains required because verifier identity changed, followed by remaining clean package gates; no upstream/Qt/packaging change or downstream PASS admission.",
+          "verification_diagnosis_path": "manifests/evidence/plasma/kde-cli-tools-attempt2/verification-diagnosis.json",
+          "verification_diagnosis_sha256": "f7d9251d7ba883d17fd91e1e3cf887184a66c4dd36bc543cf24251732ba7d752"
         }
       ],
       "review": {
         "source": "Official signed source unchanged; original two packages, CLI links, helpers, KCM, docs and translations retained.",
         "version": "Preserve epoch4/upstream6.7.5; revision2 supersedes retained failed revision1 and captured Ubuntu reference. Historical assignments remain immutable.",
         "dependencies": "Exact eligible Frameworks closure, matching Ubuntu Qt/private SDK; preserve X11, Su/WidgetsAddons and documentation. Native MIME/service-cache dependencies declared explicitly. Runtime closure follow-up: 34 exact eligible nodes and 152 binaries, including the selected retained support inputs and Python runtime dependency. All previous identities and original evidence scopes stay unchanged; fresh byte/source/version/architecture, empty-state APT diagnosis and authoritative input preflight remain required. Requires CMake>=3.29 for the reviewed executable TEST_LAUNCHER; predecessor identities are unchanged.",
-        "tests": "Full unchanged native FileTypesTest10/10 passed in zero-NIC KVM with exact staged CMake executable launcher, private HOME/XDG and closed bus, real helper success and bounded cache waits. Upstream source/assertions, frozen Qt/Frameworks, original Ubuntu functional upgrade client and rebuilt consumer remain unchanged. This proves the native fixture only; clean package, lintian and installed tests remain required.",
+        "tests": "Full unchanged native FileTypesTest10/10 passed in zero-NIC KVM with exact staged CMake executable launcher, private HOME/XDG and closed bus, real helper success and bounded cache waits. Upstream source/assertions, frozen Qt/Frameworks, original Ubuntu functional upgrade client and rebuilt consumer remain unchanged. This proves the native fixture only; clean package, lintian and installed tests remain required. Attempt2 independently confirms unchanged FileTypesTest10/10 and kcm_smoketest in clean sbuild. Its post-build generic verifier falsely rejected installed exact checks-enabled test SDK relations; original FAIL is retained as INFRA_INVALID. No separate lintian or installed tests were reached, and a fresh preflight is required for the corrected verifier.",
         "profile": "No feature disabled. Real helper authorization, device eject, interactive filetype UI, launches and actual compositor/desktop remain later QA.",
         "licensing": "Preserve original KDE and Ubuntu attribution; CC0 applies only to newly authored integration fixture files."
       },
@@ -9775,6 +9797,12 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/kde-cli-tools-attempt1",
       "archive_index_sha256": "c924c9e29265ef6f3148a9d77f2b8f08135e0489fbd2ee5cc36fbce246b794d8"
+    },
+    {
+      "node": "kde-cli-tools",
+      "attempt": 2,
+      "archive_root": ".artifacts/plasma-6.7.5/kde-cli-tools-attempt2",
+      "archive_index_sha256": "3ef9df71efe6e057b3f89167d62a921e9098bf133f76773f9ecf0fabc4dc8650"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
@@ -9855,7 +9883,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -10035,7 +10063,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/kde-cli-tools-preflight42/verification.json",
-      "sha256": "131f21d9011bfe217c90094ecc06c61a4f838edfd5230885b1ff98903aa341a9"
+      "sha256": "131f21d9011bfe217c90094ecc06c61a4f838edfd5230885b1ff98903aa341a9",
+      "applicable": false,
+      "inapplicability_reason": "The generic actual-build-predecessor verifier now admits exact <!nocheck> test SDK relations only with recorded checks-enabled profiles; fresh input certificate must bind this corrected execution code. Original preflight42 PASS and Attempt2 original FAIL remain immutable."
     }
   ],
   "package_input_incidents": [

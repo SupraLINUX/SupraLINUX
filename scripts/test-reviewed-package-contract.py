@@ -169,6 +169,44 @@ class ActualBuildPredecessors(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, 'Duplicate installed'):
             self.verify()
 
+    def conditional_test_sdk(self):
+        self.control = self.control.replace('sdk (= 4:6.30-1)', 'sdk (= 4:6.30-1) <!nocheck>')
+        self.record['packaging_sha256']['control'] = hashlib.sha256(self.control.encode()).hexdigest()
+        self.info += 'Environment:\n DEB_BUILD_OPTIONS="parallel=6"\n DEB_BUILD_PROFILES="derivative.ubuntu noudeb"\n'
+
+    def test_test_profile_requires_recorded_checks_and_exact_installed_sdk(self):
+        self.conditional_test_sdk()
+        result = self.verify()
+        self.assertEqual(result['required_test_profile_predecessors'], ['sdk'])
+        self.assertEqual(result['recorded_build_profiles'], ['derivative.ubuntu', 'noudeb'])
+        self.info = self.info.replace('sdk (= 4:6.30-1)', 'sdk (= 4:6.24-1)')
+        with self.assertRaisesRegex(AssertionError, 'installed'): self.verify()
+
+    def test_test_profile_rejects_missing_sdk_or_disabled_checks(self):
+        self.conditional_test_sdk()
+        original = self.info
+        cases = [
+            (original.replace(' sdk (= 4:6.30-1),\n', ''), 'direct predecessor absent'),
+            (original.replace('DEB_BUILD_PROFILES="derivative.ubuntu noudeb"', 'DEB_BUILD_PROFILES="nocheck"'), 'checks enabled'),
+            (original.replace('DEB_BUILD_OPTIONS="parallel=6"', 'DEB_BUILD_OPTIONS="nocheck parallel=6"'), 'checks enabled'),
+            (original.split('Environment:')[0], 'recorded build profiles'),
+            (original + ' DEB_BUILD_PROFILES=""\n', 'Duplicate recorded'),
+            (original.replace('derivative.ubuntu noudeb', 'derivative.ubuntu $invalid'), 'Invalid recorded build profile'),
+        ]
+        for info, reason in cases:
+            with self.subTest(reason=reason):
+                self.info = info
+                with self.assertRaisesRegex(AssertionError, reason): self.verify()
+
+    def test_unreviewed_condition_is_not_silently_removed(self):
+        self.conditional_test_sdk()
+        for condition in ['<cross>', '[amd64] <!nocheck>', '<!nocheck> <!cross>']:
+            with self.subTest(condition=condition):
+                self.control = self.control.replace('<!nocheck>', condition)
+                self.record['packaging_sha256']['control'] = hashlib.sha256(self.control.encode()).hexdigest()
+                with self.assertRaisesRegex(AssertionError, 'unconditional exact'): self.verify()
+                self.control = self.control.replace(condition, '<!nocheck>')
+
 
 class CompatibilityHold(unittest.TestCase):
     def setUp(self):
