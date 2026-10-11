@@ -9822,7 +9822,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -9993,6 +9993,10 @@
     {
       "path": "manifests/evidence/package-revalidation/kmenuedit-preflight39/verification.json",
       "sha256": "850f56ab436cc121db628bc764affb4f86ec4490a0910c224c53d81624fdc370"
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kde-cli-tools-preflight41/verification.json",
+      "sha256": "78f7c06e821911c6dd7419c403fd808b7ba5cd35fdf631bfd66ed92e6625719a"
     }
   ],
   "package_input_incidents": [

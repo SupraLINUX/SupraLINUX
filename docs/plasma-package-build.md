@@ -1,5 +1,20 @@
 # Authoritative Plasma package builds
 
+KDE CLI Tools `4:6.7.5-0supralinux1` input preflight 41 on
+`8c19d35bc2e8ca47a7bd24bf3763153d579e7410`,
+[run 38100001974](https://github.com/SupraLINUX/SupraLINUX/actions/runs/38100001974),
+job 114353791756, is an original authoritative input PASS. The reviewed immutable
+bare rootfs and TLS bootstrap pass the clean consumer with all 34 Frameworks
+nodes and 152 exact binary payloads, followed by the original Ubuntu CLI/public
+Qt client baseline. No candidate package Attempt started. The original result,
+delivery and source restoration are verified independently; the complete
+host/operator archive restores 137 files. Direct checks confirm runner 271, VM
+and writable overlay absence, preserving golden/milestone images. All 48
+kernel/carrier and 13 gateway observations report no incident; final read-only
+checks confirm carrier up, TSO/GSO off and no libvirt networks. The campaign now
+admits candidate Attempt 1 with both unchanged native tests and the installed
+Ubuntu upgrade/consumer contracts. This input PASS does not certify that package.
+
 KDE CLI Tools input preflight 40 on
 `94cbf04f18e3a89cf1a0d3a25e4ae574b2c2db2e`,
 [run 38082884077](https://github.com/SupraLINUX/SupraLINUX/actions/runs/38082884077),
@@ -23,8 +38,9 @@ admission, execution-contract preparation and Repository Policy reject a missing
 current rootfs policy; 23 input regression tests pass, including the original
 omission and policy drift controls. Historical contracts keep their original
 scope. Source, version, packaging, 34-node/152-binary inputs and both native tests
-are unchanged. A fresh authoritative input preflight is required after atomic
-publication and hosted Policy; the candidate package remains unbuilt.
+are unchanged. Those local controls alone did not certify a fresh KVM gate;
+the later preflight 41 recorded above closes input admission. The candidate
+package remains unbuilt.
 
 KMenuEdit `4:6.7.5-0supralinux1` Attempt 1 on
 `db241f48364af1d8a26b2c1025e3e53d460848ab`,
