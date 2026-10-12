@@ -48,6 +48,15 @@ jobs:
       - name: Test reviewed native fixture admission
         run: python3 scripts/test-native-fixture-review.py
 
+      - name: Test desktop image planning boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/test-desktop-image-planner.py
+          image_plan_tmp="$(mktemp -d)"
+          trap 'rm -rf "${image_plan_tmp}"' EXIT
+          python3 scripts/plan-desktop-image.py --profile manifests/desktop-image-profile.json --output "${image_plan_tmp}/plan.json"
+
       - name: Test historical preflight delivery recovery
         run: python3 scripts/test-preflight-delivery.py
 

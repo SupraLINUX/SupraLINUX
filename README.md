@@ -41,7 +41,9 @@ Build graph state is represented as `PASS`, `FAIL` or `BLOCKED`. `BLOCKED` is ne
 
 ## Development state
 
-The current gate is generated from live manifests in [`docs/status/current.md`](docs/status/current.md). Frameworks 6.30 has 65 retained PASS builds; their scope remains the scope recorded for each node. The Ubuntu 26.04 KVM runner contract, synthetic package proof and KArchive sample are certified. All 34 Plasma Level 0 sources and Ubuntu packaging references are materialized and locally retained. Their candidate Debian versions pass ordering checks and preserve Ubuntu epochs. Packaging preparation is next; package execution is still locked. Final Qt provider certification remains pending.
+The current gate is generated from live manifests in [`docs/status/current.md`](docs/status/current.md). Frameworks 6.30 has 65 retained PASS builds; their scope remains the scope recorded for each node. The Ubuntu 26.04 KVM runner contract, synthetic package proof and KArchive sample are certified. All 34 Plasma Level 0 sources and Ubuntu packaging references are materialized and locally retained. Their candidate Debian versions pass ordering checks and preserve Ubuntu epochs. Individually reviewed Plasma packages advance through authoritative input and package gates; remaining components retain their own preparation or compatibility-review state. Final Qt provider certification remains pending.
+
+The [first desktop image plan](docs/testing-image.md) derives its core dependency path from the live Plasma DAG and checks recorded package evidence. It is planning only: image composition, a signed APT repository, live boot, installation and recovery still need their own execution and verification.
 
 The Frameworks milestone is an admitted execution cache, not a new package certification. Complete retained artifact ZIPs are also archived by digest on the operator workspace, with known historical source/debug gaps recorded in `manifests/retained-package-artifacts.json`.
 
