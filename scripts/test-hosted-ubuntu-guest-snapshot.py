@@ -50,6 +50,7 @@ class GuestSnapshotTests(unittest.TestCase):
         self.assertEqual(control.count("Tests: guest-smoke"), 1)
         self.assertEqual(control.count("Tests: clean-sbuild-smoke"), 1)
         self.assertIn("Depends: sbuild, mmdebstrap, dpkg-dev", control)
+        self.assertIn("Restrictions: isolation-machine, needs-root, needs-internet", control)
         self.assertTrue(script.is_file() and os.access(script, os.X_OK))
         content = script.read_text()
         self.assertIn('sbuild --chroot-mode=unshare --chroot="$WORK/resolute-amd64.tar"', content)

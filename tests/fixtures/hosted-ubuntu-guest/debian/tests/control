@@ -4,4 +4,4 @@ Restrictions: isolation-machine
 
 Tests: clean-sbuild-smoke
 Depends: sbuild, mmdebstrap, dpkg-dev, debhelper-compat (= 13), ubuntu-keyring
-Restrictions: isolation-machine
+Restrictions: isolation-machine, needs-root, needs-internet
