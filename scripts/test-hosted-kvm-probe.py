@@ -56,7 +56,7 @@ class HostedKVMProbeTests(unittest.TestCase):
                             if passed:
                                 self.assertEqual(probe.run_probe()["qemu_exit_code"], 85)
                             else:
-                                with self.assertRaisesRegex(RuntimeError, "KVM guest proof failed"):
+                                with self.assertRaisesRegex(RuntimeError, "kvm guest proof failed"):
                                     probe.run_probe()
 
 
