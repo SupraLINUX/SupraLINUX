@@ -33,6 +33,12 @@ class HostedKVMProbeTests(unittest.TestCase):
         self.assertEqual(cmd[cmd.index("-machine") + 1], "pc,accel=kvm")
         self.assertEqual(cmd[cmd.index("-cpu") + 1], "host")
         self.assertNotIn("tcg", " ".join(cmd))
+        self.assertIn("snapshot=on", cmd[cmd.index("-drive") + 1])
+        self.assertNotIn("readonly=on", cmd[cmd.index("-drive") + 1])
+        self.assertEqual(probe.tcg_command(Path("/tmp/boot.img"))[
+            probe.tcg_command(Path("/tmp/boot.img")).index("-machine") + 1], "pc,accel=tcg")
+        self.assertEqual(probe.tcg_command(Path("/tmp/boot.img"))[
+            probe.tcg_command(Path("/tmp/boot.img")).index("-cpu") + 1], "qemu64")
         self.assertIn("isa-debug-exit,iobase=0xf4,iosize=0x04", cmd)
 
     def test_correct_exit_and_guest_marker_both_required(self):

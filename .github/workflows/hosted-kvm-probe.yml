@@ -48,6 +48,11 @@ jobs:
           test -r /dev/kvm && test -w /dev/kvm
           getfacl -p /dev/kvm
 
+      - name: Certify the disk and serial boot mechanism without KVM
+        run: |
+          set -euo pipefail
+          python3 scripts/probe-hosted-kvm.py --backend tcg-smoke --output evidence/hosted-kvm-probe/tcg-smoke.json
+
       - name: Run hosted KVM bootsector capability check
         run: |
           set -euo pipefail
@@ -58,6 +63,6 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: hosted-kvm-capability-${{ github.event.pull_request.head.sha || github.sha }}
-          path: evidence/hosted-kvm-probe/result.json
+          path: evidence/hosted-kvm-probe/
           if-no-files-found: warn
           retention-days: 30

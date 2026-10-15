@@ -16,7 +16,15 @@ fallback, downloaded guest OS, local host access or package build is involved.
 The first infrastructure diagnostic (run 38690562479 on commit e550e5f1) was
 INFRA_INVALID because the hosted runner user could not read/write /dev/kvm.
 Ubuntu QEMU installed successfully; no VM boot was attempted. The ACL change
-is the scoped repair being certified by the next independent probe run.
+was successfully applied, but the second run (38690896553 on f66ec5a2)
+ended INFRA_INVALID before guest execution: QEMU rejected the read-only IDE
+block node. Two infrastructure-invalid runs prohibit blind retries.
+
+The repaired mechanism uses a writable-emulated IDE drive with snapshot=on,
+so QEMU writes only to a disposable overlay, not the initial bootsector.
+The third workflow first boots the same sector under explicit TCG in a
+separately labeled non-KVM mechanism smoke; KVM execution cannot start if
+that smoke fails. The TCG result is not a KVM PASS or release certification.
 
 The bounded JSON evidence is retained with the exact SHA. A successful probe
 only proves a tiny x86 guest actually executed under KVM on one hosted runner.
