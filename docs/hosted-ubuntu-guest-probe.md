@@ -6,12 +6,25 @@ It runs a representative DEP-8 test inside QEMU with KVM acceleration.
 It is triggered only by `ci:hosted-ubuntu-guest` on same-repository PRs
 or manual dispatch, **never** as ordinary PR CI.
 
+The initial guest construction (run 38693007782) failed before DEP-8 at
+grub-pc/linux-image configuration: the builder propagated the runner-specific
+TMPDIR into a chroot that lacked that path, then vmdb2/kpartx also failed
+cleanup. That is INFRA_INVALID, not a package Attempt or image PASS.
+The scoped repair removes this host-only environment variable from the
+builder. Raw vmdb2 verbose logs are **not** uploaded because they may expose
+the GitHub-hosted environment; only filtered diagnostics are retained.
+
 The 8 GiB virtual qcow2 base is cache-only. A successful DEP-8 test seals the
 snapshot with its SHA-256, builder script checksum, Ubuntu keyring checksum,
 creation time, and exact authorizing commit. Cache restores reject wrong
 content or input bytes, snapshots older than eight days and backing-chain
 bases. Keyed by calendar week and input files, immutable cache entries are
 regenerated on misses, and the next release campaign must rebuild from zero.
+Pull-request cache scope limits reuse across unrelated PRs. This is a
+performance optimization within the permitted cache namespace, **not** a
+cross-campaign or independently archived image. Cross-campaign reuse requires
+a separate authorized, SHA-256-indexed durable artifact store; do not assume
+the GitHub cache provides it.
 Each test runs in an isolated autopkgtest QEMU overlay and the unchanged base
 is reused. GitHub's retention and eviction rules mean the cache is *not*
 a durable artifact or release evidence archive.

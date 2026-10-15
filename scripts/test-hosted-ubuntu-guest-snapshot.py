@@ -57,6 +57,10 @@ class GuestSnapshotTests(unittest.TestCase):
         self.assertIn("--overlay-dir=", sh)
         self.assertIn("ubuntu-archive-keyring.gpg", sh)
         self.assertIn("timeout -k", sh)
+        self.assertIn("sudo env -u TMPDIR autopkgtest-build-qemu", sh)
+        self.assertNotIn('sudo env TMPDIR="$WORK/tmp" autopkgtest-build-qemu', sh)
+        self.assertNotIn('"$EVID/base-build.log"', sh)
+        self.assertIn("base-build-failure.txt", sh)
 
 
 if __name__ == "__main__":
