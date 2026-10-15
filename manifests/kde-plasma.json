@@ -29,7 +29,8 @@
   },
   "critical_role_hints": {
     "compositor": [
-      "kwin"
+      "kwin",
+      "kwin-x11"
     ],
     "session": [
       "plasma-workspace"

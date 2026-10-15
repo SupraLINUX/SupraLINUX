@@ -28,6 +28,11 @@ admission = importlib.machinery.SourceFileLoader("admission", str(ROOT / "script
 
 
 class InputAdmission(unittest.TestCase):
+    def test_wayland_product_rejects_retired_source_admission(self):
+        for node in ('kgamma', 'kwin-x11'):
+            with self.subTest(node=node), self.assertRaisesRegex(AssertionError, 'Excluded Wayland-only'):
+                admission.check(node, {}, ROOT, {}, {})
+
     def reviewed_rootfs_policy(self):
         return copy.deepcopy(json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())['nodes']['kmenuedit']['sbuild_rootfs_policy'])
 

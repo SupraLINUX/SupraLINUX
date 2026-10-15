@@ -133,8 +133,6 @@ def contract(node):
     record = campaign["nodes"][node]
     assert record["packaging_review"] == "PASS", "Packaging requires individual review"
     if campaign['role'] == 'reviewed-plasma-package-build':
-        product = json.loads((ROOT/'manifests/desktop-stack.json').read_text())['product_profile']
-        assert node not in product['excluded_plasma_sources'], 'Excluded Wayland-only source cannot be built'
         check_rootfs_policy(record, campaign['execution_checkpoint'], required=node in campaign['authorized_nodes'])
         if record.get('source_scope', 'plasma-level0') == 'plasma-supplementary-provider':
             supplementary_contract(node, record)
