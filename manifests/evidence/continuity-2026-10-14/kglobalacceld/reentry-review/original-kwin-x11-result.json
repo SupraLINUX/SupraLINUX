@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "state": "SCOPED_DIAGNOSTIC_PASS",
+  "scope": "Original Ubuntu KWinX11 6.6.4 window manager, original daemon/XCB plugin and unchanged public X11 client before/after KGlobalAccelD provider 6.6.5/6.7.5; fixed Qt6.10.2/Frameworks6.30, no GPU compositing, zero NIC. Diagnostic only, not installed .deb upgrade/source build/full desktop or transition admission.",
+  "package_attempt_consumed": false,
+  "canonical_effect": "none",
+  "compatibility_transition_admitted": false,
+  "checks": {
+    "frozen_critical_inputs": "PASS",
+    "guest_loader_prerequisites": "PASS",
+    "frozen_inputs_after_execution": "PASS"
+  },
+  "phases": {
+    "original-x11-session-small-certification": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "original",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-original-x11-session-small-certification"
+    },
+    "original-x11-session-consumer": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "original",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-original-x11-session-consumer"
+    },
+    "candidate-x11-session-consumer": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "candidate",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-candidate-x11-session-consumer"
+    }
+  }
+}

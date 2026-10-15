@@ -9484,6 +9484,26 @@
           "repair": "Retain original sources, binaries, buildinfo, changes, logs, full sealed host and direct cleanup. Repair only the generic checks-enabled profile verifier with rejection controls. Fresh input preflight remains required because verifier identity changed, followed by remaining clean package gates; no upstream/Qt/packaging change or downstream PASS admission.",
           "verification_diagnosis_path": "manifests/evidence/plasma/kde-cli-tools-attempt2/verification-diagnosis.json",
           "verification_diagnosis_sha256": "f7d9251d7ba883d17fd91e1e3cf887184a66c4dd36bc543cf24251732ba7d752"
+        },
+        {
+          "attempt": 3,
+          "state": "FAIL",
+          "original_state": "FAIL",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "FAIL",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 38199502156,
+          "workflow_job_id": 114649525708,
+          "source_commit": "6bfe9d442a6e78cd2d6ee49b81566041b94d438c",
+          "artifact_id": 11725306126,
+          "artifact_sha256": "066c2c2a9bd09643185ffedfd3065b552fa7c9b1e141e62ccdcc66e19d9f9f83",
+          "result_path": "manifests/evidence/plasma/kde-cli-tools-attempt3/result.json",
+          "result_sha256": "0e7a30cbca88c8c4d348c658a5006ad95d46c8246f2b4838a4c0e758e4389184",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261012t031948z-3462308",
+          "host_evidence_manifest_sha256": "5143f82acb56dd9c064c07187382a0284deca1630017ea266638c81613c5d0ba",
+          "cause": "sbuild PASS; official FileTypesTest 10/0 PASS; lintian PASS; original Ubuntu ABI/functional client PASS after candidate upgrade. Installed consumer exits 1 before CMake or payload assertions because its stale version guard requires 4:6.7.5-0supralinux1 while installed candidate is 4:6.7.5-0supralinux2. Original overall FAIL retained; rebuilt consumer and payload assertions NOT RUN. AppStream process skipped installed payload validation.",
+          "repair": "Correct the installed consumer version guard against reviewed authenticated source identity; review candidate revision and full packaging/native-fixture-proof applicability, validate the repair and obtain an applicable fresh input gate before another Attempt. Do not rerun unchanged or admit downstream binaries."
         }
       ],
       "review": {
@@ -9803,6 +9823,12 @@
       "attempt": 2,
       "archive_root": ".artifacts/plasma-6.7.5/kde-cli-tools-attempt2",
       "archive_index_sha256": "3ef9df71efe6e057b3f89167d62a921e9098bf133f76773f9ecf0fabc4dc8650"
+    },
+    {
+      "node": "kde-cli-tools",
+      "attempt": 3,
+      "archive_root": ".artifacts/plasma-6.7.5/kde-cli-tools-attempt3",
+      "archive_index_sha256": "ee3cf6d12947aff481796c0c4b1268d15655f143bee0ae869e4dc2e06441ddf7"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",

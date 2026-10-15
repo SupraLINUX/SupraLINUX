@@ -1,0 +1,5 @@
+W: kde-cli-tools source: dep5-copyright-license-name-not-unique cc0-1.0 [debian/copyright:358]
+W: kde-cli-tools source: dep5-copyright-license-name-not-unique cc0-1.0 [debian/copyright:566]
+W: kde-cli-tools: old-fsf-address-in-copyright-file
+W: kde-cli-tools-data: old-fsf-address-in-copyright-file
+W: kde-cli-tools source: orig-tarball-missing-upstream-signature kde-cli-tools_6.7.5.orig.tar.xz

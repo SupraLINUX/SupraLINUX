@@ -49,3 +49,15 @@ The live manifests hold this candidate outside execution scope. Independent
 reviewed packages may proceed; the live status names the currently admitted gate.
 The inspectable hold is
 [`compatibility-review.json`](../manifests/evidence/plasma/kglobalacceld-attempt1/compatibility-review.json).
+
+## Follow-up preserved for continuation (2026-10-14)
+
+The statements above describe the original closed review scope. Later zero-NIC
+KVM diagnostics exercised original daemon/public clients and original KWin
+Wayland/X11 runtimes. A strict old-private-binary negative still demonstrates the
+reviewed ABI incompatibility. The proposed overlay, corrected amd64 template
+minimums, runtime matrices, cleanup and exact sources are now preserved in
+[`continuity-2026-10-14`](../manifests/evidence/continuity-2026-10-14/).
+The [handoff](handoff/chatgpt-2026-10-14.md) explains these narrower results and
+the remaining semantic admission and fresh package gates. This follow-up does
+not admit the proposal, release the live HOLD or certify an installed upgrade.

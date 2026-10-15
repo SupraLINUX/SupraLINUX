@@ -1,5 +1,7 @@
 # SupraLINUX
 
+**Continuar desde ChatGPT:** [handoff del 14 de octubre de 2026](docs/handoff/chatgpt-2026-10-14.md), con el último cierre, revisiones pendientes, restricciones de red y ubicación de artifacts. Verificar siempre la rama `architecture/bootstrap-v1` y los manifests vivos antes de ejecutar.
+
 SupraLINUX is a stable, mutable, Ubuntu-compatible Linux distribution built on a minimal Ubuntu 26.04 LTS platform. SupraLINUX selects, packages and integrates its own KDE desktop stack instead of inheriting Ubuntu's desktop package cadence.
 
 > **KDE decides what KDE needs. SupraLINUX decides the newest compatible integration point. Ubuntu does not select the desktop.**

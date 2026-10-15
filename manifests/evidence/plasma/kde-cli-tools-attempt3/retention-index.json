@@ -1,0 +1,46 @@
+{
+  "kind": "failed-package-attempt-archive",
+  "package_state": "FAIL",
+  "downstream_eligible": false,
+  "artifact_sha256": "066c2c2a9bd09643185ffedfd3065b552fa7c9b1e141e62ccdcc66e19d9f9f83",
+  "source_payload_verified": true,
+  "node": "kde-cli-tools",
+  "version": "4:6.7.5-0supralinux2",
+  "result_sha256": "0e7a30cbca88c8c4d348c658a5006ad95d46c8246f2b4838a4c0e758e4389184",
+  "inspection": {
+    "node": "kde-cli-tools",
+    "package_version": "4:6.7.5-0supralinux2",
+    "artifact_sha256": "066c2c2a9bd09643185ffedfd3065b552fa7c9b1e141e62ccdcc66e19d9f9f83",
+    "payload_prefix": "packages/",
+    "source_package": "kde-cli-tools",
+    "binaries": [
+      {
+        "package": "kde-cli-tools-data",
+        "version": "4:6.7.5-0supralinux2",
+        "architecture": "all",
+        "file": "kde-cli-tools-data_6.7.5-0supralinux2_all.deb"
+      },
+      {
+        "package": "kde-cli-tools-dbgsym",
+        "version": "4:6.7.5-0supralinux2",
+        "architecture": "amd64",
+        "file": "kde-cli-tools-dbgsym_6.7.5-0supralinux2_amd64.ddeb"
+      },
+      {
+        "package": "kde-cli-tools",
+        "version": "4:6.7.5-0supralinux2",
+        "architecture": "amd64",
+        "file": "kde-cli-tools_6.7.5-0supralinux2_amd64.deb"
+      }
+    ],
+    "source_payload_verified": true,
+    "buildinfo_verified": true,
+    "changes_payload_complete": true,
+    "missing_debug_packages": [],
+    "evidence_scope": "retained-build-evidence; not new authoritative certification"
+  },
+  "zip_crc_verified": true,
+  "empty_offline_byte_restore_verified": true,
+  "restored_file_count": 356,
+  "off_host_backup_verified": false
+}

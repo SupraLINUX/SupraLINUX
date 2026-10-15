@@ -1,0 +1,129 @@
+{
+  "schema": 1,
+  "state": "STRICT SYMBOL METADATA PASS; CANONICAL HOLD UNCHANGED",
+  "scope": "Correct three newly applicable amd64 optional template floors against reviewed original missing exports and frozen diagnostic candidate ELF; no clean package, installed upgrade or additional runtime certification",
+  "candidate_version": "6.7.5-0supralinux2",
+  "prior_stage_packaging": ".work/kglobalacceld-private-sdk-original-consumer-pin-review-20261011/debian",
+  "prior_stage_symbol_sha256": "44469210c7de6c7e6b34384d5d8fd24596d43fb3a8da75b59253c1fa46191e3e",
+  "changes": [
+    {
+      "symbol": "_ZNK12KConfigGroup9readEntryI7QStringEET_PKcRKS2_",
+      "before": " (optional=templinst|arch=amd64 armhf riscv64)_ZNK12KConfigGroup9readEntryI7QStringEET_PKcRKS2_@Base 6.0.5",
+      "after": " (optional=templinst|arch=amd64 armhf riscv64)_ZNK12KConfigGroup9readEntryI7QStringEET_PKcRKS2_@Base 6.7.5",
+      "scope": "Newly applicable amd64 optional template; original frozen amd64 library lacks this export"
+    },
+    {
+      "symbol": "_ZNK12KConfigGroup9readEntryIbEET_PKcRKS1_",
+      "before": " (optional=templinst|arch=amd64 armhf riscv64)_ZNK12KConfigGroup9readEntryIbEET_PKcRKS1_@Base 6.6.0",
+      "after": " (optional=templinst|arch=amd64 armhf riscv64)_ZNK12KConfigGroup9readEntryIbEET_PKcRKS1_@Base 6.7.5",
+      "scope": "Newly applicable amd64 optional template; original frozen amd64 library lacks this export"
+    },
+    {
+      "symbol": "_ZNK12KConfigGroup9readEntryIiEET_PKcRKS1_",
+      "before": " (optional=templinst|arch=amd64 armhf riscv64)_ZNK12KConfigGroup9readEntryIiEET_PKcRKS1_@Base 6.0.5",
+      "after": " (optional=templinst|arch=amd64 armhf riscv64)_ZNK12KConfigGroup9readEntryIiEET_PKcRKS1_@Base 6.7.5",
+      "scope": "Newly applicable amd64 optional template; original frozen amd64 library lacks this export"
+    }
+  ],
+  "exact_removed_private_export_names": [
+    "_ZN13KGlobalAccelD15setShortcutKeysERK5QListI7QStringERKS0_I12QKeySequenceEj",
+    "_ZN13KGlobalAccelD20yourShortcutsChangedERK5QListI7QStringERKS0_I12QKeySequenceE",
+    "_ZN13KGlobalAccelD22setForeignShortcutKeysERK5QListI7QStringERKS0_I12QKeySequenceE",
+    "_ZN5Utils14matchSequencesERK12QKeySequenceRK5QListIS0_E",
+    "_ZN9Component12loadSettingsERK12KConfigGroup",
+    "_ZN9Component14stringFromKeysERK5QListI12QKeySequenceE",
+    "_ZN9Component16registerShortcutERK7QStringS2_S2_S2_",
+    "_ZNK23GlobalShortcutsRegistry16getShortcutByKeyERK12QKeySequenceN12KGlobalAccel9MatchTypeE",
+    "_ZNK9Component13writeSettingsER12KConfigGroup",
+    "_ZNK9Component16getShortcutByKeyERK12QKeySequenceN12KGlobalAccel9MatchTypeE"
+  ],
+  "additional_export_names": [
+    "_ZGVZN9QMetaType21registerConverterImplI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister",
+    "_ZGVZN9QMetaType23registerMutableViewImplI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS8_EES_S_E10unregister",
+    "_ZN13KGlobalAccelD15setShortcutKeysERK5QListI7QStringERK4QSetI12QKeySequenceEj",
+    "_ZN13KGlobalAccelD20yourShortcutsChangedERK5QListI7QStringERK4QSetI12QKeySequenceE",
+    "_ZN13KGlobalAccelD22setForeignShortcutKeysERK5QListI7QStringERK4QSetI12QKeySequenceE",
+    "_ZN13QMetaSequence12MetaSequenceI4QSetI12QKeySequenceEE5valueE",
+    "_ZN23GlobalShortcutsRegistry10nextSerialEv",
+    "_ZN23GlobalShortcutsRegistry20getOrCreateComponentERK7QStringS2_",
+    "_ZN23GlobalShortcutsRegistry9needsSaveEv",
+    "_ZN5Utils14matchSequencesERK12QKeySequenceRK4QSetIS0_E",
+    "_ZN9Component12loadSettingsERK12KConfigGroupS2_",
+    "_ZN9Component14stringFromKeysERK4QSetI12QKeySequenceE",
+    "_ZN9Component16registerShortcutERK7QStringS2_S2_S2_m",
+    "_ZNK12KConfigGroup9readEntryImEET_PKcRKS1_",
+    "_ZNK23GlobalShortcutsRegistry19activeShortcutByKeyERK12QKeySequence",
+    "_ZNK9Component13writeSettingsER12KConfigGroupS1_",
+    "_ZTIZN9QMetaType17registerConverterI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS3_EEEEbT1_EUlPKvPvE_",
+    "_ZTIZN9QMetaType19registerMutableViewI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS3_EEEEbT1_EUlPvSB_E_",
+    "_ZTSZN9QMetaType17registerConverterI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS3_EEEEbT1_EUlPKvPvE_",
+    "_ZTSZN9QMetaType19registerMutableViewI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS3_EEEEbT1_EUlPvSB_E_",
+    "_ZZN9QMetaType21registerConverterImplI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister",
+    "_ZZN9QMetaType23registerMutableViewImplI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS8_EES_S_E10unregister"
+  ],
+  "unchanged_original_guard_lines": 189,
+  "source_or_qt_changed": false,
+  "private_old_binary_compatibility_pass": false,
+  "first_metadata_evaluation": {
+    "state": "METADATA TOOL SETUP INVALID",
+    "cause": "Tool required the staged source root as cwd to find debian/control",
+    "log": "strict-symbols-cwd-invalid.log",
+    "package_attempt_consumed": false
+  },
+  "strict_check": {
+    "argv": [
+      "dpkg-gensymbols",
+      "-plibkglobalacceld0",
+      "-v6.7.5-0supralinux2",
+      "-aamd64",
+      "-P/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/symbol-evaluation",
+      "-e/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/kglobalacceld-diagnostic-build-20261010/build2/bin/libKGlobalAccelD.so.6.7.5",
+      "-I/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/libkglobalacceld0.symbols",
+      "-O/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/generated.symbols",
+      "-c4"
+    ],
+    "cwd": ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012",
+    "exit_code": 0,
+    "candidate_diagnostic_elf_sha256": "0ca127af73d35ebf836261b73914512a02961f1b4b03776debd77e3b93913966",
+    "symbols_sha256": "aeea617441c0b545deb9626e33bee88e275426307d102815801f63927b2ab13d",
+    "scope": "dpkg-gensymbols-c4 metadata check only"
+  },
+  "staged_packaging_sha256": {
+    "README.source": "1bccafc6b583d1beaa5bec35168163cdd94a27dd2dfdac8d33322276de02f585",
+    "changelog": "1a764360a69131b51dfedc1a92a3686b7bc599decb5af825e50d0dba18a48f1a",
+    "control": "c53f92b93a59299c3673f654745c64d3510d488c9f723a04d2beab9ea1e1176d",
+    "copyright": "bfaa65402e461578ae4039133329e38a62511ab5f3403a60b4e8c282789de978",
+    "kglobalacceld.install": "df89033a59cf2f76edec0738d92f6f5206b9a2904f40155a1171cbfef87860d4",
+    "libkglobalacceld-dev.install": "76e3c7fbb3743bd83869ddf7726049a438067f1dc2d05d2059e54297aef9cac3",
+    "libkglobalacceld-dev.links": "e85c737283b7c0785a17b33672eea9b60d829366e23f0fd08289dd7231c3132f",
+    "libkglobalacceld0.install": "42cafac276e3dcc6763f66b86339aa7f5a99a2004cd376945a4c540a3948aab1",
+    "libkglobalacceld0.symbols": "aeea617441c0b545deb9626e33bee88e275426307d102815801f63927b2ab13d",
+    "rules": "46b648dd0987b7d871dccc3caf908cdf324674a251facc5eeced7cb402230a5e",
+    "salsa-ci.yml": "64bfb6be33af05cd116d8bee786f95e7b2aaa9faa54e90333151a7a05ef03058",
+    "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+    "tests/baseline-setup": "83023131f1b679e56c16052f7735d923d13d2d9cb7f2f9204fb45e47801f064e",
+    "tests/client/CMakeLists.txt": "201505220a0cb84fb7060f5dc39f555c75dc28eecf134d37774e8d57fc7b4d9b",
+    "tests/client/library.cpp": "01ccf06d2127094e8eeea1af84ce2bfbc172d0cc7dd05f120c206c6b45b6a2d3",
+    "tests/client/main.cpp": "4b850a1e2d8b10d3f8b46c72117c1a5b4511e9c112aeaa27f4e70e397bf7c60c",
+    "tests/client/run-private.py": "e92c1a7e5dfc8bd6c3b17f435226cf036a7767351617fe611874fb64954133b0",
+    "tests/client/ubuntu-runtime-consumer-versions": "3b43993df715b49d5c2b3081ee39fbd343c5f4a8288e1b4ce7014e24e300739b",
+    "tests/client/ubuntu-runtime-consumers.sha256": "7381705b1566f6c58c58f5f8147442cd59fd7f57ee7f81d2baf3f2196be5be7b",
+    "tests/consumer": "5cfd1f36d145295b35655d8feb1eb8fd264e1c552134475710612ada9732c718",
+    "tests/control": "4690e54294115e2c37d7031ad708178d035905e726595454b6e7fa7e38cfc68a",
+    "tests/ubuntu-abi-client": "77be6521ecae3bf58554e613c9630506279de311eab2d65dc29fc12b47ff6f02",
+    "tests/upstream-session": "d0e37f948f417742f50d5d2c0da9fe9b0548e5135ea3123744ace956fa567595",
+    "upstream/metadata": "008e982500654a516549b956e8bf9d72a38acee5cc7c0fcd376f9082b8dd052c",
+    "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+    "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+  },
+  "unchanged_client_sources_and_wrapper": {
+    "main.cpp": true,
+    "library.cpp": true,
+    "CMakeLists.txt": true,
+    "run-private.py": true
+  },
+  "next_gate": "Scoped transition contract/admission review, fresh input preflight, full package/native/lintian/installed public-negative-rebuilt consumer and original KWin guards",
+  "package_attempt_consumed": false,
+  "candidate_package_certification": false,
+  "canonical_effect": "none"
+}

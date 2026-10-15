@@ -1,0 +1,274 @@
+{
+  "schema": 1,
+  "state": "SIGNED SOURCE REVERSE-DEPENDENCY REVIEW PASS",
+  "reviewed_at": "2026-10-11T17:40:32.299052+00:00",
+  "sdk_package": "libkglobalacceld-dev",
+  "keyring_sha256": "80a36b0a6de2f69f49d2df75ef473ccde121e9e190b9ea01d20a4f63778d5c31",
+  "signed_releases": [
+    {
+      "suite": "resolute-security",
+      "inrelease_sha256": "578358f7b5e41ad069fc209bfa8ab45410f24d241be80255bdd94dbf3c11dc98",
+      "date": "Sun, 04 Oct 2026 11:12:38 UTC",
+      "valid_until": null,
+      "signature": "PASS"
+    },
+    {
+      "suite": "resolute-updates",
+      "inrelease_sha256": "d0466f8efc43702fb4fddcab72882412623e8919f2ed08e9e6aee58ea6d60533",
+      "date": "Mon, 05 Oct 2026  6:56:35 UTC",
+      "valid_until": null,
+      "signature": "PASS"
+    },
+    {
+      "suite": "resolute",
+      "inrelease_sha256": "45f95ce276cdba3e41870516a130e03c58b8b7a79e9546b0efe9e526d255740c",
+      "date": "Thu, 23 Apr 2026 17:07:15 UTC",
+      "valid_until": null,
+      "signature": "PASS"
+    }
+  ],
+  "signed_sources_indexes": [
+    {
+      "suite": "resolute-security",
+      "component": "main",
+      "sha256": "5d46bb906576cc48ff80f30f8cf1ede43780636223b6d8b72ff9de85bef202a9",
+      "size": 849719
+    },
+    {
+      "suite": "resolute-security",
+      "component": "universe",
+      "sha256": "bf072bd4f8108ed24d1b637dbb01c112c54d41ee06a73be42621f4224b035ffc",
+      "size": 227357
+    },
+    {
+      "suite": "resolute-updates",
+      "component": "main",
+      "sha256": "adcf676fe0b90b5e8a094e2fa2103858d2fc7612e9e9ebb86fde07df792813d4",
+      "size": 1543936
+    },
+    {
+      "suite": "resolute-updates",
+      "component": "universe",
+      "sha256": "b1a8d58a74b1810fb1df4b264ad3ef68caf1997c645bbda632e35b3592630884",
+      "size": 465063
+    },
+    {
+      "suite": "resolute",
+      "component": "main",
+      "sha256": "f54e264953689edeeb3e7d741ee94bc81aada8059ee62108500dda6392410446",
+      "size": 4890187
+    },
+    {
+      "suite": "resolute",
+      "component": "universe",
+      "sha256": "e324d966b70cedc32d7c308b96574d2205f15822c25b4e93d2f7607c22bcf6a7",
+      "size": 66145096
+    }
+  ],
+  "source_records_scanned": 40539,
+  "source_consumers_all_retained_versions": [
+    {
+      "source": {
+        "Package": "kwin",
+        "Binary": "kwin-common, kwin-data, kwin-dev, kwin-wayland, libkwin6",
+        "Version": "4:6.6.6-0ubuntu0.1",
+        "Priority": "optional",
+        "Section": "universe/libs",
+        "Maintainer": "Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>",
+        "Build-Depends": "breeze-dev (>= 4:6.6.5~), cmake (>= 3.16~), debhelper-compat (= 13), dh-sequence-kf6, dh-sequence-python3, extra-cmake-modules (>= 6.22.0~), gettext, hwdata, knighttime-dev (>= 6.6.5~), kscreenlocker-dev (>= 6.6.5~), kwayland-dev (>= 4:6.6.4~), libcanberra-dev, libcap-dev [linux-any], libcap2-bin [linux-any], libdisplay-info-dev, libdrm-dev (>= 2.4.116~), libegl-dev (>= 1.2~), libeis-dev, libepoxy-dev (>= 1.3), libfontconfig-dev, libfreetype-dev, libgbm-dev, libice-dev, libinput-dev (>= 1.26~), libkdecorations3-dev (>= 4:6.6.4~), libkf6auth-dev (>= 6.22.0~), libkf6colorscheme-dev (>= 6.22.0~), libkf6config-dev (>= 6.22.0~), libkf6configwidgets-dev (>= 6.22.0~), libkf6coreaddons-dev (>= 6.22.0~), libkf6crash-dev (>= 6.22.0~), libkf6dbusaddons-dev (>= 6.22.0~), libkf6declarative-dev (>= 6.22.0~), libkf6doctools-dev (>= 6.22.0~), libkf6globalaccel-dev (>= 6.22.0~), libkf6guiaddons-dev (>= 6.22.0~), libkf6i18n-dev (>= 6.22.0~), libkf6idletime-dev (>= 6.22.0~), libkf6itemviews-dev (>= 6.22.0~), libkf6kcmutils-dev (>= 6.22.0~), libkf6newstuff-dev (>= 6.22.0~), libkf6notifications-dev (>= 6.22.0~), libkf6package-dev (>= 6.22.0~), libkf6runner-dev (>= 6.22.0~), libkf6service-dev (>= 6.22.0~), libkf6svg-dev (>= 6.22.0~), libkf6widgetsaddons-dev (>= 6.22.0~), libkf6windowsystem-dev (>= 6.22.0~), libkf6xmlgui-dev (>= 6.22.0~), libkglobalacceld-dev (>= 6.6.5~), libkirigami-dev (>= 6.22.0~), liblcms2-dev, libpipewire-0.3-dev (>= 0.3.29), libplasma-dev (>= 6.6.6~), libplasmaactivities-dev (>= 6.6.4~), libqaccessibilityclient-qt6-dev, libsm-dev, libsystemd-dev, libudev-dev [linux-any], libwayland-dev (>= 1.22~), libx11-xcb-dev, libxcb-composite0-dev (>= 1.10~), libxcb-cursor-dev, libxcb-damage0-dev (>= 1.10~), libxcb-dri3-dev (>= 1.10~), libxcb-glx0-dev (>= 1.10~), libxcb-icccm4-dev, libxcb-image0-dev, libxcb-keysyms1-dev, libxcb-present-dev (>= 1.10~), libxcb-randr0-dev (>= 1.10~), libxcb-render0-dev (>= 1.10~), libxcb-res0-dev, libxcb-shape0-dev (>= 1.10~), libxcb-shm0-dev (>= 1.10~), libxcb-sync-dev (>= 1.10~), libxcb-util-dev, libxcb-xfixes0-dev (>= 1.10~), libxcb-xinerama0-dev (>= 1.10~), libxcb-xinput-dev (>= 1.10~), libxcb-xkb-dev (>= 1.10~), libxcb-xtest0-dev, libxcb1-dev (>= 1.10~), libxcursor-dev, libxcvt-dev (>= 0.1.1~), libxkbcommon-dev (>= 0.7.0~), libxkbcommon-x11-dev, pkgconf, plasma-wayland-protocols (>= 1.19.0~), python3:any, qt6-5compat-dev (>= 6.10.0~), qt6-base-dev (>= 6.10.0~), qt6-base-dev-tools (>= 6.10.0~), qt6-base-private-dev (>= 6.10.0+dfsg~), qt6-declarative-dev (>= 6.10.0~), qt6-declarative-private-dev (>= 6.10.0~), qt6-sensors-dev (>= 6.10.0~), qt6-svg-dev (>= 6.10.0~), qt6-tools-dev (>= 6.10.0~), qt6-wayland-dev (>= 6.10.0~), wayland-protocols (>= 1.44~), xwayland (>= 2:22.1.7-1~)",
+        "Architecture": "any all",
+        "Standards-Version": "4.7.0",
+        "Format": "3.0 (quilt)",
+        "Directory": "pool/universe/k/kwin",
+        "Files": "\na5c2db5d8a83896392faf7e296abb4ea 8890212 kwin_6.6.6.orig.tar.xz\n7af7c3342f95beff12136849e09382b2 35468 kwin_6.6.6-0ubuntu0.1.debian.tar.xz\n5ce9131bd8a079ca92144356e3f528b1 5058 kwin_6.6.6-0ubuntu0.1.dsc",
+        "Checksums-Sha1": "\n7fa78220b3dbaa8a4a067eb16def42bb39fbaf58 8890212 kwin_6.6.6.orig.tar.xz\n552d3deccaea7629ae9b7bb4b786424bd295a5ad 35468 kwin_6.6.6-0ubuntu0.1.debian.tar.xz\na9fb83aba2808852bfde1766ca75d5830cd8f906 5058 kwin_6.6.6-0ubuntu0.1.dsc",
+        "Checksums-Sha256": "\n76314bb5053943003c089bd8997b159c70a8bc35ba87dc3a10885ade8f561953 8890212 kwin_6.6.6.orig.tar.xz\nf8e51babdd9fd39760cb207877f0f9f8f2efec09202aeb926498d981e4c7263c 35468 kwin_6.6.6-0ubuntu0.1.debian.tar.xz\n4fda1d85b25c5f1c09a5c292065050ea038946e2f60f2b997e70e3d3c8e3eea0 5058 kwin_6.6.6-0ubuntu0.1.dsc",
+        "Checksums-Sha512": "\n3d6d6d0bd1fe9bd1af09b08c6a9cdfece04a9dec1e91b03ccd34e1c4e0333b5053f11450ef4e01a7524deb97f8b2c2a4c97ce39097dbf333f017126fbf82ce10 8890212 kwin_6.6.6.orig.tar.xz\n80f6589922cf2676dc2d6193229c3c3c3e91dd0dcf32b4e3bfd4ad710a91a9e496ff4114446ddfc4b4a2475fd4c8011b4ea562412a667b1e8972b1e55542462e 35468 kwin_6.6.6-0ubuntu0.1.debian.tar.xz\nd30155b81bbf9f35a913c319cd7c50f303c8fac0bb69b4146dc06439a2243d34a7396926f6c0a2d22e63d3bd79bf55c8e8f48a7ec070db82a0e49d5316ac01b0 5058 kwin_6.6.6-0ubuntu0.1.dsc",
+        "Homepage": "https://projects.kde.org/projects/kde/workspace/kwin",
+        "Uploaders": "Aur\u00e9lien COUDERC <coucouf@debian.org>, Patrick Franz <deltaone@debian.org>,",
+        "Vcs-Browser": "https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/kwin",
+        "Vcs-Git": "https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/kwin",
+        "Package-List": "kwin-common deb kde optional arch=any\nkwin-data deb kde optional arch=all\nkwin-dev deb libdevel optional arch=any\nkwin-wayland deb kde optional arch=any\nlibkwin6 deb libs optional arch=any",
+        "Original-Maintainer": "Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>",
+        "signed_index_sha256": "b1a8d58a74b1810fb1df4b264ad3ef68caf1997c645bbda632e35b3592630884",
+        "suite": "resolute-updates",
+        "component": "universe"
+      },
+      "relationships": [
+        {
+          "field": "Build-Depends",
+          "raw": "breeze-dev (>= 4:6.6.5~), cmake (>= 3.16~), debhelper-compat (= 13), dh-sequence-kf6, dh-sequence-python3, extra-cmake-modules (>= 6.22.0~), gettext, hwdata, knighttime-dev (>= 6.6.5~), kscreenlocker-dev (>= 6.6.5~), kwayland-dev (>= 4:6.6.4~), libcanberra-dev, libcap-dev [linux-any], libcap2-bin [linux-any], libdisplay-info-dev, libdrm-dev (>= 2.4.116~), libegl-dev (>= 1.2~), libeis-dev, libepoxy-dev (>= 1.3), libfontconfig-dev, libfreetype-dev, libgbm-dev, libice-dev, libinput-dev (>= 1.26~), libkdecorations3-dev (>= 4:6.6.4~), libkf6auth-dev (>= 6.22.0~), libkf6colorscheme-dev (>= 6.22.0~), libkf6config-dev (>= 6.22.0~), libkf6configwidgets-dev (>= 6.22.0~), libkf6coreaddons-dev (>= 6.22.0~), libkf6crash-dev (>= 6.22.0~), libkf6dbusaddons-dev (>= 6.22.0~), libkf6declarative-dev (>= 6.22.0~), libkf6doctools-dev (>= 6.22.0~), libkf6globalaccel-dev (>= 6.22.0~), libkf6guiaddons-dev (>= 6.22.0~), libkf6i18n-dev (>= 6.22.0~), libkf6idletime-dev (>= 6.22.0~), libkf6itemviews-dev (>= 6.22.0~), libkf6kcmutils-dev (>= 6.22.0~), libkf6newstuff-dev (>= 6.22.0~), libkf6notifications-dev (>= 6.22.0~), libkf6package-dev (>= 6.22.0~), libkf6runner-dev (>= 6.22.0~), libkf6service-dev (>= 6.22.0~), libkf6svg-dev (>= 6.22.0~), libkf6widgetsaddons-dev (>= 6.22.0~), libkf6windowsystem-dev (>= 6.22.0~), libkf6xmlgui-dev (>= 6.22.0~), libkglobalacceld-dev (>= 6.6.5~), libkirigami-dev (>= 6.22.0~), liblcms2-dev, libpipewire-0.3-dev (>= 0.3.29), libplasma-dev (>= 6.6.6~), libplasmaactivities-dev (>= 6.6.4~), libqaccessibilityclient-qt6-dev, libsm-dev, libsystemd-dev, libudev-dev [linux-any], libwayland-dev (>= 1.22~), libx11-xcb-dev, libxcb-composite0-dev (>= 1.10~), libxcb-cursor-dev, libxcb-damage0-dev (>= 1.10~), libxcb-dri3-dev (>= 1.10~), libxcb-glx0-dev (>= 1.10~), libxcb-icccm4-dev, libxcb-image0-dev, libxcb-keysyms1-dev, libxcb-present-dev (>= 1.10~), libxcb-randr0-dev (>= 1.10~), libxcb-render0-dev (>= 1.10~), libxcb-res0-dev, libxcb-shape0-dev (>= 1.10~), libxcb-shm0-dev (>= 1.10~), libxcb-sync-dev (>= 1.10~), libxcb-util-dev, libxcb-xfixes0-dev (>= 1.10~), libxcb-xinerama0-dev (>= 1.10~), libxcb-xinput-dev (>= 1.10~), libxcb-xkb-dev (>= 1.10~), libxcb-xtest0-dev, libxcb1-dev (>= 1.10~), libxcursor-dev, libxcvt-dev (>= 0.1.1~), libxkbcommon-dev (>= 0.7.0~), libxkbcommon-x11-dev, pkgconf, plasma-wayland-protocols (>= 1.19.0~), python3:any, qt6-5compat-dev (>= 6.10.0~), qt6-base-dev (>= 6.10.0~), qt6-base-dev-tools (>= 6.10.0~), qt6-base-private-dev (>= 6.10.0+dfsg~), qt6-declarative-dev (>= 6.10.0~), qt6-declarative-private-dev (>= 6.10.0~), qt6-sensors-dev (>= 6.10.0~), qt6-svg-dev (>= 6.10.0~), qt6-tools-dev (>= 6.10.0~), qt6-wayland-dev (>= 6.10.0~), wayland-protocols (>= 1.44~), xwayland (>= 2:22.1.7-1~)",
+          "default_profile_amd64_matches": [
+            {
+              "name": "libkglobalacceld-dev",
+              "version": "6.6.5~",
+              "operator": ">=",
+              "alternatives": [
+                [
+                  "libkglobalacceld-dev",
+                  "6.6.5~",
+                  ">="
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": {
+        "Package": "kwin",
+        "Binary": "kwin-common, kwin-data, kwin-dev, kwin-wayland, libkwin6",
+        "Version": "4:6.6.4-0ubuntu1",
+        "Priority": "optional",
+        "Section": "universe/libs",
+        "Maintainer": "Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>",
+        "Build-Depends": "breeze-dev (>= 4:6.6.4~), cmake (>= 3.16~), debhelper-compat (= 13), dh-sequence-kf6, dh-sequence-python3, extra-cmake-modules (>= 6.22.0~), gettext, hwdata, knighttime-dev (>= 6.6.4~), kscreenlocker-dev (>= 6.6.4~), kwayland-dev (>= 4:6.6.4~), libcanberra-dev, libcap-dev [linux-any], libcap2-bin [linux-any], libdisplay-info-dev, libdrm-dev (>= 2.4.116~), libegl-dev (>= 1.2~), libeis-dev, libepoxy-dev (>= 1.3), libfontconfig-dev, libfreetype-dev, libgbm-dev, libice-dev, libinput-dev (>= 1.26~), libkdecorations3-dev (>= 4:6.6.4~), libkf6auth-dev (>= 6.22.0~), libkf6colorscheme-dev (>= 6.22.0~), libkf6config-dev (>= 6.22.0~), libkf6configwidgets-dev (>= 6.22.0~), libkf6coreaddons-dev (>= 6.22.0~), libkf6crash-dev (>= 6.22.0~), libkf6dbusaddons-dev (>= 6.22.0~), libkf6declarative-dev (>= 6.22.0~), libkf6doctools-dev (>= 6.22.0~), libkf6globalaccel-dev (>= 6.22.0~), libkf6guiaddons-dev (>= 6.22.0~), libkf6i18n-dev (>= 6.22.0~), libkf6idletime-dev (>= 6.22.0~), libkf6itemviews-dev (>= 6.22.0~), libkf6kcmutils-dev (>= 6.22.0~), libkf6newstuff-dev (>= 6.22.0~), libkf6notifications-dev (>= 6.22.0~), libkf6package-dev (>= 6.22.0~), libkf6runner-dev (>= 6.22.0~), libkf6service-dev (>= 6.22.0~), libkf6svg-dev (>= 6.22.0~), libkf6widgetsaddons-dev (>= 6.22.0~), libkf6windowsystem-dev (>= 6.22.0~), libkf6xmlgui-dev (>= 6.22.0~), libkglobalacceld-dev (>= 6.6.4~), libkirigami-dev (>= 6.22.0~), liblcms2-dev, libpipewire-0.3-dev (>= 0.3.29), libplasma-dev (>= 6.6.4~), libplasmaactivities-dev (>= 6.6.4~), libqaccessibilityclient-qt6-dev, libsm-dev, libsystemd-dev, libudev-dev [linux-any], libwayland-dev (>= 1.22~), libx11-xcb-dev, libxcb-composite0-dev (>= 1.10~), libxcb-cursor-dev, libxcb-damage0-dev (>= 1.10~), libxcb-dri3-dev (>= 1.10~), libxcb-glx0-dev (>= 1.10~), libxcb-icccm4-dev, libxcb-image0-dev, libxcb-keysyms1-dev, libxcb-present-dev (>= 1.10~), libxcb-randr0-dev (>= 1.10~), libxcb-render0-dev (>= 1.10~), libxcb-res0-dev, libxcb-shape0-dev (>= 1.10~), libxcb-shm0-dev (>= 1.10~), libxcb-sync-dev (>= 1.10~), libxcb-util-dev, libxcb-xfixes0-dev (>= 1.10~), libxcb-xinerama0-dev (>= 1.10~), libxcb-xinput-dev (>= 1.10~), libxcb-xkb-dev (>= 1.10~), libxcb-xtest0-dev, libxcb1-dev (>= 1.10~), libxcursor-dev, libxcvt-dev (>= 0.1.1~), libxkbcommon-dev (>= 0.7.0~), libxkbcommon-x11-dev, pkgconf, plasma-wayland-protocols (>= 1.19.0~), python3:any, qt6-5compat-dev (>= 6.10.0~), qt6-base-dev (>= 6.10.0~), qt6-base-dev-tools (>= 6.10.0~), qt6-base-private-dev (>= 6.10.0+dfsg~), qt6-declarative-dev (>= 6.10.0~), qt6-declarative-private-dev (>= 6.10.0~), qt6-sensors-dev (>= 6.10.0~), qt6-svg-dev (>= 6.10.0~), qt6-tools-dev (>= 6.10.0~), qt6-wayland-dev (>= 6.10.0~), wayland-protocols (>= 1.44~), xwayland (>= 2:22.1.7-1~)",
+        "Architecture": "any all",
+        "Standards-Version": "4.7.0",
+        "Format": "3.0 (quilt)",
+        "Directory": "pool/universe/k/kwin",
+        "Files": "\n68c7665b8e25e3c7bc2d95e92277d28f 8894068 kwin_6.6.4.orig.tar.xz\n5289054943539f0c7f4fd8b548105b63 35156 kwin_6.6.4-0ubuntu1.debian.tar.xz\n6f9a2fcadf9458e1497ae56e213fe4c3 5050 kwin_6.6.4-0ubuntu1.dsc",
+        "Checksums-Sha1": "\n7565da2cc0dfd8abf8744d0ba6e3f261b33a49c6 8894068 kwin_6.6.4.orig.tar.xz\nde96c1ffcd4a9e8066f56062273aa97bd88c6c3d 35156 kwin_6.6.4-0ubuntu1.debian.tar.xz\n6d2a4fef40c69207f4c89e58e6139dff45370048 5050 kwin_6.6.4-0ubuntu1.dsc",
+        "Checksums-Sha256": "\n3f9439760580a977d018daf4b35b62e5a1700def7b21c8dfbfc789d21378d7ad 8894068 kwin_6.6.4.orig.tar.xz\n2057910cdafed60549f380c63ee72ea1151fd34194ec7933816ff26280a257c1 35156 kwin_6.6.4-0ubuntu1.debian.tar.xz\n0413920c8315be79d7c807285f1c0be80dcaeecbc1e6a9e00aa96063fb5a54ad 5050 kwin_6.6.4-0ubuntu1.dsc",
+        "Checksums-Sha512": "\n63624ca5705d58ca4efef012ce67ace7ce5c5e2a393f2984d107fe0beb6548d26941b777ae08692cccf2c192ada34e143222775206a1f54ac9c8f3477efcf5f4 8894068 kwin_6.6.4.orig.tar.xz\na652793b680a4e5297a259337b84d2ac416d9f9f56db2e6075cd4965836602970557030a1a120de3c93bf8cec4e12949597d1004d57f4d3259cfdd74827236e6 35156 kwin_6.6.4-0ubuntu1.debian.tar.xz\n66b5d4a3cafb12c8abd02249f6571a60c2bc85fa4ad1bf067cbf7c9dbbb13a755dcfaf812482bc0e48a37906527755bca849c4863f71056a9004dde63e5765de 5050 kwin_6.6.4-0ubuntu1.dsc",
+        "Homepage": "https://projects.kde.org/projects/kde/workspace/kwin",
+        "Uploaders": "Aur\u00e9lien COUDERC <coucouf@debian.org>, Patrick Franz <deltaone@debian.org>,",
+        "Vcs-Browser": "https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/kwin",
+        "Vcs-Git": "https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/kwin",
+        "Package-List": "kwin-common deb kde optional arch=any\nkwin-data deb kde optional arch=all\nkwin-dev deb libdevel optional arch=any\nkwin-wayland deb kde optional arch=any\nlibkwin6 deb libs optional arch=any",
+        "Original-Maintainer": "Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>",
+        "signed_index_sha256": "e324d966b70cedc32d7c308b96574d2205f15822c25b4e93d2f7607c22bcf6a7",
+        "suite": "resolute",
+        "component": "universe"
+      },
+      "relationships": [
+        {
+          "field": "Build-Depends",
+          "raw": "breeze-dev (>= 4:6.6.4~), cmake (>= 3.16~), debhelper-compat (= 13), dh-sequence-kf6, dh-sequence-python3, extra-cmake-modules (>= 6.22.0~), gettext, hwdata, knighttime-dev (>= 6.6.4~), kscreenlocker-dev (>= 6.6.4~), kwayland-dev (>= 4:6.6.4~), libcanberra-dev, libcap-dev [linux-any], libcap2-bin [linux-any], libdisplay-info-dev, libdrm-dev (>= 2.4.116~), libegl-dev (>= 1.2~), libeis-dev, libepoxy-dev (>= 1.3), libfontconfig-dev, libfreetype-dev, libgbm-dev, libice-dev, libinput-dev (>= 1.26~), libkdecorations3-dev (>= 4:6.6.4~), libkf6auth-dev (>= 6.22.0~), libkf6colorscheme-dev (>= 6.22.0~), libkf6config-dev (>= 6.22.0~), libkf6configwidgets-dev (>= 6.22.0~), libkf6coreaddons-dev (>= 6.22.0~), libkf6crash-dev (>= 6.22.0~), libkf6dbusaddons-dev (>= 6.22.0~), libkf6declarative-dev (>= 6.22.0~), libkf6doctools-dev (>= 6.22.0~), libkf6globalaccel-dev (>= 6.22.0~), libkf6guiaddons-dev (>= 6.22.0~), libkf6i18n-dev (>= 6.22.0~), libkf6idletime-dev (>= 6.22.0~), libkf6itemviews-dev (>= 6.22.0~), libkf6kcmutils-dev (>= 6.22.0~), libkf6newstuff-dev (>= 6.22.0~), libkf6notifications-dev (>= 6.22.0~), libkf6package-dev (>= 6.22.0~), libkf6runner-dev (>= 6.22.0~), libkf6service-dev (>= 6.22.0~), libkf6svg-dev (>= 6.22.0~), libkf6widgetsaddons-dev (>= 6.22.0~), libkf6windowsystem-dev (>= 6.22.0~), libkf6xmlgui-dev (>= 6.22.0~), libkglobalacceld-dev (>= 6.6.4~), libkirigami-dev (>= 6.22.0~), liblcms2-dev, libpipewire-0.3-dev (>= 0.3.29), libplasma-dev (>= 6.6.4~), libplasmaactivities-dev (>= 6.6.4~), libqaccessibilityclient-qt6-dev, libsm-dev, libsystemd-dev, libudev-dev [linux-any], libwayland-dev (>= 1.22~), libx11-xcb-dev, libxcb-composite0-dev (>= 1.10~), libxcb-cursor-dev, libxcb-damage0-dev (>= 1.10~), libxcb-dri3-dev (>= 1.10~), libxcb-glx0-dev (>= 1.10~), libxcb-icccm4-dev, libxcb-image0-dev, libxcb-keysyms1-dev, libxcb-present-dev (>= 1.10~), libxcb-randr0-dev (>= 1.10~), libxcb-render0-dev (>= 1.10~), libxcb-res0-dev, libxcb-shape0-dev (>= 1.10~), libxcb-shm0-dev (>= 1.10~), libxcb-sync-dev (>= 1.10~), libxcb-util-dev, libxcb-xfixes0-dev (>= 1.10~), libxcb-xinerama0-dev (>= 1.10~), libxcb-xinput-dev (>= 1.10~), libxcb-xkb-dev (>= 1.10~), libxcb-xtest0-dev, libxcb1-dev (>= 1.10~), libxcursor-dev, libxcvt-dev (>= 0.1.1~), libxkbcommon-dev (>= 0.7.0~), libxkbcommon-x11-dev, pkgconf, plasma-wayland-protocols (>= 1.19.0~), python3:any, qt6-5compat-dev (>= 6.10.0~), qt6-base-dev (>= 6.10.0~), qt6-base-dev-tools (>= 6.10.0~), qt6-base-private-dev (>= 6.10.0+dfsg~), qt6-declarative-dev (>= 6.10.0~), qt6-declarative-private-dev (>= 6.10.0~), qt6-sensors-dev (>= 6.10.0~), qt6-svg-dev (>= 6.10.0~), qt6-tools-dev (>= 6.10.0~), qt6-wayland-dev (>= 6.10.0~), wayland-protocols (>= 1.44~), xwayland (>= 2:22.1.7-1~)",
+          "default_profile_amd64_matches": [
+            {
+              "name": "libkglobalacceld-dev",
+              "version": "6.6.4~",
+              "operator": ">=",
+              "alternatives": [
+                [
+                  "libkglobalacceld-dev",
+                  "6.6.4~",
+                  ">="
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": {
+        "Package": "kwin-x11",
+        "Binary": "kwin-x11, kwin-x11-data, kwin-x11-dev, libkwin-x11-6",
+        "Version": "4:6.6.4-0ubuntu1",
+        "Priority": "optional",
+        "Section": "universe/kde",
+        "Maintainer": "Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>",
+        "Build-Depends": "breeze-dev (>= 4:6.6.4~), cmake (>= 3.16~), debhelper-compat (= 13), dh-sequence-kf6, extra-cmake-modules (>= 6.22.0~), gettext, hwdata, knighttime-dev (>= 6.6.4~), kscreenlocker-dev (>= 6.6.4~), kwayland-dev (>= 4:6.6.4~), libcanberra-dev, libcap-dev [linux-any], libcap2-bin [linux-any], libdisplay-info-dev, libdrm-dev (>= 2.4.116~), libegl-dev (>= 1.2~), libeis-dev, libepoxy-dev (>= 1.3), libfontconfig-dev, libfreetype-dev, libgbm-dev, libice-dev, libinput-dev (>= 1.26~), libkdecorations3-dev (>= 4:6.6.4~), libkf6auth-dev (>= 6.22.0~), libkf6colorscheme-dev (>= 6.22.0~), libkf6config-dev (>= 6.22.0~), libkf6configwidgets-dev (>= 6.22.0~), libkf6coreaddons-dev (>= 6.22.0~), libkf6crash-dev (>= 6.22.0~), libkf6dbusaddons-dev (>= 6.22.0~), libkf6declarative-dev (>= 6.22.0~), libkf6doctools-dev (>= 6.22.0~), libkf6globalaccel-dev (>= 6.22.0~), libkf6guiaddons-dev (>= 6.22.0~), libkf6i18n-dev (>= 6.22.0~), libkf6idletime-dev (>= 6.22.0~), libkf6itemviews-dev (>= 6.22.0~), libkf6kcmutils-dev (>= 6.22.0~), libkf6newstuff-dev (>= 6.22.0~), libkf6notifications-dev (>= 6.22.0~), libkf6package-dev (>= 6.22.0~), libkf6runner-dev (>= 6.22.0~), libkf6service-dev (>= 6.22.0~), libkf6svg-dev (>= 6.22.0~), libkf6widgetsaddons-dev (>= 6.22.0~), libkf6windowsystem-dev (>= 6.22.0~), libkf6xmlgui-dev (>= 6.22.0~), libkglobalacceld-dev (>= 6.6.4~), libkirigami-dev (>= 6.22.0~), liblcms2-dev, libpipewire-0.3-dev (>= 0.3.29), libplasma-dev (>= 6.6.4~), libplasmaactivities-dev (>= 6.6.4~), libqaccessibilityclient-qt6-dev, libsm-dev, libsystemd-dev, libudev-dev [linux-any], libwayland-dev (>= 1.22~), libx11-dev, libx11-xcb-dev, libxcb-composite0-dev (>= 1.10~), libxcb-cursor-dev, libxcb-damage0-dev (>= 1.10~), libxcb-dri3-dev (>= 1.10~), libxcb-glx0-dev (>= 1.10~), libxcb-icccm4-dev, libxcb-image0-dev, libxcb-keysyms1-dev, libxcb-present-dev (>= 1.10~), libxcb-randr0-dev (>= 1.10~), libxcb-render0-dev (>= 1.10~), libxcb-res0-dev, libxcb-shape0-dev (>= 1.10~), libxcb-shm0-dev (>= 1.10~), libxcb-sync-dev (>= 1.10~), libxcb-util-dev, libxcb-xfixes0-dev (>= 1.10~), libxcb-xinerama0-dev (>= 1.10~), libxcb-xinput-dev (>= 1.10~), libxcb-xkb-dev (>= 1.10~), libxcb-xtest0-dev, libxcb1-dev (>= 1.10~), libxcursor-dev, libxcvt-dev (>= 0.1.1~), libxkbcommon-dev (>= 0.7.0~), libxkbcommon-x11-dev, pkgconf, plasma-wayland-protocols (>= 1.14.0~), python3:any, qt6-5compat-dev (>= 6.10.0~), qt6-base-dev (>= 6.10.0~), qt6-base-dev-tools (>= 6.10.0~), qt6-base-private-dev (>= 6.10.0+dfsg~), qt6-declarative-dev (>= 6.10.0~), qt6-declarative-private-dev (>= 6.10.0~), qt6-sensors-dev (>= 6.10.0~), qt6-svg-dev (>= 6.10.0~), qt6-tools-dev (>= 6.10.0~), qt6-wayland-dev (>= 6.10.0~), wayland-protocols (>= 1.38~), xwayland (>= 2:23.1.0~)",
+        "Architecture": "any all",
+        "Standards-Version": "4.7.2",
+        "Format": "3.0 (quilt)",
+        "Directory": "pool/universe/k/kwin-x11",
+        "Files": "\n812356cb309dd1188ec37013f1305c1d 6891168 kwin-x11_6.6.4.orig.tar.xz\nc3d7ad6f65e475a332e469302ae0a2f3 19564 kwin-x11_6.6.4-0ubuntu1.debian.tar.xz\nf34a55e8616101de3e582b2aac1441a1 4910 kwin-x11_6.6.4-0ubuntu1.dsc",
+        "Checksums-Sha1": "\n706d77736d2037b6be85e32b581182302f3c1a35 6891168 kwin-x11_6.6.4.orig.tar.xz\ncf3101058148b7d451108f67dc43ab850b39922d 19564 kwin-x11_6.6.4-0ubuntu1.debian.tar.xz\n924a1234c0e437833afc2c9d695ba16433c83135 4910 kwin-x11_6.6.4-0ubuntu1.dsc",
+        "Checksums-Sha256": "\n81106d8b89fa2a9c93434e41aadc040ff2d7afb3b4693f423a45853806836e98 6891168 kwin-x11_6.6.4.orig.tar.xz\n7f7292e623225b1bfe633263ce1df8b380652dc3cceffe9b56ed4242de3cf178 19564 kwin-x11_6.6.4-0ubuntu1.debian.tar.xz\neca22f67724a7da44cfdbac35e6d54284d9d700fa630b62133bda44f47384a23 4910 kwin-x11_6.6.4-0ubuntu1.dsc",
+        "Checksums-Sha512": "\n5c27a502f14244ab9fc5febff3d2b6471ba108ac18c845dfccb76b2108aa17e4f2ac4741aaca0e6c4d49786dcaf432dd344f6b522c95c76b947555a96f9b1fa2 6891168 kwin-x11_6.6.4.orig.tar.xz\n6e0a58490873fb27f76857123dd25d05ff5fe2336cc9efe370a9052409a515b5b8b8f64edeb3fe19bbf90f8d48a9ac53a952f3ffe6186666acb8333531794402 19564 kwin-x11_6.6.4-0ubuntu1.debian.tar.xz\need76fcf2ca6bf8148af7507695d4905dfa499dec623c6674f920011c03d23cf9ebe54c1ea2a098bbdfb3f09bb4d3c29e7707fbcf886f838a34f70c146f290f2 4910 kwin-x11_6.6.4-0ubuntu1.dsc",
+        "Homepage": "https://invent.kde.org/plasma/kwin-x11",
+        "Uploaders": "Aur\u00e9lien COUDERC <coucouf@debian.org>,",
+        "Vcs-Browser": "https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/kwin-x11",
+        "Vcs-Git": "https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/kwin-x11",
+        "Package-List": "kwin-x11 deb kde optional arch=any\nkwin-x11-data deb kde optional arch=all\nkwin-x11-dev deb libdevel optional arch=any\nlibkwin-x11-6 deb libs optional arch=any",
+        "signed_index_sha256": "e324d966b70cedc32d7c308b96574d2205f15822c25b4e93d2f7607c22bcf6a7",
+        "suite": "resolute",
+        "component": "universe"
+      },
+      "relationships": [
+        {
+          "field": "Build-Depends",
+          "raw": "breeze-dev (>= 4:6.6.4~), cmake (>= 3.16~), debhelper-compat (= 13), dh-sequence-kf6, extra-cmake-modules (>= 6.22.0~), gettext, hwdata, knighttime-dev (>= 6.6.4~), kscreenlocker-dev (>= 6.6.4~), kwayland-dev (>= 4:6.6.4~), libcanberra-dev, libcap-dev [linux-any], libcap2-bin [linux-any], libdisplay-info-dev, libdrm-dev (>= 2.4.116~), libegl-dev (>= 1.2~), libeis-dev, libepoxy-dev (>= 1.3), libfontconfig-dev, libfreetype-dev, libgbm-dev, libice-dev, libinput-dev (>= 1.26~), libkdecorations3-dev (>= 4:6.6.4~), libkf6auth-dev (>= 6.22.0~), libkf6colorscheme-dev (>= 6.22.0~), libkf6config-dev (>= 6.22.0~), libkf6configwidgets-dev (>= 6.22.0~), libkf6coreaddons-dev (>= 6.22.0~), libkf6crash-dev (>= 6.22.0~), libkf6dbusaddons-dev (>= 6.22.0~), libkf6declarative-dev (>= 6.22.0~), libkf6doctools-dev (>= 6.22.0~), libkf6globalaccel-dev (>= 6.22.0~), libkf6guiaddons-dev (>= 6.22.0~), libkf6i18n-dev (>= 6.22.0~), libkf6idletime-dev (>= 6.22.0~), libkf6itemviews-dev (>= 6.22.0~), libkf6kcmutils-dev (>= 6.22.0~), libkf6newstuff-dev (>= 6.22.0~), libkf6notifications-dev (>= 6.22.0~), libkf6package-dev (>= 6.22.0~), libkf6runner-dev (>= 6.22.0~), libkf6service-dev (>= 6.22.0~), libkf6svg-dev (>= 6.22.0~), libkf6widgetsaddons-dev (>= 6.22.0~), libkf6windowsystem-dev (>= 6.22.0~), libkf6xmlgui-dev (>= 6.22.0~), libkglobalacceld-dev (>= 6.6.4~), libkirigami-dev (>= 6.22.0~), liblcms2-dev, libpipewire-0.3-dev (>= 0.3.29), libplasma-dev (>= 6.6.4~), libplasmaactivities-dev (>= 6.6.4~), libqaccessibilityclient-qt6-dev, libsm-dev, libsystemd-dev, libudev-dev [linux-any], libwayland-dev (>= 1.22~), libx11-dev, libx11-xcb-dev, libxcb-composite0-dev (>= 1.10~), libxcb-cursor-dev, libxcb-damage0-dev (>= 1.10~), libxcb-dri3-dev (>= 1.10~), libxcb-glx0-dev (>= 1.10~), libxcb-icccm4-dev, libxcb-image0-dev, libxcb-keysyms1-dev, libxcb-present-dev (>= 1.10~), libxcb-randr0-dev (>= 1.10~), libxcb-render0-dev (>= 1.10~), libxcb-res0-dev, libxcb-shape0-dev (>= 1.10~), libxcb-shm0-dev (>= 1.10~), libxcb-sync-dev (>= 1.10~), libxcb-util-dev, libxcb-xfixes0-dev (>= 1.10~), libxcb-xinerama0-dev (>= 1.10~), libxcb-xinput-dev (>= 1.10~), libxcb-xkb-dev (>= 1.10~), libxcb-xtest0-dev, libxcb1-dev (>= 1.10~), libxcursor-dev, libxcvt-dev (>= 0.1.1~), libxkbcommon-dev (>= 0.7.0~), libxkbcommon-x11-dev, pkgconf, plasma-wayland-protocols (>= 1.14.0~), python3:any, qt6-5compat-dev (>= 6.10.0~), qt6-base-dev (>= 6.10.0~), qt6-base-dev-tools (>= 6.10.0~), qt6-base-private-dev (>= 6.10.0+dfsg~), qt6-declarative-dev (>= 6.10.0~), qt6-declarative-private-dev (>= 6.10.0~), qt6-sensors-dev (>= 6.10.0~), qt6-svg-dev (>= 6.10.0~), qt6-tools-dev (>= 6.10.0~), qt6-wayland-dev (>= 6.10.0~), wayland-protocols (>= 1.38~), xwayland (>= 2:23.1.0~)",
+          "default_profile_amd64_matches": [
+            {
+              "name": "libkglobalacceld-dev",
+              "version": "6.6.4~",
+              "operator": ">=",
+              "alternatives": [
+                [
+                  "libkglobalacceld-dev",
+                  "6.6.4~",
+                  ">="
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exact_original_binary_to_signed_source_join": [
+    {
+      "binary": "kglobalacceld",
+      "binary_version": "6.6.5-0ubuntu0.1",
+      "binary_sha256": "ea186f181a738fa5c5ac03b3d215c6d57bd437d39126c4a3a188e43e3804eccc",
+      "source": "kglobalacceld",
+      "source_version": "6.6.5-0ubuntu0.1",
+      "signed_source_index_sha256": "b1a8d58a74b1810fb1df4b264ad3ef68caf1997c645bbda632e35b3592630884",
+      "source_sdk_build_dependency": false
+    },
+    {
+      "binary": "kwin-wayland",
+      "binary_version": "4:6.6.6-0ubuntu0.1",
+      "binary_sha256": "a52e4185f87144a9df121319902ff82b18a5532e0e5a27937dc0449853e48a91",
+      "source": "kwin",
+      "source_version": "4:6.6.6-0ubuntu0.1",
+      "signed_source_index_sha256": "b1a8d58a74b1810fb1df4b264ad3ef68caf1997c645bbda632e35b3592630884",
+      "source_sdk_build_dependency": true
+    },
+    {
+      "binary": "libkglobalacceld-dev",
+      "binary_version": "6.6.5-0ubuntu0.1",
+      "binary_sha256": "a3ef6cf16f5a6bdc9c31721c0faae43b989a75dfee7a39a4c468c845f2610a5f",
+      "source": "kglobalacceld",
+      "source_version": "6.6.5-0ubuntu0.1",
+      "signed_source_index_sha256": "b1a8d58a74b1810fb1df4b264ad3ef68caf1997c645bbda632e35b3592630884",
+      "source_sdk_build_dependency": false
+    },
+    {
+      "binary": "libkwin-x11-6",
+      "binary_version": "4:6.6.4-0ubuntu1",
+      "binary_sha256": "3926b9f13476583725e7e8350cd87f4c5c6b54eb5d413d9302ca40b15a0ec190",
+      "source": "kwin-x11",
+      "source_version": "4:6.6.4-0ubuntu1",
+      "signed_source_index_sha256": "e324d966b70cedc32d7c308b96574d2205f15822c25b4e93d2f7607c22bcf6a7",
+      "source_sdk_build_dependency": true
+    },
+    {
+      "binary": "libkwin6",
+      "binary_version": "4:6.6.6-0ubuntu0.1",
+      "binary_sha256": "c2438dfaf46e940a98d201d0a64fc9de705e729b2a70e442111f0f861f83e2f6",
+      "source": "kwin",
+      "source_version": "4:6.6.6-0ubuntu0.1",
+      "signed_source_index_sha256": "b1a8d58a74b1810fb1df4b264ad3ef68caf1997c645bbda632e35b3592630884",
+      "source_sdk_build_dependency": true
+    }
+  ],
+  "binary_inventory_sha256": "cf9e3bef2e2376de91d39945b9a391c8a78d5f4d08044e42f01cf482f8615c71",
+  "host_packages_installed": false,
+  "host_network_modified": false,
+  "remote_network_used": false,
+  "canonical_effect": "none",
+  "package_attempt_consumed": false,
+  "transition_admitted": false,
+  "limitations": [
+    "Signed Sources and binary inventory are independently frozen snapshots, not asserted current",
+    "Exact source identities for the reviewed original binary versions were joined explicitly",
+    "Declared source Build-Depends do not inventory undeclared SDK use or third-party private ABI clients",
+    "Source dependency metadata does not prove source/runtime compatibility or authorize a rebuild transition"
+  ]
+}

@@ -1,0 +1,44 @@
+Evaluate signed official KGlobalAccelD 6.7.5 as a scoped private SDK source
+transition. Preserve the Ubuntu three-binary profile, SONAME0, development SDK,
+XCB backend, autostart/systemd payloads and default deprecated public D-Bus API.
+No KDE/Qt source patch, excluded feature, skipped native test or Qt replacement.
+
+The unchanged original public application must pass before and after an actual
+APT upgrade: real owned XTEST keys, QAction activation, legacy methods, defaults,
+conflict, block/unblock and removal. Qt package identities remain unchanged.
+Record and preserve the installed original KWin Wayland/X11 runtime executables
+and both libraries, versions and bytes through the package upgrade; APT check
+must pass. Full installed KWin sessions and other applications remain later QA.
+
+The installed private headers explicitly designate a private API. Upstream
+changed QList<QKeySequence> to QSet under the same SONAME, removed ten reviewed
+private/implementation exports and changed both getters' return ABI while
+retaining their mangled names. Do not report the old private executable as
+compatible: retain its exact bytes and require the observed loader exit127 with
+the exact removed foreign QList setter and no functional output. Unrelated
+failures, successful execution or another missing symbol are fatal. Separately
+recompile the identical private client source and require its full assertions.
+The original private baseline remains mandatory before candidate installation.
+
+The symbols proposal preserves189 unaffected guard lines, raises both changed
+getters to upstream6.7.5, records21 verified new exports and four explicitly
+observed optional amd64 templates. Daemon/runtime/dev versions are locked
+exactly. The sealed Attempt1 failure and prior guard review remain unchanged.
+All three official native tests and generated AppStream tests remain fatal and
+run serially inside disposable clean sbuild; lintian and installed package gates
+remain mandatory. Private Xvfb, closed D-Bus, process groups and state are reaped.
+
+Existing zero-NIC KVM evidence covers original daemon/plugin, original KWin
+Wayland and KWin X11 with frozen original/candidate library providers and
+unchanged public contracts. It is diagnostic evidence, not a candidate .deb
+build or installed APT upgrade. This staging proposal remains unadmitted until
+its scoped lifecycle and a fresh authoritative input preflight are reviewed.
+Undeclared third-party private binaries receive no compatibility assertion.
+Final Ubuntu application/desktop/release compatibility gates remain required.
+
+The three KConfigGroup template exports absent from the reviewed original
+amd64 library also require the reviewed6.7.5 provider. Their prior minimum
+versions described armhf/riscv64 entries and must not silently apply to the
+new amd64 entries. The single widened entry now uses the conservative6.7.5
+minimum; non-amd64 packages remain outside this certification. The original
+architecture-qualified metadata and all prior reviews are retained unchanged.
