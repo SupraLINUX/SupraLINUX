@@ -47,39 +47,12 @@ prepare)
   ;;
 test)
   python3 "$SCRIPT" inspect "$IMAGE" "$META"
-  FIXTURE="$WORK/source"
-  mkdir -p "$FIXTURE/debian/tests"
-  cat > "$FIXTURE/debian/control" <<'EOF'
-Source: supralinux-guest-probe
-Section: misc
-Priority: optional
-Maintainer: SupraLINUX QA <qa@supralinux.invalid>
-Standards-Version: 4.7.0
-
-Package: supralinux-guest-probe
-Architecture: all
-Description: Disposable integration probe, not a distributed package
- Tests only isolated hosted Ubuntu QEMU infrastructure.
-EOF
-  cat > "$FIXTURE/debian/tests/control" <<'EOF'
-Tests: guest-smoke
-Depends: python3, ubuntu-keyring
-Restrictions: isolation-machine
-EOF
-  cat > "$FIXTURE/debian/tests/guest-smoke" <<'EOF'
-#!/bin/sh
-set -eu
-. /etc/os-release
-test "$ID" = ubuntu
-test "$VERSION_ID" = 26.04
-test "$VERSION_CODENAME" = resolute
-test "$(dpkg --print-architecture)" = amd64
-test "$(uname -m)" = x86_64
-dpkg-query -W ubuntu-keyring >/dev/null
-test -r /usr/share/keyrings/ubuntu-archive-keyring.gpg
-printf '%s\n' SUPRALINUX_UBUNTU26_KVM_DEP8_GUEST_OK
-EOF
-  chmod +x "$FIXTURE/debian/tests/guest-smoke"
+  FIXTURE="$ROOT/tests/fixtures/hosted-ubuntu-guest"
+  # Validate the real versioned Debian source fixture before launching QEMU.
+  test -r "$FIXTURE/debian/changelog"
+  test -x "$FIXTURE/debian/tests/guest-smoke"
+  test "$(dpkg-parsechangelog -l "$FIXTURE/debian/changelog" -S Source)" = supralinux-guest-probe
+  test "$(dpkg-parsechangelog -l "$FIXTURE/debian/changelog" -S Version)" = 1.0-1
   test ! -e "$WORK/autopkgtest"
   if ! timeout -k 30s 22m autopkgtest --no-built-binaries --apt-upgrade \
      --output-dir="$WORK/autopkgtest" "$FIXTURE" \

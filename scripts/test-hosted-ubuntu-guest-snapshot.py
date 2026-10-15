@@ -2,6 +2,8 @@
 """Cheap rejection tests for snapshot integrity and opt-in hosted guest lane."""
 import importlib.util
 import json
+import os
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -40,6 +42,28 @@ class GuestSnapshotTests(unittest.TestCase):
         })):
             with self.assertRaisesRegex(AssertionError, "independent"):
                 m.image_info(Path("/not-needed.img"))
+
+    def test_real_debian_source_fixture_is_complete(self):
+        root = ROOT / "tests/fixtures/hosted-ubuntu-guest"
+        changelog = root / "debian/changelog"
+        control = (root / "debian/control").read_text()
+        dep8 = (root / "debian/tests/control").read_text()
+        smoke = root / "debian/tests/guest-smoke"
+        self.assertTrue(changelog.is_file())
+        self.assertTrue(smoke.is_file() and os.access(smoke, os.X_OK))
+        self.assertIn("Package: supralinux-guest-probe", control)
+        self.assertIn("Tests: guest-smoke", dep8)
+        self.assertIn("Restrictions: isolation-machine", dep8)
+        self.assertIn("test \"$VERSION_ID\" = 26.04", smoke.read_text())
+        self.assertEqual(subprocess.check_output([
+            "dpkg-parsechangelog", "-l", str(changelog), "-S", "Source"],
+            text=True).strip(), "supralinux-guest-probe")
+        self.assertEqual(subprocess.check_output([
+            "dpkg-parsechangelog", "-l", str(changelog), "-S", "Version"],
+            text=True).strip(), "1.0-1")
+        lane = (ROOT / "scripts/hosted-ubuntu-guest-lane.sh").read_text()
+        self.assertNotIn("cat > \"$FIXTURE/debian/control\"", lane)
+        self.assertIn('FIXTURE="$ROOT/tests/fixtures/hosted-ubuntu-guest"', lane)
 
     def test_github_only_and_snapshot_after_smoke(self):
         wf = (ROOT / ".github/workflows/hosted-ubuntu-guest-probe.yml").read_text()

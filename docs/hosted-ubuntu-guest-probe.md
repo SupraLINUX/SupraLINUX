@@ -29,6 +29,15 @@ Each test runs in an isolated autopkgtest QEMU overlay and the unchanged base
 is reused. GitHub's retention and eviction rules mean the cache is *not*
 a durable artifact or release evidence archive.
 
+The first hosted guest run (38693007782) failed at vmdb2/grub because the
+builder passed a host-only TMPDIR into the chroot. The second run (38695358122)
+built and booted Ubuntu 26.04 successfully under hosted KVM and updated APT,
+but its generated DEP-8 source tree omitted debian/changelog, so autopkgtest
+rejected it before running guest-smoke. Neither run sealed or saved a snapshot.
+After these two infrastructure-invalid outcomes, the fixture is retained as
+real, complete, versioned source files and validated with dpkg-parsechangelog
+in cheap Repository Policy before any further hosted VM experiment.
+
 The smoke checks the guest's Ubuntu 26.04 identity, architecture, Python
 runtime and Ubuntu archive keyring. A PASS certifies this **mechanism only**:
 it does not authorize KDE package Attempts, change the frozen Plasma 6.7.5
