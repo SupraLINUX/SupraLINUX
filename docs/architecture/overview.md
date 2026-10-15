@@ -73,6 +73,21 @@ This creates a deliberate integration frontier:
 
 The internal heuristic "stay ahead of Ubuntu where compatible" is an engineering direction, not product marketing. SupraLINUX should describe what it is rather than claim superiority over another distribution.
 
+### Wayland desktop contract
+
+SupraLINUX Desktop runs a Wayland-only Plasma session, with XWayland retained
+for unmodified X11 applications. KWin X11, Plasma X11 sessions and retired
+X11-only KCMs such as KGamma are not part of the product. Qt XCB and X11
+runtime libraries needed by Ubuntu applications or XWayland are **not** banned.
+The canonical product restrictions live in
+`manifests/desktop-stack.json`; the image planner and package admission
+enforce its source restrictions, while installed APT/session/desktop payload
+validation is a separate, still-pending composition gate.
+
+The complete KDE 6.7.5 release inventory and its closed source-materialization
+records are provenance, not an installation list. They must not drive new work
+for excluded sources. Historical evidence stays intact.
+
 ### Desktop completeness
 
 The selected KDE profile is intended to expose upstream-advertised desktop functionality without requiring users to install missing integration packages after the fact. SupraLINUX therefore packages and installs the dependencies needed for those selected features by default. Exceptions must be explicit and justified, for example by security, legal restrictions, hardware-specific scope, external-service requirements or disproportionate footprint.

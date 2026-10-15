@@ -25,9 +25,18 @@ See:
 - [`docs/status/2026-09-11.md`](docs/status/2026-09-11.md)
 - [`manifests/desktop-stack.json`](manifests/desktop-stack.json)
 
-## Current upstream snapshot
+## Frozen development stack and product profile
 
-The repository manifest records the verified upstream snapshot used by development. As of 2026-09-27 it selects Plasma 6.7.5, KDE Frameworks 6.30.0 and KDE Gear 26.08.1. Plasma 6.8 is still upstream beta and is therefore not canonical; KDE's schedule assigns Plasma 6.8 a Qt 6.11 dependency profile. Plasma 6.7 uses Qt 6.10, and Ubuntu 26.04 currently provides Qt 6.10.2 as a **reuse candidate**, not as certified until SupraLINUX build and compatibility gates pass.
+The current campaign remains frozen at Plasma 6.7.5, Frameworks 6.30.0 and
+Gear 26.08.1. The Ubuntu 26.04 Qt 6.10.2 provider remains a **reuse candidate**,
+not a certified release provider until the compatibility gates pass.
+SupraLINUX Desktop is **Wayland-only** with **XWayland for X11 applications**:
+it does not include KWin X11, Plasma X11 sessions or KDE's retired X11-only
+KGamma. Retained X11/XCB runtime libraries are permitted where required for
+XWayland and Ubuntu application compatibility. Product rules are pinned in
+[`manifests/desktop-stack.json`](manifests/desktop-stack.json), and the source
+inventory and closed evidence are not installation lists. Newer upstream
+releases do not silently reselect the frozen development stack.
 
 ## Selection policy
 

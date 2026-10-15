@@ -6,9 +6,11 @@ SupraLINUX live ISO or verified installer is currently available.
 
 `manifests/desktop-image-profile.json` defines a preliminary core dependency
 analysis for the compositor/session, settings, lock screen, audio, network,
-portal and Discover. It is not the final installation seed. Other upstream
-components remain in the build inventory; this analysis does not exclude them
-or define exceptions to the final desktop profile.
+portal and Discover. It is not the final installation seed. It explicitly
+selects Wayland-only Plasma and XWayland application compatibility; it excludes
+`kwin-x11` and the retired X11-only `kgamma` source from this product.
+Other upstream sources remain in the historical authenticated inventory, not
+as an implied build or install queue.
 
 Generate a current plan without creating a VM or changing the host:
 
@@ -22,12 +24,18 @@ The planner follows the canonical Plasma DAG and rejects unknown nodes or
 dependency cycles. A recorded package PASS requires the exact result digest,
 source commit, source/version identity, authoritative build, lintian and
 installed-test results, and declared complete offline artifact retention.
-Unreviewed packages and compatibility holds remain pending.
+Unreviewed packages and compatibility holds remain pending. Product-excluded
+sources fail planning even when accidentally pulled in through the DAG; review
+and package admission of those sources are also blocked.
 
 Recorded package evidence does not restore or certify the image payload. The
 composition gate must restore sources/binaries from retained artifacts and
 verify their hashes, source package, Debian version and architecture before use.
 Even a complete package plan cannot authorize an image build by itself.
+The actual future APT seed must also reject excluded binary packages
+(`kwin-x11`, `plasma-session-x11`, `kgamma`) through Depends and Recommends,
+and must verify the installed image has no X11 session entries while preserving
+working XWayland clients. The planner cannot certify APT resolution in advance.
 
 After the package dependencies close, the image needs minimal Ubuntu composition,
 an exact package seed, signed APT metadata, live/installer generation and

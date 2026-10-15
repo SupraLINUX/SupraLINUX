@@ -15,6 +15,8 @@ supplementary = importlib.machinery.SourceFileLoader('supplementary_admission',s
 
 
 def check(node,record,packaging,level,material,execution_checkpoint='frameworks-6.30-pass'):
+    product = json.loads((ROOT/'manifests/desktop-stack.json').read_text())['product_profile']
+    assert node not in product['excluded_plasma_sources'], 'Excluded Wayland-only source cannot be admitted'
     assert record['packaging_review'] == 'PASS' and record['state'] == 'build-pending' and not record['attempts']
     prepare.check_rootfs_policy(record, execution_checkpoint, required=True)
     assert record['packaging_path'] == f'packages/plasma/{node}/debian'

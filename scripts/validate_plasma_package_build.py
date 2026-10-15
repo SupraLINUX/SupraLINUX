@@ -33,6 +33,8 @@ def validate():
     providers = json.loads((ROOT/'manifests/kde-plasma-supplementary-providers.json').read_text())['nodes']
     assert campaign["role"] == "reviewed-plasma-package-build"
     scope = campaign["authorized_nodes"]
+    product = json.loads((ROOT / 'manifests/desktop-stack.json').read_text())['product_profile']
+    assert not set(scope) & set(product['excluded_plasma_sources']), 'Excluded Wayland-only package execution'
     level_scope = [name for name in scope if name in level['selected_nodes']]
     assert level_scope == planning["authorized_package_nodes"] == level["authorized_package_nodes"]
     assert len(scope) <= 1 and all(name in campaign['nodes'] for name in scope)

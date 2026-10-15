@@ -1,6 +1,10 @@
 # Plasma 6.7.5 Level 0
 
-Status: **definition complete / materialization infrastructure preflight pending**.
+Status: **historical definition and materialization closed**. For the current
+execution gate see [the generated status](status/current.md). The 34-node
+materialization inventory is not the SupraLINUX Desktop installation profile.
+The Wayland-only product excludes `kgamma` and `kwin-x11` (the latter is in
+Level 4), while their closed inventory/provenance remains immutable.
 
 Level 0 is derived directly from the canonical executable DAG and contains 34 independent Plasma sources. All have zero internal Plasma predecessors, so later package builds may be parallelized only after their external providers and materialized packaging contracts are valid.
 

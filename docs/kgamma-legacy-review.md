@@ -40,8 +40,9 @@ Restoration of the evidence hash closure from an empty directory passed locally.
 The public diagnosis metadata and logs live under
 `manifests/evidence/plasma/diagnostics/kgamma-unsupported-defaults-ubuntu-20261006/`.
 
-Keep KGamma pending product/integration review and preserve its native
-`X-KDE-OnlyShowOnQtPlatforms=xcb` boundary. Do not hide the issue by treating an
-expected crash as quality PASS or introducing an unreviewed upstream fork.
-Physical calibration and full desktop integration remain separate gates.
-Independent Plasma packages can continue through their own reviews and gates.
+Product decision (2026-10-15): KGamma is excluded from SupraLINUX Desktop.
+It is an X11-session-only module retired by KDE, while SupraLINUX offers only
+Wayland sessions and XWayland application compatibility. Do not prepare,
+build, admit or install it for the selected desktop. This note retains only
+the already-recorded negative diagnostic and provenance; it is not an active
+development or certification gate. Do not relabel the original failure as PASS.

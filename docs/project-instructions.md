@@ -19,6 +19,17 @@ contrato, conservar el KDE estable más nuevo ya compatible. Beta/RC no son
 canónicos por defecto. Verificar upstream antes de seleccionar otra release y
 fijar los inputs de cada campaña; no cambiar la selección durante un build.
 
+El producto de escritorio usa exclusivamente sesiones Wayland, con XWayland
+para compatibilidad con aplicaciones X11. No instalar ni distribuir KWin X11,
+sesiones Plasma X11 ni módulos oficiales retirados y específicos de sesiones
+X11, como KGamma. Las bibliotecas X11/XCB necesarias para XWayland o
+aplicaciones Ubuntu siguen permitidas: prohibir sesiones X11 no significa
+prohibir APIs de compatibilidad. Las exclusiones se aplican al perfil vivo y
+a la resolución real de paquetes, sin modificar registros históricos cerrados.
+La composición debe rechazar paquetes excluidos tanto en dependencias como en
+Recommends, entradas de sesión X11 y rutas de ejecución X11.
+La fuente de política de producto es `manifests/desktop-stack.json`.
+
 Mantener el sistema mutable, basado en .deb, APT y dpkg. La recuperación prevista
 usa Btrfs, Snapper, hooks APT y un entorno de recuperación.
 
