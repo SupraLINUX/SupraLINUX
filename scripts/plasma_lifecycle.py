@@ -109,6 +109,11 @@ def validate(root, plasma, level, materialization):
     require(versions.get("materialization_result_sha256") == evidence.get("result_json_sha256"), "candidate versions source evidence binding")
     version_nodes = {node["node"]: node for node in versions["nodes"]}
     require(len(version_nodes) == len(versions["nodes"]) and set(version_nodes) == set(selected), "candidate version node coverage")
+    candidate_records = {}
+    if phase.startswith("level0-package-build-"):
+        package_manifest = root / planning.get("package_build_manifest", "")
+        if package_manifest.is_file():
+            candidate_records = json.loads(package_manifest.read_text()).get("nodes", {})
     for name in selected:
         if name not in by_node or name not in version_nodes:
             continue
@@ -119,7 +124,17 @@ def validate(root, plasma, level, materialization):
         require(upstream["sha256"] == node["upstream_source_sha256"] and upstream["version"] == node["upstream_version"], f"{name}: source identity")
         require(reference["source_package"] == node["packaging_reference"]["source_package"], f"{name}: reference identity")
         version = node.get("candidate_package_version", "")
-        require(version == version_record["candidate_package_version"], f"{name}: candidate version evidence")
+        initial_version = version_record["candidate_package_version"]
+        if version != initial_version:
+            reviewed = candidate_records.get(name, {})
+            require(
+                reviewed.get("version") == version and
+                reviewed.get("packaging_review") == "PASS" and
+                reviewed.get("upstream_sha256") == node["upstream_source_sha256"] and
+                reviewed.get("source_package") == name and
+                subprocess.run(["dpkg", "--compare-versions", version, "gt", initial_version]).returncode == 0,
+                f"{name}: revised candidate requires exact reviewed package and increasing version"
+            )
         expected_state = "package-build-pending" if name in scope else "packaging-preparation-pending"
         if phase.startswith("level0-package-build-") and node.get('state') == 'compatibility-review-required':
             campaign = json.loads((root / planning['package_build_manifest']).read_text())

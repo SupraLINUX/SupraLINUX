@@ -160,6 +160,10 @@ class PreflightTests(unittest.TestCase):
             node["candidate_package_version"] = version.split(":", 1)[1]
             self.assertTrue(any("preserved Ubuntu epoch" in error for error in lifecycle.validate(root, plasma, level, materialization)))
             node["candidate_package_version"] = version
+            node["candidate_package_version"] = version.replace("-0supralinux1", "-0supralinux2")
+            self.assertTrue(any("revised candidate requires exact reviewed package" in error
+                                for error in lifecycle.validate(root, plasma, level, materialization)))
+            node["candidate_package_version"] = version
             evidence["result_json_sha256"] = "0" * 64
             self.assertTrue(any("retained result digest" in error for error in lifecycle.validate(root, plasma, level, materialization)))
 
