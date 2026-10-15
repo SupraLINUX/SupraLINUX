@@ -49,3 +49,19 @@ ejecuta mmdebstrap --mode=unshare y sbuild como usuario no privilegiado,
 sin sudo, para comparar con el camino recomendado por Ubuntu.
 La comparación host/root vs host/user sólo diagnostica el host,
 no certifica el invitado KVM ni un paquete.
+
+## Native unprivileged PASS y verificación opt-in dentro de KVM
+
+Run 38747868023 del SHA e219135: mmdebstrap --mode=unshare,
+sbuild --chroot-mode=unshare y .deb/.changes/.buildinfo PASS en hosted
+Ubuntu 26.04 como usuario no privilegiado; Repository Policy 38747880762 PASS.
+No es todavía PASS del invitado.
+
+Un evento PR labeled con la etiqueta ci:hosted-sbuild-guest inicia el job
+`guest` del workflow de diagnóstico existente. Reutiliza exactamente la
+clave de caché del workflow original y rechaza misses; verifica SHA-256 de
+la imagen y de sus inputs antes y después. Ejecuta sobre un overlay
+autopkgtest y una COPIA temporal del fixture DEP-8 estable, sin modificar
+su source de Git ni reconstruir la imagen. El único guest-smoke combinado
+prueba el backend en modo no root. Un error es INFRA_INVALID del mecanismo,
+no FAIL de KDE ni un Package Attempt. La base QCOW2 NO se vuelve a guardar.

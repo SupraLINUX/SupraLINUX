@@ -4,8 +4,13 @@
 set -Eeuo pipefail
 umask 077
 
-[[ $# -eq 1 ]] || { echo "Usage: $0 OUTPUT_DIRECTORY" >&2; exit 2; }
-[[ "${RUNNER_ENVIRONMENT:-}" == github-hosted ]]
+[[ $# -eq 2 ]] || { echo "Usage: $0 OUTPUT_DIRECTORY host|guest" >&2; exit 2; }
+SCOPE=$2
+case "$SCOPE" in
+  host) [[ "${RUNNER_ENVIRONMENT:-}" == github-hosted ]] ;;
+  guest) [[ "${RUNNER_ENVIRONMENT:-}" != github-hosted ]] ;;
+  *) echo "Invalid scope" >&2; exit 2 ;;
+esac
 . /etc/os-release
 [[ "$ID" == ubuntu && "$VERSION_ID" == 26.04 && "$VERSION_CODENAME" == resolute ]]
 [[ "$(dpkg --print-architecture)" == amd64 && "$(id -u)" -ne 0 ]]
@@ -21,7 +26,7 @@ mkdir -p "$WORK/source/debian/source" "$WORK/out"
 REPORT="$OUTPUT_DIR/result.txt"
 ROOTFS_LOG="$OUTPUT_DIR/mmdebstrap.log"
 SBUILD_LOG="$OUTPUT_DIR/sbuild-debug.log"
-printf 'scope=hosted-ubuntu26-native-host-debug-only\nkvm_guest_certified=false\nkde_package_attempt_consumed=false\nsource_sha=%s\nactor=unprivileged-runner\n' "${GITHUB_SHA:-not-provided}" > "$REPORT"
+printf 'scope=%s\nkvm_guest_certified=false\nkde_package_attempt_consumed=false\nsource_sha=%s\nactor=unprivileged-%s\n' "$SCOPE" "${GITHUB_SHA:-not-provided}" "$SCOPE" > "$REPORT"
 
 cat > "$WORK/source/debian/changelog" <<'EOF'
 supralinux-sbuild-backend-probe (0.1) resolute; urgency=low
@@ -108,4 +113,4 @@ else
 fi
 tail -n 45 "$SBUILD_LOG"
 cat "$REPORT"
-echo 'HOST_BACKEND_DIAGNOSTIC_ONLY: no KVM guest, no KDE package PASS.'
+printf "SBUILD_SCOPE=%s; KDE_PACKAGE_ATTEMPT=false\n" "$SCOPE"
