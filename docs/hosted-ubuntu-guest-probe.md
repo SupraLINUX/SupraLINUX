@@ -68,9 +68,9 @@ hosted-runner parity verification of clean sbuild, installed Ubuntu clients,
 source/package identity, independent artifact retention and reproducible
 input selection before any authority migration.
 
-## Hosted sbuild-unshare mechanism — diagnostic HOLD (2026-10-15)
+## Hosted sbuild-unshare mechanism — historical HOLD, rootless guest PASS (2026-10-15)
 
-The separately proven Ubuntu 26.04 hosted QEMU/KVM + DEP-8 baseline remains
+The two failed root-mode experiments below remain historical failures. The separate unprivileged guest mechanism subsequently PASSed in run 38750289548; see manifests/evidence/hosted-sbuild-guest-milestone-2026-10-15.json. This does not upgrade KDE package scope or resolve the root-mode failure. The separately proven Ubuntu 26.04 hosted QEMU/KVM + DEP-8 baseline remains
 valid (runs 38696340689 and 38697145580, with exact cache restore). A small
 extension to exercise `sbuild-unshare` **did not pass**:
 

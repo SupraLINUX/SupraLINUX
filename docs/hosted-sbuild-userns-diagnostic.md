@@ -1,6 +1,6 @@
 # Hosted sbuild-unshare — diagnóstico aislado
 
-El mecanismo sbuild-unshare hospedado sigue en HOLD tras los runs 38700751372 y 38701383856, ambos INFRA_INVALID. El segundo creó un tarball buildd correctamente, pero sbuild 0.91.2ubuntu3 falló al crear la sesión de chroot sin registro --debug. No se consumió KDE Attempt.
+El mecanismo sbuild-unshare hospedado estuvo en HOLD tras los runs 38700751372 y 38701383856, ambos INFRA_INVALID. Ese HOLD histórico se resolvió exclusivamente para la ejecución sin root dentro de Ubuntu KVM en el run 38750289548; la vía root-mode original no se declara reparada. El segundo creó un tarball buildd correctamente, pero sbuild 0.91.2ubuntu3 falló al crear la sesión de chroot sin registro --debug. No se consumió KDE Attempt.
 
 Este workflow opt-in y activable por cambios propios de scripts/diagnose-sbuild-userns.sh recopila únicamente capacidades UID/GID, mappings de usuario normal y root, y límites del kernel en un runner GitHub-hosted Ubuntu 26.04. No altera sysctls, no inicia KVM, no reconstruye snapshots, no ejecuta sbuild y no cambia los tests DEP-8 certificados. Los PASS de namespaces son diagnósticos, NO certificación de sbuild, de invitados KVM ni de paquetes.
 
@@ -65,3 +65,27 @@ autopkgtest y una COPIA temporal del fixture DEP-8 estable, sin modificar
 su source de Git ni reconstruir la imagen. El único guest-smoke combinado
 prueba el backend en modo no root. Un error es INFRA_INVALID del mecanismo,
 no FAIL de KDE ni un Package Attempt. La base QCOW2 NO se vuelve a guardar.
+
+## Cierre de mecanismo guest unprivileged — 2026-10-15
+
+- Commit comprobado: f1f2cb8366dc3edadc5b1d54772c13413475b608.
+- Run: 38750289548, PASS; Repository Policy previo: 38750025273, PASS.
+- Restauración: cache hit exacto de la base original (1.318.909.194 bytes de caché transferidos), sin reconstrucción ni resellado.
+- Ensayo: Ubuntu 26.04 KVM real y un único test DEP-8 que conserva el guest-smoke de identidad y anexa en una copia temporal el smoke sbuild sin root.
+- mmdebstrap --mode=unshare: rootfs=PASS.
+- sbuild --chroot-mode=unshare, usuario normal: host_sbuild=PASS (dentro del invitado), archivo .deb amd64 y .changes/.buildinfo verificados por el smoke.
+- autopkgtest/summary: guest-smoke PASS; sha256 8aa5951ad5bd0b763cb76c6f5a283d5fe16f6e2f4540de19d18ff4fe1f871774.
+- Marca final: GUEST_SBUILD_UNSHARE_MECHANISM_PASS; NO_KDE_PACKAGE_PASS.
+- Artifact de diagnóstico 11981310968: sha256:662b6b308fdd540fc352812a146dd5b4968545ade1a807a65d0d8af1c44410d1, retención temporal 30 días.
+- Manifest acotado: manifests/evidence/hosted-sbuild-guest-milestone-2026-10-15.json.
+
+La evidencia certifica la mecánica de construcción guest/UID no privilegiado con
+inputs y versión registrados. **No** declara PASS de KDE CLI Tools, preflight -3,
+compatibilidad Ubuntu/Qt, actualización APT, reproducibilidad de paquetes KDE
+ni equivalencia con el runner autoritativo de publicación. Attempt 4 no empezó.
+
+El error del modo root previo se reprodujo fuera de KVM en 38747014708;
+la causa syscall/identidad de bajo nivel no quedó demostrada. El cambio
+validado es evitar el camino root-mode para este backend y utilizar el
+modo sin privilegios, **no** atribuirle una causa definitiva al error
+anterior. La imagen/fixture base certificados permanecen congelados.
