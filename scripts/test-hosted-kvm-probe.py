@@ -16,7 +16,7 @@ class HostedKVMProbeTests(unittest.TestCase):
     def test_boot_sector_signature_and_debug_exit(self):
         sector = probe.boot_sector()
         self.assertEqual(len(sector), 512)
-        self.assertEqual(sector[-2:], b"\\x55\\xaa")
+        self.assertEqual(sector[-2:], bytes((0x55, 0xAA)))
         self.assertIn(bytes((0xBA, 0xF4, 0, 0xB0, probe.EXIT_VALUE, 0xEE)), sector)
         self.assertEqual(probe.EXPECTED_QEMU_EXIT, 85)
 
