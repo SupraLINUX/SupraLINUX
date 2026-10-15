@@ -39,6 +39,9 @@ jobs:
       - name: Test hosted KVM probe boundaries
         run: python3 scripts/test-hosted-kvm-probe.py
 
+      - name: Test hosted Ubuntu guest snapshot boundaries
+        run: python3 scripts/test-hosted-ubuntu-guest-snapshot.py
+
       - name: Validate reviewed Plasma package inputs
         run: python3 scripts/validate_plasma_package_build.py
 

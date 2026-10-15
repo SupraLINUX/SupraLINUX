@@ -1,0 +1,92 @@
+name: Hosted Ubuntu 26.04 KVM guest and autopkgtest probe
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hosted-ubuntu-guest-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  guest:
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' || (github.event.label.name == 'ci:hosted-ubuntu-guest' && github.event.pull_request.head.repo.full_name == github.repository) }}
+    name: Ubuntu KVM guest, DEP-8 smoke and verified snapshot
+    runs-on: ubuntu-26.04
+    timeout-minutes: 85
+    env:
+      SUPRALINUX_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout authorized PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Validate fixture and source syntax
+        run: |
+          python3 scripts/check-source-syntax.py
+          python3 scripts/test-hosted-ubuntu-guest-snapshot.py
+
+      - name: Install official Ubuntu VM tooling
+        run: |
+          set -euo pipefail
+          test "$RUNNER_ENVIRONMENT" = github-hosted
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends autopkgtest vmdb2 debootstrap qemu-system-x86 qemu-utils grub-pc-bin acl ubuntu-keyring
+
+      - name: Allow runner user KVM access
+        run: |
+          set -euo pipefail
+          test "$RUNNER_ENVIRONMENT" = github-hosted
+          test -c /dev/kvm
+          if [[ ! -r /dev/kvm || ! -w /dev/kvm ]]; then
+            sudo setfacl -m "u:$(id -un):rw" /dev/kvm
+          fi
+          test -r /dev/kvm && test -w /dev/kvm
+
+      - name: Compute weekly milestone key
+        id: period
+        run: echo "week=$(date -u +%G-W%V)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore immutable Ubuntu base snapshot
+        id: cache
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .work/hosted-ubuntu-guest/base/
+          key: hosted-ubuntu26-qemu-base-v1-${{ steps.period.outputs.week }}-${{ hashFiles('scripts/hosted-ubuntu-guest-lane.sh', 'scripts/hosted-ubuntu-guest-snapshot.py', '.github/workflows/hosted-ubuntu-guest-probe.yml') }}
+
+      - name: Create or authenticate Ubuntu base
+        env:
+          SUPRALINUX_CACHE_HIT: ${{ steps.cache.outputs.cache-hit }}
+        run: bash scripts/hosted-ubuntu-guest-lane.sh prepare
+
+      - name: Run genuine QEMU-KVM DEP-8 guest test
+        run: bash scripts/hosted-ubuntu-guest-lane.sh test
+
+      - name: Seal new milestone snapshot after guest PASS
+        if: success() && steps.cache.outputs.cache-hit != 'true'
+        run: bash scripts/hosted-ubuntu-guest-lane.sh seal
+
+      - name: Cache only new sealed PASS milestone
+        if: success() && steps.cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: .work/hosted-ubuntu-guest/base/
+          key: ${{ steps.cache.outputs.cache-primary-key }}
+
+      - name: Upload diagnostics (no full VM)
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: hosted-ubuntu-guest-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            .work/hosted-ubuntu-guest/evidence/
+            .work/hosted-ubuntu-guest/autopkgtest/summary
+            .work/hosted-ubuntu-guest/autopkgtest/log
+          if-no-files-found: warn
+          retention-days: 30
