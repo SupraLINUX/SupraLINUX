@@ -49,6 +49,21 @@ require(selection.get("pre_release_canonical_allowed") is False, "pre-release KD
 feature_policy = selection.get("feature_completeness", {})
 require(feature_policy.get("policy") == "selected-upstream-desktop-features-available-by-default", "selected KDE feature-completeness policy is invalid")
 require(feature_policy.get("documented_exceptions_required") is True, "feature-completeness exceptions must be documented")
+product = data.get("product_profile", {})
+require(product.get("id") == "desktop-wayland", "product must select desktop-wayland")
+require(product.get("session_protocol") == "wayland", "desktop session must be Wayland")
+require(product.get("xwayland_compatibility") is True, "XWayland application support is mandatory")
+require(product.get("x11_sessions") is False, "X11 sessions must remain disabled")
+excluded = product.get("excluded_plasma_sources", [])
+banned = product.get("forbidden_binary_packages", [])
+require(isinstance(excluded, list) and len(excluded) == len(set(excluded)) and
+        {"kgamma", "kwin-x11"} <= set(excluded), "retired X11-only Plasma source exclusion")
+require(isinstance(banned, list) and len(banned) == len(set(banned)) and
+        {"kgamma", "kwin-x11", "plasma-session-x11"} <= set(banned),
+        "X11 session and legacy binary package exclusion")
+profile = json.loads((ROOT / "manifests/desktop-image-profile.json").read_text())
+require(profile.get("product_profile") == product.get("id"), "image profile must bind selected desktop")
+require(not set(profile.get("roots", [])) & set(excluded), "image roots must exclude retired KDE sources")
 compat = selection.get("compatibility_contract", {})
 require(compat.get("baseline") == "ubuntu-26.04", "compatibility baseline must remain Ubuntu 26.04")
 require(compat.get("hard_gate") is True, "Ubuntu application compatibility must be a hard gate")

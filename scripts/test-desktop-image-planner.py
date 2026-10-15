@@ -21,6 +21,7 @@ class ImagePlan(unittest.TestCase):
         self.manifests = self.root / 'manifests'
         self.manifests.mkdir()
         self.profile = {'schema': 1, 'name': 'core-session', 'state': 'planning-only',
+                        'product_profile': 'desktop-wayland',
                         'scope': 'Preliminary desktop path, not final seed', 'roots': ['shell'],
                         'final_install_seed': False, 'image_build_authorized': False,
                         'additional_image_gates': ['actual boot and install'], 'final_release_gates': ['full compatibility']}
@@ -36,12 +37,24 @@ class ImagePlan(unittest.TestCase):
             'local_retention': {key: True for key in ['source_complete', 'changes_complete', 'buildinfo_verified', 'offline_restore_verified']}}}
         self.save_result()
         self.campaign = {'nodes': {'sdk': self.record}}
-        (self.manifests / 'desktop-stack.json').write_text(json.dumps({
+        self.desktop = {
             'platform': {'authority': 'ubuntu', 'version': '26.04 LTS'},
-            'desktop': {name: {'version': 'selected'} for name in ['plasma', 'frameworks', 'gear']}}))
+            'desktop': {name: {'version': 'selected'} for name in ['plasma', 'frameworks', 'gear']},
+            'product_profile': {
+                'id': 'desktop-wayland', 'session_protocol': 'wayland',
+                'xwayland_compatibility': True, 'x11_sessions': False,
+                'excluded_plasma_sources': ['kgamma', 'kwin-x11'],
+                'forbidden_binary_packages': ['kgamma', 'kwin-x11', 'plasma-session-x11'],
+                'package_seed_verification': 'pending-apt-resolution-and-installed-image',
+            },
+        }
+        self.save_desktop()
 
     def tearDown(self):
         self.temporary.cleanup()
+
+    def save_desktop(self):
+        (self.manifests / 'desktop-stack.json').write_text(json.dumps(self.desktop))
 
     def save_result(self):
         self.result_path.write_text(json.dumps(self.result))
@@ -61,6 +74,46 @@ class ImagePlan(unittest.TestCase):
         self.assertFalse(result['image_available'])
         self.assertFalse(result['remaining_upstream_components_excluded'])
         self.assertTrue(all(not row['local_image_payload_restored'] for row in result['components']))
+
+    def test_wayland_product_rejects_x11_and_retired_components(self):
+        result = self.run_plan()
+        self.assertEqual(result['session_protocol'], 'wayland')
+        self.assertTrue(result['xwayland_compatibility'])
+        self.assertFalse(result['x11_sessions'])
+        self.assertEqual(result['excluded_plasma_sources'], ['kgamma', 'kwin-x11'])
+        for name in ['kgamma', 'kwin-x11']:
+            self.dag['nodes'][name] = {'level': 0, 'depends_on': []}
+            self.profile['roots'] = [name]
+            with self.subTest(name=name), self.assertRaisesRegex(AssertionError, 'Excluded Wayland-only'):
+                self.run_plan()
+        self.profile['roots'] = ['shell']
+        self.dag['nodes']['shell']['depends_on'] = ['kgamma']
+        with self.assertRaisesRegex(AssertionError, 'Excluded Wayland-only'):
+            self.run_plan()
+        self.dag['nodes']['shell']['depends_on'] = ['sdk']
+
+    def test_wayland_contract_and_package_denylist_cannot_be_relaxed(self):
+        product = self.desktop['product_profile']
+        for key, value in [('session_protocol', 'x11'), ('xwayland_compatibility', False),
+                           ('x11_sessions', True)]:
+            old = product[key]
+            product[key] = value
+            self.save_desktop()
+            with self.subTest(key=key), self.assertRaisesRegex(AssertionError, 'Wayland-only'):
+                self.run_plan()
+            product[key] = old
+        self.save_desktop()
+        for key, value in [('excluded_plasma_sources', []), ('forbidden_binary_packages', [])]:
+            old = product[key]
+            product[key] = value
+            self.save_desktop()
+            with self.subTest(key=key), self.assertRaisesRegex(AssertionError, 'Wayland-only'):
+                self.run_plan()
+            product[key] = old
+        self.save_desktop()
+        self.profile['product_profile'] = 'unknown'
+        with self.assertRaisesRegex(AssertionError, 'Wrong desktop product profile'):
+            self.run_plan()
 
     def test_cycle_and_unknown_roots_are_rejected(self):
         self.dag['nodes']['sdk']['depends_on'] = ['shell']

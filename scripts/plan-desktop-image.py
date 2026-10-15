@@ -40,9 +40,21 @@ def plan(root, profile):
     campaign = json.loads(campaign_path.read_text())
     desktop = json.loads(desktop_path.read_text())
     assert dag['canonical_for_package_planning'] is True, 'Canonical DAG required'
+    product = desktop['product_profile']
+    assert profile['product_profile'] == product['id'] == 'desktop-wayland', 'Wrong desktop product profile'
+    assert (product['session_protocol'] == 'wayland' and
+            product['xwayland_compatibility'] is True and
+            product['x11_sessions'] is False), 'Wayland-only session contract'
+    excluded = product['excluded_plasma_sources']
+    forbidden_packages = product['forbidden_binary_packages']
+    assert len(excluded) == len(set(excluded)) and {'kgamma', 'kwin-x11'} <= set(excluded), 'Wayland-only exclusions'
+    assert len(forbidden_packages) == len(set(forbidden_packages)) and {
+        'kgamma', 'kwin-x11', 'plasma-session-x11'} <= set(forbidden_packages), 'Wayland-only package denylist'
+    assert not set(profile['roots']) & set(excluded), 'Excluded Wayland-only root'
     done, active, order = set(), set(), []
 
     def visit(name):
+        assert name not in excluded, 'Excluded Wayland-only component: ' + name
         assert name in dag['nodes'], 'Unknown desktop component: ' + name
         assert name not in active, 'Desktop dependency cycle: ' + name
         if name in done:
@@ -73,6 +85,13 @@ def plan(root, profile):
             'profile': profile['name'], 'profile_scope': profile['scope'],
             'profile_definition_sha256': hashlib.sha256(json.dumps(profile, sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
             'platform': desktop['platform'],
+            'product_profile': product['id'],
+            'session_protocol': product['session_protocol'],
+            'xwayland_compatibility': product['xwayland_compatibility'],
+            'x11_sessions': product['x11_sessions'],
+            'excluded_plasma_sources': excluded,
+            'forbidden_binary_packages': forbidden_packages,
+            'binary_package_seed_verification': product['package_seed_verification'],
             'selected_stack': {name: desktop['desktop'][name]['version'] for name in ['plasma', 'frameworks', 'gear']},
             'inputs_sha256': {str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
                               for path in [dag_path, campaign_path, desktop_path]},

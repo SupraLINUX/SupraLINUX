@@ -95,5 +95,21 @@
       "qt_or_platform_substitution_requires_evidence": true,
       "incompatible_next_release_action": "retain-newest-compatible-stable-kde"
     }
+  },
+  "product_profile": {
+    "id": "desktop-wayland",
+    "session_protocol": "wayland",
+    "xwayland_compatibility": true,
+    "x11_sessions": false,
+    "excluded_plasma_sources": [
+      "kgamma",
+      "kwin-x11"
+    ],
+    "forbidden_binary_packages": [
+      "kgamma",
+      "kwin-x11",
+      "plasma-session-x11"
+    ],
+    "package_seed_verification": "pending-apt-resolution-and-installed-image"
   }
 }

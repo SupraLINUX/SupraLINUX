@@ -2,10 +2,9 @@
   "schema": 1,
   "name": "core-session-test-image",
   "state": "planning-only",
-  "scope": "Core Plasma boot/session/audio/network/settings/portal/Discover dependency path. Scheduling analysis only; not a complete final desktop seed or permission to exclude remaining components.",
+  "scope": "Wayland-only core Plasma session with XWayland application compatibility; no X11 session or retired X11-only KDE components. Scheduling analysis, not an installation seed.",
   "roots": [
     "kwin",
-    "kwin-x11",
     "plasma-workspace",
     "plasma-desktop",
     "systemsettings",
@@ -22,6 +21,7 @@
   "additional_image_gates": [
     "Close exact eligible desktop and application package dependencies",
     "Functional KVM Wayland session and required platform integrations",
+    "Verify APT Depends/Recommends and installed package/file manifest excludes X11 sessions, kwin-x11 and kgamma while preserving XWayland applications",
     "Freeze initial-image seed and explicitly declare remaining features/limitations",
     "Generate local image with retained inputs and SHA256",
     "Verify actual live boot, installation to disposable VM disks and first boot; remove VMs/overlays afterwards",
@@ -37,5 +37,6 @@
     "Selected Gear applications and upstream inventory campaign",
     "Authoritative clean-input rebuild/retention recovery",
     "Explicit final merge/stable approval"
-  ]
+  ],
+  "product_profile": "desktop-wayland"
 }
