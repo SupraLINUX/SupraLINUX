@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Reject false positives from the isolated hosted QEMU/KVM probe."""
 import importlib.util
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -13,6 +14,19 @@ spec.loader.exec_module(probe)
 
 
 class HostedKVMProbeTests(unittest.TestCase):
+    def test_probe_binds_actual_checkout_not_pull_request_merge_sha(self):
+        checked = "a" * 40
+        with mock.patch.dict(os.environ, {
+            "SUPRALINUX_EXPECTED_HEAD": checked, "GITHUB_SHA": "b" * 40,
+        }):
+            with mock.patch.object(probe.subprocess, "check_output",
+                                   return_value=checked + "\n"):
+                self.assertEqual(probe.checked_source_commit(), checked)
+            with mock.patch.object(probe.subprocess, "check_output",
+                                   return_value="c" * 40 + "\n"):
+                with self.assertRaisesRegex(RuntimeError, "checkout"):
+                    probe.checked_source_commit()
+
     def test_boot_sector_signature_and_debug_exit(self):
         sector = probe.boot_sector()
         self.assertEqual(len(sector), 512)

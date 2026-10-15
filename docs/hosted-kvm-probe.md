@@ -26,6 +26,13 @@ The third workflow first boots the same sector under explicit TCG in a
 separately labeled non-KVM mechanism smoke; KVM execution cannot start if
 that smoke fails. The TCG result is not a KVM PASS or release certification.
 
+The successful run 38691344815 proved KVM CPU execution, but its probe JSON
+reported the GitHub pull-request merge-event GITHUB_SHA (ecc275db...) as the
+source commit while actions/checkout actually selected the PR HEAD 56cf43f.
+This is a provenance-binding defect, not a CPU-execution failure. New evidence
+must capture git rev-parse HEAD and match the PR HEAD explicitly; record the
+merge-event SHA only as separate context. Revalidate scoped evidence afterward.
+
 The bounded JSON evidence is retained with the exact SHA. A successful probe
 only proves a tiny x86 guest actually executed under KVM on one hosted runner.
 It does not validate nested Ubuntu 26.04 guest boot, autopkgtest-qemu, sbuild,

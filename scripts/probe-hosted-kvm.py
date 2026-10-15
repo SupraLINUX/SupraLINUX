@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import platform
+import re
 import stat
 import subprocess
 import sys
@@ -102,6 +103,16 @@ def run_probe(backend="kvm"):
                 "host_os": host.get("PRETTY_NAME", "Ubuntu 26.04")}
 
 
+def checked_source_commit():
+    """Require the actual checked-out PR head, not GitHub's merge-event SHA."""
+    expected = os.environ.get("SUPRALINUX_EXPECTED_HEAD", "")
+    checked_out = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], text=True).strip()
+    if not re.fullmatch(r"[0-9a-f]{40}", expected) or checked_out != expected:
+        raise RuntimeError("Probe checkout does not match exact authorized PR head")
+    return checked_out
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
@@ -117,7 +128,9 @@ def main():
                   else "github-hosted-qemu-tcg-bootsector-mechanism-smoke-only"),
         "probe_backend": args.backend,
         "started_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "source_commit": os.environ.get("GITHUB_SHA", "local"),
+        "source_commit": "UNVERIFIED",
+        "github_event_sha": os.environ.get("GITHUB_SHA", "unknown"),
+        "expected_checkout_sha": os.environ.get("SUPRALINUX_EXPECTED_HEAD", "unknown"),
         "runner_image": os.environ.get("ImageOS", "unknown"),
         "runner_image_version": os.environ.get("ImageVersion", "unknown"),
         "architecture": platform.machine(), "cpu_count": os.cpu_count(),
@@ -129,6 +142,7 @@ def main():
         "user_host_changes": False,
     }
     try:
+        evidence["source_commit"] = checked_source_commit()
         evidence.update(run_probe(args.backend))
         evidence["state"] = "PASS"
     except (RuntimeError, OSError, subprocess.TimeoutExpired, AssertionError) as err:

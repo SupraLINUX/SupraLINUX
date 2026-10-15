@@ -49,11 +49,15 @@ jobs:
           getfacl -p /dev/kvm
 
       - name: Certify the disk and serial boot mechanism without KVM
+        env:
+          SUPRALINUX_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
           python3 scripts/probe-hosted-kvm.py --backend tcg-smoke --output evidence/hosted-kvm-probe/tcg-smoke.json
 
       - name: Run hosted KVM bootsector capability check
+        env:
+          SUPRALINUX_EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
           python3 scripts/probe-hosted-kvm.py --output evidence/hosted-kvm-probe/result.json
