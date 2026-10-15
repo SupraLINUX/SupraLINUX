@@ -1,3 +1,7 @@
 Tests: guest-smoke
 Depends: python3, ubuntu-keyring
 Restrictions: isolation-machine
+
+Tests: clean-sbuild-smoke
+Depends: sbuild, mmdebstrap, dpkg-dev, debhelper-compat (= 13), ubuntu-keyring
+Restrictions: isolation-machine

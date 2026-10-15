@@ -68,6 +68,20 @@ hosted-runner parity verification of clean sbuild, installed Ubuntu clients,
 source/package identity, independent artifact retention and reproducible
 input selection before any authority migration.
 
+## Next mechanism: clean sbuild inside the cached hosted Ubuntu KVM guest
+
+The same DEP-8 fixture additionally runs `clean-sbuild-smoke`: construct
+a small native Debian source, create an independent signed-Ubuntu buildd
+tarball and run `sbuild --chroot-mode=unshare` with that exact rootfs.
+Verify the resulting `.deb`, `.changes` and `.buildinfo` identity.
+Do not inject any KDE SDKs. Dispose of the inner buildd rootfs after testing.
+The base Ubuntu QEMU milestone is unchanged and can be restored as before.
+
+The extended mechanism is **not yet certified until it passes in hosted KVM**.
+Its eventual PASS must not promote KDE CLI Tools, any official Ubuntu client
+compatibility gate or release-relevant package certification automatically.
+This adds no new workflow or per-package runner.
+
 The smoke checks the guest's Ubuntu 26.04 identity, architecture, Python
 runtime and Ubuntu archive keyring. A PASS certifies this **mechanism only**:
 it does not authorize KDE package Attempts, change the frozen Plasma 6.7.5
