@@ -70,12 +70,23 @@ input selection before any authority migration.
 
 ## Next mechanism: clean sbuild inside the cached hosted Ubuntu KVM guest
 
-The same DEP-8 fixture additionally runs `clean-sbuild-smoke`: construct
-a small native Debian source, create an independent signed-Ubuntu buildd
-tarball and run `sbuild --chroot-mode=unshare` with that exact rootfs.
+The same DEP-8 fixture invokes `clean-sbuild-smoke` **within the original
+guest-smoke test session**: construct a small native Debian source, create an
+independent signed-Ubuntu buildd tarball and run
+`sbuild --chroot-mode=unshare` with that exact rootfs.
 Verify the resulting `.deb`, `.changes` and `.buildinfo` identity.
 Do not inject any KDE SDKs. Dispose of the inner buildd rootfs after testing.
 The base Ubuntu QEMU milestone is unchanged and can be restored as before.
+
+The first extension attempt (GitHub run 38700751372, commit 81dc499)
+restored the correct snapshot and passed the original `guest-smoke`. Before
+the separate `clean-sbuild-smoke` could start, however, autopkgtest attempted
+to relaunch QEMU for the next test, which failed to reopen /dev/kvm with
+`Permission denied`. The result is INFRA_INVALID for the extended
+mechanism; no sbuild build started and no KDE Attempt was consumed.
+A single DEP-8 test now performs both checks without that inter-test relaunch.
+The eventual result must be assessed independently, with the original failure
+retained.
 
 The extended mechanism is **not yet certified until it passes in hosted KVM**.
 Its eventual PASS must not promote KDE CLI Tools, any official Ubuntu client

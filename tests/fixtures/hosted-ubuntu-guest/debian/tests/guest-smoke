@@ -9,3 +9,5 @@ test "$(uname -m)" = x86_64
 dpkg-query -W ubuntu-keyring >/dev/null
 test -r /usr/share/keyrings/ubuntu-archive-keyring.gpg
 printf '%s\n' SUPRALINUX_UBUNTU26_KVM_DEP8_GUEST_OK
+# One DEP-8 test on one KVM guest: avoid a testbed reset/relaunch between checks.
+bash "$(dirname "$0")/clean-sbuild-smoke"

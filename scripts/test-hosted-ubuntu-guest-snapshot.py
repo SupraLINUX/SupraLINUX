@@ -48,8 +48,11 @@ class GuestSnapshotTests(unittest.TestCase):
         control = (root / "control").read_text()
         script = root / "clean-sbuild-smoke"
         self.assertEqual(control.count("Tests: guest-smoke"), 1)
-        self.assertEqual(control.count("Tests: clean-sbuild-smoke"), 1)
-        self.assertIn("Depends: sbuild, mmdebstrap, dpkg-dev", control)
+        self.assertNotIn("Tests: clean-sbuild-smoke", control)
+        self.assertIn("sbuild, mmdebstrap, dpkg-dev", control)
+        self.assertIn("Restrictions: isolation-machine, needs-root, needs-internet", control)
+        guest = (root / "guest-smoke").read_text()
+        self.assertIn('bash "$(dirname "$0")/clean-sbuild-smoke"', guest)
         self.assertIn("Restrictions: isolation-machine, needs-root, needs-internet", control)
         self.assertTrue(script.is_file() and os.access(script, os.X_OK))
         content = script.read_text()
