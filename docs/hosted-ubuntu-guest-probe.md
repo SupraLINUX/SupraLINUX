@@ -38,6 +38,36 @@ After these two infrastructure-invalid outcomes, the fixture is retained as
 real, complete, versioned source files and validated with dpkg-parsechangelog
 in cheap Repository Policy before any further hosted VM experiment.
 
+## Verified hosted guest mechanism milestone (2026-10-15)
+
+The exact checkout `1e814f7c321a6749e3156a76cf6a1db813f99353`
+produced two independent **PASS** executions:
+
+- Run **38696340689** (Ubuntu hosted runner image `20260927.149.1`):
+  clean Ubuntu 26.04 guest construction, actual QEMU/KVM guest boot, DEP-8
+  `guest-smoke PASS`, immutable base snapshot sealing and successful Actions
+  cache save. Diagnostic artifact `11954261425`.
+- Run **38697145580** (hosted runner image `20261012.163.1`):
+  exact cache hit, SHA-256 admission of the restored independent image, real
+  guest DEP-8 `guest-smoke PASS` again, **without** rebuilding the base.
+  Restored cache upload size: 1,318,909,194 bytes. Diagnostic artifact
+  `11954946582`.
+
+Both runs produced the same DEP-8 summary digest:
+`8aa5951ad5bd0b763cb76c6f5a283d5fe16f6e2f4540de19d18ff4fe1f871774`.
+The cache key and execution identities are indexed at
+`manifests/evidence/hosted-ubuntu-guest-milestone-2026-10-15.json`.
+The full base-image SHA-256 lives inside the sealed cached `snapshot.json`,
+which is rechecked during restore; **it has not been separately exported
+to a durable archive**. GitHub cache remains an evictable accelerator, and
+its PR/branch scope prevents treating it as cross-campaign release storage.
+
+These PASS results certify **this hosted Ubuntu KVM/DEP-8 mechanism**, not
+any package, ABI or KDE/Qt release gate. The next stage is separate
+hosted-runner parity verification of clean sbuild, installed Ubuntu clients,
+source/package identity, independent artifact retention and reproducible
+input selection before any authority migration.
+
 The smoke checks the guest's Ubuntu 26.04 identity, architecture, Python
 runtime and Ubuntu archive keyring. A PASS certifies this **mechanism only**:
 it does not authorize KDE package Attempts, change the frozen Plasma 6.7.5

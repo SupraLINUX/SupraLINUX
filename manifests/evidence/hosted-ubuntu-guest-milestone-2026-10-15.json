@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "kind": "hosted-ubuntu-guest-kvm-dep8-mechanism-milestone",
+  "date": "2026-10-15",
+  "classification": "mechanism-PASS-not-release-relevant",
+  "source_commit": "1e814f7c321a6749e3156a76cf6a1db813f99353",
+  "suite": "ubuntu-26.04-resolute",
+  "architecture": "amd64",
+  "scope": "actual Ubuntu guest boot on GitHub-hosted KVM; exact versioned DEP-8 guest-smoke; SHA-256-verified cached base reuse without rebuilding",
+  "package_attempt_consumed": false,
+  "release_compatibility_certified": false,
+  "autopkgtest_summary_sha256": "8aa5951ad5bd0b763cb76c6f5a283d5fe16f6e2f4540de19d18ff4fe1f871774",
+  "base_snapshot": {
+    "storage": "GitHub Actions Cache (ephemeral, PR-scoped, rebuildable)",
+    "key": "hosted-ubuntu26-qemu-base-v1-2026-W42-07fe81049f1c34f47e14bab9821bd9f73b29501be0a0cfe334abab942497b140",
+    "saved_on_run": 38696340689,
+    "restored_on_run": 38697145580,
+    "observed_restore_archive_bytes": 1318909194,
+    "embedded_metadata": "base/snapshot.json inside cache, includes full image SHA-256 and input hashes",
+    "external_durable_image_archive": false,
+    "immutable_base_overlay_tests": true
+  },
+  "runs": [
+    {
+      "run_id": 38696340689,
+      "result": "PASS",
+      "head_sha": "1e814f7c321a6749e3156a76cf6a1db813f99353",
+      "runner_image": "ubuntu-26.04",
+      "runner_image_version": "20260927.149.1",
+      "artifact_id": 11954261425,
+      "evidence": "new base built, guest DEP-8 PASS, snapshot sealed and saved"
+    },
+    {
+      "run_id": 38697145580,
+      "result": "PASS",
+      "head_sha": "1e814f7c321a6749e3156a76cf6a1db813f99353",
+      "runner_image": "ubuntu-26.04",
+      "runner_image_version": "20261012.163.1",
+      "artifact_id": 11954946582,
+      "evidence": "exact cache hit, SHA-256 verification PASS, repeat guest DEP-8 PASS; base not rebuilt"
+    }
+  ],
+  "prior_infra_invalid_runs": [
+    38693007782,
+    38695358122
+  ],
+  "remaining": [
+    "Do not equate hosted mechanism with the certified release KVM lane",
+    "Certify clean sbuild plus ABI, Ubuntu-app install and artifact retention before changing KVM authority",
+    "Set up durable digest-indexed archive for cross-campaign reuse if authorized"
+  ]
+}
