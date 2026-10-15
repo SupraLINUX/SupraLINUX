@@ -4,11 +4,19 @@ This is an isolated experimental gate, not a KDE package Attempt or release
 certificate. The workflow can run only by manual dispatch or by the exact PR
 label ci:hosted-kvm-probe. Routine PR sync does not start it.
 
-The job verifies Ubuntu 26.04 x86_64, an accessible /dev/kvm character device,
-then runs a tiny BIOS boot sector under QEMU with explicit KVM acceleration and
+The job verifies Ubuntu 26.04 x86_64 and the /dev/kvm character device. If
+GitHub's device permissions exclude the current user, it applies a user-specific
+POSIX ACL only inside the ephemeral GitHub-hosted runner (never chmod a+rw,
+never elevate QEMU to root, never touch the user's physical PC). The job then
+runs a tiny BIOS boot sector under QEMU with explicit KVM acceleration and
 host CPU passthrough. The sector emits a unique serial marker and exits via the
 isa-debug-exit device. Both the marker and exit code 85 must match. No QEMU TCG
 fallback, downloaded guest OS, local host access or package build is involved.
+
+The first infrastructure diagnostic (run 38690562479 on commit e550e5f1) was
+INFRA_INVALID because the hosted runner user could not read/write /dev/kvm.
+Ubuntu QEMU installed successfully; no VM boot was attempted. The ACL change
+is the scoped repair being certified by the next independent probe run.
 
 The bounded JSON evidence is retained with the exact SHA. A successful probe
 only proves a tiny x86 guest actually executed under KVM on one hosted runner.

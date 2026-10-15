@@ -34,7 +34,19 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends qemu-system-x86 qemu-system-common seabios
+          sudo apt-get install -y --no-install-recommends qemu-system-x86 qemu-system-common seabios acl
+
+      - name: Scope KVM device access to the ephemeral hosted runner user
+        run: |
+          set -euo pipefail
+          test "${RUNNER_ENVIRONMENT:-}" = "github-hosted"
+          test -c /dev/kvm
+          printf 'KVM access before: %s\n' "$(stat -c '%a %U:%G' /dev/kvm)"
+          if [[ ! -r /dev/kvm || ! -w /dev/kvm ]]; then
+            sudo setfacl -m "u:$(id -un):rw" /dev/kvm
+          fi
+          test -r /dev/kvm && test -w /dev/kvm
+          getfacl -p /dev/kvm
 
       - name: Run hosted KVM bootsector capability check
         run: |

@@ -20,6 +20,14 @@ class HostedKVMProbeTests(unittest.TestCase):
         self.assertIn(bytes((0xBA, 0xF4, 0, 0xB0, probe.EXIT_VALUE, 0xEE)), sector)
         self.assertEqual(probe.EXPECTED_QEMU_EXIT, 85)
 
+    def test_hosted_workflow_acl_is_user_scoped_not_world_writable(self):
+        wf = (ROOT / ".github/workflows/hosted-kvm-probe.yml").read_text()
+        self.assertIn('RUNNER_ENVIRONMENT:-', wf)
+        self.assertIn('sudo setfacl -m "u:$(id -un):rw" /dev/kvm', wf)
+        self.assertNotIn('chmod 666 /dev/kvm', wf)
+        self.assertNotIn('chmod a+rw /dev/kvm', wf)
+        self.assertIn('test -r /dev/kvm && test -w /dev/kvm', wf)
+
     def test_acceleration_cannot_fall_back_to_tcg(self):
         cmd = probe.kvm_command(Path("/tmp/example.img"))
         self.assertEqual(cmd[cmd.index("-machine") + 1], "pc,accel=kvm")
