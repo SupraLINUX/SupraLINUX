@@ -26,7 +26,7 @@ prepare)
   else
     test ! -e "$IMAGE" && test ! -e "$META"
     test "$(df -Pk "$WORK" | awk 'END{print $4}')" -ge 9000000
-    if ! timeout -k 30s 45m sudo autopkgtest-build-qemu \
+    if ! timeout -k 30s 45m sudo env TMPDIR="$WORK/tmp" autopkgtest-build-qemu \
        --mirror=http://archive.ubuntu.com/ubuntu \
        --keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg \
        --architecture=amd64 --size=8G --boot=bios --apt-proxy=DIRECT \
@@ -86,7 +86,7 @@ EOF
   echo "Genuine hosted Ubuntu 26.04 DEP-8 smoke PASS; no KDE package Attempt" > "$EVID/probe-result.txt"
   ;;
 seal)
-  test "$SUPRALINUX_CACHE_HIT" != true
+  test "${SUPRALINUX_CACHE_HIT:-false}" != true
   python3 "$SCRIPT" seal "$IMAGE" "$META" "$WORK/autopkgtest/summary"
   ;;
 esac
