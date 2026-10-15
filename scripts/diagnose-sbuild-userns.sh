@@ -77,16 +77,16 @@ probe() {
 
 probe runner-single-id \
   unshare --user --map-root-user --mount \
-  sh -c 'test "$(id -u)" -eq 0 && test -r /proc/self/uid_map'
+  sh -c 'id -u | grep -qx 0 && test -r /proc/self/uid_map'
 probe runner-subordinate-ids \
   unshare --user --map-root-user --map-auto \
-  sh -c 'test "$(id -u)" -eq 0 && test -r /proc/self/gid_map'
+  sh -c 'id -u | grep -qx 0 && test -r /proc/self/gid_map'
 probe root-single-id \
   sudo -n unshare --user --map-root-user --mount \
-  sh -c 'test "$(id -u)" -eq 0 && test -r /proc/self/uid_map'
+  sh -c 'id -u | grep -qx 0 && test -r /proc/self/uid_map'
 probe root-subordinate-ids \
   sudo -n unshare --user --map-root-user --map-auto \
-  sh -c 'test "$(id -u)" -eq 0 && test -r /proc/self/gid_map'
+  sh -c 'id -u | grep -qx 0 && test -r /proc/self/gid_map'
 
 cat "$report"
 echo 'DIAGNOSTIC_COLLECTED: failures above are findings, not package failures.'
