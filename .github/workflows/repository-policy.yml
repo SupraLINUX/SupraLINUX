@@ -47,7 +47,6 @@ jobs:
           POLICY_AFTER: ${{ github.event.after }}
           POLICY_BASE: ${{ github.event.pull_request.base.sha }}
           POLICY_HEAD: ${{ github.event.pull_request.head.sha }}
-          POLICY_OUTPUT: ${{ github.output }}
         run: python3 scripts/plan-repository-policy.py --github-output "$GITHUB_OUTPUT"
 
       - name: Test CI preflight regressions

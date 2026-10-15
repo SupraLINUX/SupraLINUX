@@ -49,8 +49,8 @@ class HistoricalPolicyTests(unittest.TestCase):
         before = content.index("- name: Validate KDE Frameworks Tier 1 manifest")
         after = content.index("- name: Verify runner and Ubuntu Qt candidate")
         historical = content[before:after]
-        self.assertGreaterEqual(historical.count("      - name: "), 80)
-        self.assertEqual(historical.count("      - name: "),
+        self.assertGreaterEqual(historical.count("- name: "), 80)
+        self.assertEqual(historical.count("- name: "),
                          historical.count("if: steps.policy_scope.outputs.historical == 'true'"))
         self.assertIn("run: python3 scripts/validate_kde_tier3_kio_round26_remediation.py", historical)
         self.assertNotIn("if: steps.policy_scope.outputs.historical == 'true'",
