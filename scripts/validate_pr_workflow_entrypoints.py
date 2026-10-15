@@ -33,6 +33,7 @@ req(re.search(r"pull_request:\s*\n\s+types:\s*\[opened, synchronize, reopened\]"
 special = {
     "hosted-kvm-probe.yml",
     "hosted-ubuntu-guest-probe.yml",
+    "hosted-sbuild-userns-diagnostic.yml",
     "authoritative-package-revalidation.yml",
     "authoritative-plasma-package-build.yml",
     "authoritative-frameworks-sample-proof.yml",
@@ -54,6 +55,16 @@ for name, block in blocks.items():
 
 req(not normal_direct,
     "normal PR workflows must enter only through pr-ci-router.yml; direct listeners: " + ", ".join(normal_direct))
+
+guest_workflow = (WF / "hosted-sbuild-userns-diagnostic.yml").read_text()
+req("github.event.label.name == 'ci:hosted-sbuild-guest'" in guest_workflow,
+    "hosted-sbuild-userns-diagnostic.yml must require its exact opt-in label")
+req("github.event.pull_request.head.repo.full_name == github.repository" in guest_workflow,
+    "hosted-sbuild-userns-diagnostic.yml must require same-repository PR head")
+req("github.event_name == 'pull_request'" in guest_workflow,
+    "hosted-sbuild-userns-diagnostic.yml must require PR event for guest KVM lane")
+req("github.event_name != 'pull_request'" in guest_workflow,
+    "hosted-sbuild-userns-diagnostic.yml must keep cheap host probe off labeled PR events")
 
 policy = blocks.get("repository-policy.yml", "")
 req("  workflow_call:" in policy, "Repository Policy must be reusable from PR router")

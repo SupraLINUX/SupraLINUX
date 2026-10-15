@@ -20,6 +20,7 @@ concurrency:
 
 jobs:
   namespaces:
+    if: ${{ github.event_name != 'pull_request' }}
     name: Collect Ubuntu 26.04 UID/GID namespace evidence (not sbuild PASS)
     runs-on: ubuntu-26.04
     timeout-minutes: 12
