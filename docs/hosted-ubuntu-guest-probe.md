@@ -68,30 +68,34 @@ hosted-runner parity verification of clean sbuild, installed Ubuntu clients,
 source/package identity, independent artifact retention and reproducible
 input selection before any authority migration.
 
-## Next mechanism: clean sbuild inside the cached hosted Ubuntu KVM guest
+## Hosted sbuild-unshare mechanism — diagnostic HOLD (2026-10-15)
 
-The same DEP-8 fixture invokes `clean-sbuild-smoke` **within the original
-guest-smoke test session**: construct a small native Debian source, create an
-independent signed-Ubuntu buildd tarball and run
-`sbuild --chroot-mode=unshare` with that exact rootfs.
-Verify the resulting `.deb`, `.changes` and `.buildinfo` identity.
-Do not inject any KDE SDKs. Dispose of the inner buildd rootfs after testing.
-The base Ubuntu QEMU milestone is unchanged and can be restored as before.
+The separately proven Ubuntu 26.04 hosted QEMU/KVM + DEP-8 baseline remains
+valid (runs 38696340689 and 38697145580, with exact cache restore). A small
+extension to exercise `sbuild-unshare` **did not pass**:
 
-The first extension attempt (GitHub run 38700751372, commit 81dc499)
-restored the correct snapshot and passed the original `guest-smoke`. Before
-the separate `clean-sbuild-smoke` could start, however, autopkgtest attempted
-to relaunch QEMU for the next test, which failed to reopen /dev/kvm with
-`Permission denied`. The result is INFRA_INVALID for the extended
-mechanism; no sbuild build started and no KDE Attempt was consumed.
-A single DEP-8 test now performs both checks without that inter-test relaunch.
-The eventual result must be assessed independently, with the original failure
-retained.
+- Run 38700751372 (commit 81dc499): the restored Ubuntu snapshot and original
+  `guest-smoke` both passed. The separate second DEP-8 test forced a new QEMU
+  launch, which failed to reopen `/dev/kvm` (Permission denied). Classification:
+  INFRA_INVALID, no sbuild execution.
+- Run 38701383856 (commit 555c2f6): a single combined DEP-8 test avoided
+  that QEMU relaunch. Debian source creation and a fresh mmdebstrap buildd
+  rootfs tarball succeeded, but sbuild reported
+  `E: Error creating chroot session: skipping supralinux-hosted-sbuild-smoke`.
+  Classification: INFRA_INVALID for the hosted unshare mechanism; **not**
+  a KDE source/package FAIL, and no KDE package Attempt was consumed.
 
-The extended mechanism is **not yet certified until it passes in hosted KVM**.
-Its eventual PASS must not promote KDE CLI Tools, any official Ubuntu client
-compatibility gate or release-relevant package certification automatically.
-This adds no new workflow or per-package runner.
+After two consecutive INFRA_INVALID outcomes, do not repeat the expensive
+hosted KVM sbuild experiment without an independently diagnosed and
+small-scale-certified repair. The immediate cause of the second chroot-session
+failure is not proven by the available log (the smoke did not use sbuild debug
+mode). Potential user-namespace/user-identity setup must be investigated, not
+guessed. Both GitHub Actions runs and git commits retain the failed test code.
+
+The live hosted DEP-8 fixture is restored exactly to its previously certified
+single `guest-smoke` to preserve a usable capability probe and its immutable
+snapshot cache. Do not admit the failed sbuild extension to the base image or
+promote the authoritative KDE CLI Tools preflight on this evidence.
 
 The smoke checks the guest's Ubuntu 26.04 identity, architecture, Python
 runtime and Ubuntu archive keyring. A PASS certifies this **mechanism only**:

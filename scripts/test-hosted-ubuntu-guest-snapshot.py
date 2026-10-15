@@ -43,27 +43,6 @@ class GuestSnapshotTests(unittest.TestCase):
             with self.assertRaisesRegex(AssertionError, "independent"):
                 m.image_info(Path("/not-needed.img"))
 
-    def test_clean_sbuild_mechanism_scope_in_existing_hosted_vm(self):
-        root = ROOT / "tests/fixtures/hosted-ubuntu-guest/debian/tests"
-        control = (root / "control").read_text()
-        script = root / "clean-sbuild-smoke"
-        self.assertEqual(control.count("Tests: guest-smoke"), 1)
-        self.assertNotIn("Tests: clean-sbuild-smoke", control)
-        self.assertIn("sbuild, mmdebstrap, dpkg-dev", control)
-        self.assertIn("Restrictions: isolation-machine, needs-root, needs-internet", control)
-        guest = (root / "guest-smoke").read_text()
-        self.assertIn('bash "$(dirname "$0")/clean-sbuild-smoke"', guest)
-        self.assertIn("Restrictions: isolation-machine, needs-root, needs-internet", control)
-        self.assertTrue(script.is_file() and os.access(script, os.X_OK))
-        content = script.read_text()
-        self.assertIn('sbuild --chroot-mode=unshare --chroot="$WORK/resolute-amd64.tar"', content)
-        self.assertIn("mmdebstrap --mode=root --variant=buildd", content)
-        self.assertIn("env -u TMPDIR mmdebstrap", content)
-        self.assertIn("SUPRALINUX_HOSTED_SBUILD_UNSHARE_SMOKE_PASS", content)
-        self.assertIn("dpkg-deb -f", content)
-        self.assertNotIn("sudo sbuild", content)
-        subprocess.run(["bash", "-n", str(script)], check=True)
-
     def test_real_debian_source_fixture_is_complete(self):
         root = ROOT / "tests/fixtures/hosted-ubuntu-guest"
         changelog = root / "debian/changelog"
