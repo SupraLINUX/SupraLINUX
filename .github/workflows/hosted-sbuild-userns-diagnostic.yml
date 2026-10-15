@@ -1,0 +1,53 @@
+name: Hosted sbuild unshare namespace diagnostic (not a package gate)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [architecture/bootstrap-v1]
+    paths:
+      - scripts/diagnose-sbuild-userns.sh
+      - .github/workflows/hosted-sbuild-userns-diagnostic.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hosted-sbuild-userns-diagnostic-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  namespaces:
+    name: Collect Ubuntu 26.04 UID/GID namespace evidence (not sbuild PASS)
+    runs-on: ubuntu-26.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Validate probe syntax and Ubuntu runner identity
+        run: |
+          set -euo pipefail
+          test "$RUNNER_ENVIRONMENT" = github-hosted
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          bash -n scripts/diagnose-sbuild-userns.sh
+          python3 scripts/check-source-syntax.py
+
+      - name: Install only namespace diagnostic prerequisites
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends uidmap util-linux
+
+      - name: Record non-authoritative namespace capabilities
+        run: bash scripts/diagnose-sbuild-userns.sh evidence/hosted-sbuild-userns
+
+      - name: Retain scoped diagnostic evidence (not a certificate)
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: hosted-sbuild-userns-diagnostic-${{ github.sha }}
+          path: evidence/hosted-sbuild-userns/
+          if-no-files-found: warn
+          retention-days: 30
