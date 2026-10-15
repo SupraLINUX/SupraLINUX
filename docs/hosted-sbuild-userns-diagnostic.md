@@ -34,3 +34,18 @@ El resultado distingue fallos de mmdebstrap, de sbuild y de verificación
 de artifacts. Cualquier PASS sería exclusivamente de este host efímero:
 no certifica la ejecución dentro del invitado KVM, el preflight -3,
 compatibilidad ABI ni un KDE package Attempt.
+
+## Resultado root-mode y comparación siguiente
+
+Run 38747014708 (55152dd): el smoke nativo, ejecutado como root,
+completó el tarball con mmdebstrap --mode=root pero sbuild --debug falló
+antes del build: Fail-Stage=create-session. El log completo indica
+Sbuild::ChrootRoot; no contiene la excepción/llamada de bajo nivel,
+de modo que NO demuestra todavía un error de UID/GID específico.
+La infraestructura KVM no intervino. El CI de ese SHA pasó (38747024726).
+
+El siguiente experimento usa el MISMO runner y fixture genérico pero
+ejecuta mmdebstrap --mode=unshare y sbuild como usuario no privilegiado,
+sin sudo, para comparar con el camino recomendado por Ubuntu.
+La comparación host/root vs host/user sólo diagnostica el host,
+no certifica el invitado KVM ni un paquete.

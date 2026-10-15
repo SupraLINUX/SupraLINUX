@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Small, disposable root-mode sbuild debug experiment on GitHub-hosted Ubuntu.
+# Small, disposable unprivileged sbuild debug experiment on GitHub-hosted Ubuntu.
 # This is a host-only backend diagnostic, not a KDE package Attempt or KVM proof.
 set -Eeuo pipefail
 umask 077
@@ -9,7 +9,7 @@ umask 077
 . /etc/os-release
 [[ "$ID" == ubuntu && "$VERSION_ID" == 26.04 && "$VERSION_CODENAME" == resolute ]]
 [[ "$(dpkg --print-architecture)" == amd64 && "$(id -u)" -ne 0 ]]
-for tool in sudo timeout sbuild mmdebstrap dpkg-source dpkg-parsechangelog sha256sum; do
+for tool in timeout sbuild mmdebstrap dpkg-source dpkg-parsechangelog sha256sum; do
   command -v "$tool" >/dev/null
 done
 OUTPUT_DIR=$1
@@ -21,7 +21,7 @@ mkdir -p "$WORK/source/debian/source" "$WORK/out"
 REPORT="$OUTPUT_DIR/result.txt"
 ROOTFS_LOG="$OUTPUT_DIR/mmdebstrap.log"
 SBUILD_LOG="$OUTPUT_DIR/sbuild-debug.log"
-printf 'scope=hosted-ubuntu26-native-host-debug-only\nkvm_guest_certified=false\nkde_package_attempt_consumed=false\nsource_sha=%s\n' "${GITHUB_SHA:-not-provided}" > "$REPORT"
+printf 'scope=hosted-ubuntu26-native-host-debug-only\nkvm_guest_certified=false\nkde_package_attempt_consumed=false\nsource_sha=%s\nactor=unprivileged-runner\n' "${GITHUB_SHA:-not-provided}" > "$REPORT"
 
 cat > "$WORK/source/debian/changelog" <<'EOF'
 supralinux-sbuild-backend-probe (0.1) resolute; urgency=low
@@ -60,11 +60,11 @@ DSC="$WORK/supralinux-sbuild-backend-probe_0.1.dsc"
 [[ -s "$DSC" ]]
 printf 'source_dsc_sha256=%s\n' "$(sha256sum "$DSC" | awk '{print $1}')" >> "$REPORT"
 
-# Match the failed guest's root-mode buildd tar creation, but without booting KVM.
-if timeout --signal=TERM --kill-after=20s 270s sudo -n env -i \
-  PATH=/usr/sbin:/usr/bin:/sbin:/bin HOME=/root LANG=C.UTF-8 \
+# Use the documented unprivileged backend outside KVM to contrast the failed root-mode smoke.
+if timeout --signal=TERM --kill-after=20s 270s env -i \
+  PATH=/usr/sbin:/usr/bin:/sbin:/bin HOME="$HOME" USER="$(id -un)" LOGNAME="$(id -un)" LANG=C.UTF-8 \
   DEBIAN_FRONTEND=noninteractive \
-  mmdebstrap --mode=root --variant=buildd --architectures=amd64 \
+  mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 \
   --components=main,universe --format=tar --keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg \
   resolute "$WORK/resolute-amd64.tar" \
   "deb http://archive.ubuntu.com/ubuntu resolute main universe" \
@@ -80,17 +80,16 @@ else
 fi
 [[ -s "$WORK/resolute-amd64.tar" ]]
 
-# Run with root identity, matching DEP-8 needs-root, not the normal CI user.
+# Run as the normal hosted user with subordinate IDs; do not alter the kernel.
 # Sanitize the environment to keep Actions credentials out of debug output.
-if timeout --signal=TERM --kill-after=20s 360s sudo -n env -i \
-  PATH=/usr/sbin:/usr/bin:/sbin:/bin HOME=/root LANG=C.UTF-8 \
+if timeout --signal=TERM --kill-after=20s 360s env -i \
+  PATH=/usr/sbin:/usr/bin:/sbin:/bin HOME="$HOME" USER="$(id -un)" LOGNAME="$(id -un)" LANG=C.UTF-8 \
   DEBIAN_FRONTEND=noninteractive \
   sbuild --debug --chroot-mode=unshare --chroot="$WORK/resolute-amd64.tar" \
   --dist=resolute --arch=amd64 --no-run-lintian --no-run-autopkgtest \
   --build-dir="$WORK/out" "$DSC" \
   > "$SBUILD_LOG" 2>&1; then
   # An exit status of zero alone does not count without the expected products.
-  sudo -n chown -R "$(id -u):$(id -g)" "$WORK/out"
   shopt -s nullglob
   debs=("$WORK"/out/*.deb)
   changes=("$WORK"/out/*.changes)

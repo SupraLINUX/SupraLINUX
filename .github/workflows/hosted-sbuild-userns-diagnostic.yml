@@ -44,7 +44,7 @@ jobs:
       - name: Record non-authoritative namespace capabilities
         run: bash scripts/diagnose-sbuild-userns.sh evidence/hosted-sbuild-userns
 
-      - name: Run small root-mode sbuild debug smoke outside KVM
+      - name: Run small unprivileged sbuild debug smoke outside KVM
         run: bash scripts/probe-hosted-sbuild-backend.sh evidence/hosted-sbuild-backend
 
       - name: Retain scoped diagnostic evidence (not a certificate)
