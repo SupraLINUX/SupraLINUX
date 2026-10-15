@@ -21,3 +21,16 @@ Run 38745890347 en el commit d8ba82a: recolección PASS, no certificación de sb
 La asimetría comprueba que la política de mapeo importa, pero NO
 identifica la causa del fallo del invitado ni verifica que el backend de
 sbuild haya podido abrir su sesión. Ningún paquete fue compilado.
+
+## Segundo experimento pequeño: sbuild real fuera de KVM
+
+Reutilizamos el mismo workflow en un runner hosted Ubuntu 26.04 sin arrancar
+ninguna VM. El script scripts/probe-hosted-sbuild-backend.sh genera una fuente
+Debian descartable 0.1, crea un tarball buildd con mmdebstrap --mode=root
+y ejecuta sbuild --debug como root con entorno saneado. Conserva logs
+limitados y verifica .deb/.changes/.buildinfo si el build termina exitoso.
+
+El resultado distingue fallos de mmdebstrap, de sbuild y de verificación
+de artifacts. Cualquier PASS sería exclusivamente de este host efímero:
+no certifica la ejecución dentro del invitado KVM, el preflight -3,
+compatibilidad ABI ni un KDE package Attempt.

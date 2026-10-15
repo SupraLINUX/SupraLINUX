@@ -6,6 +6,7 @@ on:
     branches: [architecture/bootstrap-v1]
     paths:
       - scripts/diagnose-sbuild-userns.sh
+      - scripts/probe-hosted-sbuild-backend.sh
       - .github/workflows/hosted-sbuild-userns-diagnostic.yml
 
 permissions:
@@ -38,16 +39,21 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends uidmap util-linux
+          sudo apt-get install -y --no-install-recommends uidmap util-linux sbuild mmdebstrap dpkg-dev
 
       - name: Record non-authoritative namespace capabilities
         run: bash scripts/diagnose-sbuild-userns.sh evidence/hosted-sbuild-userns
+
+      - name: Run small root-mode sbuild debug smoke outside KVM
+        run: bash scripts/probe-hosted-sbuild-backend.sh evidence/hosted-sbuild-backend
 
       - name: Retain scoped diagnostic evidence (not a certificate)
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: hosted-sbuild-userns-diagnostic-${{ github.sha }}
-          path: evidence/hosted-sbuild-userns/
+          path: |
+            evidence/hosted-sbuild-userns/
+            evidence/hosted-sbuild-backend/
           if-no-files-found: warn
           retention-days: 30
