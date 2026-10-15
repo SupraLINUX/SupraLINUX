@@ -1,3 +1,13 @@
+kde-cli-tools (4:6.7.5-0supralinux3) resolute; urgency=medium
+
+  * Bind both installed DEP-8 consumers to the exact candidate source
+    changelog version instead of a stale packaging revision literal.
+  * Require dpkg-dev for the verified version parser in autopkgtest.
+  * Preserve the unchanged KDE native tests, Qt and Frameworks providers,
+    historical Attempts and original revision2 fixture evidence.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Thu, 15 Oct 2026 05:00:00 +0000
+
 kde-cli-tools (4:6.7.5-0supralinux2) resolute; urgency=medium
 
   * Run unchanged native tests in an owned CMake launcher after debhelper setup.

@@ -15,11 +15,25 @@ spec.loader.exec_module(prepare)
 records = json.loads((ROOT / 'manifests/kde-plasma-package-build.json').read_text())['nodes']
 checked = 0
 for record in records.values():
-    if 'native_fixture_review' not in record:
+    active = record.get('native_fixture_review')
+    historical = record.get('historical_native_fixture_review')
+    if not active and not historical:
         continue
-    prepare.check_native_fixture_review(record)
-    original_path = ROOT / record['native_fixture_review']['path']
+    assert not (active and historical), 'Fixture proof cannot be both current and historical'
+    reference = active or historical
+    original_path = ROOT / reference['path']
     original_proof = json.loads(original_path.read_text())
+    if historical:
+        assert record['version'] != original_proof['version'], 'Historical fixture requires older revision'
+        candidate = copy.deepcopy(record)
+        candidate['version'] = original_proof['version']
+        candidate['packaging_sha256'] = original_proof['packaging_sha256']
+        candidate['native_fixture_review'] = historical
+        del candidate['historical_native_fixture_review']
+        assert candidate['upstream_sha256'] == record['upstream_sha256']
+    else:
+        candidate = record
+    prepare.check_native_fixture_review(candidate)
     for mutation in ['source', 'candidate-certification', 'coverage', 'helper', 'cleanup', 'unbound-evidence']:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -46,7 +60,7 @@ for record in records.values():
                 proof['files_sha256'][name] = hashlib.sha256(file.read_bytes()).hexdigest()
             file = directory / original_path.name
             file.write_text(json.dumps(proof) + '\n')
-            mutated = copy.deepcopy(record)
+            mutated = copy.deepcopy(candidate)
             mutated['native_fixture_review']['sha256'] = hashlib.sha256(file.read_bytes()).hexdigest()
             try:
                 prepare.check_native_fixture_review(mutated, root)

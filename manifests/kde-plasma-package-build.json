@@ -8446,7 +8446,7 @@
     "kde-cli-tools": {
       "state": "build-pending",
       "source_package": "kde-cli-tools",
-      "version": "4:6.7.5-0supralinux2",
+      "version": "4:6.7.5-0supralinux3",
       "upstream_version": "6.7.5",
       "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/kde-cli-tools-6.7.5.tar.xz",
       "upstream_sha256": "18f3c421b305003caf73f9e9fbec09fbf30f472dbe81fec328046cca7883a31d",
@@ -9508,9 +9508,9 @@
       ],
       "review": {
         "source": "Official signed source unchanged; original two packages, CLI links, helpers, KCM, docs and translations retained.",
-        "version": "Preserve epoch4/upstream6.7.5; revision2 supersedes retained failed revision1 and captured Ubuntu reference. Historical assignments remain immutable.",
+        "version": "Preserve epoch4, Plasma6.7.5 and the exact Ubuntu supersession. Revision3 fixes both stale installed-test version checks with a single source-derived exact guard. Revision2 native fixture and Attempts1-3 remain historical with their original identities; no rev3 PASS is asserted.",
         "dependencies": "Exact eligible Frameworks closure, matching Ubuntu Qt/private SDK; preserve X11, Su/WidgetsAddons and documentation. Native MIME/service-cache dependencies declared explicitly. Runtime closure follow-up: 34 exact eligible nodes and 152 binaries, including the selected retained support inputs and Python runtime dependency. All previous identities and original evidence scopes stay unchanged; fresh byte/source/version/architecture, empty-state APT diagnosis and authoritative input preflight remain required. Requires CMake>=3.29 for the reviewed executable TEST_LAUNCHER; predecessor identities are unchanged.",
-        "tests": "Full unchanged native FileTypesTest10/10 passed in zero-NIC KVM with exact staged CMake executable launcher, private HOME/XDG and closed bus, real helper success and bounded cache waits. Upstream source/assertions, frozen Qt/Frameworks, original Ubuntu functional upgrade client and rebuilt consumer remain unchanged. This proves the native fixture only; clean package, lintian and installed tests remain required. Attempt2 independently confirms unchanged FileTypesTest10/10 and kcm_smoketest in clean sbuild. Its post-build generic verifier falsely rejected installed exact checks-enabled test SDK relations; original FAIL is retained as INFRA_INVALID. No separate lintian or installed tests were reached, and a fresh preflight is required for the corrected verifier.",
+        "tests": "Original upstream FileTypesTest 10/10 and KCM smoke passed for revision2 using unchanged native fixture code; the rev2 fixture proof is historical-only because revision3 changes changelog and installed tests. Both DEP-8 consumers now derive the exact version from the authenticated source changelog and require dpkg-dev. Real rebuilt consumer and payload tests remain pending, as does authoritative preflight and package Attempt4.",
         "profile": "No feature disabled. Real helper authorization, device eject, interactive filetype UI, launches and actual compositor/desktop remain later QA.",
         "licensing": "Preserve original KDE and Ubuntu attribution; CC0 applies only to newly authored integration fixture files."
       },
@@ -9523,23 +9523,24 @@
         "copyright": "f03fde8c3b47843122eb1739ae23da4d2bdf03646dae1c13ef93f569233c4f98",
         "rules": "9f4bd64559ccd6ea29ccfd9c14738ead1b63e2e6ae5edc458ffa4ef97345f7ea",
         "not-installed": "484b77843be0a0db7f0b318cf147c413ea8a5a6deabc6ee3017f45bc1c7918e1",
-        "changelog": "bd2277a96aac5d93451f60295285e3280ea6cbdd86d92ff142197b2507f65172",
+        "changelog": "1068d6a01a3b62d4d1a8f0e277d3a83c8e5ab15e08ced9d10fb1bb21a56d9f0d",
         "control": "c0a1808f4c6fc00799f45a3af86d5210769561cf804c39aa76c80485c25c5bb8",
         "kde-cli-tools-data.install": "8d4e78a4b276faa93c2c94c226f9985e9bd685374f964df22b5080d3f158a56d",
         "upstream/metadata": "d55afe23039f74e509aefaa6830c854af22483d65cc2e61b38c1e03fc0002a91",
         "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
         "tests/native-cache-helper": "f4826f2571bbabd826b74b53dfc9f2fb914695d5c8ff3d07cc8da36a63dfd14d",
         "tests/baseline-setup": "8dffa232988eb914e0dd21afdd74dab8ba973f772110832cc687d7607d9479f1",
-        "tests/ubuntu-abi-client": "e994bb83637846d2a5143de47efbb9c1db54d44412a1307618007410e3481605",
-        "tests/control": "45d53676dfc78cfa9eeaae875e251b162240523fc72d7a388643ceda8c9b7505",
+        "tests/ubuntu-abi-client": "74304a24c5d9730a59edf75bae43941578dc12497c085763145fb664abf817ab",
+        "tests/control": "ed2d14d67f54a0b121512408310ca03ce283fd7c6ae80e0fc438b25ac8cdae59",
         "tests/upstream-session": "94f828e64f793934107d5cbf669566c95f22d44c5f731918b366107c67340b13",
-        "tests/consumer": "03af7fbf530351494ab70d4466de102e448b552053b9b139dcdea0f87447631c",
+        "tests/consumer": "a132dfc0cf1c8fdf82c82307c210926277317342f0120e5f0acd1cff9f24b725",
         "salsa/qt-kde-team.debian.net.asc": "2b218b250b8929ad7055afe891bd29288228cfb6efac0e4ed638d9db8d3c4e77",
         "salsa/extra_repository.list": "412646a06d733ca403c3175d36f1d1e734baaa8a76bb8e5176a0d0fb4bda7d45",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
         "tests/client/main.cpp": "8b65543d1eee8c1f8fdac6ada4029952a737cd361d9d92326e100fa2d46fca97",
         "tests/client/run-private.py": "25dfc64848ff8cd9a71c8a3c4cafaafee5bd531e5e24d33045af4974d55e3921",
-        "tests/client/CMakeLists.txt": "6e7623fab4dd950d53619e9f1545895a58954d0009d75dddaf6de4fd2c08dc54"
+        "tests/client/CMakeLists.txt": "6e7623fab4dd950d53619e9f1545895a58954d0009d75dddaf6de4fd2c08dc54",
+        "tests/source-version": "981f44f5e9b5ab069b66226429a42216ce412007761b717c964d7d3b375a26d9"
       },
       "sbuild_rootfs_policy": {
         "kind": "immutable-bare-milestone",
@@ -9550,9 +9551,10 @@
           "resolute-security"
         ]
       },
-      "native_fixture_review": {
+      "historical_native_fixture_review": {
         "path": "manifests/evidence/plasma/kde-cli-tools-native-fixture-repair/fixture-review.json",
-        "sha256": "0b01a46291616bfe8ad627a066e1c1497699668d84cdf287f426ff45b5c5803c"
+        "sha256": "0b01a46291616bfe8ad627a066e1c1497699668d84cdf287f426ff45b5c5803c",
+        "scope": "revision2-unchanged-native-test-fixture; historical-only; not a revision3 certification"
       }
     }
   },
@@ -9909,7 +9911,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -10095,7 +10097,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/kde-cli-tools-preflight43/verification.json",
-      "sha256": "d66dfaec4bfe42f9cf9b68cc383109bef6c514f920a0a8a7bf380c341045a47d"
+      "sha256": "d66dfaec4bfe42f9cf9b68cc383109bef6c514f920a0a8a7bf380c341045a47d",
+      "applicable": false,
+      "inapplicability_reason": "Revision3 changes the Debian source version, changelog, both installed tests, DEP-8 test dependencies and adds an exact source-version guard after Attempt3. Preserve the original revision2 preflight43 PASS and all original Attempt evidence; require fresh current-input preflight before Attempt4."
     }
   ],
   "package_input_incidents": [

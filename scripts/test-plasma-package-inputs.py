@@ -33,6 +33,43 @@ class InputAdmission(unittest.TestCase):
             with self.subTest(node=node), self.assertRaisesRegex(AssertionError, 'Excluded Wayland-only'):
                 admission.check(node, {}, ROOT, {}, {})
 
+    def test_cli_source_version_guard_rejects_old_new_and_partial_binary_sets(self):
+        changelog = ROOT/'packages/plasma/kde-cli-tools/debian/changelog'
+        guard = ROOT/'packages/plasma/kde-cli-tools/debian/tests/source-version'
+        expected = subprocess.check_output(
+            ['dpkg-parsechangelog', '-l', str(changelog), '-S', 'Version'], text=True).strip()
+        self.assertEqual(expected, '4:6.7.5-0supralinux3')
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            tests = root/'debian/tests'
+            tests.mkdir(parents=True)
+            (root/'debian/changelog').write_bytes(changelog.read_bytes())
+            (tests/'source-version').write_bytes(guard.read_bytes())
+            mock_bin = root/'bin'
+            mock_bin.mkdir()
+            mock = mock_bin/'dpkg-query'
+            mock.write_text('#!/bin/sh\nfor last do :; done\n'
+                            'case "$last" in\n'
+                            ' kde-cli-tools) printf "%s" "$TEST_CLI_VERSION";;\n'
+                            ' kde-cli-tools-data) printf "%s" "$TEST_DATA_VERSION";;\n'
+                            ' *) exit 2;;\nesac\n')
+            mock.chmod(0o755)
+            for cli, data, succeeds in [
+                (expected, expected, True),
+                ('4:6.7.5-0supralinux2', expected, False),
+                (expected, '4:6.7.5-0supralinux2', False),
+                ('4:6.7.5-0supralinux999', expected, False),
+            ]:
+                env = dict(os.environ, PATH=str(mock_bin) + os.pathsep + os.environ['PATH'],
+                           TEST_CLI_VERSION=cli, TEST_DATA_VERSION=data)
+                result = subprocess.run(['bash', '-c', 'source "$1"', 'bash',
+                                         str(tests/'source-version')], env=env,
+                                        capture_output=True, text=True)
+                with self.subTest(cli=cli, data=data):
+                    self.assertEqual(result.returncode == 0, succeeds, result.stderr)
+                    if not succeeds:
+                        self.assertIn('Version mismatch:', result.stderr)
+
     def reviewed_rootfs_policy(self):
         return copy.deepcopy(json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())['nodes']['kmenuedit']['sbuild_rootfs_policy'])
 

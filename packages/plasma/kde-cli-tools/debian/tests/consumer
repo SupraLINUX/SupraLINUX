@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
-for package in kde-cli-tools kde-cli-tools-data; do
-    [[ $(dpkg-query -W -f='${Version}' "${package}") == 4:6.7.5-0supralinux1 ]]
-done
+source "$(dirname "$0")/source-version"
 cmake -S "$(dirname "$0")/client" -B "${AUTOPKGTEST_TMP}/build" -DCMAKE_BUILD_TYPE=Release
 cmake --build "${AUTOPKGTEST_TMP}/build" --parallel 2
 python3 "$(dirname "$0")/client/run-private.py" "${AUTOPKGTEST_TMP}/build/cli-client" "${AUTOPKGTEST_ARTIFACTS}/rebuilt-consumer"
