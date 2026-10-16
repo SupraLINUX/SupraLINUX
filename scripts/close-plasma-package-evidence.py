@@ -35,6 +35,14 @@ def verify_workflow_job(job, host, head, job_id, host_export=False):
         assert steps['Retain package sources, binaries and evidence']['conclusion'] == 'success'
 
 
+def temporary_retention_directory(prefix):
+    """Create ignored local scratch space before retaining or restoring evidence."""
+    work_dir = ROOT / '.work'
+    work_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
+    assert not work_dir.is_symlink(), 'Refusing symlinked evidence work directory'
+    return tempfile.TemporaryDirectory(dir=work_dir, prefix=prefix)
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('node')
@@ -166,7 +174,7 @@ def main():
     plan = {'schema':1, 'items':[{'node':a.node, 'package_version':record['version'], 'artifact_id':meta['id'],
                                 'workflow_run_id':int(result['workflow_run_id']), 'artifact_sha256':artifact_sha,
                                 'payload_prefix':'packages/'}]}
-    with tempfile.TemporaryDirectory(dir=ROOT/'.work', prefix='package-retention-') as temp:
+    with temporary_retention_directory('package-retention-') as temp:
         temp = Path(temp)
         tmp_plan = temp/'plan.json'
         write(tmp_plan, plan)
@@ -204,7 +212,7 @@ def main():
         with zipfile.ZipFile(supplement, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
             for name, data in sorted(recovered.items()):
                 archive.writestr(name, data)
-        with tempfile.TemporaryDirectory(dir=ROOT/'.work', prefix='evidence-offline-restore-') as temp:
+        with temporary_retention_directory('evidence-offline-restore-') as temp:
             restored = Path(temp)/supplement.name
             shutil.copyfile(supplement, restored)
             assert sha(restored) == sha(supplement)

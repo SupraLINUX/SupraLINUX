@@ -82,6 +82,8 @@ class InputAdmission(unittest.TestCase):
         # The immutable preflight40 contract records the original omission only.
         record = copy.deepcopy(json.loads((ROOT/'manifests/kde-plasma-package-build.json').read_text())['nodes'][node])
         record.pop('sbuild_rootfs_policy')
+        # Keep the admission fixture pending after the canonical node reaches PASS.
+        record['state'] = 'build-pending'
         record['attempts'] = []
         level = json.loads((ROOT/'manifests/kde-plasma-level0.json').read_text())
         material = {item['node']:item for item in json.loads((ROOT/'manifests/evidence/kde-plasma-level0-materialization-result.json').read_text())['nodes']}

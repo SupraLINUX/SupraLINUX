@@ -5,6 +5,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('preflight_closure', ROOT/'scripts/close-package-revalidation-evidence.py')
@@ -99,6 +100,34 @@ class PackageJobBindings(unittest.TestCase):
         self.job['steps'][0]['conclusion'] = 'failure'
         with self.assertRaises(AssertionError):
             package.verify_workflow_job(self.job, self.host, 'source', 456)
+
+
+class PackageRetentionScratch(unittest.TestCase):
+    def test_missing_work_directory_created_and_temporary_payloads_cleaned(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / 'checkout'
+            root.mkdir()
+            self.assertFalse((root / '.work').exists())
+            with patch.object(package, 'ROOT', root):
+                for prefix in ('package-retention-', 'evidence-offline-restore-'):
+                    with self.subTest(prefix=prefix):
+                        with package.temporary_retention_directory(prefix) as directory:
+                            scratch = Path(directory)
+                            self.assertEqual(scratch.parent, root / '.work')
+                            self.assertTrue(scratch.name.startswith(prefix))
+                            (scratch / 'fixture').write_text('test')
+                        self.assertFalse(scratch.exists())
+                self.assertTrue((root / '.work').is_dir())
+
+    def test_symlinked_work_directory_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / 'checkout'
+            root.mkdir()
+            (root / '.work').symlink_to(Path(temp), target_is_directory=True)
+            with patch.object(package, 'ROOT', root), self.assertRaisesRegex(
+                AssertionError, 'symlinked evidence work directory'
+            ):
+                package.temporary_retention_directory('package-retention-')
 
 
 if __name__ == '__main__':
