@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: CC0-1.0
+"""Validate installed upstream features; does not simulate authentication."""
+import os
+import pathlib
+import subprocess
+
+pkg = 'polkit-kde-agent-1'
+files = subprocess.check_output(['dpkg-query','-L',pkg],text=True).splitlines()
+assert files
+agent = [x for x in files if x.endswith('/polkit-kde-authentication-agent-1') and '/libexec/' in x]
+assert len(agent) == 1, agent
+binary = pathlib.Path(agent[0])
+assert binary.is_file() and os.access(binary,os.X_OK)
+
+expected = {
+    'application': '/org.kde.polkit-kde-authentication-agent-1.desktop',
+    'autostart': '/polkit-kde-authentication-agent-1.desktop',
+    'systemd': '/plasma-polkit-agent.service',
+    'notifyrc': '/polkit-kde-authentication-agent-1.notifyrc',
+}
+found = {}
+for kind, suffix in expected.items():
+    paths = [pathlib.Path(x) for x in files if x.endswith(suffix)]
+    if kind == 'application':
+        paths = [x for x in paths if '/applications/' in str(x)]
+    if kind == 'autostart':
+        paths = [x for x in paths if '/autostart/' in str(x)]
+    if kind == 'systemd':
+        paths = [x for x in paths if '/systemd/user/' in str(x)]
+    assert len(paths) == 1, (kind,paths)
+    assert paths[0].is_file(), (kind,paths[0])
+    found[kind]=paths[0]
+
+
+def key_value(path,key):
+    values = [line.partition('=')[2].strip() for line in path.read_text().splitlines()
+              if line.startswith(key+'=')]
+    assert len(values)==1,(path,key,values)
+    return values[0]
+
+assert key_value(found['autostart'],'Exec')==str(binary)
+assert key_value(found['application'],'Exec')==str(binary)
+assert key_value(found['autostart'],'OnlyShowIn')=='KDE;'
+assert key_value(found['autostart'],'X-systemd-skip')=='true'
+assert key_value(found['systemd'],'ExecStart')==str(binary)
+assert key_value(found['systemd'],'PartOf')=='graphical-session.target'
+assert key_value(found['systemd'],'BusName')=='org.kde.polkit-kde-authentication-agent-1'
+assert any(x.endswith('.mo') and '/locale/' in x for x in files), 'Translations not installed'
+
+linkage = subprocess.run(['ldd',str(binary)],check=True,capture_output=True,text=True)
+assert 'not found' not in linkage.stdout, linkage.stdout
+polkit = subprocess.run(['dpkg-query','-W','-f=${Status}', 'polkitd'],check=True,capture_output=True,text=True)
+assert polkit.stdout == 'install ok installed', polkit.stdout
+print('Installed agent, autostart, user service, notifications and translations: PASS')
