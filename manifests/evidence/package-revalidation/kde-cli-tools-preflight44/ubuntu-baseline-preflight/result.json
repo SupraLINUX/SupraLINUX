@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "scope": "reviewed-ubuntu-baseline-preflight",
+  "node": "kde-cli-tools",
+  "state": "PASS",
+  "exit_code": 0,
+  "source_commit": "617934153285997566c7121a2c1fb5b5364d05a9",
+  "workflow_run_id": "38817700267",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "candidate_installed": false,
+  "inputs_sha256": {
+    "scripts/probe-reviewed-ubuntu-baseline.py": "242b1ad8d6e85027155391d11747f1d2cee77a9a8371bb6d1f4d57d4731dc03b",
+    "scripts/plasma-package-testing.py": "5fe6280e23080e98b13fbfd92f5db0988987e2b833567fbd4583ae88a8ec74d1",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "packages/plasma/kde-cli-tools/debian/tests/baseline-setup": "8dffa232988eb914e0dd21afdd74dab8ba973f772110832cc687d7607d9479f1",
+    "packages/plasma/kde-cli-tools/debian/tests/client/CMakeLists.txt": "6e7623fab4dd950d53619e9f1545895a58954d0009d75dddaf6de4fd2c08dc54",
+    "packages/plasma/kde-cli-tools/debian/tests/client/main.cpp": "8b65543d1eee8c1f8fdac6ada4029952a737cd361d9d92326e100fa2d46fca97",
+    "packages/plasma/kde-cli-tools/debian/tests/client/run-private.py": "25dfc64848ff8cd9a71c8a3c4cafaafee5bd531e5e24d33045af4974d55e3921",
+    "packages/plasma/kde-cli-tools/debian/tests/consumer": "a132dfc0cf1c8fdf82c82307c210926277317342f0120e5f0acd1cff9f24b725",
+    "packages/plasma/kde-cli-tools/debian/tests/control": "ed2d14d67f54a0b121512408310ca03ce283fd7c6ae80e0fc438b25ac8cdae59",
+    "packages/plasma/kde-cli-tools/debian/tests/native-cache-helper": "f4826f2571bbabd826b74b53dfc9f2fb914695d5c8ff3d07cc8da36a63dfd14d",
+    "packages/plasma/kde-cli-tools/debian/tests/source-version": "981f44f5e9b5ab069b66226429a42216ce412007761b717c964d7d3b375a26d9",
+    "packages/plasma/kde-cli-tools/debian/tests/ubuntu-abi-client": "74304a24c5d9730a59edf75bae43941578dc12497c085763145fb664abf817ab",
+    "packages/plasma/kde-cli-tools/debian/tests/upstream-session": "94f828e64f793934107d5cbf669566c95f22d44c5f731918b366107c67340b13"
+  },
+  "files_sha256": {
+    "autopkgtest/log": "68ff2981f0fce19d255fb415424692503527d83c76244339066c913a2a336793",
+    "autopkgtest/reviewed-baseline-packages": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/reviewed-baseline-stdout": "d3b4cc1ff51e072e6cdc994df4920876c3641850e045eb736371c334bd043401",
+    "autopkgtest/summary": "36e1952a68e082ee9b1d71c36e7ee1d26054668b01a97ed5e481b3e31a7962e2",
+    "autopkgtest/testbed-packages": "340b878dd9e93b7e0e311ce8b9685a64b3564067ca59ba2214a8f8b2dbb5cb8b",
+    "autopkgtest/testinfo.json": "92f4607e1b393552e0d84437d7ad822c8b4ae4d2b2e4a3174dddb6ab18865040",
+    "baseline-setup": "8dffa232988eb914e0dd21afdd74dab8ba973f772110832cc687d7607d9479f1",
+    "reviewed-inputs.json": "2b84e67cb33aacdac3c998b3def2aee99f50b0a52b8e3295390eb1a5628a22bb",
+    "setup-commands.txt": "7f5eed208a346763ba8f2718fea9ef1f5f240d22c88e27d6d731cb4bd70ca467"
+  }
+}

@@ -9911,7 +9911,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -10100,6 +10100,10 @@
       "sha256": "d66dfaec4bfe42f9cf9b68cc383109bef6c514f920a0a8a7bf380c341045a47d",
       "applicable": false,
       "inapplicability_reason": "Revision3 changes the Debian source version, changelog, both installed tests, DEP-8 test dependencies and adds an exact source-version guard after Attempt3. Preserve the original revision2 preflight43 PASS and all original Attempt evidence; require fresh current-input preflight before Attempt4."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kde-cli-tools-preflight44/verification.json",
+      "sha256": "fd84db53d62c5bce4f1578dec112bc5d49f75e2170fc3dcfe7c476693e969779"
     }
   ],
   "package_input_incidents": [
