@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Actual zero-NIC offline golden preparation lifecycle PASS on f5e3392; original signed source and guest marker, direct VM/overlay/seed cleanup, no runner or package Attempt, all preserved images unchanged",
+  "archive_path": ".artifacts/host-network-safety/offline-golden-lifecycle-actual-20261010/inputs.zip",
+  "archive_sha256": "805de9ced9c92269a733ba3dea4ae6c7c9c698988362aafc183512b64a582a96",
+  "files": {
+    "external/var/lib/supralinux/evidence/golden-lifecycle-preflight/20261010T171054Z-374167/domain-state.txt": {
+      "sha256": "4ac2843107022561129b54a476ecd4001dec7a2f57e73177fdc9cadf28eb19e1",
+      "size": 9
+    },
+    "external/var/lib/supralinux/evidence/golden-lifecycle-preflight/20261010T171054Z-374167/domain.xml": {
+      "sha256": "172da9999031b0a5be865c6fa75912ec2bdb29ff32470f3e34d3ed1a82bd0e71",
+      "size": 2856
+    },
+    "external/var/lib/supralinux/evidence/golden-lifecycle-preflight/20261010T171054Z-374167/guest-marker.txt": {
+      "sha256": "3f46ea84fd46dcf96234f2d9e71f878657aa4959c71a29d38c99f1a9a6e64abe",
+      "size": 12
+    },
+    "external/var/lib/supralinux/evidence/golden-lifecycle-preflight/20261010T171054Z-374167/libguestfs-runtime.txt": {
+      "sha256": "1acb36510cd445459b4e38623cb1d972d8e380bfb5888930aff207d8ccfaca35",
+      "size": 504
+    },
+    "external/var/lib/supralinux/evidence/golden-lifecycle-preflight/20261010T171054Z-374167/libguestfs-test-tool.txt": {
+      "sha256": "7448fc642a1b7b4f80f9c22cfc8a692def11f2a777e8b9e39f796d656050d488",
+      "size": 71256
+    },
+    "external/var/lib/supralinux/evidence/golden-lifecycle-preflight/20261010T171054Z-374167/libvirt-storage-access.txt": {
+      "sha256": "36ad6706de51a58cc2832bcebf8f5fd24f7ec9cb2608df695128676e131362d9",
+      "size": 358
+    },
+    "external/var/lib/supralinux/evidence/golden-lifecycle-preflight/20261010T171054Z-374167/meta-data": {
+      "sha256": "37cfac87b57f2c27231943e88f8eebfa15a7b26a06e798bc4e4c113460031beb",
+      "size": 133
+    },
+    "external/var/lib/supralinux/evidence/golden-lifecycle-preflight/20261010T171054Z-374167/network-config": {
+      "sha256": "639b6f419a9ac49312b218e12395dc7e7d623d96202c3315a92dcd19d6fa02ba",
+      "size": 25
+    },
+    "external/var/lib/supralinux/evidence/golden-lifecycle-preflight/20261010T171054Z-374167/result.txt": {
+      "sha256": "dd1d9fe8fededd3f5d1d95e32768bb1ae27736d5d53880acbcb6d32b402b615f",
+      "size": 211
+    },
+    "external/var/lib/supralinux/evidence/golden-lifecycle-preflight/20261010T171054Z-374167/source-image-verification.txt": {
+      "sha256": "1e7e7e34f8cc1547f6f3e4348f062bfa8baa47e190c4fb80a23b5b12dac7bc05",
+      "size": 292
+    },
+    "external/var/lib/supralinux/evidence/golden-lifecycle-preflight/20261010T171054Z-374167/user-data": {
+      "sha256": "d8151c962e9538a8dab6d2c6d4f4e759ce59cd36a2a8e880dcdd38d59c96ba90",
+      "size": 354
+    },
+    "external/var/lib/supralinux/evidence/golden-lifecycle-preflight/20261010T171054Z-374167/virt-install.txt": {
+      "sha256": "36787495be8f2004b0a83249db2dd03cd7c1ee155c28ba804b218daaf631e3c1",
+      "size": 836
+    },
+    ".work/offline-golden-lifecycle-20261010-host.log": {
+      "sha256": "b1edf14a64fb58edb1cfd96e0efc8bfc424794572def788c98ec3c70d29d2dac",
+      "size": 74991
+    },
+    ".work/offline-golden-lifecycle-20261010-cleanup.json": {
+      "sha256": "d6227d3aef87ca13f03c52c54ef3f12049e2d7a0d7c21e1b014e3a31ab269cad",
+      "size": 2054
+    },
+    ".work/offline-golden-lifecycle-20261010-active-checkpoint.json": {
+      "sha256": "d3b48588c3eb4d44c564fd02a5002748e7fe22da04b4dd1ec3f3854551ddbf31",
+      "size": 617
+    },
+    "scripts/check-golden-preparation-lifecycle.sh": {
+      "sha256": "455f1e1a4780b11b38b70d7e71838bd11ebcd2aed1fe9b49005f8814812ffcc6",
+      "size": 7429
+    },
+    "scripts/with-libguestfs-runtime.sh": {
+      "sha256": "09d15ab93219d48a2142d52d51ca41ad00129505a68cfa259d19a5943f760ae9",
+      "size": 3275
+    },
+    "scripts/verify-ubuntu-cloud-image-provenance.sh": {
+      "sha256": "fa01d3cdabb59648b1cd67a191a8d99e249c5ff7b445fee80d5cea18551427d7",
+      "size": 3291
+    },
+    ".work/libksysguard-preflight38-publication-review/hosted-policy-receipt.json": {
+      "sha256": "5411d587f00fa4ef3e5be12464977b7ebcf1e948f0d4ffd61bde941b601c6465",
+      "size": 283
+    }
+  },
+  "empty_offline_byte_restore_verified": true,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

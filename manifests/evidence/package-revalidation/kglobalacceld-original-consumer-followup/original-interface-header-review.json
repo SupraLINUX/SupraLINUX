@@ -1,0 +1,14 @@
+{
+  "state": "REVIEW_REQUIRED",
+  "scope": "original/candidate interface header byte comparison and authenticated original consumer ELF audit; static only",
+  "original_interface_header_sha256": "9a7b85c053186ad58fafae75e4bcab80f1053f82859b9aad5e75541bc87e494a",
+  "candidate_interface_header_sha256": "9a7b85c053186ad58fafae75e4bcab80f1053f82859b9aad5e75541bc87e494a",
+  "interface_headers_byte_identical": true,
+  "actual_consumer_elf_review_sha256": "e95ca3eef45c79921c2dff548c17ebb83275d167be1b322593692676dfa95bd8",
+  "independent_input_retention": ".artifacts/plasma-frontier/kglobalacceld-original-ubuntu-consumer-elf-20261009/index.json",
+  "retention_index_sha256": "62236521a0e95055aee230cb2e61ec0c01852fb9934ba4f8aed722a28b3be56a",
+  "conclusion": "The original declared Ubuntu consumers import unaffected daemon construction/init/interface and plugin interface methods. Static facts narrow the required private SDK transition; they do not certify runtime behavior or undeclared consumers.",
+  "candidate_runtime_transition": "NOT RUN",
+  "private_sdk_transition_admitted": false,
+  "canonical_effect": "none"
+}

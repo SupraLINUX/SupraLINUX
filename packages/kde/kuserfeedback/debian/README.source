@@ -1,0 +1,37 @@
+SupraLINUX KUserFeedback packaging notes
+
+Authority is KDE Frameworks upstream stable 6.30.0. Ubuntu 26.04 Resolute is the provider platform. Debian packaging is a technical reference only.
+
+Batch 11 preserves upstream KUserFeedback defaults: survey targeting expressions, PHP validation, PHP unit tests, documentation, Widgets and QML remain available; the upstream console stays OFF because that is the upstream default. BUILD_QCH remains OFF under the common SupraLINUX Frameworks profile.
+
+The retained Debian packaging-tree artifact 10301938362 supplies copyright and symbols metadata only after the entire retained tree manifest has been hash-verified. Those files do not select the KDE version or feature profile.
+
+No downstream behavior patch or test suppression is retained. Real package attempts are recorded separately from infrastructure incidents.
+
+PHPUnit 13 integration
+----------------------
+
+Ubuntu 26.04 Resolute provides PHPUnit 13. KDE KUserFeedback 6.30 still uses
+legacy @dataProvider metadata in its PHP autotests, and its SQLite fixture
+assigns configuration variables in the including file scope. SupraLINUX keeps
+ENABLE_PHP_UNIT=ON and carries a test-only compatibility patch: DataProvider
+attributes plus static providers, explicit $GLOBALS fixture configuration, and
+the php-sqlite3 provider. Product/runtime source behavior is unchanged.
+
+The second validation cycle exposed one additional PHPUnit 13 API removal:
+SampleTest used TestCase::getActualOutput(). The compatibility patch captures
+the same dynamically emitted JSON with nested PHP output buffering instead.
+No production source or expected test behavior is changed.
+
+The third validation cycle exposed the final legacy PHPUnit object assertions
+used by SampleTest. PHPUnit 13 provides assertObjectHasProperty() and
+assertObjectNotHasProperty(); the test-only compatibility patch maps the old
+attribute assertions to those property assertions. Production code is unchanged.
+
+Documentation output
+--------------------
+
+KUserFeedback's ENABLE_DOCS=ON installs the UserFeedbackConsole manual as
+/usr/share/KDE/UserFeedbackConsole/user-feedback-manual.qch independently of
+the Framework API documentation BUILD_QCH switch. SupraLINUX packages that
+upstream manual in libkf6userfeedback-doc rather than dropping it.

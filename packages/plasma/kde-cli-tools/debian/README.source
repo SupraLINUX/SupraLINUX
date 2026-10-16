@@ -1,0 +1,56 @@
+SupraLINUX review for KDE CLI Tools 6.7.5
+
+Use unchanged signed KDE source and authenticated Ubuntu packaging. Preserve
+epoch 4, two binary packages, original public CLI/compatibility links, docs,
+translations, completion, KCM, X11 support and Su/WidgetsAddons helpers.
+Use exact eligible Frameworks 6.30 providers and Ubuntu Qt 6.10.2+dfsg-7,
+including its required matching GuiPrivate SDK. No Qt transition.
+
+Enable the original filetypestest and kcm_smoketest; selected KCMUtils 6.30
+provides --smoke-test. Declare kbuildsycoca6, update-mime-database, fonts and
+private-bus prerequisites. Native tests use owned HOME/XDG directories,
+offscreen rendering and a bounded private session with no activation service
+directories; the system bus is unavailable. Original assertions remain.
+
+A public Ubuntu Qt SDK client invokes the actual installed CLI. Against only
+owned files it checks MIME extension/content/stdin detection, rendered SVG
+pixels, KIO cat/copy/move and the original compatibility link. Typed private
+D-Bus fixture interfaces receive four inhibition requests, observe the child
+command and release of caller connections, and receive an actual broadcast
+notification signal. No real desktop inhibition, notification, eject, helper
+authorization or device access occurs. Its bus/process groups/runtime are
+removed and original stdout/stderr retained.
+
+Compile that client against original Ubuntu before candidate installation,
+retain its hash, and rerun the unchanged binary after normal APT upgrade.
+Require both exact candidate versions and unchanged Qt runtimes. Rebuild a
+consumer with the installed SDK, verify CLI/helper/KCM/docs/link payload and
+APT consistency. Local original Ubuntu mechanism passed all ten commands,
+four inhibition calls, one broadcast and own-resource cleanup. Candidate
+native tests, packaging, ABI/upgrade and KVM execution are still pending.
+
+Real authorization, device eject, application/desktop launching, interactive
+filetype editing and real Wayland/X11 sessions remain later desktop QA.
+
+Packaging revision 4:6.7.5-0supralinux2 prepares a native CMake test launcher
+after debhelper compat13 sets HOME and clears XDG variables. CMake>=3.29 is
+required for TEST_LAUNCHER. BUILD_TESTING, BUILD_DOC and WITH_X11 remain ON;
+all original native tests and assertions remain unchanged. The suite keeps
+its closed private bus; the executable target owns a fresh HOME/XDG fixture.
+
+The launcher invokes the real update-mime-database and kbuildsycoca6 with
+the original arguments and propagates failure. Only successful calls wait:
+5.1 seconds for the frozen Qt MIME recheck interval and 1.6 seconds for
+KService6.30's 1500ms cache recheck. No fake helper, signal, clock, provider
+patch, assertion waiver or persistent user MIME/config state is introduced.
+The test helpers and launcher remain integration fixtures in debian/tests.
+Original source, Qt, Frameworks predecessor identities, installed Ubuntu
+functional client and separately rebuilt consumer checks remain unchanged.
+
+Attempt1 clean compilation completed; dh_auto_test failed two native rows.
+The AppStream process returned success but skipped validation before install.
+No completed candidate binaries, lintian or installed package tests existed.
+Preserve its source/log/host archives and original FAIL. Offline zero-NIC
+KVM controls establish complete unchanged native test coverage separately;
+fresh authoritative input preflight and clean package execution are required
+before any candidate package certification or delivery.

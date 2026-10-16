@@ -1,0 +1,8 @@
+E: libkf6screen8: symbols-file-contains-current-version-with-debian-revision on symbol _ZN7KScreen6Output11setAbmLevelEj@Base and 8 others (libKF6Screen.so.8) [symbols]
+W: libkf6screen8: old-fsf-address-in-copyright-file
+W: libkf6screendpms8: old-fsf-address-in-copyright-file
+W: libkscreen-bin: old-fsf-address-in-copyright-file
+W: libkscreen-data: old-fsf-address-in-copyright-file
+W: libkscreen-dev: old-fsf-address-in-copyright-file
+W: libkscreen-doc: old-fsf-address-in-copyright-file
+W: libkscreen source: orig-tarball-missing-upstream-signature libkscreen_6.7.5.orig.tar.xz

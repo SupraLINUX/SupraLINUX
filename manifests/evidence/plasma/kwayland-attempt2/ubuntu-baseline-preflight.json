@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "scope": "reviewed-ubuntu-baseline-preflight",
+  "node": "kwayland",
+  "state": "PASS",
+  "exit_code": 0,
+  "source_commit": "3e889e04f3229fe07aeab7b12bc24a15cb42da9a",
+  "workflow_run_id": "37705452980",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "candidate_installed": false,
+  "inputs_sha256": {
+    "scripts/probe-reviewed-ubuntu-baseline.py": "242b1ad8d6e85027155391d11747f1d2cee77a9a8371bb6d1f4d57d4731dc03b",
+    "scripts/plasma-package-testing.py": "1ce68a6a5cfecd43b93943235cddb8a57b00aa531a02b9174cc2363d6650dfbb",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "packages/plasma/kwayland/debian/tests/acc": "66cd0b90010f187688d28bec28b554ecedd51f925821c65d62ae13922a13d1ec",
+    "packages/plasma/kwayland/debian/tests/baseline-setup": "bea3e9d8c68534966e8c719c636649503bb2e2b2c8c2743808865f8f403e6430",
+    "packages/plasma/kwayland/debian/tests/client/CMakeLists.txt": "b23cb20493c49d4d602951b6f617d083edcbb337a23fbe6a271c74dddc708ef4",
+    "packages/plasma/kwayland/debian/tests/client/main.cpp": "01ccf3f0f413a6cf6c0ef8e0ad431f291729fe5ccb5a64c926d35314b78a912a",
+    "packages/plasma/kwayland/debian/tests/client/run-private.py": "14cfffbc476d3133c5430bc9ec5aed27afafd16fc43c19054694fcef544b50cc",
+    "packages/plasma/kwayland/debian/tests/client/server.c": "b9ae33e2275aec3ce1c62e9db33537a9011fe38608b9b7f2010f76fe60485443",
+    "packages/plasma/kwayland/debian/tests/consumer": "f80d82982bf79cb594047f6d013d8c17c0b1ae9aaab455be98c0b53a23fbca18",
+    "packages/plasma/kwayland/debian/tests/control": "123ff0a5eb2fa03fcbe2e7ee2cface9e877cf5599a3a3e574960d83b0c0cfbe3",
+    "packages/plasma/kwayland/debian/tests/control.disabled": "bebd0667963d3ddf5428954e055d6d198eebf892483f25be0b569c7fce46c0d2",
+    "packages/plasma/kwayland/debian/tests/ubuntu-abi-client": "9771687d0d19808709b87c48b113e9b820410d5dfba5376138f59dc26d8a1417"
+  },
+  "files_sha256": {
+    "autopkgtest/log": "bdfa52d960790de7170c20f2a2f75e27eba78d51527d6c0f01f0d05a492fe68f",
+    "autopkgtest/reviewed-baseline-packages": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/reviewed-baseline-stdout": "d3b4cc1ff51e072e6cdc994df4920876c3641850e045eb736371c334bd043401",
+    "autopkgtest/summary": "36e1952a68e082ee9b1d71c36e7ee1d26054668b01a97ed5e481b3e31a7962e2",
+    "autopkgtest/testbed-packages": "41a9a1392c05ad8e9a7b9855663c71bdb1c16703059280a8104ff54a5a5ea1d7",
+    "autopkgtest/testinfo.json": "92f4607e1b393552e0d84437d7ad822c8b4ae4d2b2e4a3174dddb6ab18865040",
+    "baseline-setup": "bea3e9d8c68534966e8c719c636649503bb2e2b2c8c2743808865f8f403e6430",
+    "reviewed-inputs.json": "e929733ca8ad04dd7883ef6053388c196bca6c0f0e4ef07e9a144a190d9814b6",
+    "setup-commands.txt": "0b855033c656bede921011a47d18cd05808a9948579999ac0d98a30dec407306"
+  }
+}

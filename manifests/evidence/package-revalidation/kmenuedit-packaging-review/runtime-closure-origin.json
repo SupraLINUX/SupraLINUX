@@ -1,0 +1,15 @@
+{
+  "state": "PASS",
+  "scope": "documentation count correction on existing reviewed exact dependency closure; no executable/source/Qt change",
+  "prior_record": ".work/dependent-plasma-review/kmenuedit/runtime-closure-review/record.json",
+  "prior_record_sha256": "3e4157db70e4d8dbbfb76ce52785fcaa70bb3f3f30b5c492dbbe8a8a768f8bf8",
+  "record_sha256": "4cdc0216e909e48ac503e9cc74bde6257b82aab5409fc4eb89b3285661147ed6",
+  "packaging_changes": [
+    "README.source"
+  ],
+  "frameworks_predecessors_unchanged": true,
+  "existing_empty_state_apt_result": ".work/dependent-plasma-review/kmenuedit/runtime-closure-review/apt/result.json",
+  "existing_empty_state_apt_result_sha256": "81264283a99c8da1f184fc6742b9307045049f0aa593cf6d9c298addfb20480a",
+  "package_attempt_consumed": false,
+  "candidate_execution": "NOT RUN"
+}

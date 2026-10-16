@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(SupraLinuxKAuthConsumer LANGUAGES CXX)
+find_package(KF6Auth 6.30.0 REQUIRED)
+find_package(Qt6 6.9.0 REQUIRED COMPONENTS Core)
+add_executable(kauth-consumer main.cpp)
+target_link_libraries(kauth-consumer PRIVATE KF6::AuthCore Qt6::Core)

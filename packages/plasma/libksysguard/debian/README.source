@@ -1,0 +1,57 @@
+SupraLINUX integrates the signed official stable KDE Plasma 6.7.5 source with
+Ubuntu 26.04 packaging. Preserve all 21 binaries (including original transitional
+packages), five SONAMEs, symbols, QML modules, sensor-face packages, process
+plugins and KAuth/network helpers. Ubuntu Qt 6.10 providers remain unchanged.
+
+Enable all eight official native CTests. A private typed sensor provider supplies
+the versioned SDK service and the legacy upstream presence-check alias. Candidate
+headers/plugins/packages are used at build time. Privilege-dependent process cases
+may retain upstream QSKIP behavior and must be reported separately in the logs.
+
+The installed Ubuntu ABI contract exercises formatting, an owned process with
+memory and termination transitions, real private D-Bus sensors and model signals,
+SystemStats property/object lifecycle, installed SensorFace package/configuration,
+QML creation and software rendering. Both original Ubuntu-built executables are
+retained unchanged across normal APT upgrade. An exact 6.7.5 installed SDK consumer
+is compiled separately. Local Ubuntu prototype PASS does not certify the candidate.
+
+Exact eligible Frameworks artifacts include the reviewed transitive DAG closure;
+original historical verification scopes remain unchanged. No KDE source patch,
+helper privilege change, hardware process control or Qt replacement is introduced.
+Full application/session QA, real ksystemstats hardware plugins, GPU/network
+capture, privileged helper actions and accelerated/Wayland rendering remain later
+integration gates. Initial packaging preparation did not execute the candidate.
+
+Native CTest stdout/stderr are inherited by the retained clean sbuild log, while
+installed consumer output remains independently retained in its result files.
+HOME is private; cleanup verifies every owned process-group absence.
+
+Revision 4:6.7.5-0supralinux2 adds only the missing candidate source/systemstats
+include directory to the native sensor-provider fixture. Attempt 1 remains an
+original package FAIL: upstream compilation completed, provider compilation
+stopped at generated-header SensorInfo.h lookup, and CTests/lintian/installed
+tests did not run. Its sources/logs restore offline and owned KVM cleanup passed.
+Local negative/positive include-path reproduction and the original Ubuntu client
+with the repaired provider passed, with owned cleanup. This local mechanism uses
+actual candidate source/XML and Qt-generated D-Bus headers, plus authenticated
+original export-visibility metadata; it does not certify the full candidate build.
+Fresh KVM must generate candidate headers and execute all eight official tests,
+lintian and unchanged-original/rebuilt installed clients. Source, assertions,
+symbol guards, dependency closure, product profile and Qt remain unchanged.
+
+Revision 4:6.7.5-0supralinux3 stages the actual build/bin package-structure
+plugin unchanged into the owned kf6/packagestructure runtime namespace. The
+Attempt 2 link command and signed source install rule establish those paths.
+Require a unique contained QML URI and plugin, amd64 ELF bytes and exact copied
+bytes; retain native input hashes. Attempt 2 preserved its original FAIL after
+successful provider compilation but before CTest, lintian or installed tests.
+Actual original Ubuntu plugin/QML bytes projected into that observed layout
+reproduced the old guard failure and passed the repaired private runtime,
+rendering and cleanup. Qt traces prove the private staged plugin was loaded.
+Six negative controls reject old layout, missing/duplicate/foreign/non-ELF
+plugins and wrong QML URI. This certifies the staging mechanism only; full
+candidate execution still requires fresh authoritative input preflight/build.
+Source, assertions, dependencies, symbol guards and Qt remain unchanged.
+Native staging input/hash JSON is emitted to retained sbuild stdout before the
+ephemeral result directory is removed; a separate original-runtime follow-up
+verified stdout/result-file identity and owned cleanup.

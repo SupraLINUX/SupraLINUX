@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "scope": "failed-package-attempt-retention-verification",
+  "node": "libkscreen",
+  "version": "4:6.7.5-0supralinux2",
+  "source_commit": "1a4012c956b47cc497ba5f975f8a54472d753929",
+  "artifact_id": 11567717263,
+  "artifact_sha256": "3e22288687ee2e255fc5164c8063add877dc822298acbcb6e76073d18078dc39",
+  "archive_path": ".artifacts/plasma-6.7.5/libkscreen-attempt2/sha256/3e22288687ee2e255fc5164c8063add877dc822298acbcb6e76073d18078dc39.zip",
+  "source_payload_verified": true,
+  "raw_file_digest_closure_verified": true,
+  "offline_restore_verified": true,
+  "requires_github_for_restore": false,
+  "candidate_binaries_buildinfo_changes": "complete; identity/architecture/source/version and checksums verified after offline restore",
+  "outcomes": {
+    "sbuild": "PASS",
+    "native_upstream_tests": {
+      "state": "PASS",
+      "passed": [
+        "appstreamtest",
+        "kscreen-testscreenconfig",
+        "kscreen-testconfigserializer",
+        "kscreen-testconfigmonitor",
+        "kscreen-testinprocess",
+        "kscreen-testbackendloader",
+        "kscreen-testlog",
+        "kscreen-testmodelistchange",
+        "kscreen-testedid"
+      ],
+      "failed": []
+    },
+    "lintian": "FAIL",
+    "installed_candidate_tests": "not-run",
+    "baseline_ubuntu_client": "PASS",
+    "infrastructure_probe": "PASS",
+    "infrastructure_cleanup": "PASS",
+    "evidence_validation": "PASS"
+  },
+  "files_sha256": {
+    "artifact-meta.json": "62c6be0bf406b551ccc2863eac4d57ebbd6462520cc532ea81fdc6f6148381e8",
+    "build-contract.json": "0337ef7dded301e555b9f00c40fc48a1027ed164e74686799f076c972485841b",
+    "cache-probe/result.json": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+    "cleanup.json": "2cd6e72e9c96550c50c27b57543d276cab85c19ad6f451d73f334d80e9b1fed8",
+    "host-evidence-sha256.txt": "7c7115c566751de9a2c769b8709b79b6f435250099b03f58dec280bfae807acc",
+    "host-result.json": "ca77631606cfe2a631ab7f3d959b6042c1596ff3f8109d7d627345215d76c144",
+    "host-workflow-run.json": "5e134842998e71f6f53a9c4a9c4a9e9a2a1aa817c257313d585f2a68947d145a",
+    "lintian.log": "5fbc9b37d786298ab99c45885b0622c2ad13f8acc36290dc458f5ae8a0fa9b17",
+    "observed-binary-symbols": "f275fd21df1c05bb0bf76df29dfb604744b481e00c93c8d0e91dfb8eccfb7edf",
+    "result.json": "f81eff923f56bb20099fad2569b7924ca5e344050a16810ea4ce4e23cab918f4",
+    "sbuild.log": "f33f1bbafdb8893f9cc6dabbff467d8dce3b7a69b08e895e1e22fc6f8b2cd7e7",
+    "ubuntu-baseline-preflight/result.json": "3ceda5ae4a4772fe6ccc02652c433b7ebc297e98764f45fb9d62a0b32f9d05ec",
+    "upstream-tests.json": "4bd42720088ef5e4762476e0ffabc79a3577733b36a31852153b3100791435c3",
+    "workflow-job.json": "e5af64413c3b534036b91e955eff803b0177bbc47e68fd06855f92ec31eb6333"
+  },
+  "offline_inspection": {
+    "node": "libkscreen",
+    "package_version": "4:6.7.5-0supralinux2",
+    "artifact_sha256": "3e22288687ee2e255fc5164c8063add877dc822298acbcb6e76073d18078dc39",
+    "payload_prefix": "packages/",
+    "source_package": "libkscreen",
+    "binaries": [
+      {
+        "package": "libkf6screen8-dbgsym",
+        "version": "4:6.7.5-0supralinux2",
+        "architecture": "amd64",
+        "file": "libkf6screen8-dbgsym_6.7.5-0supralinux2_amd64.ddeb"
+      },
+      {
+        "package": "libkf6screen8",
+        "version": "4:6.7.5-0supralinux2",
+        "architecture": "amd64",
+        "file": "libkf6screen8_6.7.5-0supralinux2_amd64.deb"
+      },
+      {
+        "package": "libkf6screendpms8-dbgsym",
+        "version": "4:6.7.5-0supralinux2",
+        "architecture": "amd64",
+        "file": "libkf6screendpms8-dbgsym_6.7.5-0supralinux2_amd64.ddeb"
+      },
+      {
+        "package": "libkf6screendpms8",
+        "version": "4:6.7.5-0supralinux2",
+        "architecture": "amd64",
+        "file": "libkf6screendpms8_6.7.5-0supralinux2_amd64.deb"
+      },
+      {
+        "package": "libkscreen-bin-dbgsym",
+        "version": "4:6.7.5-0supralinux2",
+        "architecture": "amd64",
+        "file": "libkscreen-bin-dbgsym_6.7.5-0supralinux2_amd64.ddeb"
+      },
+      {
+        "package": "libkscreen-bin",
+        "version": "4:6.7.5-0supralinux2",
+        "architecture": "amd64",
+        "file": "libkscreen-bin_6.7.5-0supralinux2_amd64.deb"
+      },
+      {
+        "package": "libkscreen-data",
+        "version": "4:6.7.5-0supralinux2",
+        "architecture": "all",
+        "file": "libkscreen-data_6.7.5-0supralinux2_all.deb"
+      },
+      {
+        "package": "libkscreen-dev",
+        "version": "4:6.7.5-0supralinux2",
+        "architecture": "amd64",
+        "file": "libkscreen-dev_6.7.5-0supralinux2_amd64.deb"
+      },
+      {
+        "package": "libkscreen-doc",
+        "version": "4:6.7.5-0supralinux2",
+        "architecture": "all",
+        "file": "libkscreen-doc_6.7.5-0supralinux2_all.deb"
+      }
+    ],
+    "source_payload_verified": true,
+    "buildinfo_verified": true,
+    "changes_payload_complete": true,
+    "missing_debug_packages": [],
+    "evidence_scope": "retained-build-evidence; not new authoritative certification"
+  },
+  "observed_binary": {
+    "package": "libkf6screen8",
+    "archive_member": "packages/libkf6screen8_6.7.5-0supralinux2_amd64.deb",
+    "deb_sha256": "958e55af891c2c4912f8c2786a6731051b251edbf2be749c505075d9e848cb15",
+    "metadata": {
+      "Package": "libkf6screen8",
+      "Source": "libkscreen",
+      "Version": "4:6.7.5-0supralinux2",
+      "Architecture": "amd64",
+      "Maintainer": "Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>",
+      "Installed-Size": "442",
+      "Depends": "libkscreen-data (= 4:6.7.5-0supralinux2), libc6 (>= 2.29), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libstdc++6 (>= 5), qt6-base-private-abi (= 6.10.2)",
+      "Recommends": "hwdata",
+      "Section": "libs",
+      "Priority": "optional",
+      "Multi-Arch": "same",
+      "Homepage": "https://invent.kde.org/plasma/libkscreen",
+      "Description": "library for screen management - shared library\nThe KDE multiple monitor support is trying be as smart as possible\nadapting the behavior of it to each use case making the configuration\nof monitors as simple as plugging them to your computer.\n.\nThis package contains the shared library",
+      "Original-Maintainer": "Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>"
+    },
+    "symbols_sha256": "f275fd21df1c05bb0bf76df29dfb604744b481e00c93c8d0e91dfb8eccfb7edf"
+  }
+}

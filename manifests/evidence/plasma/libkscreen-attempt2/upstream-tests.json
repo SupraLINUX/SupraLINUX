@@ -1,0 +1,25 @@
+{
+  "state": "PASS",
+  "expected_tests": [
+    "kscreen-testscreenconfig",
+    "kscreen-testconfigserializer",
+    "kscreen-testconfigmonitor",
+    "kscreen-testinprocess",
+    "kscreen-testbackendloader",
+    "kscreen-testlog",
+    "kscreen-testmodelistchange",
+    "kscreen-testedid"
+  ],
+  "executed_tests": [
+    "appstreamtest",
+    "kscreen-testscreenconfig",
+    "kscreen-testconfigserializer",
+    "kscreen-testconfigmonitor",
+    "kscreen-testinprocess",
+    "kscreen-testbackendloader",
+    "kscreen-testlog",
+    "kscreen-testmodelistchange",
+    "kscreen-testedid"
+  ],
+  "scope": "CTest suite executed during the clean package build"
+}

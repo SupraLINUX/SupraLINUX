@@ -1,0 +1,6 @@
+Retained technical copyright reference
+provider: debian
+reference_version: 6.28.0
+sha256: f543030704eff9bfb1d562853c9de98e6d6033e5f73eea674d80e74ff3d019ac
+source: retained Tier 1 packaging-tree artifact 10301938362
+build_use: runner materializes the hash-pinned retained debian/copyright into the ephemeral source package

@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-03",
+  "authority": "supralinux-ci-infrastructure",
+  "provider_platform": "ubuntu-resolute",
+  "plasma_version": "6.7.5",
+  "role": "plasma-level0-materialization-infrastructure-preflight",
+  "state": "PASS",
+  "execution_authorized": false,
+  "materialization_authorized": false,
+  "package_execution_authorized": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "mechanism": "apt-get-source-download-only-plus-dpkg-source-extract",
+  "source_index": {
+    "suites": [
+      "resolute",
+      "resolute-updates",
+      "resolute-security"
+    ],
+    "components": [
+      "main",
+      "universe"
+    ],
+    "signed_by": "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
+  },
+  "sample": {
+    "source_package": "kf6-kconfig",
+    "package_campaign_scope": "non-Plasma-Level0",
+    "expected_upstream_family": "KDE Frameworks",
+    "purpose": "certify source download, .dsc integrity path, dpkg-source extraction and Debian packaging-tree capture"
+  },
+  "pass_contract": {
+    "ubuntu_version_id": "26.04",
+    "source_reference_available": true,
+    "apt_get_source_download_only": "PASS",
+    "dsc_count": 1,
+    "dpkg_source_extract": "PASS",
+    "required_packaging_files": [
+      "debian/control",
+      "debian/rules",
+      "debian/changelog"
+    ],
+    "source_version_must_exist_in_apt_source_records": true,
+    "package_execution_started": false
+  },
+  "output": {
+    "evidence_dir": "evidence/kde-plasma-level0-materialization-preflight",
+    "artifact_name_template": "kde-plasma-level0-materialization-preflight-${commit}",
+    "retention_days": 90
+  },
+  "failure_classification": "INFRA_INVALID",
+  "next_gate_on_pass": "plasma-level0-materialization",
+  "next_gate_on_failure": "freeze-materialization-infrastructure-diagnostic",
+  "evidence": {
+    "workflow_run_id": 37161541259,
+    "workflow_job_id": 111316001972,
+    "workflow_head_sha": "56b7242cf830ec7b76085f4b9d04a849e12545a2",
+    "artifact_id": 11286979140,
+    "artifact_name": "kde-plasma-level0-materialization-preflight-56b7242cf830ec7b76085f4b9d04a849e12545a2",
+    "artifact_digest": "sha256:2ba6f74d31cff399c00d3682adae7f66a96962df1b0616e6626298c819ae2f8f",
+    "files": {
+      "apt-cache-showsrc.txt": "2b2d522bb3ad00d2789f35c5d0fea0dabc2e7099b5a771f92a4c255fca7b9ca4",
+      "apt-get-source.log": "4888865b92d3c8df0f822df0f75899f7cd4dde728b712139253280f0b81c4214",
+      "dpkg-source-extract.log": "8832e61c72a879e2fb5eeaf31e6a64f2ae011b86fb09639ef8cd5b3480c64b67",
+      "result.json": "cb8e6471aa1149e8335cde8d4d43c1d84916151187ecb11fda3b3d7f2cf9ed4f",
+      "sample-debian-tree.tar": "7ac5c9bd45fc7a59f4faa253b67eb74776752adf61f4b1620e47e88644a429a4"
+    },
+    "result": "PASS",
+    "materialized_source": "kf6-kconfig",
+    "materialized_version": "6.24.0-0ubuntu1",
+    "debian_tree_sha256": "a46f37651381db961a9abb69f0f042f66f08d56c15cc1c64635130a7bfbb3217",
+    "package_execution_started": false,
+    "consumes_package_attempt": false,
+    "canonical_package_state_effect": "none"
+  },
+  "closed": true
+}

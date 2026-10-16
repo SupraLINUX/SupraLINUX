@@ -1,0 +1,24 @@
+/var/tmp/supralinux-kde-cli-tools-baseline/build/cli-client: OK
+{
+  "state": "PASS",
+  "scope": "actual original installed CLI against private fixture",
+  "returncode": 0,
+  "client_result": {
+    "broadcast_signals": 1,
+    "commands": 10,
+    "hardware_access": false,
+    "inhibit_calls": 4,
+    "privilege_authorization": false,
+    "scope": "installed public CLI against owned files and D-Bus fixtures",
+    "state": "PASS"
+  }
+}
+{
+  "state": "PASS",
+  "owned_process_groups_absent": true,
+  "private_runtime_absent": true,
+  "errors": []
+}
+Reading package lists...
+Building dependency tree...
+Reading state information...

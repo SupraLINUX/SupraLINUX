@@ -1,0 +1,4 @@
+usr/include/KF6/KPlotting/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6Plotting/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6Plotting.so
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/plugins/designer/kplotting6widgets.so

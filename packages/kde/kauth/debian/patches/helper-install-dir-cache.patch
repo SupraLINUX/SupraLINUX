@@ -1,0 +1,17 @@
+Description: Make KAuth helper install directory packager-configurable
+Author: Debian Qt/KDE Maintainers and SupraLINUX Project
+Forwarded: not-needed
+Origin: Debian technical packaging reference
+Last-Update: 2026-09-20
+---
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -47,7 +47,7 @@
+ find_package(KF6CoreAddons ${KF_DEP_VERSION} REQUIRED)
+ 
+-set(KAUTH_HELPER_INSTALL_DIR "${KDE_INSTALL_LIBEXECDIR_KF}/kauth")
++set(KAUTH_HELPER_INSTALL_DIR "${KDE_INSTALL_LIBEXECDIR_KF}/kauth" CACHE STRING "KAuth helper install directory")
+ 
+ if(IS_ABSOLUTE ${KAUTH_HELPER_INSTALL_DIR})
+     set(KAUTH_HELPER_INSTALL_ABSOLUTE_DIR ${KAUTH_HELPER_INSTALL_DIR})
+ else()

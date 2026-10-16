@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Actual same Qt6.10.2 standard item model insert/reset/insert consistency control; no KDE candidate execution",
+  "exit_code": 0,
+  "compiler_command": [
+    "g++",
+    "-std=c++20",
+    "-fPIC",
+    "-I.work/ubuntu-client-sdk/extracted/usr/include/x86_64-linux-gnu/qt6",
+    "-I.work/ubuntu-client-sdk/extracted/usr/include/x86_64-linux-gnu/qt6/QtCore",
+    "-I.work/ubuntu-client-sdk/extracted/usr/include/x86_64-linux-gnu/qt6/QtGui",
+    "-I.work/ubuntu-client-sdk/extracted/usr/include/x86_64-linux-gnu/qt6/QtTest",
+    ".work/libksysguard-sensortree-original-sdk-review/qt-standard-model-control/standard-model.cpp",
+    "-o",
+    ".work/libksysguard-sensortree-original-sdk-review/qt-standard-model-control/standard-model",
+    "/usr/lib/x86_64-linux-gnu/libQt6Core.so.6",
+    "/usr/lib/x86_64-linux-gnu/libQt6Gui.so.6",
+    "/usr/lib/x86_64-linux-gnu/libQt6Test.so.6"
+  ],
+  "package_attempt_consumed": false,
+  "host_packages_installed": false
+}

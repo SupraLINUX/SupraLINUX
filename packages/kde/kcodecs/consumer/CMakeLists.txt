@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXKCodecsConsumer LANGUAGES CXX)
+find_package(KF6Codecs 6.30.0 REQUIRED CONFIG)
+add_executable(kcodecs-consumer main.cpp)
+target_link_libraries(kcodecs-consumer PRIVATE KF6::Codecs)

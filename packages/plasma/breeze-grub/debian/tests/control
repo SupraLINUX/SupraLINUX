@@ -1,0 +1,6 @@
+Tests: theme-resources
+Depends: @, python3
+
+Tests: ubuntu-upgrade
+Depends: @, python3, apt
+Restrictions: needs-root

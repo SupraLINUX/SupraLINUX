@@ -1,0 +1,5 @@
+usr/include/KF6/KGuiAddons/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6GuiAddons/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6GuiAddons.so
+usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig/KF6GuiAddons.pc
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/metatypes/qt6kf6guiaddons_metatypes.json

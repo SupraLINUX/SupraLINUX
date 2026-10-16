@@ -1,0 +1,3 @@
+Tests: ubuntu-abi-client, consumer
+Depends: @, apt, build-essential, cmake, pkgconf, libkscreen-dev, libkscreen-bin, qt6-base-dev, qt6-qpa-plugins, python3, dbus-daemon, libglib2.0-bin, xvfb
+Restrictions: needs-root, allow-stderr

@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "complete sealed host and operator observations with empty offline byte restore",
+  "archive_path": ".artifacts/host-network-safety/slirp-probe1/inputs.zip",
+  "archive_sha256": "83032a7d2e039fb19103855cd957391bc401a6bc83a9b181a8d9d95c8ab4058d",
+  "files": {
+    "host/domain.xml": {
+      "sha256": "56a9bbca1907202f3f1e8926fb643fe1c00ec8be71782bf9aa586d34f9496b21",
+      "size": 4695
+    },
+    "host/evidence-sha256.txt": {
+      "sha256": "951477efc4997dbb171841bf6f643838962ed8fc432e501ebc57a75041b1c3f0",
+      "size": 2052
+    },
+    "host/golden-provenance-admission.txt": {
+      "sha256": "12d001342dd6086dcd244c9e73fe36347cdad1438903498a2347016ee2a09708",
+      "size": 644
+    },
+    "host/guest-copy-out.txt": {
+      "sha256": "2268f68ef7ad3c792f915fed706feeab0d38f72ed8f99cc967b831bd2071acb6",
+      "size": 550
+    },
+    "host/guest-files/evidence/actions-runner.txt": {
+      "sha256": "be8b66c8dc461b18f0776e0ac389b1919f278188def7c56440dcc7c7ad04f0fe",
+      "size": 360
+    },
+    "host/guest-files/evidence/autopkgtest-build-resources.txt": {
+      "sha256": "89f36a5b34c441f0062b3ca49435f8fc5aecf244f4aab8a3ecc2eacd51f1e3f2",
+      "size": 526
+    },
+    "host/guest-files/evidence/base-image-seal.txt": {
+      "sha256": "5adeeb85b54e65e1f07d72f1ec87e724b3090de5abffd130e5cb3b925354d85b",
+      "size": 1265
+    },
+    "host/guest-files/evidence/golden-build-complete.txt": {
+      "sha256": "c351f918be2000999aeb72aa8d2e14b158cfbacd9422a231b062d87e082497d3",
+      "size": 136
+    },
+    "host/guest-files/evidence/golden-build-result.txt": {
+      "sha256": "fe621fc1d388f39882047067c761e2bfbfcda62bfd1854420813998e1b452a4a",
+      "size": 100
+    },
+    "host/guest-files/evidence/runner-guest-provisioning.txt": {
+      "sha256": "a8cda3a416f129a1154d4a7f4b9ab601cf92bbf6d7548ed488e8153f1e04ce26",
+      "size": 1401
+    },
+    "host/host-environment.txt": {
+      "sha256": "204e6b31ea59b52ce1778d86803463d72b4bb8bbf2310123353739dd9b72c09c",
+      "size": 2584
+    },
+    "host/host-result.json": {
+      "sha256": "99f430810f7d150e405bc8b8917c6d2504afb5e634a71206d54a61dbe6e5893e",
+      "size": 116
+    },
+    "host/libguestfs-runtime.txt": {
+      "sha256": "1acb36510cd445459b4e38623cb1d972d8e380bfb5888930aff207d8ccfaca35",
+      "size": 504
+    },
+    "host/network-admission.json": {
+      "sha256": "cb3899a08528dba37dc2b6179f81c459c6e0aa1e14ae4dc14e5bdd14ce5e678e",
+      "size": 322
+    },
+    "host/network-guest-limits.json": {
+      "sha256": "342532b7ced999b1be89870dbef0903587c2f63860ac8f2bfab5004561463410",
+      "size": 256
+    },
+    "host/network-guest-policy-execution.json": {
+      "sha256": "8c61cea64c710e328fdaf6b062e524d4d91746a704ba84b97a67cd344ce2fa9e",
+      "size": 27480
+    },
+    "host/network-live-domain.xml": {
+      "sha256": "91513afdf9cd8fb59f6985fcfd5aa58138bb31f6b871c705bcfb8b8762151841",
+      "size": 4698
+    },
+    "host/overlay-info-before-boot.json": {
+      "sha256": "99ad570f5236d3fdfcb3607d835827c24e1ed51bea6eff249bd78e49045b847b",
+      "size": 1359
+    },
+    "host/overlay-info.json": {
+      "sha256": "3f7c407a372339346319209e791d54008751ff069a6a0b76f6df49bece4656da",
+      "size": 1365
+    },
+    "host/overlay-sha256.txt": {
+      "sha256": "d740b0c299371642725a70418e429740a6a41887de1d52d02dd33642dbf4d7e3",
+      "size": 173
+    },
+    "host/qemu-cpu-policy.json": {
+      "sha256": "b60213e45f35d74af31f58e6bfa1751c4015da826d17aa86f3088ba3647205b4",
+      "size": 227
+    },
+    "host/workflow-baseline-ids.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "size": 3
+    },
+    "operator/cleanup.json": {
+      "sha256": "e27029e000c13fab9e11aee8c125a6f643a9a85a9cabe87a5042afc9eac67f73",
+      "size": 702
+    },
+    "operator/host-health.jsonl": {
+      "sha256": "62e73ca493759fca8cfbc872aec07d119c62b064ee49a40f6d8276f19ab5a5ee",
+      "size": 875
+    },
+    "operator/host.log": {
+      "sha256": "9bffd34d9ba01ad1a25e98d1fea5c4abc9adea6f422c0bd2792d411f82b9b2d3",
+      "size": 1712
+    }
+  },
+  "requires_github_for_restore": false,
+  "empty_offline_byte_restore_verified": true
+}

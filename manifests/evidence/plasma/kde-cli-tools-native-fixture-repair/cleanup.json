@@ -1,0 +1,13 @@
+{
+  "state": "PASS",
+  "checked_at": "2026-10-11T20:27:07.096362+00:00",
+  "vm_name": "supralinux-offline-diagnostic-20261011t202308z-1105308",
+  "vm_uuid": "13ae0a85-e500-4d26-99e1-5ae821568c19",
+  "direct_domain_absent": true,
+  "direct_uuid_absent": true,
+  "direct_state_dir_and_overlay_absent": true,
+  "no_github_runner_created": true,
+  "libvirt_networks_before_after": [],
+  "golden_preserved": true,
+  "exact_payload_iso_sha256": "b4191708929c9535dc99fe3cde3ae664ae67c3d8c6cc291e2ae53bb44558d8e1"
+}

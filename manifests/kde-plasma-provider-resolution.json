@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-02",
+  "plasma_version": "6.7.5",
+  "state": "PASS",
+  "execution_authorized": false,
+  "package_execution_authorized": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "input": {
+    "provider_audit_workflow_run_id": 37008092158,
+    "provider_audit_artifact_id": 11226253937,
+    "provider_audit_artifact_name": "kde-plasma-provider-audit-715ff744c019743822e5609773298a65888967b1",
+    "provider_audit_artifact_digest": "sha256:bfb58c38bbe7aa2a8fdff5ef61b672b71e1ebcda55cb88c1e2976515ae32835a",
+    "provider_inventory_sha256": "885bcf1da1521b5f3c78a7e252a81ee4a64b537eda1f9922bec6654bbe415b5c"
+  },
+  "policy": {
+    "ubuntu_role": "provider-and-technical-reference-not-desktop-authority",
+    "frameworks_provider": "supralinux-frameworks-6.30.0",
+    "qt_provider": "ubuntu-resolute-qt-6.10.2",
+    "use_ubuntu_source_build_depends_as_reference": true,
+    "use_apt_file_for_binary_provider_discovery": false,
+    "legacy_qt5_kf5_refs_are_findings_until_source_context_proves_active": true,
+    "unresolved_provider_is_planning_finding_not_package_fail": true,
+    "use_batched_ubuntu_source_build_depends": true
+  },
+  "workflow": ".github/workflows/kde-plasma-lane.yml",
+  "output": {
+    "result": "evidence/kde-plasma-provider-resolution/result.json",
+    "cmake": "evidence/kde-plasma-provider-resolution/cmake-resolution.json",
+    "pkg_config": "evidence/kde-plasma-provider-resolution/pkg-config-resolution.json",
+    "qml": "evidence/kde-plasma-provider-resolution/qml-resolution.json",
+    "ubuntu_sources": "evidence/kde-plasma-provider-resolution/ubuntu-source-reference.json"
+  },
+  "next_gate": "plasma-provider-resolution-review",
+  "recovery": {
+    "state": "PASS",
+    "mechanism": "batched-apt-cache-showsrc-plus-policy",
+    "evidence": {
+      "workflow_run_id": 37038135919,
+      "workflow_job_id": 110942082547,
+      "workflow_head_sha": "22c5e9f258ac41d1849685c92f9caa3b8b4095ba",
+      "artifact_id": 11240638791,
+      "artifact_name": "kde-plasma-provider-resolution-preflight-22c5e9f258ac41d1849685c92f9caa3b8b4095ba",
+      "artifact_digest": "sha256:21800febef732a07e2898bc5b905784536c94c2a9a7ac599110f37f4e3b84e31",
+      "result_json_sha256": "6bdc666ef3ab38b0657dd4e066f270cdda073ac1b3f9202941c92f613b834c46",
+      "sample_policy_sha256": "c9ccebe5a85b2c0d611d95ce841ce70f6c4e84f93af569c114ff9e47b14fa646",
+      "sample_sources_sha256": "408f4f0a1ab24775c28689d9c050155669a12e3de58b4084e0bfb2003b01b8ac",
+      "result": "PASS",
+      "mechanism": "batched-apt-cache-showsrc-plus-policy",
+      "source_sample_count": 12,
+      "available_source_references": 12,
+      "build_dep_package_count": 189,
+      "showsrc_seconds": 0.4,
+      "policy_seconds": 0.036,
+      "anchors": {
+        "qt6-base-dev": "6.10.2+dfsg-7",
+        "extra-cmake-modules": "6.24.0-0ubuntu1",
+        "libpipewire-0.3-dev": "1.6.2-1ubuntu1.2"
+      },
+      "package_execution_started": false,
+      "consumes_package_attempt": false,
+      "canonical_package_state_effect": "none"
+    },
+    "prior_infrastructure_hold": {
+      "consecutive_infra_invalid": 2,
+      "incidents": [
+        {
+          "sequence": 1,
+          "workflow_run_id": 37016533849,
+          "workflow_job_id": 110869185461,
+          "workflow_head_sha": "b3815a256688a9ce5d9d77f5bb871ab4802fdd44",
+          "result": "INFRA_INVALID",
+          "failure": "provider resolver timed out before evidence materialization",
+          "timeout_minutes": 25
+        },
+        {
+          "sequence": 2,
+          "workflow_run_id": 37023254784,
+          "workflow_job_id": 110892486112,
+          "workflow_head_sha": "aa07ace46b0b737e22015cdb4a91e222b93060e9",
+          "result": "INFRA_INVALID",
+          "failure": "batched giant-regex apt-file resolver timed out before evidence materialization",
+          "timeout_minutes": 20
+        }
+      ],
+      "prior_failed_preflight": {
+        "workflow_run_id": 37034707251,
+        "workflow_job_id": 110930343273,
+        "workflow_head_sha": "96162ce051527398c39b396dd91b83eeeda203cd",
+        "result": "FAIL",
+        "failure": "apt-file chunked preflight required ~150s for a small sample and failed Qt6Config anchor lookup",
+        "package_attempts_consumed": 0
+      },
+      "package_attempts_consumed": 0,
+      "status": "recovered"
+    }
+  },
+  "evidence": {
+    "result": "PASS",
+    "workflow_run_id": 37086119189,
+    "job_id": 111096931279,
+    "commit": "3c1371fbec26dd2c06fab9fe3364eefe9d29fcfc",
+    "artifact_id": 11260780398,
+    "artifact_name": "kde-plasma-provider-resolution-3c1371fbec26dd2c06fab9fe3364eefe9d29fcfc",
+    "artifact_digest": "sha256:aeabbadbb4ea5d5388cfe0aee4eb62e8ca3b79de839414b77abd000724aa7785",
+    "files": {
+      "cmake-resolution.json": "832a121efba8d13c054fdfecc0fbb0a359869629d505bc95dbe6d27a8069973f",
+      "node-resolution.json": "edb2e4fcd9b9b83888871ba48ff99618135788634e354f30a25785b60afbb20f",
+      "pkg-config-resolution.json": "b371753f15167d11d4188100daadd9329ec727ab305d8e65fb9dbef12d8c1ef0",
+      "qml-resolution.json": "fb8b0716c55e154078bc17539b368e8457a3d838ac5406256f37c1ff1dcb411e",
+      "result.json": "49e137d999886f447264aafe857c351c5aca84171069c986bcdf182876176a21",
+      "ubuntu-build-dep-providers.json": "23b49003f3750f0f821a60e80e20145130f2ccd60adc703d76aa4af0e3e90edb",
+      "ubuntu-source-reference.json": "9f222f4cf51a4e08739fba3902cd98cf7b04a7b4240581ae7b236d467014992d"
+    }
+  },
+  "result_summary": {
+    "ubuntu_source_references_available": 70,
+    "ubuntu_source_references_missing": 5,
+    "ubuntu_build_dep_packages": 282,
+    "ubuntu_build_dep_candidates_available": 275,
+    "ubuntu_build_dep_candidates_missing": 7,
+    "known_cmake_direct_decisions": 75,
+    "cmake_source_reference_reviews": 117,
+    "qml_direct_decisions": 12,
+    "review_required": true
+  }
+}

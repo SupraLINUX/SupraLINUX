@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Keep every upstream dbus-launch test in a private, reaped session.
+set -Eeuo pipefail
+state=$(mktemp -d)
+trap 'rm -rf "${state}"' EXIT
+for directory in runtime config data cache wrappers; do mkdir -m 0700 "${state}/${directory}"; done
+unset DISPLAY WAYLAND_DISPLAY DBUS_SESSION_BUS_ADDRESS SESSION_MANAGER
+export XDG_RUNTIME_DIR="${state}/runtime" XDG_CONFIG_HOME="${state}/config" XDG_DATA_HOME="${state}/data" XDG_CACHE_HOME="${state}/cache"
+export DBUS_SYSTEM_BUS_ADDRESS="unix:path=${state}/no-system-bus" QT_QPA_PLATFORM=offscreen KSCREEN_LOGGING=false
+mapfile -t launchers < <(find obj-* -type f -name kscreen_backend_launcher)
+[[ ${#launchers[@]} == 1 ]]
+launcher=$(realpath "${launchers[0]}")
+[[ -x "${launcher}" ]]
+mkdir -p "${state}/data/dbus-1/services"
+printf '[D-BUS Service]\nName=org.kde.KScreen\nExec=%s\n' "${launcher}" > "${state}/data/dbus-1/services/org.kde.kscreen.service"
+# Native plugins are emitted under the build's bin/kf6/kscreen directory.
+mapfile -t plugins < <(find obj-* -type f -path '*/bin/kf6/kscreen/KSC_Fake.so')
+[[ ${#plugins[@]} == 1 ]]
+export QT_PLUGIN_PATH="$(realpath "$(dirname "${plugins[0]}")/../..")"
+cat > "${state}/wrappers/dbus-launch" <<'SESSION'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+# Upstream invokes dbus-launch with the test executable and no launcher options.
+[[ $# -ge 1 && "$1" != --* ]]
+exec timeout --signal=TERM --kill-after=5s 180s dbus-run-session -- "$@"
+SESSION
+chmod +x "${state}/wrappers/dbus-launch"
+export PATH="${state}/wrappers:${PATH}"
+"$@"

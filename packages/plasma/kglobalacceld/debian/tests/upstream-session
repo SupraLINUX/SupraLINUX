@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Run upstream native tests serially: their test-mode config and bus names overlap.
+# This wrapper runs in the disposable clean sbuild account, not the host session.
+set -Eeuo pipefail
+state=$(mktemp -d)
+trap 'rm -rf "${state}"' EXIT
+python3 debian/tests/client/run-private.py native "$(command -v "$1")" "${state}/native" "${@:2}"

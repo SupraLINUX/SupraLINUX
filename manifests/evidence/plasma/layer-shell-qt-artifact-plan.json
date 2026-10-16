@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "layer-shell-qt",
+      "package_version": "6.7.5-0supralinux1",
+      "artifact_id": 11340127872,
+      "workflow_run_id": 37297325668,
+      "artifact_sha256": "d77e9c0f99362781a9d29593bccc33d3ec3e12e89f514db0210fec0af1197ae1",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

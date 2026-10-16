@@ -1,0 +1,916 @@
+{
+  "schema": 1,
+  "role": "reviewed-plasma-package-build",
+  "state": "execution-authorized",
+  "authorized_nodes": [
+    "breeze-plymouth"
+  ],
+  "package_execution_authorized": true,
+  "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
+  "scope": "Per-node clean builds, upstream tests, package/Ubuntu upgrade and ABI client checks on KVM; graphical desktop and final distro integration remain later gates",
+  "nodes": {
+    "breeze-grub": {
+      "state": "PASS",
+      "source_package": "breeze-grub",
+      "version": "6.7.5-0supralinux1",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/breeze-grub-6.7.5.tar.xz",
+      "upstream_sha256": "bd14716ae52d946e37833b3a02d259f5268683af8382c21230c1ce7d767f032a",
+      "signature_sha256": "b5e5f90143e535a500353377fba4ada01ab9f361d789ccd639b20e2776281e11",
+      "packaging_path": "packages/plasma/breeze-grub/debian",
+      "packaging_review": "PASS",
+      "packaging_reference_version": "6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "ed779c7d96f18fe3b51b997a7494f41784e122ea14eecb15031d5cee0671d30d",
+      "packaging_sha256": {
+        "changelog": "b7653fcb4f40145e17baa9ddd6b1089118e6b6d35639e63a3edeffd21656975c",
+        "control": "a09dfb6f67a6333bcb72b76b6d3889d3f25302b497a9219ef52d4c28ecb07af3",
+        "copyright": "1e1407283abcfc9440faf52f3adfa0cc9fbaab1dd47204819a803e738fd28250",
+        "docs": "3764ceaff06f3c6d3dcf7404d0f29ba3a2abb4a52c000481646112524ea1923c",
+        "grub-theme-breeze.lintian-overrides": "d91596bc33b62643f90479e4804690de0f8b62ce22c87b8c4bcbde1650586f6e",
+        "install": "6272fb736b4e56685a88ab2e11173a42a999926d7a4cd36eda304578ae1cbadb",
+        "rules": "021a77ca102a0ffe05cc05be87fdcab6b53aa3bcab9bb7750c4586f0c1f6f8fa",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/control": "c421633b5a83bb6215cb335ba1d7544561314d85641189c0a3415094d4f9815b",
+        "tests/theme-resources": "58f5d5f5aa0aa28d93820d3e25a9a63cb6fde78a30da6614fd36744e15096c89",
+        "tests/theme-resources.json": "c4a224aaa90ab0b13caff512c2e4027ff1579209e7ba1cb1375fe61bde669961",
+        "tests/ubuntu-upgrade": "42170aad88f572d95348eb92fdf69fe9285700b88452319c3fcda67e16261a09"
+      },
+      "binary_packages": {
+        "grub-theme-breeze": "amd64"
+      },
+      "ubuntu_baseline_package": "grub-theme-breeze",
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "INFRA_INVALID",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "INFRA_INVALID",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37230769694,
+          "workflow_job_id": 111519731444,
+          "source_commit": "cee200ca76b93af0a3a3d82db6714fa447f02c31",
+          "artifact_id": 11313542212,
+          "artifact_sha256": "aa360b543a6b28225eb712052bdb765f66c8b13e1a43fa448957870391cda064",
+          "result_path": "manifests/evidence/plasma/breeze-grub-attempt1/result.json",
+          "result_sha256": "9634dc07ba17030d3d5e680c637a4d8c2004dcf15121544a7a214f5f72e3a19c",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t200422z-2247488",
+          "host_evidence_manifest_sha256": "8f262cb4f8ce7a2c68f2fa8e44ed571250dfde60f4be873451094600920612b4",
+          "cause": "Sourcing /etc/os-release overwrote the shell VERSION variable; autopkgtest setup received the Ubuntu display version. Original result.version is preserved as invalid; package identity is independently verified in .dsc/.changes/.deb.",
+          "repair": "Use PACKAGE_VERSION for the frozen Debian candidate; rerun only this node on a fresh runner."
+        },
+        {
+          "attempt": 2,
+          "state": "FAIL",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "FAIL",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37231407471,
+          "workflow_job_id": 111521639273,
+          "source_commit": "ccef08a9160324da99e777f38609f17ff7b114f9",
+          "artifact_id": 11314331420,
+          "artifact_sha256": "193db467180e7d0cab09350606f2994478557b745d68782128ce1a7cb107cdf6",
+          "result_path": "manifests/evidence/plasma/breeze-grub-attempt2/result.json",
+          "result_sha256": "81b7070d7c854248cc8f4c789a1c86151905acacc01a2bea337f82da249fb5f7",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t201425z-2304486",
+          "host_evidence_manifest_sha256": "f8a2abb27bcfd5b2aec85461cba93b7041de9d394199e5fbeb6597638b7245d4",
+          "cause": "Strict byte comparison rejected PNG tIME timestamps normalized by dh_strip_nondeterminism. Every other PNG chunk, including IDAT, is unchanged.",
+          "repair": "Compare every PNG chunk except its validated tIME field; preserve exact byte hashes for other resources. Regression rejects changed pixels and invalid CRC."
+        },
+        {
+          "attempt": 3,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37232072978,
+          "workflow_job_id": 111523743421,
+          "source_commit": "abacd73d14e3c92580cf35bffd6e3ca139ecd5ab",
+          "artifact_id": 11314332562,
+          "artifact_sha256": "7dcaeed6314c999ab3a6da387a7460167ce556f85c30702cf897554e02aadacd",
+          "result_path": "manifests/evidence/plasma/breeze-grub-attempt3/result.json",
+          "result_sha256": "3d378ca5763ec673bd0e5102e4c2ee012113669d14a931044226aaf8c9c823dc",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t202457z-2364010",
+          "host_evidence_manifest_sha256": "49d7c2686da5699ca072d4dff3519537965c0d3aea6c6495cf85f072b7098e78"
+        }
+      ],
+      "review": {
+        "upstream_changes": "Official 6.7.5 signed resources; no upstream code patches.",
+        "packaging_changes": "Retain Ubuntu names, linux-any and theme paths; update owner/VCS, SPDX licenses and autopkgtests.",
+        "build_dependencies": "Only debhelper-compat (=13); no Qt or Frameworks dependency.",
+        "test_policy": "No upstream build tests exist for this resource-only source; non-superficial integrity/font/reference and Ubuntu upgrade tests added. PNG timestamps may be normalized by debhelper; every rendering/content chunk remains exact.",
+        "activation_policy": "Installs resources only; does not enable the theme or rewrite boot configuration."
+      },
+      "evidence": {
+        "workflow_run_id": 37232072978,
+        "workflow_job_id": 111523743421,
+        "source_commit": "abacd73d14e3c92580cf35bffd6e3ca139ecd5ab",
+        "artifact_id": 11314332562,
+        "artifact_sha256": "7dcaeed6314c999ab3a6da387a7460167ce556f85c30702cf897554e02aadacd",
+        "result_path": "manifests/evidence/plasma/breeze-grub-attempt3/result.json",
+        "result_sha256": "3d378ca5763ec673bd0e5102e4c2ee012113669d14a931044226aaf8c9c823dc",
+        "contract_path": "manifests/evidence/plasma/breeze-grub-attempt3/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t202457z-2364010",
+        "host_evidence_manifest_sha256": "49d7c2686da5699ca072d4dff3519537965c0d3aea6c6495cf85f072b7098e78",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/pass",
+          "archive_index_sha256": "2cdf9f4c7b520bcf4844b964ca986c637cdaa7d6cb70802a1c35655f2fbb70bf",
+          "plan_path": "manifests/evidence/plasma/breeze-grub-artifact-plan.json",
+          "plan_sha256": "25857d84be25a5f9b3814c2c7e059ff1f90497d23820bdc002c1e3b82fc652cd",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "unique_binary_package_count": 1,
+          "binary_payload_file_count": 2,
+          "duplicate_binary_role": "autopkgtest retains an additional identical testbed copy of the candidate .deb",
+          "off_host_backup_verified": false
+        }
+      },
+      "required_executable_files": [
+        "rules",
+        "tests/theme-resources",
+        "tests/ubuntu-upgrade"
+      ]
+    },
+    "ocean-sound-theme": {
+      "state": "PASS",
+      "source_package": "ocean-sound-theme",
+      "version": "6.7.5-0supralinux1",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/ocean-sound-theme-6.7.5.tar.xz",
+      "upstream_sha256": "452e5ab04f5e2d7cbf9357e4e12badf8493aefda437ba130eb38c9e511313b72",
+      "signature_sha256": "d0a03cc099de813d2092aacf3fc144be33dfa1e3d972cd03a5987890db96fe25",
+      "packaging_path": "packages/plasma/ocean-sound-theme/debian",
+      "packaging_review": "PASS",
+      "packaging_reference_version": "6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "bbeb64b22118f07e24c5b32d38a64467b3a4333c6beda0221c83c8ee0f56b1e6",
+      "packaging_sha256": {
+        "changelog": "95000eb7f5afdae6e45d6410682eae4df25ae8054c302da67435a98ae1980f97",
+        "control": "64b7d468fcd0a44d21a23147f9300d8a18d33ce3ee656ad97901da08a784ea2c",
+        "copyright": "de913492361bf2d6176f7852be9a0d8e0e0b0f288de51570d0f9ba01c424ee33",
+        "docs": "3764ceaff06f3c6d3dcf7404d0f29ba3a2abb4a52c000481646112524ea1923c",
+        "rules": "b1e51e6fb1f2819ea2db05590c5d668c59cd5a422cb2159cae04550d6470f21a",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/control": "ddb2ea626e74f784389db64b9a5868cd06623883bb83b504914683ac8966c262",
+        "tests/sound-resources": "dfb9f958d4264fb7a000c60a06809bc5b8c5f21babd2c85747116eaaee31aaad",
+        "tests/sound-resources.json": "a695510b9119fe99ae62d69e488a5530636ba98b35b212fbccc78da1c86089e0",
+        "tests/ubuntu-upgrade": "689b511687773020dc7112d52f408c45079f0d241dac1aac7110dd46c99bdcc1"
+      },
+      "binary_packages": {
+        "ocean-sound-theme": "all"
+      },
+      "ubuntu_baseline_package": "ocean-sound-theme",
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        }
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37242861863,
+          "workflow_job_id": 111554864187,
+          "source_commit": "d999e3f9cdf28bc52a50587b3fc157f4f8aa2ac9",
+          "artifact_id": 11317894456,
+          "artifact_sha256": "9243fe8efcf9a24b659ed3ec76954cca4263a08dd71e7613f12f20b57cddc2f2",
+          "result_path": "manifests/evidence/plasma/ocean-sound-theme-attempt1/result.json",
+          "result_sha256": "d1e571d882b87a7f0b53867a7c81dd0416b0ad48d17336ccdbc1c56c01879d88",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t230950z-3271155",
+          "host_evidence_manifest_sha256": "26503363018283586e274930cec1c0bb0f7b0432a97ea3f747402066d2664118"
+        }
+      ],
+      "review": {
+        "upstream_changes": "Signed official 6.7.5; no upstream code patches. All 64 regular resources and 14 sound aliases preserved.",
+        "packaging_changes": "Preserve source/binary name, Architecture all, Multi-Arch foreign and upstream CMake defaults; correct SPDX license ownership; pin retained ECM.",
+        "build_dependencies": "ECM 6.30.0-0supralinux3 supplied only through sbuild --extra-package, clean Ubuntu Qt 6.10 provider.",
+        "test_policy": "No upstream tests exist; substantive exact resource-set/hash checks, freedesktop theme metadata, decoding of every audio stream and Ubuntu APT upgrade.",
+        "activation_policy": "Installs sound theme resources; session selection and actual PipeWire playback remain integration gates."
+      },
+      "required_executable_files": [
+        "rules",
+        "tests/sound-resources",
+        "tests/ubuntu-upgrade"
+      ],
+      "evidence": {
+        "workflow_run_id": 37242861863,
+        "workflow_job_id": 111554864187,
+        "source_commit": "d999e3f9cdf28bc52a50587b3fc157f4f8aa2ac9",
+        "artifact_id": 11317894456,
+        "artifact_sha256": "9243fe8efcf9a24b659ed3ec76954cca4263a08dd71e7613f12f20b57cddc2f2",
+        "result_path": "manifests/evidence/plasma/ocean-sound-theme-attempt1/result.json",
+        "result_sha256": "d1e571d882b87a7f0b53867a7c81dd0416b0ad48d17336ccdbc1c56c01879d88",
+        "contract_path": "manifests/evidence/plasma/ocean-sound-theme-attempt1/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t230950z-3271155",
+        "host_evidence_manifest_sha256": "26503363018283586e274930cec1c0bb0f7b0432a97ea3f747402066d2664118",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/ocean-sound-theme-attempt1",
+          "archive_index_sha256": "f39e34f723a1024142e54a341a1186f678915bcc14c49c97687a80fb008724bb",
+          "plan_path": "manifests/evidence/plasma/ocean-sound-theme-artifact-plan.json",
+          "plan_sha256": "4ada823250e5d633195dda0377906c0d87d85017550f30ca2668b818f74cfe27",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 1,
+          "binary_payload_file_count": 1,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/ocean-sound-theme-attempt1/cache-probe-result.json",
+        "cache_probe_result_sha256": "6f7e5865703570b1575c929f582ac7f0459bfe881712ef16aa9968e303cc25b3"
+      }
+    },
+    "oxygen-sounds": {
+      "state": "PASS",
+      "source_package": "oxygen-sounds",
+      "version": "4:6.7.5-0supralinux1",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/oxygen-sounds-6.7.5.tar.xz",
+      "upstream_sha256": "0cc5b60004d8feb8b1de032cb5d3c056c98f62a8713589b90b471e5943e31ad9",
+      "signature_sha256": "e58b3c0fb5684e79d2029403fcce3b94cdc6f0a6d77d6c22b814b3a1bcbf8a9b",
+      "packaging_path": "packages/plasma/oxygen-sounds/debian",
+      "packaging_review": "PASS",
+      "packaging_reference_version": "4:6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "22980872c8123c3166ee823c4e32691de5b30f1c4a9a88b0fa56a7f94923c4d2",
+      "packaging_sha256": {
+        "changelog": "5fc52780175f59a22406ae5c86d66561edfdb7bb6ea7b43e66f2a89ac7139c2a",
+        "control": "087e3a52106457f138c83dd48bf6fcb0b6d90860a399e061241cea4cedf1cbee",
+        "copyright": "ddcca675f2105719054a3415a3087f7e1aba51991e74d8606de4e337ca4ee506",
+        "docs": "3764ceaff06f3c6d3dcf7404d0f29ba3a2abb4a52c000481646112524ea1923c",
+        "rules": "653c7f176cf22ccdfccc0bb58ae176df4a84a2798bb210994d34eb33682dd18f",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/control": "ddb2ea626e74f784389db64b9a5868cd06623883bb83b504914683ac8966c262",
+        "tests/sound-resources": "6f50d5af031136aa9f87bf04a56ef0a7c831ceee6fac9dcaf6f206970f506eda",
+        "tests/sound-resources.json": "8747345c716f51efa97dc5755947220199d834624fd4bf46839e33809d2a74a6",
+        "tests/ubuntu-upgrade": "a2c1e0801eecc016195de08da8a3214016123229c0018321d5744664f2788182"
+      },
+      "binary_packages": {
+        "oxygen-sounds": "all"
+      },
+      "ubuntu_baseline_package": "oxygen-sounds",
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        }
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "FAIL",
+          "sbuild_result": "not-run",
+          "lintian_result": "not-run",
+          "autopkgtest_result": "not-run",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37243994066,
+          "workflow_job_id": 111558140736,
+          "source_commit": "70212047c7a8a86e4662b8e34ecdae2cadea0f09",
+          "artifact_id": 11318731446,
+          "artifact_sha256": "835144360eadc11ecfc63a60a5976533c3cb5d414b4188e6afc08901622c29c9",
+          "result_path": "manifests/evidence/plasma/oxygen-sounds-attempt1/result.json",
+          "result_sha256": "e2ef7817dd52ece7eb4edba84187168766a5db32e320fc5d1f442bfbaf2fa261",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t232831z-3382094",
+          "host_evidence_manifest_sha256": "ac7d847c23b60304d97351cc33ac4090d0b412205556aee458117ec55c60bc5e",
+          "cause": "CMake selected KDEInstallDirs5 because Oxygen requests legacy ECM 5.102 and does not discover Qt itself. The valid sbuild failed at configure. Original sbuild_result=not-run is preserved as a runner-marker defect; the attempted build and configure failure are retained in sbuild.log.",
+          "repair": "Set QT_MAJOR_VERSION=6 explicitly alongside KF5_SUPPORT=ON; preserve all legacy sounds and test in a fresh runner. Mark sbuild_result=FAIL before invoking sbuild so a failed execution retains its proper marker."
+        },
+        {
+          "attempt": 2,
+          "state": "FAIL",
+          "sbuild_result": "PASS",
+          "lintian_result": "FAIL",
+          "autopkgtest_result": "not-run",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37244996285,
+          "workflow_job_id": 111561012084,
+          "source_commit": "d818c67d090601a1fe3edc68b56f4a957557ae21",
+          "artifact_id": 11319255058,
+          "artifact_sha256": "03a7cc6491b14dbcb1497ba392e5dc7672172f563400dd9a8608fc8852c7ef5b",
+          "result_path": "manifests/evidence/plasma/oxygen-sounds-attempt2/result.json",
+          "result_sha256": "b33eb44f8c130f19e5c41e485c96b799c12574a5a59c50e47b8d5c18726b8af6",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t234511z-3471625",
+          "host_evidence_manifest_sha256": "378c64871a7c2af168e33695669d039dac1570b3d3c1f3794ec50c321eae87dd",
+          "cause": "The Qt 6 configure repair passed sbuild. Lintian rejected embedding the full LGPL-3 text instead of referring to the Debian common license.",
+          "repair": "Use the standard LGPL-3 common-license reference while preserving the LGPL-3.0-or-later terms and all SPDX attributions; rerun the package checks and tests."
+        },
+        {
+          "attempt": 3,
+          "state": "INFRA_INVALID",
+          "source_commit": "4de0c25aac5051aa32da9ac8fb43874ae04986cc",
+          "package_attempt_consumed": true,
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "INFRA_INVALID",
+          "workflow_run_id": 37245539473,
+          "workflow_job_id": 111562584832,
+          "artifact_id": null,
+          "artifact_sha256": "0aa5ff943da88b15963980b3a2a72d4bb77b48a98668524f4b829374488cb68b",
+          "artifact_origin": "sealed-host-recovery",
+          "result_path": "manifests/evidence/plasma/oxygen-sounds-attempt3/observation.json",
+          "result_sha256": "4ba1779dd2dae9e83abdac48a056e734f54e2484ab21d44fb46c3e2448a85482",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t235426z-3523025",
+          "host_evidence_manifest_sha256": "9b7cb64358cd8304799f66012bd79691cd86bc631a62618bf48a8054ba72de2a",
+          "cause": "Host DNS resolution of api.github.com failed during active package monitoring. The controller exited and shut down the VM during autopkgtest testbed setup. sbuild and lintian passed; no test completed and no original guest result or Actions artifact was produced.",
+          "repair": "Retry read-only API transport after transient DNS/network/HTTP failures without repeating mutations. Certify recovery, permanent-error handling and a finite retry budget, then rerun Oxygen tests on a fresh KVM runner."
+        },
+        {
+          "attempt": 4,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37247818914,
+          "workflow_job_id": 111569110171,
+          "source_commit": "2cde3f11550e45fa149f10c3f174bba98d8a6850",
+          "artifact_id": 11319926950,
+          "artifact_sha256": "247f69c3d91df91fc1bc07e11533e048dd215d2493ff4a4b4ce8ced92ff75066",
+          "result_path": "manifests/evidence/plasma/oxygen-sounds-attempt4/result.json",
+          "result_sha256": "f953879eb1e254971464eb3ae2eb0de946f945b1f92c2205a63485b3a31a5e23",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t002909z-3714464",
+          "host_evidence_manifest_sha256": "9e436bdf51bd13711e0e77923fbe2b833e879963b8077a42e9e63c0d51bbc69c"
+        }
+      ],
+      "review": {
+        "upstream_changes": "Official signed 6.7.5 resources; no source patches. 115 installed resources including 63 aliases and all 50 legacy sound paths.",
+        "packaging_changes": "Preserve Ubuntu epoch 4, binary identity and Multi-Arch foreign. Use QT_MAJOR_VERSION=6 with KF5_SUPPORT=ON; both are required because Oxygen requests legacy ECM 5.102 without a Qt discovery call. Update SPDX attribution including the camera-shutter CC-BY-3.0 author. Use the Debian LGPL-3 common-license reference as required by lintian.",
+        "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3 through sbuild --extra-package; Ubuntu Qt 6.10. No implicit preinstallation.",
+        "test_policy": "No upstream test suite; verify exact dpkg-owned resources, byte hashes, alias targets, metadata and decoding of every current and legacy stream, plus Ubuntu APT upgrade.",
+        "activation_policy": "Install upstream sound resources only; session selection and PipeWire playback remain integration gates."
+      },
+      "required_executable_files": [
+        "rules",
+        "tests/sound-resources",
+        "tests/ubuntu-upgrade"
+      ],
+      "evidence": {
+        "workflow_run_id": 37247818914,
+        "workflow_job_id": 111569110171,
+        "source_commit": "2cde3f11550e45fa149f10c3f174bba98d8a6850",
+        "artifact_id": 11319926950,
+        "artifact_sha256": "247f69c3d91df91fc1bc07e11533e048dd215d2493ff4a4b4ce8ced92ff75066",
+        "result_path": "manifests/evidence/plasma/oxygen-sounds-attempt4/result.json",
+        "result_sha256": "f953879eb1e254971464eb3ae2eb0de946f945b1f92c2205a63485b3a31a5e23",
+        "contract_path": "manifests/evidence/plasma/oxygen-sounds-attempt4/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t002909z-3714464",
+        "host_evidence_manifest_sha256": "9e436bdf51bd13711e0e77923fbe2b833e879963b8077a42e9e63c0d51bbc69c",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt4",
+          "archive_index_sha256": "e316c7d85d19b73683f2c7401bdcc974c4206787054474d2a1d2a1cec6e59cfc",
+          "plan_path": "manifests/evidence/plasma/oxygen-sounds-artifact-plan.json",
+          "plan_sha256": "fd4f48d4b3ee93a521580a9ba9609eca7c2c4c6cc4244ab191eefb059531e79a",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 1,
+          "binary_payload_file_count": 1,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/oxygen-sounds-attempt4/cache-probe-result.json",
+        "cache_probe_result_sha256": "6f7e5865703570b1575c929f582ac7f0459bfe881712ef16aa9968e303cc25b3"
+      }
+    },
+    "kdecoration": {
+      "state": "PASS",
+      "source_package": "kdecoration",
+      "version": "4:6.7.5-0supralinux1",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/kdecoration-6.7.5.tar.xz",
+      "upstream_sha256": "7ff1fe2854ca08a21a1ba47f1b0c97d12ea24f1db618631319cba4023ca53d86",
+      "signature_sha256": "c9b1094ab02591ab2bc1ed1f4ac58094822df909799489456a8ca30c6be9f277",
+      "packaging_path": "packages/plasma/kdecoration/debian",
+      "packaging_review": "PASS",
+      "packaging_reference_version": "4:6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "f9e595e0f53f84f75ebc465fdbce0c4409d359c42ba3f0d47b0cb25781ca662e",
+      "packaging_sha256": {
+        "changelog": "f9d92a654b271c785d1a36e47599bc91d303bca170be4945ff52e5dc91e7fc54",
+        "control": "16df22657e2f00bc0d860209b3039d28e956ab90d203bcc74e87925b03308873",
+        "copyright": "275c462bd125912f0cf34e3ebdecd784b274395a3e0b16cf1129dbae6734fcbb",
+        "docs": "3764ceaff06f3c6d3dcf7404d0f29ba3a2abb4a52c000481646112524ea1923c",
+        "libkdecorations3-6.install": "0c41b019ad3173de75e35ed78c7fadc72c828269566bd470a58b1ec72f3bf350",
+        "libkdecorations3-6.symbols": "a05b742570686e43172f8cc650d3d26096cd5fd54da29836c0f96d354a5ef021",
+        "libkdecorations3-dev.install": "02635448ea12f58caafd1e575528588fa30d72cc9df1c62b5e71b72d1fd5d3f1",
+        "libkdecorations3private2.install": "368ced092c710a18fdfaa29e8525fa179e8a5cb5d2333651f9833dd8a23be751",
+        "libkdecorations3private2.symbols": "1fcd160c9f0b5930686d95a837650346eeb2f789ae0ee178f225f31acde085f6",
+        "rules": "4970c797099117336988087e5689a22446db030eb34818b35c696fdc63e6406c",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/baseline-setup": "d86c66d59dc02b02d625554d2c7f86765e25e857e20fd3dd00c01f6382772470",
+        "tests/consumer": "715f8048546d0043766a5b4cd9db6565846095ebe4f262d216480c8f9228d2c8",
+        "tests/control": "6f1a3e0bafcd1cc191442c02980b55cd795fd4444fd22b1cc0b203455df2f8ae",
+        "tests/ubuntu-abi-client": "8bd572ee34598b062dbc4b9783a9e034121e5c43335c5c186a4b3f4ab4178085"
+      },
+      "binary_packages": {
+        "libkdecorations3-6": "amd64",
+        "libkdecorations3-dev": "amd64",
+        "libkdecorations3private2": "amd64"
+      },
+      "ubuntu_baseline_package": "libkdecorations3-dev",
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        },
+        "ki18n": {
+          "source_package": "kf6-ki18n",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "libkf6i18n-data",
+              "architecture": "all",
+              "sha256": "3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a"
+            },
+            {
+              "package": "libkf6i18n-dev",
+              "architecture": "amd64",
+              "sha256": "a9485f9fdb874cc6a61064a824d66567306122c39677ccf92f8adb3b0db14870"
+            },
+            {
+              "package": "libkf6i18n6",
+              "architecture": "amd64",
+              "sha256": "fa60bd16ffb35ae90eb1ab324386961d973a9b0dd31a4947351d3afc652b6e58"
+            },
+            {
+              "package": "libkf6i18nlocaledata6",
+              "architecture": "amd64",
+              "sha256": "19a6b680b3f85fe04901d53fa6193dd773d72fc02c9337387776ec779f5c285a"
+            },
+            {
+              "package": "libkf6i18nqml6",
+              "architecture": "amd64",
+              "sha256": "0297393117c5b4b0fd284d32aa9040c5afbe91aa0da73b2f83d1b181a812f91c"
+            },
+            {
+              "package": "qml6-module-org-kde-i18n-localedata",
+              "architecture": "amd64",
+              "sha256": "147a716c4794a50a63160928228afd25c406a02af2b3d00637bed289027f6001"
+            },
+            {
+              "package": "qml6-module-org-kde-ki18n",
+              "architecture": "amd64",
+              "sha256": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
+            }
+          ]
+        }
+      },
+      "baseline_setup_script": "tests/baseline-setup",
+      "upstream_tests": [
+        "kdecoration3-decorationButtonTest",
+        "kdecoration3-decorationTest",
+        "kdecoration3-decorationShadowTest"
+      ],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "INFRA_INVALID",
+          "original_state": "FAIL",
+          "sbuild_result": "PASS",
+          "lintian_result": "not-run",
+          "autopkgtest_result": "not-run",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37248553978,
+          "workflow_job_id": 111571268069,
+          "source_commit": "01b3a5749040944cac883efcef6fa245a59ed2c2",
+          "artifact_id": 11320590331,
+          "artifact_sha256": "f5986679e2e77b0dacbd81c72b05b22f5d2fa253d768e5c64404ac8285acd521",
+          "result_path": "manifests/evidence/plasma/kdecoration-attempt1/result.json",
+          "result_sha256": "84c70e450cb1b6104efd434214c67118a2976a98e669e5c816b7513c3f1504ab",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t004046z-3788246",
+          "host_evidence_manifest_sha256": "cdd627c2132a4690ac7a5e1a57b92d55490ab0590788b806227b87aa0ace7efc",
+          "cause": "sbuild and all four actual CTest entries passed. The verifier incorrectly required exactly three entries and rejected the additional appstreamtest generated by ECM. The original runner FAIL is retained; this is a verification-gate false negative, not a failing upstream test.",
+          "repair": "Require all declared upstream tests and account for every executed CTest entry, including ECM additions. Capture binaries/buildinfo/changes before post-build verification so a future validation failure retains those outputs. Retry only KDecoration in a fresh KVM runner.",
+          "verification_diagnosis_path": "manifests/evidence/plasma/kdecoration-attempt1/verification-diagnosis.json",
+          "verification_diagnosis_sha256": "dc1b7220031ece998eb3539fc770d0a8bb1b4068e742feef4a7eb7c3488388e8"
+        },
+        {
+          "attempt": 2,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37249338022,
+          "workflow_job_id": 111573553470,
+          "source_commit": "136d128a2f4e828edca70837421a61cd917cf263",
+          "artifact_id": 11320766520,
+          "artifact_sha256": "fbb4bc690ea851fc44af28e6ce2f9ad661ccfa2cd5320b61722bbd10798f1e50",
+          "result_path": "manifests/evidence/plasma/kdecoration-attempt2/result.json",
+          "result_sha256": "acb4add4a834624da812d4828e91eca85bf4c8ab98928834d64e88e8350e5f98",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t005308z-3863161",
+          "host_evidence_manifest_sha256": "b070db0bee2be78fc7e5ec63fd95281f528562816f97561451dc86e9960eac5f",
+          "hidden_file_export_recovery": {
+            "proof_path": "manifests/evidence/plasma/kdecoration-attempt2/export-recovery.json",
+            "proof_sha256": "341e5678a2925e76d7f79d6dd37d85c2ba6001d028fa97abfdb9b9a63b4dcfe1"
+          }
+        }
+      ],
+      "review": {
+        "upstream_changes": "Signed official stable 6.7.5; upstream source unchanged. Requires Qt >=6.10 and Frameworks >=6.26, satisfied by Ubuntu Qt and selected Frameworks.",
+        "packaging_changes": "Preserve epoch 4, three binary names, Multi-Arch same, historical Breaks/Replaces and public/private SONAMEs. Retain Ubuntu symbol lists to reject missing exports. Refresh SPDX attribution and enable upstream CTest.",
+        "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3 and KI18n 6.30.0-0supralinux1 including its required binary closure; Ubuntu Qt 6.10.",
+        "test_policy": "Require all three upstream CTest tests, then run the unchanged client compiled and exercised against Ubuntu libraries before the candidate upgrade; compile a second client against candidate headers, inspect SONAMEs and check APT.",
+        "activation_policy": "Libraries only. Real KWin decoration plugins and a graphical Wayland desktop remain integration gates."
+      },
+      "required_executable_files": [
+        "rules",
+        "tests/baseline-setup",
+        "tests/ubuntu-abi-client",
+        "tests/consumer"
+      ],
+      "evidence": {
+        "workflow_run_id": 37249338022,
+        "workflow_job_id": 111573553470,
+        "source_commit": "136d128a2f4e828edca70837421a61cd917cf263",
+        "artifact_id": 11320766520,
+        "artifact_sha256": "fbb4bc690ea851fc44af28e6ce2f9ad661ccfa2cd5320b61722bbd10798f1e50",
+        "result_path": "manifests/evidence/plasma/kdecoration-attempt2/result.json",
+        "result_sha256": "acb4add4a834624da812d4828e91eca85bf4c8ab98928834d64e88e8350e5f98",
+        "contract_path": "manifests/evidence/plasma/kdecoration-attempt2/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t005308z-3863161",
+        "host_evidence_manifest_sha256": "b070db0bee2be78fc7e5ec63fd95281f528562816f97561451dc86e9960eac5f",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/kdecoration-attempt2",
+          "archive_index_sha256": "d7929a8cacdecf3f581c191903c926bf761e13114b66a7d648c42c3e4ce055a4",
+          "plan_path": "manifests/evidence/plasma/kdecoration-artifact-plan.json",
+          "plan_sha256": "945cf48f93bf671594906f9bc91792e36a14fef51f439522b099676c48b88d1d",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 5,
+          "binary_payload_file_count": 5,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/kdecoration-attempt2/cache-probe-result.json",
+        "cache_probe_result_sha256": "6f7e5865703570b1575c929f582ac7f0459bfe881712ef16aa9968e303cc25b3",
+        "upstream_tests_path": "manifests/evidence/plasma/kdecoration-attempt2/upstream-tests.json",
+        "upstream_tests_sha256": "3ed689464faf3708b9a6ff2de98b6c9313f3680589e5bcd226f232535a2091bf",
+        "hidden_file_export_recovery": {
+          "proof_path": "manifests/evidence/plasma/kdecoration-attempt2/export-recovery.json",
+          "proof_sha256": "341e5678a2925e76d7f79d6dd37d85c2ba6001d028fa97abfdb9b9a63b4dcfe1"
+        }
+      }
+    },
+    "plasma-workspace-wallpapers": {
+      "state": "PASS",
+      "source_package": "plasma-workspace-wallpapers",
+      "version": "4:6.7.5-0supralinux1",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/plasma-workspace-wallpapers-6.7.5.tar.xz",
+      "upstream_sha256": "c481ac4b937a2b1b080c3273e0557cd0c9d57b644156b941902483fd8e1646b5",
+      "signature_sha256": "ac9c0a591fe0335c6641dc70ffbd4e85e69d97ff0ba24abc076859130819cd35",
+      "packaging_path": "packages/plasma/plasma-workspace-wallpapers/debian",
+      "packaging_review": "PASS",
+      "packaging_reference_version": "4:6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "c18fbfaa4f9b1575e4053ecb98906bedcf45f13e62510ccbbd3e5fef53b6d324",
+      "packaging_sha256": {
+        "changelog": "41690e8d02328622e9afb64b6af24fd29a6e62a2c79d9881536db7b61fb180bb",
+        "control": "db3645438dbf08bfc9dccb3502c1e9643833b8dd130da8a2c63dd8587592807d",
+        "copyright": "55b5ad7d07ac6c7f3a73a57643719088db1be691160b71022aa079458d247ea4",
+        "docs": "68e5edf8b0f0e49d6af75cff04d4b2239837e439454f5fcc4e020ab526d78706",
+        "rules": "984e7b1a2f04a3e441c83360260be9e627f5ac293f877051ac7e78a6350b3035",
+        "salsa/extra_repository.list": "412646a06d733ca403c3175d36f1d1e734baaa8a76bb8e5176a0d0fb4bda7d45",
+        "salsa/qt-kde-team.debian.net.asc": "2b218b250b8929ad7055afe891bd29288228cfb6efac0e4ed638d9db8d3c4e77",
+        "salsa-ci.yml": "04779f76232c171e1b0094a8bf323543669e75a3131a1d706b8c6f61ec7c2ab0",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/control": "2790b1ae643213bd070ab5ee35d16e92f6b9970cb3be3f3861027626705c9ac5",
+        "tests/ubuntu-upgrade": "7a906bf47618eab9bf18f728600ebad94eeed63763098f2966d938428158138a",
+        "tests/wallpaper-resources": "5eb4e6d2e3cc131a6e8feb786b2a54a215e43995b792577e0f5e3ca1e0aeda18",
+        "tests/wallpaper-resources.json": "712e245cedcb3291845e7d343fdf8520a000c27f28842ad361d54f6ce2fe15d4",
+        "upstream/metadata": "b9cd50e03f006b2c1ae4dd3a5f4b5292bc3846f4f27afece83c4d88d5016fb39",
+        "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+      },
+      "binary_packages": {
+        "plasma-workspace-wallpapers": "all"
+      },
+      "ubuntu_baseline_package": "plasma-workspace-wallpapers",
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        }
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "FAIL",
+          "original_state": "FAIL",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "FAIL",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37251368483,
+          "workflow_job_id": 111579504420,
+          "source_commit": "48d80bfc8edb578478099966567a24de5f428db0",
+          "artifact_id": 11321430631,
+          "artifact_sha256": "84873fd0da2b2da6c7b307bdeedea1b5b0f36e6dd7e0660aa1b12a62581112b1",
+          "result_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt1/result.json",
+          "result_sha256": "92961447754368eccf75f7a18f2a6c6889b177f6e2be138af32eab6b13e7535a",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t012339z-4043731",
+          "host_evidence_manifest_sha256": "bf421181954c514c81c61cb0d14d39b10e33950270c43d0f6c16e35154db908a",
+          "cause": "Resource tests compared ImageMagick PNG date:create/date:modify bytes strictly. Debian normalized those two valid timestamp fields; IDAT, EXIF and every other chunk of the rejected Shell screenshot are unchanged.",
+          "repair": "Validate CRC and timestamp syntax; normalize only date:create/date:modify values while preserving keys/order and every other PNG chunk. Regression rejects changed pixels, author metadata, malformed dates and CRC corruption."
+        },
+        {
+          "attempt": 2,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37252562053,
+          "workflow_job_id": 111583017355,
+          "source_commit": "369f3d3cf172292afd1c443773f9d1499ac61968",
+          "artifact_id": null,
+          "artifact_sha256": "40496080f8db226c36d626143585ae69bf8ca30c96420c4fb84d60a4b41149e0",
+          "result_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/result.json",
+          "result_sha256": "2125762052bd4c5a6d8f52cec91e150871568126f17f99362daf40984bec0be7",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t014201z-4156714",
+          "host_evidence_manifest_sha256": "e65ccc74679f0b7a86b18285381dd744b2895a774114aa0d9ff39ed35c918d0b",
+          "rootfs_admission_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/rootfs-admission.json",
+          "rootfs_admission_sha256": "1426e2e8ffbf5708327eef2011e1b88f12eec0f70d9c290f079c71bbdc644b30",
+          "artifact_origin": "sealed-host-package-export",
+          "actions_export_complete": false,
+          "workflow_job_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/workflow-job.json",
+          "workflow_job_sha256": "90686e13a4ec973a4c599899055776de914d6d4c59af47451fc614be12be7e14",
+          "host_result_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/host-result.json",
+          "host_result_sha256": "a063869772729927c315dfba58660b9a219dd7ba2629eb12e5cee4c954d9eecb"
+        }
+      ],
+      "required_executable_files": [
+        "rules",
+        "tests/wallpaper-resources",
+        "tests/ubuntu-upgrade"
+      ],
+      "review": {
+        "upstream_changes": "Signed official 6.7.5; all 37 wallpaper sets and 288 resources, including 143 safe image aliases. No source modifications.",
+        "packaging_changes": "Preserve Ubuntu epoch 4, binary name and Architecture all. Correct per-wallpaper authors/licenses from upstream metadata; preserve root and Debian references. Use explicit Qt 6 for legacy ECM setup and declare the Qt provider.",
+        "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3 through explicit sbuild input; qt6-base-dev from Ubuntu 6.10.",
+        "test_policy": "No upstream tests. Exact dpkg-owned resource coverage, safe aliases, metadata and decode of 108 unique images. PNG CRCs and all chunks remain exact except valid tIME and date:create/date:modify timestamp values normalized by Debian; regression rejects pixel/author changes and malformed metadata. Original Attempt 1 FAIL preserved; real installed payload passed the repaired local verifier. KVM rerun required.",
+        "activation_policy": "Installs the complete additional wallpaper collection; default wallpaper remains part of Breeze and session integration.",
+        "rootfs_policy": "Admit immutable bare milestone buildd base by digest, Ubuntu identity and absence of Frameworks/Qt SDK. Replace only APT sources with all three signed Ubuntu suites; sbuild updates/upgrades every disposable build. Infrastructure ECM/Qt consumer must pass before a package Attempt."
+      },
+      "sbuild_rootfs_policy": {
+        "kind": "immutable-bare-milestone",
+        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+        "suites": [
+          "resolute",
+          "resolute-updates",
+          "resolute-security"
+        ]
+      },
+      "evidence": {
+        "workflow_run_id": 37252562053,
+        "workflow_job_id": 111583017355,
+        "source_commit": "369f3d3cf172292afd1c443773f9d1499ac61968",
+        "artifact_id": null,
+        "artifact_sha256": "40496080f8db226c36d626143585ae69bf8ca30c96420c4fb84d60a4b41149e0",
+        "result_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/result.json",
+        "result_sha256": "2125762052bd4c5a6d8f52cec91e150871568126f17f99362daf40984bec0be7",
+        "contract_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t014201z-4156714",
+        "host_evidence_manifest_sha256": "e65ccc74679f0b7a86b18285381dd744b2895a774114aa0d9ff39ed35c918d0b",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/plasma-workspace-wallpapers-attempt2",
+          "archive_index_sha256": "182468206b6d9532afdc7669e9e3a52f6d3091152a90bd3790bc39b8fd3bd319",
+          "plan_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-artifact-plan.json",
+          "plan_sha256": "6c2455750147027b3eae8274b17efe776b1502419b90e6e83e6019b0e4d0c71a",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 1,
+          "binary_payload_file_count": 1,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/cache-probe-result.json",
+        "cache_probe_result_sha256": "6f7e5865703570b1575c929f582ac7f0459bfe881712ef16aa9968e303cc25b3",
+        "rootfs_admission_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/rootfs-admission.json",
+        "rootfs_admission_sha256": "1426e2e8ffbf5708327eef2011e1b88f12eec0f70d9c290f079c71bbdc644b30",
+        "artifact_origin": "sealed-host-package-export",
+        "actions_export_complete": false,
+        "workflow_job_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/workflow-job.json",
+        "workflow_job_sha256": "90686e13a4ec973a4c599899055776de914d6d4c59af47451fc614be12be7e14",
+        "host_result_path": "manifests/evidence/plasma/plasma-workspace-wallpapers-attempt2/host-result.json",
+        "host_result_sha256": "a063869772729927c315dfba58660b9a219dd7ba2629eb12e5cee4c954d9eecb"
+      }
+    },
+    "breeze-plymouth": {
+      "state": "build-pending",
+      "source_package": "breeze-plymouth",
+      "version": "6.7.5-0supralinux1",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/breeze-plymouth-6.7.5.tar.xz",
+      "upstream_sha256": "9cb05ef4fed5ac19bc35f5c4b18ec425e499fae47d52d344821fbf38474c44a0",
+      "signature_sha256": "d0c1476e5a08ff68d9731d17efb0b9067ef6a2a20145ff6be7e0c42efb5037ee",
+      "packaging_path": "packages/plasma/breeze-plymouth/debian",
+      "packaging_review": "PASS",
+      "packaging_reference_version": "6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "03544dddd9b3162e4eb928285954bb55ff8cb91ea50b807d303e6616e413bdac",
+      "packaging_sha256": {
+        "changelog": "034a644df025c9d727d2a1055e05b65571e7138138ed295126c49de6aa82daa3",
+        "control": "988b38d0a207e6b6ef47675b659f7505d36bc3d4186b58ccb060db3191f3e89d",
+        "copyright": "4d21673d60970f7a87f38df487e0cca0f0ddfe6c9b5132bd15ab3700069b7581",
+        "plymouth-theme-breeze.README.Debian": "8ec6ac96096ded54d61b1b0470c78f87b4ae8567f1083ab10aad6a98e63a8f17",
+        "plymouth-theme-breeze.postinst": "37be748136cfc3ddeedbae53d1e0189b40a49a6fa4de64c395ac03a5585f0bae",
+        "plymouth-theme-breeze.prerm": "027c85fac438efe9fce639bf0c3c1615f9b8a6e388ee30e91ff85eb1b06a8c37",
+        "rules": "b8f29b81b0ba7dd9f5e69c72e124297ae2428afa941b7a8166d2c41c65630056",
+        "salsa/extra_repository.list": "412646a06d733ca403c3175d36f1d1e734baaa8a76bb8e5176a0d0fb4bda7d45",
+        "salsa/qt-kde-team.debian.net.asc": "2b218b250b8929ad7055afe891bd29288228cfb6efac0e4ed638d9db8d3c4e77",
+        "salsa-ci.yml": "04779f76232c171e1b0094a8bf323543669e75a3131a1d706b8c6f61ec7c2ab0",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/baseline-setup": "f01ac5aa9d360a385947e2b940d842da516dbb17ca3d93b01d09370814b5bb6f",
+        "tests/consumer": "afa2aa862fd4a5d73a065c0f891c3b05411ae7c8afa0b71998e3b6ee40cbba6e",
+        "tests/control": "d6bca161afef8a699343025369773a38c47881ecb7a0427a094c014003929003",
+        "tests/theme-resources": "8e93a193f5a6d10fc5dfa46db501a1c9f728015de752847a81649f2ecf320440",
+        "tests/theme-resources.json": "c7427c741ce2fde230f164db2152e5dd34cba1c9a4d64edb7eda0500a3edbf27",
+        "tests/ubuntu-abi-client": "34210657a09a4116d3e252f8921876a50f31e31e436f04601f1ed9cab5cc4c3f",
+        "upstream/metadata": "e229fed32275ea8cda6b7fb3329059bf85aa5943babcb1606867e72bd32456f3",
+        "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+      },
+      "binary_packages": {
+        "plymouth-theme-breeze": "amd64"
+      },
+      "ubuntu_baseline_package": "plymouth-theme-breeze",
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        }
+      },
+      "sbuild_rootfs_policy": {
+        "kind": "immutable-bare-milestone",
+        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+        "suites": [
+          "resolute",
+          "resolute-updates",
+          "resolute-security"
+        ]
+      },
+      "attempts": [],
+      "baseline_setup_script": "tests/baseline-setup",
+      "required_executable_files": [
+        "rules",
+        "tests/baseline-setup",
+        "tests/ubuntu-abi-client",
+        "tests/consumer",
+        "tests/theme-resources"
+      ],
+      "review": {
+        "upstream_changes": "Signed official stable 6.7.5, no upstream code patches. Text plugin uses Ubuntu Plymouth headers and libraries; graphical theme uses the Ubuntu script/label-pango runtime.",
+        "packaging_changes": "Preserve Ubuntu name, architecture, hardening and maintainer scripts. Configure SupraLINUX title through supported upstream CMake options. Correct SPDX-specific license stanzas and declare fonts-noto-core/plymouth-label. Keep correct upstream plugin/theme install directories.",
+        "build_dependencies": "Exact retained ECM 6.30.0-0supralinux3; all C/Plymouth SDK/providers from Ubuntu. No Qt provider replacement. Immutable bare buildd admission with explicit current Ubuntu suites/update/distupgrade.",
+        "test_policy": "No automated upstream suite. Host resource fixture passed: 89 exact resources, 84 decoded PNGs, metadata and both color-depth spinner branches. Ubuntu SDK client compiled syntax checked; real baseline and unchanged binary post-upgrade execution in boot/shutdown/updates modes, prompt/progress/lifecycle without display views plus newly compiled consumer remain KVM gates. Normalize only validated PNG time/date fields, retaining pixel/other metadata identity; the source fixture passes this policy.",
+        "activation_policy": "Theme package installs plugin/resources; daemon/display rendering, initramfs theme selection and real BIOS/UEFI boot remain distro integration gates."
+      }
+    }
+  },
+  "retained_attempt_archives": [
+    {
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/attempt1",
+      "archive_index_sha256": "045d2261e730c850046919242b9dce7ccdd43fb0cbf69cf5d4e30b0b7c8abada"
+    },
+    {
+      "attempt": 2,
+      "archive_root": ".artifacts/plasma-6.7.5/attempt2",
+      "archive_index_sha256": "6530429108fc3a9586affd131b14e96da6bf67495ac054c3b36bdb28dd85b3fc"
+    },
+    {
+      "attempt": 3,
+      "archive_root": ".artifacts/plasma-6.7.5/pass",
+      "archive_index_sha256": "2cdf9f4c7b520bcf4844b964ca986c637cdaa7d6cb70802a1c35655f2fbb70bf"
+    },
+    {
+      "node": "ocean-sound-theme",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/ocean-sound-theme-attempt1",
+      "archive_index_sha256": "f39e34f723a1024142e54a341a1186f678915bcc14c49c97687a80fb008724bb"
+    },
+    {
+      "node": "oxygen-sounds",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt1",
+      "archive_index_sha256": "723700b0000effa8dcd4a23b99ea9bf4138b1e45290892a4ac46ff440d08e57f"
+    },
+    {
+      "node": "oxygen-sounds",
+      "attempt": 2,
+      "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt2",
+      "archive_index_sha256": "46b9bfc04c84389be3a8bfc11250a16e8d6ff20de3b1a4f793f115d9ac2249eb"
+    },
+    {
+      "node": "oxygen-sounds",
+      "attempt": 3,
+      "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt3",
+      "archive_index_sha256": "bea81b15331ec2f897c479619d927b1477b01349efd6aaf7f3851334f37c6cba"
+    },
+    {
+      "node": "oxygen-sounds",
+      "attempt": 4,
+      "archive_root": ".artifacts/plasma-6.7.5/oxygen-sounds-attempt4",
+      "archive_index_sha256": "e316c7d85d19b73683f2c7401bdcc974c4206787054474d2a1d2a1cec6e59cfc"
+    },
+    {
+      "node": "kdecoration",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/kdecoration-attempt1",
+      "archive_index_sha256": "b7f5ca6551b6b828acffd418c9d3b0928e484ce650518b238494f5b58c047e3c"
+    },
+    {
+      "node": "kdecoration",
+      "attempt": 2,
+      "archive_root": ".artifacts/plasma-6.7.5/kdecoration-attempt2",
+      "archive_index_sha256": "d7929a8cacdecf3f581c191903c926bf761e13114b66a7d648c42c3e4ce055a4"
+    },
+    {
+      "node": "plasma-workspace-wallpapers",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/plasma-workspace-wallpapers-attempt1",
+      "archive_index_sha256": "8d737b931693347825610d2f4adad082ccfd7b0736f3065ddb0972504b000284"
+    },
+    {
+      "node": "plasma-workspace-wallpapers",
+      "attempt": 2,
+      "archive_root": ".artifacts/plasma-6.7.5/plasma-workspace-wallpapers-attempt2",
+      "archive_index_sha256": "182468206b6d9532afdc7669e9e3a52f6d3091152a90bd3790bc39b8fd3bd319"
+    }
+  ],
+  "execution_checkpoint": "frameworks-6.30-pass",
+  "infrastructure_incidents": [
+    {
+      "state": "INFRA_INVALID",
+      "kind": "milestone-backing-image-access",
+      "source_commit": "c6c364a52bb7ec37eb601660bff1cea8c99c2a24",
+      "stage": "outer-vm-creation",
+      "package_execution_started": false,
+      "consumes_package_attempt": false,
+      "workflow_run_id": null,
+      "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t225829z-3209890",
+      "host_evidence_manifest_sha256": "fcb8300b03be0f4d76217d47d00a4b317b17b7fe9bb86ffaff151cd8ca2cf0fa",
+      "result_path": "manifests/evidence/plasma/infrastructure/milestone-backing-access-20261004/host-result.json",
+      "result_sha256": "b10859b707c6c6f2fb773ef000f38171a300f3f8a0633f7f7dc13001100e3c01",
+      "cause": "Milestone parent directory mode 0750 did not permit the libvirt QEMU identity to traverse it. No guest, workflow or package execution started.",
+      "repair": "Grant only libvirt-qemu read/traverse ACL on the dedicated milestone directory. Check POSIX access ACLs before creating an overlay; certify cache transport with the synthetic ECM/Qt consumer before Ocean."
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "result": {
+    "state": "PASS",
+    "status": 200,
+    "bytes": 10370
+  },
+  "seconds": 2.3325832600000354,
+  "before": [
+    {
+      "parent": "ffff:",
+      "protocol": "all",
+      "pref": 1,
+      "kind": "matchall",
+      "chain": 0
+    },
+    {
+      "parent": "ffff:",
+      "protocol": "all",
+      "pref": 1,
+      "kind": "matchall",
+      "chain": 0,
+      "options": {
+        "handle": 1,
+        "not_in_hw": true,
+        "rule_hit": 749,
+        "actions": [
+          {
+            "order": 1,
+            "kind": "police",
+            "index": 1,
+            "control_action": {
+              "type": "drop"
+            },
+            "overhead": 0,
+            "ref": 1,
+            "bind": 1,
+            "installed": 480,
+            "last_used": 4,
+            "first_used": 479,
+            "stats": {
+              "bytes": 1173926,
+              "packets": 1111,
+              "drops": 117,
+              "overlimits": 117,
+              "requeues": 0,
+              "backlog": 0,
+              "qlen": 0
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "after": [
+    {
+      "parent": "ffff:",
+      "protocol": "all",
+      "pref": 1,
+      "kind": "matchall",
+      "chain": 0
+    },
+    {
+      "parent": "ffff:",
+      "protocol": "all",
+      "pref": 1,
+      "kind": "matchall",
+      "chain": 0,
+      "options": {
+        "handle": 1,
+        "not_in_hw": true,
+        "rule_hit": 771,
+        "actions": [
+          {
+            "order": 1,
+            "kind": "police",
+            "index": 1,
+            "control_action": {
+              "type": "drop"
+            },
+            "overhead": 0,
+            "ref": 1,
+            "bind": 1,
+            "installed": 483,
+            "first_used": 482,
+            "stats": {
+              "bytes": 1203099,
+              "packets": 1142,
+              "drops": 120,
+              "overlimits": 120,
+              "requeues": 0,
+              "backlog": 0,
+              "qlen": 0
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

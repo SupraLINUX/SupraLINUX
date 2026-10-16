@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+"""Run the original Ubuntu SDK client with the updated candidate plugin."""
+import os
+import shutil
+import subprocess
+from pathlib import Path
+
+base = Path('/var/tmp/supralinux-plymouth-baseline')
+candidate = '6.7.5-0supralinux1'
+baseline = (base/'ubuntu-theme-version').read_text().strip()
+subprocess.run(['dpkg','--compare-versions',candidate,'gt',baseline],check=True)
+assert subprocess.check_output(['dpkg-query','-W','-f=${Version}','plymouth-theme-breeze'],text=True).strip() == candidate
+assert subprocess.check_output(['dpkg-query','-W','-f=${Version}','libplymouth5'],text=True).strip() == (base/'ubuntu-runtime-version').read_text().strip()
+subprocess.run(['sha256sum','--check','--strict',str(base/'binary-sha256.txt')],check=True)
+plugin = Path(subprocess.check_output(['pkg-config','--variable=pluginsdir','ply-splash-core'],text=True).strip())/'breeze-text.so'
+themes = Path(subprocess.check_output(['pkg-config','--variable=themesdir','ply-splash-core'],text=True).strip())
+assert 'ply_boot_splash_plugin_get_interface' in subprocess.check_output(['nm','-D','--defined-only',str(plugin)],text=True)
+assert 'not found' not in subprocess.check_output(['ldd',str(plugin)],text=True)
+output = subprocess.check_output([str(base/'ubuntu-plymouth-client'),str(plugin),str(themes/'breeze-text/breeze-text.plymouth')],text=True)
+assert 'Plymouth text theme title: SupraLINUX' in output and output.rstrip().endswith('PASS')
+print(output,end='')
+subprocess.run(['apt-get','check'],check=True)
+shutil.copytree(base,Path(os.environ['AUTOPKGTEST_ARTIFACTS'])/'ubuntu-compiled-client',dirs_exist_ok=True)
+print(f'Unchanged Ubuntu {baseline} Plymouth client after SupraLINUX {candidate} upgrade: PASS')

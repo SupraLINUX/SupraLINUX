@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+"""Check dpkg-owned themed resources and both graphical color-depth branches."""
+import configparser
+import datetime
+import hashlib
+import json
+import re
+import struct
+import subprocess
+import zlib
+from pathlib import Path
+
+
+def resource_hash(payload, name):
+    if not name.endswith(".png"):
+        return hashlib.sha256(payload).hexdigest()
+    # dh_strip_nondeterminism rewrites tIME to SOURCE_DATE_EPOCH. Preserve
+    # exact identity of every other chunk, including compressed pixel data.
+    assert payload[:8] == b"\x89PNG\r\n\x1a\n", f"Invalid PNG: {name}"
+    normalized = bytearray(payload[:8])
+    offset = 8
+    tags = []
+    while offset < len(payload):
+        assert offset + 12 <= len(payload), f"Truncated PNG: {name}"
+        size, tag = struct.unpack(">I4s", payload[offset:offset + 8])
+        end = offset + 12 + size
+        assert end <= len(payload), f"Truncated PNG chunk: {name}"
+        data = payload[offset + 8:end - 4]
+        crc = struct.unpack(">I", payload[end - 4:end])[0]
+        assert zlib.crc32(tag + data) & 0xffffffff == crc, f"Invalid PNG CRC: {name}"
+        if tag == b"tIME":
+            assert size == 7, f"Invalid PNG timestamp: {name}"
+            datetime.datetime(*struct.unpack(">H5B", data))
+        elif tag == b'tEXt' and data.split(b'\0',1)[0] in {b'date:create',b'date:modify'}:
+            key, timestamp = data.split(b'\0',1)
+            assert re.fullmatch(rb'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})',timestamp), f'Invalid PNG date text: {name}'
+            assert datetime.datetime.fromisoformat(timestamp.decode()).tzinfo is not None, name
+            # Debian normalizes ImageMagick's two date fields as well as tIME.
+            # Keep the key, occurrence/order and every other text/EXIF chunk.
+            normalized.extend(tag+b'\0'+key+b'\0<validated-timestamp>')
+        else:
+            normalized.extend(payload[offset:end])
+        tags.append(tag)
+        offset = end
+    assert tags[0] == b"IHDR" and tags[-1] == b"IEND" and tags.count(b"tIME") <= 1, name
+    return hashlib.sha256(normalized).hexdigest()
+
+
+def verify(root,contract,owned):
+    actual = {str(Path(p).relative_to(root)) for p in owned if Path(p).is_relative_to(root) and Path(p).is_file()}
+    assert actual == set(contract['resources']),f'Theme resource coverage changed: {actual ^ set(contract["resources"])}'
+    for name,digest in contract['resources'].items():
+        path = root/name
+        assert not path.is_symlink() and resource_hash(path.read_bytes(),name) == digest,name
+        if name.endswith('.png'):
+            subprocess.run(['ffmpeg','-v','error','-xerror','-nostdin','-i',str(path),'-frames:v','1','-f','null','-'],check=True)
+    graphics = configparser.ConfigParser();graphics.read(root/'breeze/breeze.plymouth')
+    text = configparser.ConfigParser();text.read(root/'breeze-text/breeze-text.plymouth')
+    assert graphics['Plymouth Theme']['ModuleName'] == 'script'
+    assert Path(graphics['script']['ImageDir']).resolve() == (root/'breeze').resolve()
+    assert Path(graphics['script']['ScriptFile']).resolve() == (root/'breeze/breeze.script').resolve()
+    assert text['Plymouth Theme']['ModuleName'] == 'breeze-text'
+    assert text['breeze-text']['title'].strip() == 'SupraLINUX'
+    script = (root/'breeze/breeze.script').read_text()
+    assert 'global.title.text = "SupraLINUX ";' in script
+    assert not re.search(r'@[A-Za-z_]+@',script)
+    for prefix in ['images','images/16bit']:
+        for name in ['plasma.logo.png','text-input.png']:
+            assert (root/'breeze'/prefix/name).is_file()
+        for angle in range(0,360,10):
+            assert (root/'breeze'/prefix/'spinner'/f'spinner{angle}.png').is_file()
+    print(f'Plymouth resources, title, metadata, two color-depth asset branches and {sum(n.endswith(".png") for n in actual)} decoded images: PASS')
+
+
+if __name__ == '__main__':
+    root = Path(subprocess.check_output(['pkg-config','--variable=themesdir','ply-splash-core'],text=True).strip())
+    contract = json.loads(Path(__file__).with_suffix('.json').read_text())
+    verify(root,contract,subprocess.check_output(['dpkg-query','-L','plymouth-theme-breeze'],text=True).splitlines())
+    plugin_dir = Path(subprocess.check_output(['pkg-config','--variable=pluginsdir','ply-splash-core'],text=True).strip())
+    for name in ['breeze-text.so','script.so','label-pango.so']:
+        assert (plugin_dir/name).is_file(),f'Missing runtime module: {name}'
+    family = subprocess.check_output(['fc-match','--format=%{family}','Noto Sans'],text=True)
+    assert 'Noto Sans' in family,f'Missing declared Noto Sans font: {family}'

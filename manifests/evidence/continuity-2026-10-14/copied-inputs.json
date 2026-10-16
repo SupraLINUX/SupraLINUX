@@ -1,0 +1,355 @@
+{
+  "schema": 1,
+  "canonical_effect": "none; review proposals only",
+  "scope": "Exact selected local review inputs copied to repository paths; original embedded .work/.artifacts references are historical local provenance, not cloud paths",
+  "files": {
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/README.source": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/README.source",
+      "sha256": "1bccafc6b583d1beaa5bec35168163cdd94a27dd2dfdac8d33322276de02f585"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/changelog": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/changelog",
+      "sha256": "1a764360a69131b51dfedc1a92a3686b7bc599decb5af825e50d0dba18a48f1a"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/control": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/control",
+      "sha256": "c53f92b93a59299c3673f654745c64d3510d488c9f723a04d2beab9ea1e1176d"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/copyright": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/copyright",
+      "sha256": "bfaa65402e461578ae4039133329e38a62511ab5f3403a60b4e8c282789de978"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/kglobalacceld.install": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/kglobalacceld.install",
+      "sha256": "df89033a59cf2f76edec0738d92f6f5206b9a2904f40155a1171cbfef87860d4"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/libkglobalacceld-dev.install": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/libkglobalacceld-dev.install",
+      "sha256": "76e3c7fbb3743bd83869ddf7726049a438067f1dc2d05d2059e54297aef9cac3"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/libkglobalacceld-dev.links": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/libkglobalacceld-dev.links",
+      "sha256": "e85c737283b7c0785a17b33672eea9b60d829366e23f0fd08289dd7231c3132f"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/libkglobalacceld0.install": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/libkglobalacceld0.install",
+      "sha256": "42cafac276e3dcc6763f66b86339aa7f5a99a2004cd376945a4c540a3948aab1"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/libkglobalacceld0.symbols": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/libkglobalacceld0.symbols",
+      "sha256": "aeea617441c0b545deb9626e33bee88e275426307d102815801f63927b2ab13d"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/rules": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/rules",
+      "sha256": "46b648dd0987b7d871dccc3caf908cdf324674a251facc5eeced7cb402230a5e"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/salsa-ci.yml": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/salsa-ci.yml",
+      "sha256": "64bfb6be33af05cd116d8bee786f95e7b2aaa9faa54e90333151a7a05ef03058"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/source/format": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/source/format",
+      "sha256": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/tests/baseline-setup": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/tests/baseline-setup",
+      "sha256": "83023131f1b679e56c16052f7735d923d13d2d9cb7f2f9204fb45e47801f064e"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/tests/client/CMakeLists.txt": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/tests/client/CMakeLists.txt",
+      "sha256": "201505220a0cb84fb7060f5dc39f555c75dc28eecf134d37774e8d57fc7b4d9b"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/tests/client/library.cpp": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/tests/client/library.cpp",
+      "sha256": "01ccf06d2127094e8eeea1af84ce2bfbc172d0cc7dd05f120c206c6b45b6a2d3"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/tests/client/main.cpp": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/tests/client/main.cpp",
+      "sha256": "4b850a1e2d8b10d3f8b46c72117c1a5b4511e9c112aeaa27f4e70e397bf7c60c"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/tests/client/run-private.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/tests/client/run-private.py",
+      "sha256": "e92c1a7e5dfc8bd6c3b17f435226cf036a7767351617fe611874fb64954133b0"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/tests/client/ubuntu-runtime-consumer-versions": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/tests/client/ubuntu-runtime-consumer-versions",
+      "sha256": "3b43993df715b49d5c2b3081ee39fbd343c5f4a8288e1b4ce7014e24e300739b"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/tests/client/ubuntu-runtime-consumers.sha256": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/tests/client/ubuntu-runtime-consumers.sha256",
+      "sha256": "7381705b1566f6c58c58f5f8147442cd59fd7f57ee7f81d2baf3f2196be5be7b"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/tests/consumer": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/tests/consumer",
+      "sha256": "5cfd1f36d145295b35655d8feb1eb8fd264e1c552134475710612ada9732c718"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/tests/control": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/tests/control",
+      "sha256": "4690e54294115e2c37d7031ad708178d035905e726595454b6e7fa7e38cfc68a"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/tests/ubuntu-abi-client": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/tests/ubuntu-abi-client",
+      "sha256": "77be6521ecae3bf58554e613c9630506279de311eab2d65dc29fc12b47ff6f02"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/tests/upstream-session": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/tests/upstream-session",
+      "sha256": "d0e37f948f417742f50d5d2c0da9fe9b0548e5135ea3123744ace956fa567595"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/upstream/metadata": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/upstream/metadata",
+      "sha256": "008e982500654a516549b956e8bf9d72a38acee5cc7c0fcd376f9082b8dd052c"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/upstream/signing-key.asc": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/upstream/signing-key.asc",
+      "sha256": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian/watch": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/proposed-debian/watch",
+      "sha256": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/review.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/symbol-floor/review.json",
+      "sha256": "2ec276ad086bbd0fe348ec924b9eeee719f2c3a91ffb99776bb637be30b3bdb8"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/generated.symbols": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/symbol-floor/generated.symbols",
+      "sha256": "11c445c70c53ae1963d77f8b608d599bd14acc00d41e0dd3f0a1ab9e2ed99c92"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/strict-symbols.log": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/symbol-floor/strict-symbols.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/strict-symbols-cwd-invalid.log": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/symbol-floor/strict-symbols-cwd-invalid.log",
+      "sha256": "a40b35e1b4fe6bba19f4ab222067f811904e2517161a2876705abff3a509da23"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/direct-cleanup-followup.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/direct-cleanup-followup.json",
+      "sha256": "a42108a9e87ca52f93bf399ac858c7b59bfebfd3ae2a1d135b2c15877a768424"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/exact-original-kwin-pins.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/exact-original-kwin-pins.json",
+      "sha256": "70fb1e8d3cb95dab929d6e7c2cd28f1143629bbae963bfd18239e6ee7e9641ee"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original-daemon-public-and-private-cleanup.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original-daemon-public-and-private-cleanup.json",
+      "sha256": "84d50385199ff21349e6f81e5b9e4f0fdc826567d62db85005ed8b4304f18cee"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original-daemon-public-and-private-host.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original-daemon-public-and-private-host.json",
+      "sha256": "863369fad79b55ae55683f76bba39290cbdfd94a1f54ee2d88226f5f88d107a9"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original-daemon-public-and-private-result.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original-daemon-public-and-private-result.json",
+      "sha256": "127df5673705ae0c5eaa96e77e42df028554fc4377743c3ab44d8765fdd25366"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original-failed-result.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original-failed-result.json",
+      "sha256": "412d99be6df9b9c6799d3bef7f0138870557b7e794b300dc9e1d624366dcbfc8"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original-hold.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original-hold.json",
+      "sha256": "f84984b1b629881d0ab82794121ececa20e389fb9fd2647f0545d391f99d6191"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original-import-review.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original-import-review.json",
+      "sha256": "9b61c6b17cf523568e4e09e25fc288382759d03acb262134b607f2d4359aebe2"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original-kwin-wayland-cleanup.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original-kwin-wayland-cleanup.json",
+      "sha256": "bf2e04191e7831844436b8ea660e755a38d54222dca9c859ec892dfe20447cba"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original-kwin-wayland-host.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original-kwin-wayland-host.json",
+      "sha256": "e625de7748893a77dcf04932db728e6d39c54120123f883e87eb39a189499b82"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original-kwin-wayland-result.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original-kwin-wayland-result.json",
+      "sha256": "0bd8a80514b2b85dcf117fd6ef85341e5ae11cdb97d1da391f5827d4aaa37af9"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original-kwin-x11-cleanup.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original-kwin-x11-cleanup.json",
+      "sha256": "dd33a71526722dc75eec11b4403e3c483111035d738156b5804081454edb1024"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original-kwin-x11-host.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original-kwin-x11-host.json",
+      "sha256": "c84136f4269e6c01d9f14c4d4a9689a18ba0aff5a943988a16451d79ee53e339"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original-kwin-x11-result.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original-kwin-x11-result.json",
+      "sha256": "9b49c4c9ce5c50601ae21dc8ebf6ab77262a4bf7bf701418d06e46f6eb55d5fc"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/original.symbols": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/original.symbols",
+      "sha256": "95576a3407afb4fd9840b2f4701dadefc25640d8a5f98e2d123e964631656f1d"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/review.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/review.json",
+      "sha256": "ad56ee01067753a302ae930f157a5e462e96b5564aa42ffac034088bbda62d87"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/reviewed.symbols": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/reviewed.symbols",
+      "sha256": "aeea617441c0b545deb9626e33bee88e275426307d102815801f63927b2ab13d"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/signed-source-consumer-review.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/signed-source-consumer-review.json",
+      "sha256": "3e9bb45648e5b6d6207862d98ea3f0495040d9d8f03d28076fac250e6a5a326a"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/strict-generated.symbols": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/strict-generated.symbols",
+      "sha256": "11c445c70c53ae1963d77f8b608d599bd14acc00d41e0dd3f0a1ab9e2ed99c92"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/strict-private-negative.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/strict-private-negative.json",
+      "sha256": "fb9d8395bb8dc781ba5c9c9aeef6b74b4fa07b03577e1720e9a6d615ccef037f"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/strict-private-wrapper-cleanup.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/strict-private-wrapper-cleanup.json",
+      "sha256": "b1e463b482d1639c66598b6fb3d9ddb6fdd8c5773486e4e15e708d22d5f18f0d"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/strict-private-wrapper-host.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/strict-private-wrapper-host.json",
+      "sha256": "e476ff1b88ae8a99ee040d1b517243dff43027f46711bf60cc271f39de893ee9"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/strict-private-wrapper-result.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/strict-private-wrapper-result.json",
+      "sha256": "f45e7c2e622997f813c31b5dffb6da7a9ea12eb7a1c600cf3b195ab888e9f6e3"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/strict-symbols.log": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/strict-symbols.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".work/kglobalacceld-scoped-reentry-review-20261012/symbol-floor-review.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/reentry-review/symbol-floor-review.json",
+      "sha256": "2ec276ad086bbd0fe348ec924b9eeee719f2c3a91ffb99776bb637be30b3bdb8"
+    },
+    ".work/libksysguard-upstream-correction-followup-20261011/reset-merge-requests.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/libksysguard/upstream-review/reset-merge-requests.json",
+      "sha256": "d7ce95d3c1fa4c2a6a9dcf2e0ae2367dfaafc42dc7b1e0f6a1782aa71aa1a480"
+    },
+    ".work/libksysguard-upstream-correction-followup-20261011/review.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/libksysguard/upstream-review/review.json",
+      "sha256": "04d6dc456fa2680a8e825e8b5c2c7486c87f3269210a0dbfa99eab5ea2cae975"
+    },
+    ".work/libksysguard-upstream-correction-followup-20261011/sensor-merge-requests.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/libksysguard/upstream-review/sensor-merge-requests.json",
+      "sha256": "60d7b9b90f1e4784c40b6f37d896d2de12c88731782ae63d4d53423c5077dd43"
+    },
+    ".work/libksysguard-upstream-correction-followup-20261011/stable-model-commits.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/libksysguard/upstream-review/stable-model-commits.json",
+      "sha256": "561b8de7da14817ee9c43df71fc117d5cd9ee4728418f9806c08d3a20332e4de"
+    },
+    ".work/libksysguard-upstream-correction-followup-20261011/stable-model.cpp": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/libksysguard/upstream-review/stable-model.cpp",
+      "sha256": "85bfbdb0e8624af1f901de3d8e726f85201c848047b8fa1df077fd03bfce3d9d"
+    },
+    ".work/kgamma-packaging-review-20261011/review.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kgamma/source-review.json",
+      "sha256": "8a6f760a039cd29ff4dd4b0062d0f87ce591e332e23b62b7573d1e996911fb0c"
+    },
+    ".work/kde-cli-tools-attempt3-operator-sources/download-github-artifact.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/host-operators/download-github-artifact.py",
+      "sha256": "80d9e26c85a8e5964081a94c171128c1b201320f07f53d90380686425ff8c59b"
+    },
+    ".work/kde-cli-tools-attempt3-operator-sources/enrich-new-input-proof.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/host-operators/enrich-new-input-proof.py",
+      "sha256": "dcc6f9e7676488711f595a0a38770cac9ad7498a35e02dbfaa7b7dde15d00b77"
+    },
+    ".work/kde-cli-tools-attempt3-operator-sources/index.json": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/host-operators/index.json",
+      "sha256": "91e59413894d95ca99a9ef828870db60d63673db29466f8a8637f6d68a858e45"
+    },
+    ".work/kde-cli-tools-attempt3-operator-sources/observe-owned-physical-gateway.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/host-operators/observe-owned-physical-gateway.py",
+      "sha256": "96b2c750787cdadf92d5fc8a4caa67bfb9158c03eef99ae121ccb86aa438cc59"
+    },
+    ".work/kde-cli-tools-attempt3-operator-sources/read-owned-kvm-progress.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/host-operators/read-owned-kvm-progress.py",
+      "sha256": "18792dd56c655df5a8bff3a5457f0b0f6765488ee9afa3e88825649c0571d585"
+    },
+    ".work/kde-cli-tools-attempt3-operator-sources/retain-local-review-inputs.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/host-operators/retain-local-review-inputs.py",
+      "sha256": "3203ad78d10b3de0d5f909cd3cd44ae9e6b125dbf3952a77e37915d860c426a3"
+    },
+    ".work/kde-cli-tools-attempt3-operator-sources/run-watched-kvm-gate.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/host-operators/run-watched-kvm-gate.py",
+      "sha256": "59f17027400e735d033f49ac77e85d22dfcba7aa64646cb6f70d751a53649ecb"
+    },
+    ".work/kde-cli-tools-attempt3-operator-sources/verify-owned-kvm-cleanup.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/host-operators/verify-owned-kvm-cleanup.py",
+      "sha256": "e56d4bdbc8c51e1c27ba93876278a8952919a03f528f7309a6cbf991c30eeec5"
+    },
+    ".work/kglobalacceld-offline-runtime-control-20261011/first-materializer-source.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/daemon/first-materializer-source.py",
+      "sha256": "4606a69bde18b364b0ed40e76b5158658ba5d6e421b1cfd797ccdfb818ec6957"
+    },
+    ".work/kglobalacceld-offline-runtime-control-20261011/launch-owned-library-process.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/daemon/launch-owned-library-process.py",
+      "sha256": "7599bfaf9593ee1827ac8053df1a9b9a575a7fb1d198e050f8b3d619475803a1"
+    },
+    ".work/kglobalacceld-offline-runtime-control-20261011/materialize-owned-runtime-payload.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/daemon/materialize-owned-runtime-payload.py",
+      "sha256": "4606a69bde18b364b0ed40e76b5158658ba5d6e421b1cfd797ccdfb818ec6957"
+    },
+    ".work/kglobalacceld-offline-runtime-control-20261011/run-offline-library-transition.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/daemon/run-offline-library-transition.py",
+      "sha256": "24d5554a07c22828810f87657bf39feae8e7a7aa6aae47df6b704ee538602513"
+    },
+    ".work/kglobalacceld-offline-runtime-control-20261011/run-owned-daemon-consumer.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/daemon/run-owned-daemon-consumer.py",
+      "sha256": "037c068a0729326be9b85c70c870720d61b502f935b0f837e8ba6c348c95b492"
+    },
+    ".work/kglobalacceld-offline-runtime-control-20261011/run-owned-offline-kvm-diagnostic.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/daemon/run-owned-offline-kvm-diagnostic.py",
+      "sha256": "53d821a88f912629749b0ae8af3303feee198dceb444b8e20d4baa7e7aae884c"
+    },
+    ".work/kglobalacceld-original-kwin-runtime-control-20261011-v3/run-offline-library-transition.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/wayland/run-offline-library-transition.py",
+      "sha256": "fad0f84d905da8962ae8bfbfeb43b1101235fc8b8abbd4efdb28af9cb56a91c9"
+    },
+    ".work/kglobalacceld-original-kwin-runtime-control-20261011-v3/run-owned-offline-kvm-diagnostic.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/wayland/run-owned-offline-kvm-diagnostic.py",
+      "sha256": "53d821a88f912629749b0ae8af3303feee198dceb444b8e20d4baa7e7aae884c"
+    },
+    ".work/kglobalacceld-original-kwin-runtime-control-20261011-v3/run-owned-wayland-consumer.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/wayland/run-owned-wayland-consumer.py",
+      "sha256": "c4bb37692720a98d792660c0e323a766fd2c6dca7347bc1ebfde4827a3cb0fce"
+    },
+    ".work/kglobalacceld-original-kwin-runtime-control-20261011-v3/verify-owned-offline-kvm-cleanup.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/wayland/verify-owned-offline-kvm-cleanup.py",
+      "sha256": "9e96f4b24139b293d0dff64f43ccab2664b79df41adb07f0a217f008728ba5c0"
+    },
+    ".work/kglobalacceld-original-kwin-x11-runtime-control-20261011-v2/materialize-owned-runtime-payload.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/x11/materialize-owned-runtime-payload.py",
+      "sha256": "4606a69bde18b364b0ed40e76b5158658ba5d6e421b1cfd797ccdfb818ec6957"
+    },
+    ".work/kglobalacceld-original-kwin-x11-runtime-control-20261011-v2/run-offline-library-transition.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/x11/run-offline-library-transition.py",
+      "sha256": "fad0f84d905da8962ae8bfbfeb43b1101235fc8b8abbd4efdb28af9cb56a91c9"
+    },
+    ".work/kglobalacceld-original-kwin-x11-runtime-control-20261011-v2/run-owned-offline-kvm-diagnostic.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/x11/run-owned-offline-kvm-diagnostic.py",
+      "sha256": "53d821a88f912629749b0ae8af3303feee198dceb444b8e20d4baa7e7aae884c"
+    },
+    ".work/kglobalacceld-original-kwin-x11-runtime-control-20261011-v2/run-owned-x11-session-consumer.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/x11/run-owned-x11-session-consumer.py",
+      "sha256": "bf063e71c05549bbbe4c250b106c14cd2bd69f11e56b8d3276f9a98c9830b43d"
+    },
+    ".work/kglobalacceld-original-kwin-x11-runtime-control-20261011-v2/verify-owned-offline-kvm-cleanup.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/x11/verify-owned-offline-kvm-cleanup.py",
+      "sha256": "9e96f4b24139b293d0dff64f43ccab2664b79df41adb07f0a217f008728ba5c0"
+    },
+    ".work/kglobalacceld-original-kwin-client-build-20261011-v2/wayland-shortcut-client.cpp": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/wayland/wayland-shortcut-client.cpp",
+      "sha256": "4ae777f9a031c3c2ffa78217890e3b4f4b6a25c884cba6e28192824eccdddc8a"
+    },
+    ".work/kglobalacceld-private-sdk-packaging-evaluation-20261011/run-offline-library-transition.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/strict-wrapper/run-offline-library-transition.py",
+      "sha256": "37f74762b07917081db4bec7b73f1f26e0886b1b6b8f11ad812b5ef20c832722"
+    },
+    ".work/kglobalacceld-private-sdk-packaging-evaluation-20261011/run-owned-offline-kvm-diagnostic.py": {
+      "repository_path": "manifests/evidence/continuity-2026-10-14/kglobalacceld/runtime-source/strict-wrapper/run-owned-offline-kvm-diagnostic.py",
+      "sha256": "53d821a88f912629749b0ae8af3303feee198dceb444b8e20d4baa7e7aae884c"
+    }
+  }
+}

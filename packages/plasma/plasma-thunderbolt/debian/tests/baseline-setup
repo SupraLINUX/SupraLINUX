@@ -1,0 +1,943 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+apt-get install -y --no-install-recommends build-essential cmake plasma-thunderbolt libkf6coreaddons-dev libkf6dbusaddons-dev libkf6kcmutils-dev qt6-base-dev qt6-declarative-dev qt6-qpa-plugins dbus-daemon qml6-module-qtqml-workerscript qml6-module-qtquick-templates
+BASE=/var/tmp/supralinux-thunderbolt-baseline
+mkdir -p "${BASE}/source"
+cat > "${BASE}/source/CMakeLists.txt" <<'SUPRA_CMAKELISTS_TXT'
+cmake_minimum_required(VERSION 3.16)
+project(ubuntu-thunderbolt-client LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_AUTOMOC ON)
+find_package(Qt6 6.10 REQUIRED COMPONENTS Core Gui Widgets DBus Test Qml Quick)
+find_package(KF6CoreAddons 6.24 CONFIG REQUIRED)
+find_package(KF6DBusAddons 6.24 CONFIG REQUIRED)
+find_package(KF6KCMUtils 6.24 CONFIG REQUIRED)
+set(SOURCES main.cpp fakeserver.cpp fakemanager.cpp fakedevice.cpp)
+qt_add_dbus_adaptor(SOURCES org.freedesktop.bolt1.device.xml fakedevice.h FakeDevice fakedeviceadaptor FakeDeviceAdaptor)
+qt_add_dbus_adaptor(SOURCES org.freedesktop.bolt1.manager.xml fakemanager.h FakeManager fakemanageradaptor FakeManagerAdaptor)
+add_executable(ubuntu-thunderbolt-client ${SOURCES})
+target_include_directories(ubuntu-thunderbolt-client PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(ubuntu-thunderbolt-client Qt6::Core Qt6::Gui Qt6::Widgets Qt6::DBus Qt6::Test Qt6::Qml Qt6::Quick KF6::CoreAddons KF6::DBusAddons KF6::KCMUtilsQuick)
+
+SUPRA_CMAKELISTS_TXT
+cat > "${BASE}/source/fakedevice.cpp" <<'SUPRA_FAKEDEVICE_CPP'
+/*
+ * SPDX-FileCopyrightText: 2018-2019 Daniel Vrátil <dvratil@kde.org>
+ *
+ * SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+ */
+
+#include "fakedevice.h"
+#include "fakedeviceadaptor.h"
+
+#include <QDBusConnection>
+#include <QDBusError>
+
+#include <chrono>
+#include <thread>
+
+using namespace std::chrono_literals;
+
+FakeDevice::FakeDevice(const QString &uid, QObject *parent)
+    : QObject(parent)
+    , mUid(uid)
+{
+    new FakeDeviceAdaptor(this);
+    auto bus = QDBusConnection::sessionBus();
+    if (!bus.registerObject(dbusPath().path(), this)) {
+        throw FakeDeviceException(QStringLiteral("Failed to register device %1 to DBus: %2").arg(mUid, bus.lastError().message()));
+    }
+}
+
+FakeDevice::FakeDevice(const QJsonObject &json, QObject *parent)
+    : QObject(parent)
+    , mUid(json[QStringLiteral("Uid")].toString())
+    , mName(json[QStringLiteral("Name")].toString())
+    , mVendor(json[QStringLiteral("Vendor")].toString())
+    , mType(json[QStringLiteral("Type")].toString())
+    , mStatus(json[QStringLiteral("Status")].toString())
+    , mAuthFlags(json[QStringLiteral("AuthFlags")].toString())
+    , mParent(json[QStringLiteral("Parent")].toString())
+    , mSysfsPath(json[QStringLiteral("SysfsPath")].toString())
+    , mPolicy(json[QStringLiteral("Policy")].toString())
+    , mKey(json[QStringLiteral("Key")].toString())
+    , mLabel(json[QStringLiteral("Label")].toString())
+    , mConnectTime(json[QStringLiteral("ConnectTime")].toVariant().value<quint64>())
+    , mAuthorizeTime(json[QStringLiteral("AuthorizeTime")].toVariant().value<quint64>())
+    , mStoreTime(json[QStringLiteral("StoreTime")].toVariant().value<quint64>())
+    , mStored(json[QStringLiteral("Stored")].toBool())
+{
+    new FakeDeviceAdaptor(this);
+    auto bus = QDBusConnection::sessionBus();
+    if (!bus.registerObject(dbusPath().path(), this)) {
+        throw FakeDeviceException(QStringLiteral("Failed to register device %1 to DBus: %2").arg(mUid, bus.lastError().message()));
+    }
+}
+
+FakeDevice::~FakeDevice()
+{
+    QDBusConnection::sessionBus().unregisterObject(dbusPath().path());
+}
+
+QDBusObjectPath FakeDevice::dbusPath() const
+{
+    return QDBusObjectPath(QStringLiteral("/org/freedesktop/bolt/devices/%1").arg(QString(mUid).replace(QLatin1Char('-'), QLatin1Char('_'))));
+}
+
+QString FakeDevice::uid() const
+{
+    return mUid;
+}
+
+QString FakeDevice::name() const
+{
+    return mName;
+}
+
+void FakeDevice::setName(const QString &name)
+{
+    mName = name;
+}
+
+QString FakeDevice::vendor() const
+{
+    return mVendor;
+}
+
+void FakeDevice::setVendor(const QString &vendor)
+{
+    mVendor = vendor;
+}
+
+QString FakeDevice::type() const
+{
+    return mType;
+}
+
+void FakeDevice::setType(const QString &type)
+{
+    mType = type;
+}
+
+QString FakeDevice::status() const
+{
+    return mStatus;
+}
+
+void FakeDevice::setStatus(const QString &status)
+{
+    mStatus = status;
+}
+
+QString FakeDevice::authFlags() const
+{
+    return mAuthFlags;
+}
+
+void FakeDevice::setAuthFlags(const QString &authFlags)
+{
+    mAuthFlags = authFlags;
+}
+
+QString FakeDevice::parent() const
+{
+    return mParent;
+}
+
+void FakeDevice::setParent(const QString &parent)
+{
+    mParent = parent;
+}
+
+QString FakeDevice::sysfsPath() const
+{
+    return mSysfsPath;
+}
+
+void FakeDevice::setSysfsPath(const QString &sysfsPath)
+{
+    mSysfsPath = sysfsPath;
+}
+
+bool FakeDevice::stored() const
+{
+    return mStored;
+}
+
+void FakeDevice::setStored(bool stored)
+{
+    mStored = stored;
+}
+
+QString FakeDevice::policy() const
+{
+    return mPolicy;
+}
+
+void FakeDevice::setPolicy(const QString &policy)
+{
+    mPolicy = policy;
+}
+
+QString FakeDevice::key() const
+{
+    return mKey;
+}
+
+void FakeDevice::setKey(const QString &key)
+{
+    mKey = key;
+}
+
+QString FakeDevice::label() const
+{
+    return mLabel;
+}
+
+void FakeDevice::setLabel(const QString &label)
+{
+    mLabel = label;
+    Q_EMIT labelChanged(label);
+}
+
+quint64 FakeDevice::connectTime() const
+{
+    return mConnectTime;
+}
+
+void FakeDevice::setConnectTime(quint64 connectTime)
+{
+    mConnectTime = connectTime;
+}
+
+quint64 FakeDevice::authorizeTime() const
+{
+    return mAuthorizeTime;
+}
+
+void FakeDevice::setAuthorizeTime(quint64 authorizeTime)
+{
+    mAuthorizeTime = authorizeTime;
+}
+
+quint64 FakeDevice::storeTime() const
+{
+    return mStoreTime;
+}
+
+void FakeDevice::setStoreTime(quint64 storeTime)
+{
+    mStoreTime = storeTime;
+}
+
+void FakeDevice::Authorize(const QString &flags)
+{
+    std::this_thread::sleep_for(1s); // simulate this operation taking time
+    mAuthFlags = flags;
+    mStatus = QLatin1String("authorized");
+}
+
+#include "moc_fakedevice.cpp"
+
+SUPRA_FAKEDEVICE_CPP
+cat > "${BASE}/source/fakedevice.h" <<'SUPRA_FAKEDEVICE_H'
+/*
+ * SPDX-FileCopyrightText: 2018-2019 Daniel Vrátil <dvratil@kde.org>
+ *
+ * SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+ */
+
+#ifndef FAKEDEVICE_H
+#define FAKEDEVICE_H
+
+#include <QDBusObjectPath>
+#include <QJsonObject>
+#include <QObject>
+
+class FakeDeviceException : public std::runtime_error
+{
+public:
+    FakeDeviceException(const QString &what)
+        : std::runtime_error(what.toStdString())
+    {
+    }
+};
+
+class FakeDevice : public QObject
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.freedesktop.bolt1.Device")
+
+    Q_PROPERTY(QString Uid READ uid CONSTANT)
+    Q_PROPERTY(QString Name READ name CONSTANT)
+    Q_PROPERTY(QString Vendor READ vendor CONSTANT)
+    Q_PROPERTY(QString Type READ type CONSTANT)
+    Q_PROPERTY(QString Status READ status CONSTANT)
+    Q_PROPERTY(QString AuthFlags READ authFlags CONSTANT)
+    Q_PROPERTY(QString Parent READ parent CONSTANT)
+    Q_PROPERTY(QString SysfsPath READ sysfsPath CONSTANT)
+    Q_PROPERTY(bool Stored READ stored CONSTANT)
+    Q_PROPERTY(QString Policy READ policy CONSTANT)
+    Q_PROPERTY(QString Key READ key CONSTANT)
+    Q_PROPERTY(QString Label READ label WRITE setLabel NOTIFY labelChanged)
+    Q_PROPERTY(quint64 ConnectTime READ connectTime CONSTANT)
+    Q_PROPERTY(quint64 AuthorizeTime READ authorizeTime CONSTANT)
+    Q_PROPERTY(quint64 StoreTime READ storeTime CONSTANT)
+public:
+    explicit FakeDevice(const QString &uid, QObject *parent = nullptr);
+    explicit FakeDevice(const QJsonObject &json, QObject *parent = nullptr);
+    ~FakeDevice() override;
+
+    QDBusObjectPath dbusPath() const;
+
+    QString uid() const;
+    QString name() const;
+    void setName(const QString &name);
+    QString vendor() const;
+    void setVendor(const QString &vendor);
+    QString type() const;
+    void setType(const QString &type);
+    QString status() const;
+    void setStatus(const QString &status);
+    QString authFlags() const;
+    void setAuthFlags(const QString &authFlags);
+    QString parent() const;
+    void setParent(const QString &parent);
+    QString sysfsPath() const;
+    void setSysfsPath(const QString &sysfsPath);
+    bool stored() const;
+    void setStored(bool stored);
+    QString policy() const;
+    void setPolicy(const QString &policy);
+    QString key() const;
+    void setKey(const QString &key);
+    QString label() const;
+    void setLabel(const QString &label);
+    quint64 connectTime() const;
+    void setConnectTime(quint64 connectTime);
+    quint64 authorizeTime() const;
+    void setAuthorizeTime(quint64 authorizeTime);
+    quint64 storeTime() const;
+    void setStoreTime(quint64 storeTime);
+
+public Q_SLOTS:
+    void Authorize(const QString &flags);
+
+Q_SIGNALS:
+    void labelChanged(const QString &label);
+
+private:
+    QDBusObjectPath mDBusPath;
+
+    QString mUid;
+    QString mName;
+    QString mVendor;
+    QString mType;
+    QString mStatus = QStringLiteral("unknown");
+    QString mAuthFlags = QStringLiteral("none");
+    QString mParent;
+    QString mSysfsPath;
+    QString mPolicy = QStringLiteral("unknown");
+    QString mKey;
+    QString mLabel;
+    quint64 mConnectTime = 0;
+    quint64 mAuthorizeTime = 0;
+    quint64 mStoreTime = 0;
+    bool mStored = false;
+};
+
+#endif
+
+SUPRA_FAKEDEVICE_H
+cat > "${BASE}/source/fakemanager.cpp" <<'SUPRA_FAKEMANAGER_CPP'
+/*
+ * SPDX-FileCopyrightText: 2018-2019 Daniel Vrátil <dvratil@kde.org>
+ *
+ * SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+ */
+
+#include "fakemanager.h"
+#include "fakedevice.h"
+#include "fakemanageradaptor.h"
+
+#include <QDBusConnection>
+#include <QDBusError>
+#include <QJsonArray>
+
+#include <QDebug>
+
+#include <chrono>
+#include <thread>
+
+using namespace std::chrono_literals;
+
+namespace
+{
+static const QString kManagerDBusPath = QStringLiteral("/org/freedesktop/bolt");
+}
+
+FakeManager::FakeManager(const QJsonObject &json, QObject *parent)
+    : QObject(parent)
+    , mProbing(json[QStringLiteral("Probing")].toBool())
+    , mDefaultPolicy(json[QStringLiteral("DefaultPolicy")].toString())
+    , mSecurityLevel(json[QStringLiteral("SecurityLevel")].toString())
+    , mAuthMode(json[QStringLiteral("AuthMode")].toString())
+{
+    new FakeManagerAdaptor(this);
+    if (!QDBusConnection::sessionBus().registerObject(kManagerDBusPath, this)) {
+        throw FakeManagerException(QStringLiteral("Failed to register FakeManager to DBus: %1").arg(QDBusConnection::sessionBus().lastError().message()));
+    }
+
+    const auto jsonDevices = json[QStringLiteral("Devices")].toArray();
+    for (const auto &jsonDevice : jsonDevices) {
+        auto device = std::make_unique<FakeDevice>(jsonDevice.toObject(), this);
+        mDevices.emplace(device->uid(), std::move(device));
+    }
+}
+
+FakeManager::FakeManager(QObject *parent)
+    : QObject(parent)
+{
+    new FakeManagerAdaptor(this);
+    if (!QDBusConnection::sessionBus().registerObject(kManagerDBusPath, this)) {
+        throw FakeManagerException(QStringLiteral("Failed to register FakeManager to DBus: %1").arg(QDBusConnection::sessionBus().lastError().message()));
+    }
+}
+
+FakeManager::~FakeManager()
+{
+    QDBusConnection::sessionBus().unregisterObject(kManagerDBusPath);
+}
+
+FakeDevice *FakeManager::addDevice(std::unique_ptr<FakeDevice> device)
+{
+    const auto it = mDevices.emplace(device->uid(), std::move(device)).first;
+    Q_EMIT DeviceAdded(it->second->dbusPath());
+    return it->second.get();
+}
+
+void FakeManager::removeDevice(const QString &uid)
+{
+    auto deviceIt = mDevices.find(uid);
+    if (deviceIt == mDevices.end()) {
+        return;
+    }
+    auto device = std::move(deviceIt->second);
+    mDevices.erase(deviceIt);
+    Q_EMIT DeviceRemoved(device->dbusPath());
+}
+
+QList<FakeDevice *> FakeManager::devices() const
+{
+    QList<FakeDevice *> rv;
+    rv.reserve(mDevices.size());
+    std::transform(mDevices.cbegin(), mDevices.cend(), std::back_inserter(rv), [](const auto &v) {
+        return v.second.get();
+    });
+    return rv;
+}
+
+unsigned int FakeManager::version() const
+{
+    return 1;
+}
+
+bool FakeManager::isProbing() const
+{
+    return mProbing;
+}
+
+QString FakeManager::defaultPolicy() const
+{
+    return mDefaultPolicy;
+}
+
+QString FakeManager::securityLevel() const
+{
+    return mSecurityLevel;
+}
+
+QString FakeManager::authMode() const
+{
+    return mAuthMode;
+}
+
+void FakeManager::setAuthMode(const QString &authMode)
+{
+    qDebug("Manager: authMode changed to %s", qUtf8Printable(authMode));
+    mAuthMode = authMode;
+    Q_EMIT authModeChanged(authMode);
+}
+
+QList<QDBusObjectPath> FakeManager::ListDevices() const
+{
+    QList<QDBusObjectPath> rv;
+    rv.reserve(mDevices.size());
+    for (const auto &device : mDevices) {
+        rv.push_back(device.second->dbusPath());
+    }
+    return rv;
+}
+
+QDBusObjectPath FakeManager::DeviceByUid(const QString &uid) const
+{
+    auto device = mDevices.find(uid);
+    if (device == mDevices.cend()) {
+        return QDBusObjectPath();
+    } else {
+        return device->second->dbusPath();
+    }
+}
+
+QDBusObjectPath FakeManager::EnrollDevice(const QString &uid, const QString &policy, const QString &flags)
+{
+    std::this_thread::sleep_for(1s); // simulate this operation taking time
+
+    auto deviceIt = mDevices.find(uid);
+    if (deviceIt == mDevices.end()) {
+        return QDBusObjectPath();
+    }
+    auto &device = deviceIt->second;
+    if (policy == QLatin1String("default")) {
+        device->setPolicy(defaultPolicy());
+    } else {
+        device->setPolicy(policy);
+    }
+    device->setAuthFlags(flags);
+    device->setStored(true);
+    device->setStatus(QLatin1String("authorized"));
+
+    return device->dbusPath();
+}
+
+void FakeManager::ForgetDevice(const QString &uid)
+{
+    std::this_thread::sleep_for(1s); // simulate this operation taking time
+
+    auto deviceIt = mDevices.find(uid);
+    if (deviceIt == mDevices.end()) {
+        return;
+    }
+    auto &device = deviceIt->second;
+    device->setStored(false);
+    device->setStatus(QLatin1String("connected"));
+}
+
+#include "moc_fakemanager.cpp"
+
+SUPRA_FAKEMANAGER_CPP
+cat > "${BASE}/source/fakemanager.h" <<'SUPRA_FAKEMANAGER_H'
+/*
+ * SPDX-FileCopyrightText: 2018-2019 Daniel Vrátil <dvratil@kde.org>
+ *
+ * SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+ */
+
+#ifndef FAKEMANAGER_H_
+#define FAKEMANAGER_H_
+
+#include <QDBusObjectPath>
+#include <QJsonObject>
+#include <QList>
+#include <QObject>
+#include <QString>
+
+#include <map>
+#include <memory>
+
+class FakeManagerException : public std::runtime_error
+{
+public:
+    FakeManagerException(const QString &what)
+        : std::runtime_error(what.toStdString())
+    {
+    }
+};
+
+class FakeDevice;
+class FakeManager : public QObject
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.freedesktop.bolt1.Manager")
+
+    Q_PROPERTY(unsigned int Version READ version CONSTANT)
+    Q_PROPERTY(bool Probing READ isProbing CONSTANT)
+    Q_PROPERTY(QString DefaultPolicy READ defaultPolicy CONSTANT)
+    Q_PROPERTY(QString SecurityLevel READ securityLevel CONSTANT)
+    Q_PROPERTY(QString AuthMode READ authMode WRITE setAuthMode NOTIFY authModeChanged)
+
+public:
+    explicit FakeManager(const QJsonObject &json, QObject *parent = nullptr);
+    explicit FakeManager(QObject *parent = nullptr);
+    ~FakeManager() override;
+
+    unsigned int version() const;
+    bool isProbing() const;
+    QString defaultPolicy() const;
+    QString securityLevel() const;
+    QString authMode() const;
+    void setAuthMode(const QString &authMode);
+
+    FakeDevice *addDevice(std::unique_ptr<FakeDevice> device);
+    void removeDevice(const QString &uid);
+    QList<FakeDevice *> devices() const;
+
+    Q_INVOKABLE QList<QDBusObjectPath> ListDevices() const;
+    Q_INVOKABLE QDBusObjectPath DeviceByUid(const QString &uid) const;
+    Q_INVOKABLE QDBusObjectPath EnrollDevice(const QString &uid, const QString &policy, const QString &flags);
+    Q_INVOKABLE void ForgetDevice(const QString &uid);
+
+Q_SIGNALS:
+    void DeviceAdded(const QDBusObjectPath &device);
+    void DeviceRemoved(const QDBusObjectPath &device);
+    void authModeChanged(const QString &authMode);
+
+private:
+    bool mProbing = false;
+    QString mDefaultPolicy = QStringLiteral("auto");
+    QString mSecurityLevel = QStringLiteral("none");
+    QString mAuthMode = QStringLiteral("enabled");
+
+    std::map<QString /*uid*/, std::unique_ptr<FakeDevice>> mDevices;
+};
+
+#endif
+
+SUPRA_FAKEMANAGER_H
+cat > "${BASE}/source/fakeserver.cpp" <<'SUPRA_FAKESERVER_CPP'
+/*
+ * SPDX-FileCopyrightText: 2018-2019 Daniel Vrátil <dvratil@kde.org>
+ *
+ * SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+ */
+
+#include "fakeserver.h"
+#include "fakemanager.h"
+
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusError>
+#include <QDebug>
+#include <QEventLoop>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QTest>
+#include <QTimer>
+
+namespace
+{
+static const QString OrgKdeFakebolt = QStringLiteral("org.kde.fakebolt");
+
+}
+
+FakeServer::FakeServer(const QString &filename)
+{
+    QFile jsonFile(filename);
+    if (!jsonFile.open(QIODevice::ReadOnly)) {
+        qCritical("Failed to open file %s: %s", qUtf8Printable(filename), qUtf8Printable(jsonFile.errorString()));
+        throw FakeServerException(QStringLiteral("Failed to open file %1: %2").arg(filename, jsonFile.errorString()));
+    }
+
+    const auto doc = QJsonDocument::fromJson(jsonFile.readAll());
+
+    if (!QDBusConnection::sessionBus().registerService(OrgKdeFakebolt)) {
+        throw FakeServerException(QStringLiteral("Failed to register org.kde.fakebolt service: %1").arg(QDBusConnection::sessionBus().lastError().message()));
+    }
+
+    try {
+        mManager = std::make_unique<FakeManager>(doc.object());
+    } catch (const FakeManagerException &e) {
+        throw FakeServerException(e.what());
+    }
+}
+
+FakeServer::FakeServer()
+{
+    if (!QDBusConnection::sessionBus().registerService(OrgKdeFakebolt)) {
+        throw FakeServerException(QStringLiteral("Failed to register org.kde.fakebolt service: %1").arg(QDBusConnection::sessionBus().lastError().message()));
+    }
+
+    try {
+        mManager = std::make_unique<FakeManager>();
+    } catch (FakeManagerException &e) {
+        throw FakeServerException(e.what());
+    }
+}
+
+FakeServer::~FakeServer()
+{
+}
+
+void FakeServer::enableFakeEnv()
+{
+    qputenv("KBOLT_FAKE", "1");
+}
+
+FakeManager *FakeServer::manager() const
+{
+    return mManager.get();
+}
+
+SUPRA_FAKESERVER_CPP
+cat > "${BASE}/source/fakeserver.h" <<'SUPRA_FAKESERVER_H'
+/*
+ * SPDX-FileCopyrightText: 2018-2019 Daniel Vrátil <dvratil@kde.org>
+ *
+ * SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+ */
+
+#ifndef FAKESERVER_H
+#define FAKESERVER_H
+
+#include <QString>
+
+#include <memory>
+
+class FakeServerException : public std::runtime_error
+{
+public:
+    FakeServerException(const char *what)
+        : std::runtime_error(what)
+    {
+    }
+    FakeServerException(const QString &what)
+        : std::runtime_error(what.toStdString())
+    {
+    }
+};
+
+class FakeManager;
+class FakeServer
+{
+public:
+    explicit FakeServer(const QString &file);
+    explicit FakeServer();
+    ~FakeServer();
+
+    static void enableFakeEnv();
+
+    FakeManager *manager() const;
+
+private:
+    std::unique_ptr<FakeManager> mManager;
+};
+
+#endif
+
+SUPRA_FAKESERVER_H
+cat > "${BASE}/source/main.cpp" <<'SUPRA_MAIN_CPP'
+#include <KDEDModule>
+#include <KPluginFactory>
+#include <KPluginMetaData>
+#include <QApplication>
+#include <KQuickConfigModule>
+#include <QQuickItem>
+#include <QQuickWindow>
+#include <QAbstractItemModel>
+#include <QDBusConnection>
+#include <QElapsedTimer>
+#include <QEventLoop>
+#include <QThread>
+#include <QSet>
+#include <functional>
+#include <memory>
+#include <iostream>
+#include "fakeserver.h"
+#include "fakemanager.h"
+#include "fakedevice.h"
+
+class Notifications : public QObject {
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface","org.freedesktop.Notifications")
+public:
+    struct Message {uint id;QString title,body;QStringList actions;};
+    QList<Message> messages;
+public Q_SLOTS:
+    QStringList GetCapabilities(){return {QStringLiteral("body"),QStringLiteral("actions"),QStringLiteral("persistence")};}
+    uint Notify(const QString &,uint,const QString &,const QString &title,const QString &body,const QStringList &actions,const QVariantMap &,int){
+        uint id=uint(messages.size()+1);messages.append({id,title,body,actions});return id;
+    }
+    QString GetServerInformation(QString &vendor,QString &version,QString &specVersion){vendor=QStringLiteral("SupraLINUX");version=QStringLiteral("1");specVersion=QStringLiteral("1.2");return QStringLiteral("Private notification fixture");}
+    void CloseNotification(uint id){Q_EMIT NotificationClosed(id,3);}
+Q_SIGNALS:
+    void ActionInvoked(uint id,const QString &key);
+    void NotificationClosed(uint id,uint reason);
+};
+static bool until(const std::function<bool()> &ready,int milliseconds=6000){
+    QElapsedTimer timer;timer.start();while(!ready() && timer.elapsed()<milliseconds){QCoreApplication::processEvents(QEventLoop::AllEvents,100);QThread::msleep(10);}return ready();
+}
+static void settle(int milliseconds){QElapsedTimer t;t.start();while(t.elapsed()<milliseconds){QCoreApplication::processEvents(QEventLoop::AllEvents,100);QThread::msleep(10);}}
+int main(int argc,char **argv){
+    qputenv("KBOLT_FAKE","1");QApplication app(argc,argv);
+    auto fail=[](const char *name){std::cerr<<"Installed Bolt module fixture failed: "<<name<<'\n';return 1;};
+    if(argc!=3)return fail("module path");
+    Notifications notifications;auto bus=QDBusConnection::sessionBus();
+    if(!bus.registerObject(QStringLiteral("/org/freedesktop/Notifications"),&notifications,QDBusConnection::ExportAllSlots|QDBusConnection::ExportAllSignals) || !bus.registerService(QStringLiteral("org.freedesktop.Notifications")))return fail("private notifications");
+    FakeServer server;auto manager=server.manager();manager->setAuthMode(QStringLiteral("enabled"));
+    auto loaded=KPluginFactory::instantiatePlugin<KDEDModule>(KPluginMetaData(QString::fromLocal8Bit(argv[1])),nullptr);
+    if(!loaded){std::cerr<<loaded.errorText.toStdString();return fail("actual installed KDED plugin");}
+    std::unique_ptr<KDEDModule> module(loaded.plugin);settle(300);
+    auto make=[](const char *uid,const char *name,const char *status){auto device=std::make_unique<FakeDevice>(QString::fromLatin1(uid));device->setName(QString::fromLatin1(name));device->setLabel(QString::fromLatin1(name));device->setVendor(QStringLiteral("Synthetic Vendor"));device->setType(QStringLiteral("peripheral"));device->setStatus(QString::fromLatin1(status));device->setAuthFlags(QStringLiteral("none"));return device;};
+    auto temporary=manager->addDevice(make("SupraTemp","Synthetic Temporary Device","connected"));
+    if(!until([&]{return notifications.messages.size()==1;}))return fail("actual unauthorized-device notification");
+    const auto notification=notifications.messages.front();
+    if(!notification.body.contains(QStringLiteral("Synthetic Temporary Device")) || notification.actions.size()<4)return fail("actual notification device and actions");
+    auto choose=[&](const Notifications::Message &message,const QString &label){for(qsizetype i=0;i+1<message.actions.size();i+=2){if(message.actions[i+1]==label){Q_EMIT notifications.ActionInvoked(message.id,message.actions[i]);return true;}}return false;};
+    if(!choose(notification,QStringLiteral("Authorize Now")))return fail("temporary authorization action");
+    if(!until([&]{return temporary->status()==QStringLiteral("authorized");}) || temporary->stored())return fail("actual temporary D-Bus authorization");
+    QSet<QString> flags;for(const auto &part:temporary->authFlags().split('|'))flags.insert(part.trimmed());
+    if(flags!=QSet<QString>{QStringLiteral("boot"),QStringLiteral("nokey")})return fail("temporary authorization flags");
+    const int before=notifications.messages.size();
+    manager->addDevice(make("SupraAlready","Synthetic Already Authorized","authorized"));settle(800);
+    if(notifications.messages.size()!=before)return fail("already authorized device notification suppression");
+    auto permanent=manager->addDevice(make("SupraPermanent","Synthetic Permanent Device","connected"));
+    if(!until([&]{return notifications.messages.size()==before+1;}))return fail("permanent-device notification");
+    if(!choose(notifications.messages.back(),QStringLiteral("Authorize Permanently")))return fail("permanent enrollment action");
+    if(!until([&]{return permanent->stored() && permanent->status()==QStringLiteral("authorized");}) || permanent->policy()!=QStringLiteral("auto"))return fail("actual manager D-Bus enrollment");
+    flags.clear();for(const auto &part:permanent->authFlags().split('|'))flags.insert(part.trimmed());
+    if(flags!=QSet<QString>{QStringLiteral("boot"),QStringLiteral("nokey")})return fail("permanent authorization flags");
+    module.reset();settle(100);
+    auto kcmLoaded=KQuickConfigModuleLoader::loadModule(KPluginMetaData(QString::fromLocal8Bit(argv[2])));
+    if(!kcmLoaded){std::cerr<<kcmLoaded.errorText.toStdString();return fail("actual installed KCM plugin");}
+    std::unique_ptr<KQuickConfigModule> kcm(kcmLoaded.plugin);
+    QQuickItem *ui=nullptr;
+    if(!until([&]{ui=kcm->mainUi();return ui!=nullptr;})){std::cerr<<kcm->errorString().toStdString();return fail("actual installed KCM QML load");}
+    auto view=ui->property("view").value<QObject*>();
+    if(!view)return fail("actual KCM device list view");
+    if(!until([&]{return view->property("count").toInt()==3;}))return fail("actual KCM private device model");
+    if(!view->property("enabled").toBool())return fail("actual enabled KCM device list");
+    auto model=view->property("deviceModel").value<QObject*>();
+    auto boltManager=model?model->property("manager").value<QObject*>():nullptr;
+    if(!boltManager || !boltManager->property("isAvailable").toBool())return fail("KCM private Bolt provider availability");
+    QQuickWindow window;window.resize(800,600);ui->setParentItem(window.contentItem());ui->setWidth(800);ui->setHeight(600);window.show();
+    auto hasLabel=[&](){QList<QQuickItem*> pending{ui};while(!pending.isEmpty()){auto item=pending.takeFirst();if(item->property("text").toString()==QStringLiteral("Synthetic Temporary Device"))return true;pending.append(item->childItems());}return false;};
+    if(!until(hasLabel))return fail("actual rendered KCM device label");
+    manager->removeDevice(QStringLiteral("SupraAlready"));
+    if(!until([&]{return view->property("count").toInt()==2;}))return fail("actual KCM device removal");
+    kcm.reset();settle(100);
+    std::cout<<"Installed Thunderbolt KDED plugin, real private device notifications, temporary authorization, permanent enrollment, authorized-device suppression, actual rendered KCM QML and dynamic device model: PASS\n";
+    return 0;
+}
+#include "main.moc"
+
+SUPRA_MAIN_CPP
+cat > "${BASE}/source/org.freedesktop.bolt1.device.xml" <<'SUPRA_ORG_FREEDESKTOP_BOLT1_DEVICE_XML'
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+                      "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.freedesktop.bolt1.Device">
+    <method name="Authorize">
+      <arg type="s" name="flags" direction="in">
+      </arg>
+    </method>
+    <property type="s" name="Uid" access="read">
+    </property>
+    <property type="s" name="Name" access="read">
+    </property>
+    <property type="s" name="Vendor" access="read">
+    </property>
+    <property type="s" name="Type" access="read">
+    </property>
+    <property type="s" name="Status" access="read">
+    </property>
+    <property type="s" name="AuthFlags" access="read">
+    </property>
+    <property type="s" name="Parent" access="read">
+      <annotation name="org.qtproject.QtDBus.PropertyGetter" value="parentUid"/>
+    </property>
+    <property type="s" name="SysfsPath" access="read">
+    </property>
+    <property type="b" name="Stored" access="read">
+    </property>
+    <property type="s" name="Policy" access="read">
+    </property>
+    <property type="s" name="Key" access="read">
+    </property>
+    <property type="s" name="Label" access="readwrite">
+    </property>
+    <property type="t" name="ConnectTime" access="read">
+    </property>
+    <property type="t" name="AuthorizeTime" access="read">
+    </property>
+    <property type="t" name="StoreTime" access="read">
+    </property>
+  </interface>
+</node>
+
+SUPRA_ORG_FREEDESKTOP_BOLT1_DEVICE_XML
+cat > "${BASE}/source/org.freedesktop.bolt1.manager.xml" <<'SUPRA_ORG_FREEDESKTOP_BOLT1_MANAGER_XML'
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+                      "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.freedesktop.bolt1.Manager">
+    <method name="ListDevices">
+      <arg type="ao" name="devices" direction="out">
+      </arg>
+    </method>
+    <method name="DeviceByUid">
+      <arg type="s" name="uid" direction="in">
+      </arg>
+      <arg type="o" name="device" direction="out">
+      </arg>
+    </method>
+    <method name="EnrollDevice">
+      <arg type="s" name="uid" direction="in">
+      </arg>
+      <arg type="s" name="policy" direction="in">
+      </arg>
+      <arg type="s" name="flags" direction="in">
+      </arg>
+      <arg type="o" name="device" direction="out">
+      </arg>
+    </method>
+    <method name="ForgetDevice">
+      <arg type="s" name="uid" direction="in">
+      </arg>
+    </method>
+    <signal name="DeviceAdded">
+      <arg type="o" name="device">
+      </arg>
+    </signal>
+    <signal name="DeviceRemoved">
+      <arg type="o" name="device">
+      </arg>
+    </signal>
+    <property type="u" name="Version" access="read">
+    </property>
+    <property type="b" name="Probing" access="read">
+    </property>
+    <property type="s" name="DefaultPolicy" access="read">
+    </property>
+    <property type="s" name="SecurityLevel" access="read">
+    </property>
+    <property type="s" name="AuthMode" access="readwrite">
+    </property>
+  </interface>
+</node>
+
+
+SUPRA_ORG_FREEDESKTOP_BOLT1_MANAGER_XML
+cat > "${BASE}/run-session" <<'SESSION'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+ulimit -c 0
+CLIENT=$1
+SESSION_ROOT=$(mktemp -d)
+trap 'rm -rf "${SESSION_ROOT}"' EXIT
+export HOME="${SESSION_ROOT}/home" XDG_CONFIG_HOME="${SESSION_ROOT}/config" XDG_DATA_HOME="${SESSION_ROOT}/data" XDG_CACHE_HOME="${SESSION_ROOT}/cache" XDG_RUNTIME_DIR="${SESSION_ROOT}/runtime"
+export QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software QT_QUICK_CONTROLS_STYLE=Basic KBOLT_FAKE=1 LC_ALL=C.UTF-8
+unset DBUS_SESSION_BUS_ADDRESS DISPLAY WAYLAND_DISPLAY
+mkdir -p "${HOME}" "${XDG_CONFIG_HOME}" "${XDG_DATA_HOME}" "${XDG_CACHE_HOME}" "${XDG_RUNTIME_DIR}"
+chmod 700 "${XDG_RUNTIME_DIR}"
+mapfile -t MODULES < <(dpkg -L plasma-thunderbolt | sed -n '\|/kf6/kded/kded_bolt.so$|p')
+mapfile -t KCMS < <(dpkg -L plasma-thunderbolt | sed -n '\|/kcms/systemsettings/kcm_bolt.so$|p')
+[[ ${#MODULES[@]} == 1 && ${#KCMS[@]} == 1 ]]
+timeout --kill-after=5s 45s dbus-run-session -- "${CLIENT}" "${MODULES[0]}" "${KCMS[0]}"
+SESSION
+chmod +x "${BASE}/run-session"
+cmake -S "${BASE}/source" -B "${BASE}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${BASE}/build" --parallel 2
+"${BASE}/run-session" "${BASE}/build/ubuntu-thunderbolt-client" | tee "${BASE}/ubuntu-output.txt"
+dpkg-query -W -f='${Version}' plasma-thunderbolt > "${BASE}/ubuntu-version"
+dpkg-query -W -f='${Version}' libqt6core6t64 > "${BASE}/ubuntu-qt-core-version"
+sha256sum "${BASE}/build/ubuntu-thunderbolt-client" > "${BASE}/binary-sha256.txt"

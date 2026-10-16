@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "plasma-workspace-wallpapers",
+      "package_version": "4:6.7.5-0supralinux1",
+      "artifact_id": null,
+      "workflow_run_id": 37252562053,
+      "artifact_sha256": "40496080f8db226c36d626143585ae69bf8ca30c96420c4fb84d60a4b41149e0",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

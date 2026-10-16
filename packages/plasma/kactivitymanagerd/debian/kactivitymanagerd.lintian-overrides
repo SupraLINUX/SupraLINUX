@@ -1,0 +1,5 @@
+kactivitymanagerd: lacks-ldconfig-trigger usr/lib/*/libkactivitymanagerd_plugin.so
+kactivitymanagerd: package-name-doesnt-match-sonames libkactivitymanagerd-plugin
+kactivitymanagerd: shared-library-lacks-version usr/lib/*/libkactivitymanagerd_plugin.so libkactivitymanagerd_plugin.so
+kactivitymanagerd: no-symbols-control-file usr/lib/*/libkactivitymanagerd_plugin.so
+

@@ -1,0 +1,67 @@
+# SymbolsHelper-Confirmed: 6.4.91 amd64 armel armhf hppa hurd-i386 i386 powerpc riscv64 sh4 x32
+libKNightTime.so.0 libknighttime0 #MINVER#
+* Build-Depends-Package: knighttime-dev
+ _ZN15KDarkLightCycleC1ERK9QDateTimeRK20KDarkLightTransitionS5_@Base 6.4.91
+ _ZN15KDarkLightCycleC1Ev@Base 6.4.91
+ _ZN15KDarkLightCycleC2ERK9QDateTimeRK20KDarkLightTransitionS5_@Base 6.4.91
+ _ZN15KDarkLightCycleC2Ev@Base 6.4.91
+ (subst)_ZN18KDarkLightSchedule8forecastERK9QDateTime5QTimeS3_NSt6chrono8durationI{int64_t}St5ratioIL{int64_t}1EL{int64_t}1000EEEEi@Base 6.4.91
+ _ZN18KDarkLightSchedule8forecastERK9QDateTimeddi@Base 6.4.91
+ _ZN18KDarkLightSchedule9fromStateERK7QString@Base 6.4.91
+ _ZN18KDarkLightScheduleC1ERK5QListI15KDarkLightCycleE@Base 6.4.91
+ _ZN18KDarkLightScheduleC1Ev@Base 6.4.91
+ _ZN18KDarkLightScheduleC2ERK5QListI15KDarkLightCycleE@Base 6.4.91
+ _ZN18KDarkLightScheduleC2Ev@Base 6.4.91
+ _ZN20KDarkLightTransitionC1ENS_4TypeERK9QDateTimeS3_@Base 6.4.91
+ _ZN20KDarkLightTransitionC1Ev@Base 6.4.91
+ _ZN20KDarkLightTransitionC2ENS_4TypeERK9QDateTimeS3_@Base 6.4.91
+ _ZN20KDarkLightTransitionC2Ev@Base 6.4.91
+ _ZN26KDarkLightScheduleProvider11qt_metacallEN11QMetaObject4CallEiPPv@Base 6.4.91
+ _ZN26KDarkLightScheduleProvider11qt_metacastEPKc@Base 6.4.91
+ _ZN26KDarkLightScheduleProvider15scheduleChangedEv@Base 6.4.91
+ _ZN26KDarkLightScheduleProvider16staticMetaObjectE@Base 6.4.91
+ _ZN26KDarkLightScheduleProviderC1ERK7QStringP7QObject@Base 6.4.91
+ _ZN26KDarkLightScheduleProviderC2ERK7QStringP7QObject@Base 6.4.91
+ _ZN26KDarkLightScheduleProviderD0Ev@Base 6.4.91
+ _ZN26KDarkLightScheduleProviderD1Ev@Base 6.4.91
+ _ZN26KDarkLightScheduleProviderD2Ev@Base 6.4.91
+ _ZNK15KDarkLightCycle12extrapolatedERK9QDateTime@Base 6.4.91
+ _ZNK15KDarkLightCycle12noonDateTimeEv@Base 6.4.91
+ _ZNK15KDarkLightCycle14nextTransitionERK9QDateTime@Base 6.4.91
+ _ZNK15KDarkLightCycle18previousTransitionERK9QDateTime@Base 6.4.91
+ _ZNK15KDarkLightCycle7eveningEv@Base 6.4.91
+ _ZNK15KDarkLightCycle7morningEv@Base 6.4.91
+ _ZNK18KDarkLightSchedule14nextTransitionERK9QDateTime@Base 6.4.91
+ _ZNK18KDarkLightSchedule18previousTransitionERK9QDateTime@Base 6.4.91
+ _ZNK18KDarkLightSchedule6cyclesEv@Base 6.4.91
+ _ZNK18KDarkLightSchedule7toStateEv@Base 6.4.91
+ _ZNK20KDarkLightTransition11endDateTimeEv@Base 6.4.91
+ _ZNK20KDarkLightTransition13startDateTimeEv@Base 6.4.91
+ _ZNK20KDarkLightTransition4testERK9QDateTime@Base 6.4.91
+ _ZNK20KDarkLightTransition4typeEv@Base 6.4.91
+ _ZNK20KDarkLightTransition8progressERK9QDateTime@Base 6.4.91
+ _ZNK26KDarkLightScheduleProvider10metaObjectEv@Base 6.4.91
+ _ZNK26KDarkLightScheduleProvider5stateEv@Base 6.4.91
+ _ZNK26KDarkLightScheduleProvider8scheduleEv@Base 6.4.91
+ (optional=templinst)_ZNKSt8_Rb_treeI7QStringSt4pairIKS0_8QVariantESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE4findERS2_@Base 6.4.91
+ (optional=templinst)_ZNSt8_Rb_treeI7QStringSt4pairIKS0_8QVariantESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE24_M_get_insert_unique_posERS2_@Base 6.4.91
+ (optional=templinst)_ZNSt8_Rb_treeI7QStringSt4pairIKS0_8QVariantESt10_Select1stIS4_ESt4lessIS0_ESaIS4_EE29_M_get_insert_hint_unique_posESt23_Rb_tree_const_iteratorIS4_ERS2_@Base 6.4.91
+ _ZTI26KDarkLightScheduleProvider@Base 6.4.91
+ (arch=armel riscv64)_ZTIN9__gnu_cxx7__mutexE@Base 6.4.91
+ (arch=armel riscv64)_ZTISt11_Mutex_baseILN9__gnu_cxx12_Lock_policyE1EE@Base 6.4.91
+ (arch=!armel !riscv64)_ZTISt11_Mutex_baseILN9__gnu_cxx12_Lock_policyE2EE@Base 6.4.91
+ (arch=armel riscv64)_ZTISt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE1EE@Base 6.4.91
+ (arch=!armel !riscv64)_ZTISt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE@Base 6.4.91
+ (arch=armel armhf)_ZTISt19_Sp_make_shared_tag@Base 6.4.91
+ _ZTS26KDarkLightScheduleProvider@Base 6.4.91
+ (arch=armel riscv64)_ZTSN9__gnu_cxx7__mutexE@Base 6.4.91
+ (arch=armel riscv64)_ZTSSt11_Mutex_baseILN9__gnu_cxx12_Lock_policyE1EE@Base 6.4.91
+ (arch=!armel !riscv64)_ZTSSt11_Mutex_baseILN9__gnu_cxx12_Lock_policyE2EE@Base 6.4.91
+ (arch=armel riscv64)_ZTSSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE1EE@Base 6.4.91
+ (arch=!armel !riscv64)_ZTSSt16_Sp_counted_baseILN9__gnu_cxx12_Lock_policyE2EE@Base 6.4.91
+ _ZTSSt19_Sp_make_shared_tag@Base 6.4.91
+ _ZTV26KDarkLightScheduleProvider@Base 6.4.91
+ _ZZNSt19_Sp_make_shared_tag5_S_tiEvE5__tag@Base 6.4.91
+ _Zls6QDebugRK15KDarkLightCycle@Base 6.4.91
+ _Zls6QDebugRK18KDarkLightSchedule@Base 6.4.91
+ _Zls6QDebugRK20KDarkLightTransition@Base 6.4.91

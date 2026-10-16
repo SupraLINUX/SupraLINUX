@@ -1,0 +1,1 @@
+libkf6auth-data: dbus-policy-without-send-destination <policy context="default"><allow send_interface="org.kde.kf6auth"/> [usr/share/dbus-1/system.d/org.kde.kf6auth.conf:*]

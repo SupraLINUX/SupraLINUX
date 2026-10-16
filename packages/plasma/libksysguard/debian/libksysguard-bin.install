@@ -1,0 +1,5 @@
+#!/usr/bin/dh-exec
+[linux-any] usr/lib/*/libexec/ksysguard/ksgrd_network_helper
+[linux-any] usr/lib/*/qt6/plugins/ksysguard/process/ksysguard_plugin_gpu.so
+[linux-any] usr/lib/*/qt6/plugins/ksysguard/process/ksysguard_plugin_network.so
+usr/lib/kf6/kauth/libexec/ksysguardprocesslist_helper

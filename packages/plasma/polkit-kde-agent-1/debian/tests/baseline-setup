@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: CC0-1.0
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-polkit-agent-baseline
+mkdir -p -- "${BASE}"
+actual="$(dpkg-query -W -f='${Version}' polkit-kde-agent-1)"
+expected="$(cat /var/tmp/supralinux-ubuntu-package-version)"
+[[ "${actual}" == "${expected}" ]]
+printf '%s\n' "${actual}" > "${BASE}/ubuntu-version"
+dpkg-query -L polkit-kde-agent-1 > "${BASE}/installed-files.txt"
+grep -F '/polkit-kde-authentication-agent-1' "${BASE}/installed-files.txt" >/dev/null
+printf 'Reviewed Ubuntu polkit agent baseline: PASS\n'

@@ -1,0 +1,4 @@
+usr/lib/*/libexec/knighttimed
+usr/lib/systemd/user/plasma-knighttimed.service
+usr/share/applications/org.kde.knighttimed.desktop
+usr/share/dbus-1/services/org.kde.NightTime.service

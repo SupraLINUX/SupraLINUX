@@ -1,0 +1,12 @@
+{
+  "scope": "owned native runtime input staging; no package result",
+  "source_root": "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source",
+  "build_root": "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu",
+  "qml_import_root": "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin",
+  "qml_dir_sha256": "49be54c15cca6eea86e6b98b442d5813de7abb754ff91cf85fe5546233ff79f6",
+  "plugin_build_path": "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/ksysguard_sensorface.so",
+  "plugin_staged_path": "/tmp/supra-stats-private-ypv9bp7e/qt-plugins/kf6/packagestructure/ksysguard_sensorface.so",
+  "plugin_install_namespace": "kf6/packagestructure/ksysguard_sensorface.so",
+  "plugin_sha256": "49625695ac760fd282ec771bc14afd3cc475caa183540afdecd0bc0fd9f0b1a2",
+  "byte_preserving_private_staging": true
+}

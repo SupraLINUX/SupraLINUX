@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "scope": "reviewed-ubuntu-baseline-preflight",
+  "node": "plasma-thunderbolt",
+  "state": "PASS",
+  "exit_code": 0,
+  "source_commit": "8ae73d0cf501113a3a4ee6e1edec0ba3cdfe8c7a",
+  "workflow_run_id": "37378827086",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "candidate_installed": false,
+  "inputs_sha256": {
+    "scripts/probe-reviewed-ubuntu-baseline.py": "bf6e05cbee7372e35cbbd6b39d4d5dd00fbf10cda45bff8a1e0c7b9b77b5c6ba",
+    "scripts/plasma-package-testing.py": "d0af4b36dad45ea121d71094176ba59873d7fb274babb268e586075a9914dd7d",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "packages/plasma/plasma-thunderbolt/debian/tests/baseline-setup": "470998972f34986c7e53888ad639a77adc3d1ada5394af96fd14fcdabd86f499"
+  },
+  "files_sha256": {
+    "autopkgtest/log": "886fc4ec2ceb9214a5e6938679771c7a7a2d8a3a8ce12a1dc123e68086f84ff2",
+    "autopkgtest/reviewed-baseline-packages": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/reviewed-baseline-stdout": "d3b4cc1ff51e072e6cdc994df4920876c3641850e045eb736371c334bd043401",
+    "autopkgtest/summary": "36e1952a68e082ee9b1d71c36e7ee1d26054668b01a97ed5e481b3e31a7962e2",
+    "autopkgtest/testbed-packages": "e165f2ce75870731d6c7e332f4f7df31e07f1ae81a08ed240da57f02fced552b",
+    "autopkgtest/testinfo.json": "92f4607e1b393552e0d84437d7ad822c8b4ae4d2b2e4a3174dddb6ab18865040",
+    "baseline-setup": "470998972f34986c7e53888ad639a77adc3d1ada5394af96fd14fcdabd86f499",
+    "reviewed-inputs.json": "ac93a0fda6f5414c8696c4b22343f73b30e4ddfc6e107376cc8da68aaf9e587e",
+    "setup-commands.txt": "4d06efbc4e029fe6dd67f7471646fd8c4098a65a53a2453ec172d6918b69975f"
+  }
+}

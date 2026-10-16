@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "state": "ORIGINAL FAIL; STALE TEST VERSION GUARD",
+  "source_commit": "6bfe9d442a6e78cd2d6ee49b81566041b94d438c",
+  "version": "4:6.7.5-0supralinux2",
+  "downstream_eligible": false,
+  "original_result_sha256": "0e7a30cbca88c8c4d348c658a5006ad95d46c8246f2b4838a4c0e758e4389184",
+  "consumer_path": "packages/plasma/kde-cli-tools/debian/tests/consumer",
+  "consumer_sha256": "03af7fbf530351494ab70d4466de102e448b552053b9b139dcdea0f87447631c",
+  "stale_expected_version": "4:6.7.5-0supralinux1",
+  "installed_version_evidence": "autopkgtest/log contains Setting up for both revision2 packages; ubuntu-abi-client revision2 assertions passed",
+  "consumer_packages_file_scope": "Additional test dependencies only; this file does not list candidate versions",
+  "cause": "The first shell comparison exits 1 before CMake/rebuilt consumer or subsequent payload assertions.",
+  "sbuild": "PASS",
+  "filetypestest": "10 passed; 0 failed; official test unchanged",
+  "kcm_smoketest": "PASS",
+  "appstream_payload_validation": "NOT RUN; process passed with Not installed yet, skipping",
+  "lintian": "PASS",
+  "original_ubuntu_client": "PASS after real candidate APT upgrade",
+  "rebuilt_consumer": "NOT RUN",
+  "later_payload_assertions": "NOT RUN",
+  "repair_implemented": false,
+  "required_next_steps": [
+    "Repair exact source-version guard without weakening package identity",
+    "Review candidate version and full packaging/native-fixture-proof applicability; preserve originals",
+    "Validate changed mechanism and fresh relevant input gate before next valid package Attempt"
+  ],
+  "files_sha256": {
+    "autopkgtest/log": "48d3c6b12fd15b654395a25a592bfb4bc2fb6daa90e6fadcbc74b84ac1adb281",
+    "autopkgtest/summary": "f09d1807e155b933d15aab5d256ff7e160cbcd974b158319683b668391096710",
+    "autopkgtest/ubuntu-abi-client-stdout": "58ce7ed6dba38f0a5b49ef271f762106a6adaef19b4283cb0c395321b394aae3",
+    "autopkgtest/consumer-packages": "74547ea6433283cbe8929a30452fb6a0f32d1eaa403f299b76604d021129601c",
+    "upstream-tests.json": "36b82a80a4c45ab531dd31f1efef4d71485cd4bb2445d0a7fad99c0b4728e0da",
+    "lintian.log": "7216b0917d6febcaff35b279e6ccb9edfea130b87b917086e52048338ea506a5"
+  }
+}

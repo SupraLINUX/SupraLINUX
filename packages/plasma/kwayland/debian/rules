@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all optimize=+lto
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DBUILD_QCH=ON -DBUILD_TESTING=ON
+
+# Upstream registers manual clients, not automated CTests. Compile all enabled
+# clients; dh_auto_test records the actual CTest discovery without inventing tests.

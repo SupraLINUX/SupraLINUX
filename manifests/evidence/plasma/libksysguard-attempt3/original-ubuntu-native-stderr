@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/packages/plasma/libksysguard/debian/tests/client/run-private.py", line 108, in <module>
+    raise subprocess.CalledProcessError(code, command)
+subprocess.CalledProcessError: Command '['/usr/lib/cargo/bin/coreutils/env', '/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/libksysguard-sensortree-original-sdk-review/sensortreemodeltest']' returned non-zero exit status 1.

@@ -1,0 +1,14 @@
+SupraLINUX KConfig packaging
+==============================
+
+Authority is KDE upstream stable. Debian 6.28 packaging retained by SupraLINUX is a technical reference for package layout, symbols, copyright and Debian-family compatibility only.
+
+This Batch 9 package targets KDE Frameworks 6.30.0, ECM 6.30.0-0supralinux3 and Ubuntu 26.04 as provider platform. BUILD_TESTING remains ON. QCH is intentionally OFF under the common SupraLINUX Frameworks packaging profile.
+
+The Debian patch allowing KCONFIG_COMPILER_INSTALL_DIR is retained solely to preserve the Debian-compatible libexec layout. The two Debian QSKIP test patches are deliberately excluded.
+
+ABI references remain in the retained, hash-pinned Debian 6.28 packaging-tree artifact and are materialized as active *.symbols only inside the clean runner. The campaign pins each reference file SHA-256 and export count. Any 6.30 ABI delta must be observed in real CI and documented before a SupraLINUX symbols overlay is added; no symbol versions are guessed in advance.
+
+Batch 9 attempt 1 established the reviewed ABI delta and attempt 2 proved that the delta itself is accepted by dpkg-gensymbols. Attempt 2 then failed only because debian/rules directly invokes python3 without declaring it as a build prerequisite. Revision -3 therefore adds python3:any to Build-Depends; the reviewed symbols delta and upstream KDE defaults are otherwise unchanged.
+
+Batch 9 validation cycle 4 proved the package build, 90/90 upstream tests, Lintian, amd64 ABI floor and exact local APT installation, then failed the consumer CMake configure because the installed KF6ConfigConfig.cmake executes find_dependency(Qt6Qml "6.9.0") while libkf6config-dev did not pull in the Qt QML development CMake package. Ubuntu 26.04 Resolute provides that contract through qt6-declarative-dev 6.10.2+dfsg-3. Revision -4 therefore adds qt6-declarative-dev (>= 6.9.0~) to the libkf6config-dev Depends. KDE/Qt define the requirement; Ubuntu is only the provider. No KDE feature, ABI symbol minimum or upstream default changes.

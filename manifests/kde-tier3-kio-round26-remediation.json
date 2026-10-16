@@ -1,0 +1,226 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-27",
+  "node": "kio",
+  "round": 26,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "claim": "non-promoting-kio-kdirmodel-hidden-home-causality-and-combined-remediation-proof",
+  "non_promoting": true,
+  "remediation_candidate": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "canonical_source_modified": false,
+  "diagnostic_worktree_modified": true,
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "package_revision_allocation": false,
+  "test_suppression": false,
+  "execution_authorized": false,
+  "package_execution_authorized": false,
+  "status": "remediation-PASS",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "canonical_kio": {
+    "state": "FAIL",
+    "package_version": "6.30.0-0supralinux8",
+    "downstream_eligible": false
+  },
+  "predecessor_round25": {
+    "status": "remediation-FAIL-contract",
+    "workflow_run": 36359842892,
+    "job_id": 108734756942,
+    "branch_commit": "5d8b72cf6d468550aa520d0a09c169ff9c1bf05f",
+    "artifact_id": 10945592004,
+    "artifact_sha256": "0ac55c97c3efb725bd46500d9f899fcc0222368f8b60973b574356975b2dd1ce",
+    "historical_contract_result": "FAIL",
+    "target_krecent_remediation": "PASS",
+    "candidate_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+    "target_evidence": {
+      "isolated_runs": 220,
+      "isolated_failures": 0,
+      "full_suite_krecent": "PASS"
+    },
+    "independent_blocker": "kiowidgets-kdirmodeltest"
+  },
+  "kdirmodel_upstream_check": {
+    "repository": "KDE/kio",
+    "test_v630_sha": "1d9d47f086a2605f76ceb31581111000a83bfba4",
+    "test_master_sha": "1d9d47f086a2605f76ceb31581111000a83bfba4",
+    "implementation_v630_sha": "35afa32a7fc2284d05dbcc6d7edadbf7ed59d98c",
+    "implementation_master_sha": "35afa32a7fc2284d05dbcc6d7edadbf7ed59d98c",
+    "kcoredirlister_v630_sha": "b9f7c8ba925d4b72bb724d49e8eef16dc3b06b48",
+    "kcoredirlister_master_sha": "7a451b0a5288719128bb37d27eb12142adefefeb",
+    "default_show_hidden_files": false,
+    "relevant_kdirmodel_test_and_implementation_unchanged": true
+  },
+  "hypothesis": {
+    "classification": "hidden-home-path-causality-candidate",
+    "historical_home": "/build/reproducible-path/kf6-kio-6.30.0/debian/.supralinux-test-home/sbuild",
+    "visible_control_home": "/build/reproducible-path/kf6-kio-6.30.0/debian/supralinux-test-home/sbuild",
+    "source_fact": "KCoreDirLister defaults setShowHiddenFiles(false)",
+    "failing_behavior": "ShowRoot on file:/// then expandToUrl(homeUrl) cannot discover hidden .supralinux-test-home",
+    "supporting_behavior": "testShowRootWithTrailingSlash opens the HOME directly and historically passes",
+    "causal_question": "does the historical hidden HOME reproduce both KDirModel assertions while an otherwise equivalent visible HOME eliminates them?",
+    "production_change_authorized": false
+  },
+  "combined_remediation": {
+    "krecent_candidate_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+    "krecent_candidate_reused_exactly": true,
+    "packaging_home_change": {
+      "from": "debian/.supralinux-test-home/sbuild",
+      "to": "debian/supralinux-test-home/sbuild",
+      "source_code_change": false,
+      "package_runtime_change": false,
+      "test_environment_only": true
+    },
+    "production_patch_selected": false,
+    "production_packaging_change_selected": false
+  },
+  "infrastructure_basis": {
+    "new_infrastructure_mechanism": false,
+    "certified_preflight": {
+      "status": "PASS",
+      "workflow_run": 36286096599,
+      "job_id": 108527097646,
+      "artifact_id": 10920194622,
+      "artifact_sha256": "ee6adecf77aa5110db735220bca0ebecd2a4a41b4a2b8dacc6692816866c1d39"
+    },
+    "certified_target_transport": {
+      "round": 25,
+      "environment_valid": true,
+      "workflow_run": 36359842892,
+      "artifact_id": 10945592004
+    }
+  },
+  "historical_build_path_contract": {
+    "sbuild_version": "0.91.2ubuntu3",
+    "chroot_mode": "unshare",
+    "network": true,
+    "dpkg_buildpackage_command": "dpkg-buildpackage --sanitize-env -us -uc -b",
+    "debian_entrypoint": "debian/rules binary",
+    "diagnostic_injection_point": "override_dh_auto_test",
+    "manual_configure_or_build_from_hook_forbidden": true,
+    "worktree_source_restored_before_exit": true,
+    "candidate_package_artifacts_forbidden": true
+  },
+  "diagnostic_matrix": [
+    {
+      "id": "hidden-home",
+      "test": "kiowidgets-kdirmodeltest",
+      "repetitions": 10,
+      "home": "debian/.supralinux-test-home/sbuild",
+      "expected": "exact historical two-assertion failure each run"
+    },
+    {
+      "id": "visible-home",
+      "test": "kiowidgets-kdirmodeltest",
+      "repetitions": 20,
+      "home": "debian/supralinux-test-home/sbuild",
+      "expected": "20/20 PASS"
+    },
+    {
+      "id": "full-suite-visible",
+      "test": "all 69 CTest tests",
+      "repetitions": 1,
+      "home": "debian/supralinux-test-home/sbuild",
+      "expected": "69/69 PASS including KRecent and KDirModel"
+    }
+  ],
+  "validity_contract": {
+    "exact_attempt8_rootfs": true,
+    "exact_attempt8_source_materialization": true,
+    "exact_attempt8_predecessor_artifacts": true,
+    "exact_sbuild_unshare_mode": true,
+    "historical_dpkg_buildpackage_required": true,
+    "remediation_runs_from_override_dh_auto_test": true,
+    "exact_round25_krecent_candidate_patch_required": true,
+    "hidden_lane_requires_exact_historical_kdirmodel_signature": true,
+    "visible_lane_requires_zero_kdirmodel_failures": true,
+    "full_suite_visible_requires_69_of_69": true,
+    "full_suite_requires_krecent_and_kdirmodel_pass": true,
+    "full_suite_krecent_final_order_12_13_14": true,
+    "hidden_and_visible_test_homes_removed_before_exit": true,
+    "test_and_core_sources_restored_before_exit": true,
+    "canonical_source_artifact_unchanged": true,
+    "no_candidate_package_artifacts": true
+  },
+  "pass_contract": {
+    "hidden_home": "10/10 runs reproduce both historical KDirModel assertions",
+    "visible_home": "20/20 runs pass",
+    "full_suite_visible": "69/69 tests pass",
+    "krecent_candidate_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+    "conclusion": "hidden-home-causality-and-combined-kio-remediation-PASS"
+  },
+  "decision_rules": {
+    "pass": "hidden HOME reproduces 10/10 exact historical KDirModel signature, visible HOME passes 20/20, visible-home full suite passes 69/69, exact Round25 KRecent patch is reused, and restoration/artifact contracts pass",
+    "fail": "valid environment but hidden-home causality or combined remediation proof does not satisfy the declared matrix",
+    "infra_invalid": "transport/input/environment/restoration failure prevents valid evaluation",
+    "no_package_decision": "Round26 cannot itself allocate a package revision, authorize Attempt 9, unblock dependents, suppress tests, or promote packages"
+  },
+  "next_gate": "tier3-attempt9-kio-remediation-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "historical_evidence": {
+    "workflow_run": 36366972800,
+    "job_id": 108755265236,
+    "branch_commit": "d8ad9719307bcc115380440f008e9b862b5e6388",
+    "artifact_id": 10948970106,
+    "artifact_sha256": "7c8b91266fd9ecd79638c8c4bfc5419dadac937b911517522b083900e9bc9f98",
+    "result": "REMEDIATION_PASS"
+  },
+  "result": {
+    "environment_valid": true,
+    "diagnostic_build_path_invoked": true,
+    "package_attempted": false,
+    "package_state_effect": "none",
+    "containment": "sbuild-0.91.2ubuntu3-unshare",
+    "historical_build_path": "sbuild -> dpkg-buildpackage --sanitize-env -us -uc -b -> debian/rules binary -> override_dh_auto_test",
+    "source_restored": true,
+    "rules_restored": true,
+    "candidate_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+    "candidate_source_sha256": "57d20f3786220178316b31819ba266432207b1f4d55859ccf8d1fad37645021b",
+    "historical_candidate_patch_reused": true,
+    "kdirmodel_matrix": {
+      "hidden-home": {
+        "runs": 10,
+        "expected_runs": 10,
+        "nonzero_rc_runs": 10,
+        "exact_historical_signature_runs": 10
+      },
+      "visible-home": {
+        "runs": 20,
+        "expected_runs": 20,
+        "nonzero_rc_runs": 0,
+        "exact_historical_signature_runs": 0
+      }
+    },
+    "hidden_home_causality_reproduced": true,
+    "visible_home_remediation_pass": true,
+    "full_suite_visible": {
+      "rc": 0,
+      "all_69_tests_pass": true,
+      "kdirmodel_pass": true,
+      "krecent_pass": true,
+      "krecent_final_order": [
+        "temp File 12",
+        "temp File 13",
+        "temp File 14"
+      ],
+      "krecent_final_order_ok": true
+    },
+    "combined_suite_pass": true,
+    "conclusion": "hidden-home-causality-and-combined-kio-remediation-PASS"
+  },
+  "interpretation": {
+    "hidden_home_path_causality": "confirmed",
+    "historical_hidden_home_reproduces": "10/10 exact historical KDirModel signature",
+    "visible_home_remediation": "20/20 PASS",
+    "combined_kio_suite": "69/69 PASS",
+    "krecent_candidate_reused_exactly": true,
+    "krecent_candidate_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+    "production_source_patch_selected": false,
+    "production_packaging_home_change_selected": false,
+    "attempt9_authorized": false,
+    "next_scope": "define Attempt 9 package remediation using the proven KRecent ordering patch and visible test HOME"
+  }
+}

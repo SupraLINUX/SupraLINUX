@@ -1,0 +1,2102 @@
+sbuild (Debian sbuild) 0.91.2ubuntu3 (11 February 2026) on supralinux-golden-20261001t012658z-3d4ce1a31222-149797
+
++==============================================================================+
+| supralinux-cache-probe 1.0 (amd64)           Wed, 07 Oct 2026 22:09:26 +0000 |
++==============================================================================+
+
+Package: supralinux-cache-probe
+Version: 1.0
+Source Version: 1.0
+Distribution: resolute
+Machine Architecture: amd64
+Host Architecture: amd64
+Build Architecture: amd64
+Build Type: binary
+
+I: Unpacking /home/ubuntu/.cache/sbuild/resolute-amd64.tar to /tmp/tmp.sbuild.wG94zJ8tc1...
+I: Setting up the chroot...
+I: Creating chroot session...
+I: Setting up log color...
+I: Setting up apt archive...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/extra-cmake-modules_6.30.0-0supralinux3_all.deb to /sbuild-unshare-dummy-location...
+Copying /opt/actions-runner/_work/SupraLINUX/SupraLINUX/evidence/authoritative-plasma-package/supplementary-predecessors/plasma-wayland-protocols/plasma-wayland-protocols_1.22.0-0supralinux1_all.deb to /sbuild-unshare-dummy-location...
+
++------------------------------------------------------------------------------+
+| Update chroot                                Wed, 07 Oct 2026 22:09:33 +0000 |
++------------------------------------------------------------------------------+
+
+Ign:1 file:/build/reproducible-path/resolver-a1ASpF/apt_archive ./ InRelease
+Get:2 file:/build/reproducible-path/resolver-a1ASpF/apt_archive ./ Release [606 B]
+Get:2 file:/build/reproducible-path/resolver-a1ASpF/apt_archive ./ Release [606 B]
+Ign:3 file:/build/reproducible-path/resolver-a1ASpF/apt_archive ./ Release.gpg
+Get:4 file:/build/reproducible-path/resolver-a1ASpF/apt_archive ./ Packages [1556 B]
+Get:5 https://archive.ubuntu.com/ubuntu resolute InRelease [136 kB]
+Get:6 https://archive.ubuntu.com/ubuntu resolute-updates InRelease [137 kB]
+Get:7 https://archive.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+Get:8 https://archive.ubuntu.com/ubuntu resolute/main amd64 Packages [1480 kB]
+Get:9 https://archive.ubuntu.com/ubuntu resolute/universe amd64 Packages [16.0 MB]
+Get:10 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages [733 kB]
+Get:11 https://archive.ubuntu.com/ubuntu resolute-updates/universe amd64 Packages [322 kB]
+Get:12 https://archive.ubuntu.com/ubuntu resolute-security/universe amd64 Packages [199 kB]
+Get:13 https://archive.ubuntu.com/ubuntu resolute-security/main amd64 Packages [597 kB]
+Fetched 19.7 MB in 1min 27s (227 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+The following NEW packages will be installed:
+  libcrypt-dev
+The following packages will be upgraded:
+  base-files build-essential bzip2 diffutils gnu-coreutils gpgv gzip libattr1
+  libaudit-common libaudit1 libblkid1 libbz2-1.0 libc-bin libc-dev-bin
+  libc-gconv-modules-extra libc6 libc6-dev libgcrypt20 libmount1
+  libpam-modules libpam-modules-bin libpam-runtime libpam0g libperl5.40
+  libsmartcols1 libssl3t64 libsystemd0 libudev1 libuuid1 linux-libc-dev
+  openssl-provider-legacy perl perl-base perl-modules-5.40 rust-coreutils sed
+  tar util-linux zlib1g
+39 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 31.2 MB of archives.
+After this operation, 1313 kB of additional disk space will be used.
+Get:1 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libc-dev-bin amd64 2.43-2ubuntu2.4 [23.3 kB]
+Get:2 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libc6-dev amd64 2.43-2ubuntu2.4 [2294 kB]
+Get:3 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libc-gconv-modules-extra amd64 2.43-2ubuntu2.4 [1362 kB]
+Get:4 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libc6 amd64 2.43-2ubuntu2.4 [2104 kB]
+Get:5 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 linux-libc-dev amd64 7.0.0-38.38 [1715 kB]
+Get:6 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 base-files amd64 14ubuntu6.2 [74.9 kB]
+Get:7 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 diffutils amd64 1:3.12-1ubuntu0.1 [176 kB]
+Get:8 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 gzip amd64 1.14-1~exp2ubuntu1.1 [106 kB]
+Get:9 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libperl5.40 amd64 5.40.1-7ubuntu0.3 [4889 kB]
+Get:10 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 perl amd64 5.40.1-7ubuntu0.3 [262 kB]
+Get:11 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 perl-base amd64 5.40.1-7ubuntu0.3 [1850 kB]
+Get:12 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 perl-modules-5.40 all 5.40.1-7ubuntu0.3 [3212 kB]
+Get:13 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 bzip2 amd64 1.0.8-6ubuntu0.1 [34.3 kB]
+Get:14 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libbz2-1.0 amd64 1.0.8-6ubuntu0.1 [36.2 kB]
+Get:15 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 zlib1g amd64 1:1.3.dfsg+really1.3.1-1ubuntu3.1 [61.6 kB]
+Get:16 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 sed amd64 4.9-2ubuntu1 [195 kB]
+Get:17 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 tar amd64 1.35+dfsg-4ubuntu0.4 [258 kB]
+Get:18 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libsmartcols1 amd64 2.41.3-3ubuntu2.2 [84.9 kB]
+Get:19 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libuuid1 amd64 2.41.3-3ubuntu2.2 [36.7 kB]
+Get:20 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libblkid1 amd64 2.41.3-3ubuntu2.2 [126 kB]
+Get:21 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libmount1 amd64 2.41.3-3ubuntu2.2 [159 kB]
+Get:22 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 util-linux amd64 2.41.3-3ubuntu2.2 [1070 kB]
+Get:23 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libc-bin amd64 2.43-2ubuntu2.4 [701 kB]
+Get:24 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 gnu-coreutils amd64 9.7-3ubuntu2.1 [1339 kB]
+Get:25 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libpam-runtime all 1.7.0-5ubuntu3.2 [149 kB]
+Get:26 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libaudit-common all 1:4.1.2-1ubuntu0.1 [4958 B]
+Get:27 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libaudit1 amd64 1:4.1.2-1ubuntu0.1 [55.1 kB]
+Get:28 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libpam0g amd64 1.7.0-5ubuntu3.2 [65.0 kB]
+Get:29 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libsystemd0 amd64 259.5-0ubuntu3.4 [481 kB]
+Get:30 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libpam-modules-bin amd64 1.7.0-5ubuntu3.2 [45.6 kB]
+Get:31 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libpam-modules amd64 1.7.0-5ubuntu3.2 [193 kB]
+Get:32 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libattr1 amd64 1:2.5.2-4ubuntu0.1 [12.0 kB]
+Get:33 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 openssl-provider-legacy amd64 3.5.5-1ubuntu3.7 [39.7 kB]
+Get:34 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libssl3t64 amd64 3.5.5-1ubuntu3.7 [2368 kB]
+Get:35 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libudev1 amd64 259.5-0ubuntu3.4 [151 kB]
+Get:36 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 rust-coreutils amd64 0.10.0-1ubuntu2~26.04.1 [4515 kB]
+Get:37 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libgcrypt20 amd64 1.12.0-2ubuntu1.1 [675 kB]
+Get:38 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 gpgv amd64 2.4.8-4ubuntu3.1 [155 kB]
+Get:39 https://archive.ubuntu.com/ubuntu resolute/main amd64 libcrypt-dev amd64 1:4.5.1-1 [122 kB]
+Get:40 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 build-essential amd64 12.12ubuntu2.26.04.2 [5158 B]
+Preconfiguring packages ...
+Fetched 31.2 MB in 2min 31s (207 kB/s)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libc-dev-bin_2.43-2ubuntu2.4_amd64.deb ...
+Unpacking libc-dev-bin (2.43-2ubuntu2.4) over (2.43-2ubuntu2) ...
+Preparing to unpack .../libc6-dev_2.43-2ubuntu2.4_amd64.deb ...
+Unpacking libc6-dev:amd64 (2.43-2ubuntu2.4) over (2.43-2ubuntu2) ...
+Preparing to unpack .../libc-gconv-modules-extra_2.43-2ubuntu2.4_amd64.deb ...
+Unpacking libc-gconv-modules-extra:amd64 (2.43-2ubuntu2.4) over (2.43-2ubuntu2) ...
+Setting up libc-gconv-modules-extra:amd64 (2.43-2ubuntu2.4) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libc6_2.43-2ubuntu2.4_amd64.deb ...
+Unpacking libc6:amd64 (2.43-2ubuntu2.4) over (2.43-2ubuntu2) ...
+Setting up libc6:amd64 (2.43-2ubuntu2.4) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../linux-libc-dev_7.0.0-38.38_amd64.deb ...
+Unpacking linux-libc-dev:amd64 (7.0.0-38.38) over (7.0.0-14.14) ...
+Preparing to unpack .../base-files_14ubuntu6.2_amd64.deb ...
+Unpacking base-files (14ubuntu6.2) over (14ubuntu6) ...
+Setting up base-files (14ubuntu6.2) ...
+Installing new version of config file /etc/issue ...
+Installing new version of config file /etc/issue.net ...
+Installing new version of config file /etc/lsb-release ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../diffutils_1%3a3.12-1ubuntu0.1_amd64.deb ...
+Unpacking diffutils (1:3.12-1ubuntu0.1) over (1:3.12-1) ...
+Setting up diffutils (1:3.12-1ubuntu0.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../gzip_1.14-1~exp2ubuntu1.1_amd64.deb ...
+Unpacking gzip (1.14-1~exp2ubuntu1.1) over (1.14-1~exp2ubuntu1) ...
+Setting up gzip (1.14-1~exp2ubuntu1.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libperl5.40_5.40.1-7ubuntu0.3_amd64.deb ...
+Unpacking libperl5.40:amd64 (5.40.1-7ubuntu0.3) over (5.40.1-7build1) ...
+Preparing to unpack .../perl_5.40.1-7ubuntu0.3_amd64.deb ...
+Unpacking perl (5.40.1-7ubuntu0.3) over (5.40.1-7build1) ...
+Preparing to unpack .../perl-base_5.40.1-7ubuntu0.3_amd64.deb ...
+Unpacking perl-base (5.40.1-7ubuntu0.3) over (5.40.1-7build1) ...
+Setting up perl-base (5.40.1-7ubuntu0.3) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../perl-modules-5.40_5.40.1-7ubuntu0.3_all.deb ...
+Unpacking perl-modules-5.40 (5.40.1-7ubuntu0.3) over (5.40.1-7build1) ...
+Preparing to unpack .../bzip2_1.0.8-6ubuntu0.1_amd64.deb ...
+Unpacking bzip2 (1.0.8-6ubuntu0.1) over (1.0.8-6build2) ...
+Preparing to unpack .../libbz2-1.0_1.0.8-6ubuntu0.1_amd64.deb ...
+Unpacking libbz2-1.0:amd64 (1.0.8-6ubuntu0.1) over (1.0.8-6build2) ...
+Setting up libbz2-1.0:amd64 (1.0.8-6ubuntu0.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../zlib1g_1%3a1.3.dfsg+really1.3.1-1ubuntu3.1_amd64.deb ...
+Unpacking zlib1g:amd64 (1:1.3.dfsg+really1.3.1-1ubuntu3.1) over (1:1.3.dfsg+really1.3.1-1ubuntu3) ...
+Setting up zlib1g:amd64 (1:1.3.dfsg+really1.3.1-1ubuntu3.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../sed_4.9-2ubuntu1_amd64.deb ...
+Unpacking sed (4.9-2ubuntu1) over (4.9-2build3) ...
+Setting up sed (4.9-2ubuntu1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../tar_1.35+dfsg-4ubuntu0.4_amd64.deb ...
+Unpacking tar (1.35+dfsg-4ubuntu0.4) over (1.35+dfsg-4) ...
+Setting up tar (1.35+dfsg-4ubuntu0.4) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libsmartcols1_2.41.3-3ubuntu2.2_amd64.deb ...
+Unpacking libsmartcols1:amd64 (2.41.3-3ubuntu2.2) over (2.41.3-3ubuntu2) ...
+Setting up libsmartcols1:amd64 (2.41.3-3ubuntu2.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libuuid1_2.41.3-3ubuntu2.2_amd64.deb ...
+Unpacking libuuid1:amd64 (2.41.3-3ubuntu2.2) over (2.41.3-3ubuntu2) ...
+Setting up libuuid1:amd64 (2.41.3-3ubuntu2.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libblkid1_2.41.3-3ubuntu2.2_amd64.deb ...
+Unpacking libblkid1:amd64 (2.41.3-3ubuntu2.2) over (2.41.3-3ubuntu2) ...
+Setting up libblkid1:amd64 (2.41.3-3ubuntu2.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libmount1_2.41.3-3ubuntu2.2_amd64.deb ...
+Unpacking libmount1:amd64 (2.41.3-3ubuntu2.2) over (2.41.3-3ubuntu2) ...
+Setting up libmount1:amd64 (2.41.3-3ubuntu2.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../util-linux_2.41.3-3ubuntu2.2_amd64.deb ...
+Unpacking util-linux (2.41.3-3ubuntu2.2) over (2.41.3-3ubuntu2) ...
+Setting up util-linux (2.41.3-3ubuntu2.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libc-bin_2.43-2ubuntu2.4_amd64.deb ...
+Unpacking libc-bin (2.43-2ubuntu2.4) over (2.43-2ubuntu2) ...
+Setting up libc-bin (2.43-2ubuntu2.4) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../gnu-coreutils_9.7-3ubuntu2.1_amd64.deb ...
+Unpacking gnu-coreutils (9.7-3ubuntu2.1) over (9.7-3ubuntu2) ...
+Setting up gnu-coreutils (9.7-3ubuntu2.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libpam-runtime_1.7.0-5ubuntu3.2_all.deb ...
+Unpacking libpam-runtime (1.7.0-5ubuntu3.2) over (1.7.0-5ubuntu3) ...
+Setting up libpam-runtime (1.7.0-5ubuntu3.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libaudit-common_1%3a4.1.2-1ubuntu0.1_all.deb ...
+Unpacking libaudit-common (1:4.1.2-1ubuntu0.1) over (1:4.1.2-1build1) ...
+Setting up libaudit-common (1:4.1.2-1ubuntu0.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libaudit1_1%3a4.1.2-1ubuntu0.1_amd64.deb ...
+Unpacking libaudit1:amd64 (1:4.1.2-1ubuntu0.1) over (1:4.1.2-1build1) ...
+Setting up libaudit1:amd64 (1:4.1.2-1ubuntu0.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libpam0g_1.7.0-5ubuntu3.2_amd64.deb ...
+Unpacking libpam0g:amd64 (1.7.0-5ubuntu3.2) over (1.7.0-5ubuntu3) ...
+Setting up libpam0g:amd64 (1.7.0-5ubuntu3.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libsystemd0_259.5-0ubuntu3.4_amd64.deb ...
+Unpacking libsystemd0:amd64 (259.5-0ubuntu3.4) over (259.5-0ubuntu3) ...
+Setting up libsystemd0:amd64 (259.5-0ubuntu3.4) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libpam-modules-bin_1.7.0-5ubuntu3.2_amd64.deb ...
+Unpacking libpam-modules-bin (1.7.0-5ubuntu3.2) over (1.7.0-5ubuntu3) ...
+Setting up libpam-modules-bin (1.7.0-5ubuntu3.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libpam-modules_1.7.0-5ubuntu3.2_amd64.deb ...
+Unpacking libpam-modules:amd64 (1.7.0-5ubuntu3.2) over (1.7.0-5ubuntu3) ...
+Setting up libpam-modules:amd64 (1.7.0-5ubuntu3.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libattr1_1%3a2.5.2-4ubuntu0.1_amd64.deb ...
+Unpacking libattr1:amd64 (1:2.5.2-4ubuntu0.1) over (1:2.5.2-4) ...
+Setting up libattr1:amd64 (1:2.5.2-4ubuntu0.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../openssl-provider-legacy_3.5.5-1ubuntu3.7_amd64.deb ...
+Unpacking openssl-provider-legacy (3.5.5-1ubuntu3.7) over (3.5.5-1ubuntu3) ...
+Setting up openssl-provider-legacy (3.5.5-1ubuntu3.7) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libssl3t64_3.5.5-1ubuntu3.7_amd64.deb ...
+Unpacking libssl3t64:amd64 (3.5.5-1ubuntu3.7) over (3.5.5-1ubuntu3) ...
+Setting up libssl3t64:amd64 (3.5.5-1ubuntu3.7) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libudev1_259.5-0ubuntu3.4_amd64.deb ...
+Unpacking libudev1:amd64 (259.5-0ubuntu3.4) over (259.5-0ubuntu3) ...
+Setting up libudev1:amd64 (259.5-0ubuntu3.4) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../rust-coreutils_0.10.0-1ubuntu2~26.04.1_amd64.deb ...
+Unpacking rust-coreutils (0.10.0-1ubuntu2~26.04.1) over (0.8.0-0ubuntu3) ...
+Setting up rust-coreutils (0.10.0-1ubuntu2~26.04.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13079 files and directories currently installed.)
+Preparing to unpack .../libgcrypt20_1.12.0-2ubuntu1.1_amd64.deb ...
+Unpacking libgcrypt20:amd64 (1.12.0-2ubuntu1.1) over (1.12.0-2) ...
+Setting up libgcrypt20:amd64 (1.12.0-2ubuntu1.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13079 files and directories currently installed.)
+Preparing to unpack .../gpgv_2.4.8-4ubuntu3.1_amd64.deb ...
+Unpacking gpgv (2.4.8-4ubuntu3.1) over (2.4.8-4ubuntu3) ...
+Setting up gpgv (2.4.8-4ubuntu3.1) ...
+Selecting previously unselected package libcrypt-dev:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13079 files and directories currently installed.)
+Preparing to unpack .../libcrypt-dev_1%3a4.5.1-1_amd64.deb ...
+Unpacking libcrypt-dev:amd64 (1:4.5.1-1) ...
+Preparing to unpack .../build-essential_12.12ubuntu2.26.04.2_amd64.deb ...
+Unpacking build-essential (12.12ubuntu2.26.04.2) over (12.12ubuntu2) ...
+Setting up linux-libc-dev:amd64 (7.0.0-38.38) ...
+Setting up bzip2 (1.0.8-6ubuntu0.1) ...
+Setting up perl-modules-5.40 (5.40.1-7ubuntu0.3) ...
+Setting up libcrypt-dev:amd64 (1:4.5.1-1) ...
+Setting up libc-dev-bin (2.43-2ubuntu2.4) ...
+Setting up libperl5.40:amd64 (5.40.1-7ubuntu0.3) ...
+Setting up perl (5.40.1-7ubuntu0.3) ...
+Setting up libc6-dev:amd64 (2.43-2ubuntu2.4) ...
+Setting up build-essential (12.12ubuntu2.26.04.2) ...
+Processing triggers for libc-bin (2.43-2ubuntu2.4) ...
+
++------------------------------------------------------------------------------+
+| Fetch source files                           Wed, 07 Oct 2026 22:13:36 +0000 |
++------------------------------------------------------------------------------+
+
+
+Local sources
+-------------
+
+/opt/actions-runner/_work/SupraLINUX/SupraLINUX/.work/authoritative-plasma-package/cache-probe/supralinux-cache-probe_1.0.dsc exists in /opt/actions-runner/_work/SupraLINUX/SupraLINUX/.work/authoritative-plasma-package/cache-probe; copying to chroot
+
++------------------------------------------------------------------------------+
+| Install package build dependencies           Wed, 07 Oct 2026 22:13:37 +0000 |
++------------------------------------------------------------------------------+
+
+
+Setup apt archive
+-----------------
+
+Merged Build-Depends: debhelper-compat (= 13), cmake, extra-cmake-modules (= 6.30.0-0supralinux3), qt6-base-dev, python3, plasma-wayland-protocols (= 1.22.0-0supralinux1), build-essential
+Filtered Build-Depends: debhelper-compat (= 13), cmake, extra-cmake-modules (= 6.30.0-0supralinux3), qt6-base-dev, python3, plasma-wayland-protocols (= 1.22.0-0supralinux1), build-essential
+dpkg-deb: building package 'sbuild-build-depends-main-dummy' in '/build/reproducible-path/resolver-ki5ZFi/apt_archive/sbuild-build-depends-main-dummy.deb'.
+Ign:1 copy:/build/reproducible-path/resolver-ki5ZFi/apt_archive ./ InRelease
+Get:2 copy:/build/reproducible-path/resolver-ki5ZFi/apt_archive ./ Release [609 B]
+Ign:3 copy:/build/reproducible-path/resolver-ki5ZFi/apt_archive ./ Release.gpg
+Get:4 copy:/build/reproducible-path/resolver-ki5ZFi/apt_archive ./ Sources [725 B]
+Get:5 copy:/build/reproducible-path/resolver-ki5ZFi/apt_archive ./ Packages [764 B]
+Fetched 2098 B in 0s (0 B/s)
+Reading package lists...
+Ign:1 file:/build/reproducible-path/resolver-a1ASpF/apt_archive ./ InRelease
+Get:2 file:/build/reproducible-path/resolver-a1ASpF/apt_archive ./ Release [606 B]
+Get:2 file:/build/reproducible-path/resolver-a1ASpF/apt_archive ./ Release [606 B]
+Ign:3 file:/build/reproducible-path/resolver-a1ASpF/apt_archive ./ Release.gpg
+Reading package lists...
+Reading package lists...
+
+Install main build dependencies (apt-based resolver)
+----------------------------------------------------
+
+Installing build dependencies
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Solving dependencies...
+The following additional packages will be installed:
+  autoconf automake autopoint autotools-dev bsdextrautils cmake cmake-data
+  debhelper debugedit dh-autoreconf dh-strip-nondeterminism dwz
+  extra-cmake-modules file fontconfig fontconfig-config fonts-dejavu-core
+  fonts-dejavu-mono gettext gettext-base groff-base intltool-debian
+  libarchive-zip-perl libarchive13t64 libavahi-client3 libavahi-common-data
+  libavahi-common3 libb2-1 libbrotli1 libbsd0 libcom-err2 libcups2t64
+  libcurl3t64-gnutls libcurl4t64 libdbus-1-3 libdebhelper-perl
+  libdouble-conversion3 libdrm-amdgpu1 libdrm-common libdrm-intel1 libdrm2
+  libduktape207 libdw1t64 libedit2 libegl-mesa0 libegl1 libelf1t64 libevdev2
+  libexpat1 libffi8 libfile-stripnondeterminism-perl libfontconfig1
+  libfreetype6 libgbm1 libgl-dev libgl1 libgl1-mesa-dri libglib2.0-0t64
+  libglvnd0 libglx-dev libglx-mesa0 libglx0 libgnutls30t64 libgraphite2-3
+  libgssapi-krb5-2 libgudev-1.0-0 libharfbuzz0b libhogweed6t64 libice6
+  libicu78 libidn2-0 libinput-bin libinput10 libjpeg-turbo8 libjpeg8
+  libjsoncpp26 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0
+  libldap-common libldap2 libllvm21 libmagic-mgc libmagic1t64 libmd4c0
+  libmtdev1t64 libncursesw6 libnettle8t64 libnghttp2-14 libopengl-dev
+  libopengl0 libp11-kit0 libpciaccess0 libpcre2-16-0 libpipeline1
+  libpng16-16t64 libproc2-0 libproxy1v5 libpsl5t64 libpython3-stdlib
+  libpython3.14-minimal libpython3.14-stdlib libqt6concurrent6 libqt6core6t64
+  libqt6dbus6 libqt6gui6 libqt6network6 libqt6opengl6 libqt6openglwidgets6
+  libqt6printsupport6 libqt6sql6 libqt6test6 libqt6waylandclient6
+  libqt6widgets6 libqt6wlshellintegration6 libqt6xml6 libreadline8t64
+  librhash1 librtmp1 libsasl2-2 libsasl2-modules-db libsensors-config
+  libsensors5 libsm6 libsqlite3-0 libssh2-1t64 libtasn1-6 libtool libts0t64
+  libuchardet0 libunistring5 libuv1t64 libvulkan-dev libvulkan1
+  libwacom-common libwacom9 libwayland-client0 libwayland-cursor0
+  libwayland-egl1 libx11-6 libx11-data libx11-dev libx11-xcb1 libxau-dev
+  libxau6 libxcb-cursor0 libxcb-dri3-0 libxcb-glx0 libxcb-icccm4 libxcb-image0
+  libxcb-keysyms1 libxcb-present0 libxcb-randr0 libxcb-render-util0
+  libxcb-render0 libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-util1
+  libxcb-xfixes0 libxcb-xinput0 libxcb-xkb1 libxcb1 libxcb1-dev libxdmcp-dev
+  libxdmcp6 libxext6 libxkbcommon-x11-0 libxkbcommon0 libxml2-16 libxshmfence1
+  libxxf86vm1 m4 man-db media-types mesa-libgallium netbase
+  plasma-wayland-protocols po-debconf procps python3 python3-minimal
+  python3.14 python3.14-minimal qmake6 qmake6-bin qt6-base-dev
+  qt6-base-dev-tools qt6-qpa-plugins readline-common sensible-utils
+  shared-mime-info tzdata x11-common x11proto-dev xkb-data xorg-sgml-doctools
+  xtrans-dev
+Suggested packages:
+  autoconf-archive gnu-standards autoconf-doc cmake-doc cmake-format
+  elpa-cmake-mode ninja-build dh-make gettext-doc libasprintf-dev
+  libgettextpo-dev gnulib-l10n groff lrzip cups-common low-memory-monitor
+  gnutls-bin krb5-doc krb5-user pciutils lm-sensors libtool-doc gfortran
+  | fortran95-compiler libwacom-bin libx11-doc libxcb-doc m4-doc apparmor less
+  www-browser libmail-box-perl python3-doc python3-tk python3-venv
+  python3.14-venv python3.14-doc binfmt-support readline-doc
+Recommended packages:
+  curl | wget | lynx ca-certificates dbus libarchive-cpio-perl libglib2.0-data
+  xdg-user-dirs krb5-locales libgpm2 publicsuffix qt6-translations-l10n
+  qt6-gtk-platformtheme qt6-svg-plugins qt6-wayland libqt6sql6-sqlite
+  | libqt6sql6-mysql | libqt6sql6-odbc | libqt6sql6-psql | libqt6sql6-ibase
+  libsasl2-modules libltdl-dev mesa-vulkan-drivers | vulkan-icd
+  libmail-sendmail-perl psmisc linux-sysctl-defaults
+The following NEW packages will be installed:
+  autoconf automake autopoint autotools-dev bsdextrautils cmake cmake-data
+  debhelper debugedit dh-autoreconf dh-strip-nondeterminism dwz
+  extra-cmake-modules file fontconfig fontconfig-config fonts-dejavu-core
+  fonts-dejavu-mono gettext gettext-base groff-base intltool-debian
+  libarchive-zip-perl libarchive13t64 libavahi-client3 libavahi-common-data
+  libavahi-common3 libb2-1 libbrotli1 libbsd0 libcom-err2 libcups2t64
+  libcurl3t64-gnutls libcurl4t64 libdbus-1-3 libdebhelper-perl
+  libdouble-conversion3 libdrm-amdgpu1 libdrm-common libdrm-intel1 libdrm2
+  libduktape207 libdw1t64 libedit2 libegl-mesa0 libegl1 libelf1t64 libevdev2
+  libexpat1 libffi8 libfile-stripnondeterminism-perl libfontconfig1
+  libfreetype6 libgbm1 libgl-dev libgl1 libgl1-mesa-dri libglib2.0-0t64
+  libglvnd0 libglx-dev libglx-mesa0 libglx0 libgnutls30t64 libgraphite2-3
+  libgssapi-krb5-2 libgudev-1.0-0 libharfbuzz0b libhogweed6t64 libice6
+  libicu78 libidn2-0 libinput-bin libinput10 libjpeg-turbo8 libjpeg8
+  libjsoncpp26 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0
+  libldap-common libldap2 libllvm21 libmagic-mgc libmagic1t64 libmd4c0
+  libmtdev1t64 libncursesw6 libnettle8t64 libnghttp2-14 libopengl-dev
+  libopengl0 libp11-kit0 libpciaccess0 libpcre2-16-0 libpipeline1
+  libpng16-16t64 libproc2-0 libproxy1v5 libpsl5t64 libpython3-stdlib
+  libpython3.14-minimal libpython3.14-stdlib libqt6concurrent6 libqt6core6t64
+  libqt6dbus6 libqt6gui6 libqt6network6 libqt6opengl6 libqt6openglwidgets6
+  libqt6printsupport6 libqt6sql6 libqt6test6 libqt6waylandclient6
+  libqt6widgets6 libqt6wlshellintegration6 libqt6xml6 libreadline8t64
+  librhash1 librtmp1 libsasl2-2 libsasl2-modules-db libsensors-config
+  libsensors5 libsm6 libsqlite3-0 libssh2-1t64 libtasn1-6 libtool libts0t64
+  libuchardet0 libunistring5 libuv1t64 libvulkan-dev libvulkan1
+  libwacom-common libwacom9 libwayland-client0 libwayland-cursor0
+  libwayland-egl1 libx11-6 libx11-data libx11-dev libx11-xcb1 libxau-dev
+  libxau6 libxcb-cursor0 libxcb-dri3-0 libxcb-glx0 libxcb-icccm4 libxcb-image0
+  libxcb-keysyms1 libxcb-present0 libxcb-randr0 libxcb-render-util0
+  libxcb-render0 libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-util1
+  libxcb-xfixes0 libxcb-xinput0 libxcb-xkb1 libxcb1 libxcb1-dev libxdmcp-dev
+  libxdmcp6 libxext6 libxkbcommon-x11-0 libxkbcommon0 libxml2-16 libxshmfence1
+  libxxf86vm1 m4 man-db media-types mesa-libgallium netbase
+  plasma-wayland-protocols po-debconf procps python3 python3-minimal
+  python3.14 python3.14-minimal qmake6 qmake6-bin qt6-base-dev
+  qt6-base-dev-tools qt6-qpa-plugins readline-common
+  sbuild-build-depends-main-dummy sensible-utils shared-mime-info tzdata
+  x11-common x11proto-dev xkb-data xorg-sgml-doctools xtrans-dev
+0 upgraded, 200 newly installed, 0 to remove and 0 not upgraded.
+Need to get 122 MB/122 MB of archives.
+After this operation, 516 MB of additional disk space will be used.
+Get:1 file:/build/reproducible-path/resolver-a1ASpF/apt_archive ./ extra-cmake-modules 6.30.0-0supralinux3 [157 kB]
+Get:2 copy:/build/reproducible-path/resolver-ki5ZFi/apt_archive ./ sbuild-build-depends-main-dummy 0.invalid.0 [724 B]
+Get:3 file:/build/reproducible-path/resolver-a1ASpF/apt_archive ./ plasma-wayland-protocols 1.22.0-0supralinux1 [43.6 kB]
+Get:4 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libexpat1 amd64 2.7.4-1ubuntu0.2 [98.8 kB]
+Get:5 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libpython3.14-minimal amd64 3.14.4-1ubuntu0.2 [916 kB]
+Get:6 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 python3.14-minimal amd64 3.14.4-1ubuntu0.2 [2579 kB]
+Get:7 https://archive.ubuntu.com/ubuntu resolute/main amd64 python3-minimal amd64 3.14.3-0ubuntu2 [25.8 kB]
+Get:8 https://archive.ubuntu.com/ubuntu resolute/main amd64 media-types all 14.0.0build1 [31.4 kB]
+Get:9 https://archive.ubuntu.com/ubuntu resolute/main amd64 netbase all 6.5build1 [13.0 kB]
+Get:10 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 tzdata all 2026c-0ubuntu0.26.04.1 [193 kB]
+Get:11 https://archive.ubuntu.com/ubuntu resolute/main amd64 libffi8 amd64 3.5.2-4 [26.3 kB]
+Get:12 https://archive.ubuntu.com/ubuntu resolute/main amd64 libncursesw6 amd64 6.6+20251231-1 [150 kB]
+Get:13 https://archive.ubuntu.com/ubuntu resolute/main amd64 readline-common all 8.3-4 [61.5 kB]
+Get:14 https://archive.ubuntu.com/ubuntu resolute/main amd64 libreadline8t64 amd64 8.3-4 [164 kB]
+Get:15 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libsqlite3-0 amd64 3.46.1-9ubuntu0.3 [720 kB]
+Get:16 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libpython3.14-stdlib amd64 3.14.4-1ubuntu0.2 [2415 kB]
+Get:17 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 python3.14 amd64 3.14.4-1ubuntu0.2 [830 kB]
+Get:18 https://archive.ubuntu.com/ubuntu resolute/main amd64 libpython3-stdlib amd64 3.14.3-0ubuntu2 [8476 B]
+Get:19 https://archive.ubuntu.com/ubuntu resolute/main amd64 python3 amd64 3.14.3-0ubuntu2 [22.9 kB]
+Get:20 https://archive.ubuntu.com/ubuntu resolute/main amd64 libbsd0 amd64 0.12.2-2build2 [42.3 kB]
+Get:21 https://archive.ubuntu.com/ubuntu resolute/main amd64 libcom-err2 amd64 1.47.2-3ubuntu4 [27.8 kB]
+Get:22 https://archive.ubuntu.com/ubuntu resolute/main amd64 libproc2-0 amd64 2:4.0.4-9ubuntu1 [59.4 kB]
+Get:23 https://archive.ubuntu.com/ubuntu resolute/main amd64 procps amd64 2:4.0.4-9ubuntu1 [710 kB]
+Get:24 https://archive.ubuntu.com/ubuntu resolute/main amd64 sensible-utils all 0.0.26build1 [27.1 kB]
+Get:25 https://archive.ubuntu.com/ubuntu resolute/main amd64 libdbus-1-3 amd64 1.16.2-2ubuntu4 [186 kB]
+Get:26 https://archive.ubuntu.com/ubuntu resolute/main amd64 libedit2 amd64 3.1-20251016-1 [96.9 kB]
+Get:27 https://archive.ubuntu.com/ubuntu resolute/main amd64 libelf1t64 amd64 0.194-4 [57.1 kB]
+Get:28 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libglib2.0-0t64 amd64 2.88.0-1ubuntu0.1 [1598 kB]
+Get:29 https://archive.ubuntu.com/ubuntu resolute/main amd64 libnettle8t64 amd64 3.10.2-1 [185 kB]
+Get:30 https://archive.ubuntu.com/ubuntu resolute/main amd64 libhogweed6t64 amd64 3.10.2-1 [201 kB]
+Get:31 https://archive.ubuntu.com/ubuntu resolute/main amd64 libunistring5 amd64 1.3-2build1 [610 kB]
+Get:32 https://archive.ubuntu.com/ubuntu resolute/main amd64 libidn2-0 amd64 2.3.8-4build1 [67.6 kB]
+Get:33 https://archive.ubuntu.com/ubuntu resolute/main amd64 libp11-kit0 amd64 0.26.2-2 [313 kB]
+Get:34 https://archive.ubuntu.com/ubuntu resolute/main amd64 libtasn1-6 amd64 4.21.0-2 [45.3 kB]
+Get:35 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libgnutls30t64 amd64 3.8.12-2ubuntu1.1 [1029 kB]
+Get:36 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libkrb5support0 amd64 1.22.1-2ubuntu4.1 [33.5 kB]
+Get:37 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libk5crypto3 amd64 1.22.1-2ubuntu4.1 [82.0 kB]
+Get:38 https://archive.ubuntu.com/ubuntu resolute/main amd64 libkeyutils1 amd64 1.6.3-6ubuntu3 [10.6 kB]
+Get:39 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libkrb5-3 amd64 1.22.1-2ubuntu4.1 [361 kB]
+Get:40 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libgssapi-krb5-2 amd64 1.22.1-2ubuntu4.1 [147 kB]
+Get:41 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libxml2-16 amd64 2.15.2+dfsg-0.1ubuntu0.2 [606 kB]
+Get:42 https://archive.ubuntu.com/ubuntu resolute/main amd64 shared-mime-info amd64 2.4-5build3 [476 kB]
+Get:43 https://archive.ubuntu.com/ubuntu resolute/main amd64 xkb-data all 2.46-2 [393 kB]
+Get:44 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 bsdextrautils amd64 2.41.3-3ubuntu2.2 [86.7 kB]
+Get:45 https://archive.ubuntu.com/ubuntu resolute/main amd64 libmagic-mgc amd64 1:5.46-5build2 [337 kB]
+Get:46 https://archive.ubuntu.com/ubuntu resolute/main amd64 libmagic1t64 amd64 1:5.46-5build2 [90.8 kB]
+Get:47 https://archive.ubuntu.com/ubuntu resolute/main amd64 file amd64 1:5.46-5build2 [22.0 kB]
+Get:48 https://archive.ubuntu.com/ubuntu resolute/main amd64 gettext-base amd64 0.23.2-1 [42.3 kB]
+Get:49 https://archive.ubuntu.com/ubuntu resolute/main amd64 libuchardet0 amd64 0.0.8-2 [75.8 kB]
+Get:50 https://archive.ubuntu.com/ubuntu resolute/main amd64 groff-base amd64 1.23.0-10 [1023 kB]
+Get:51 https://archive.ubuntu.com/ubuntu resolute/main amd64 libdrm-common all 2.4.131-1 [9774 B]
+Get:52 https://archive.ubuntu.com/ubuntu resolute/main amd64 libdrm2 amd64 2.4.131-1 [42.3 kB]
+Get:53 https://archive.ubuntu.com/ubuntu resolute/main amd64 libevdev2 amd64 1.13.6+dfsg-1 [37.7 kB]
+Get:54 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libnghttp2-14 amd64 1.68.0-2ubuntu0.2 [71.0 kB]
+Get:55 https://archive.ubuntu.com/ubuntu resolute/main amd64 libpipeline1 amd64 1.5.8-2 [31.4 kB]
+Get:56 https://archive.ubuntu.com/ubuntu resolute/main amd64 libpng16-16t64 amd64 1.6.57-1 [194 kB]
+Get:57 https://archive.ubuntu.com/ubuntu resolute/main amd64 libpsl5t64 amd64 0.21.2-1.1build2 [59.5 kB]
+Get:58 https://archive.ubuntu.com/ubuntu resolute/main amd64 libsensors-config all 1:3.6.2-2build1 [6862 B]
+Get:59 https://archive.ubuntu.com/ubuntu resolute/main amd64 libsensors5 amd64 1:3.6.2-2build1 [28.9 kB]
+Get:60 https://archive.ubuntu.com/ubuntu resolute/main amd64 libuv1t64 amd64 1.51.0-2ubuntu1 [103 kB]
+Get:61 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxau6 amd64 1:1.0.11-1build2 [7502 B]
+Get:62 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxdmcp6 amd64 1:1.1.5-2 [10.8 kB]
+Get:63 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb1 amd64 1.17.0-2ubuntu1 [49.0 kB]
+Get:64 https://archive.ubuntu.com/ubuntu resolute/main amd64 libx11-data all 2:1.8.13-1 [114 kB]
+Get:65 https://archive.ubuntu.com/ubuntu resolute/main amd64 libx11-6 amd64 2:1.8.13-1 [657 kB]
+Get:66 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxext6 amd64 2:1.3.4-1build3 [30.8 kB]
+Get:67 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxkbcommon0 amd64 1.13.1-1 [159 kB]
+Get:68 https://archive.ubuntu.com/ubuntu resolute/main amd64 man-db amd64 2.13.1-1build1 [1392 kB]
+Get:69 https://archive.ubuntu.com/ubuntu resolute/main amd64 m4 amd64 1.4.21-1 [219 kB]
+Get:70 https://archive.ubuntu.com/ubuntu resolute/main amd64 autoconf all 2.72-3.1ubuntu2 [384 kB]
+Get:71 https://archive.ubuntu.com/ubuntu resolute/main amd64 autotools-dev all 20240727.1build1 [43.4 kB]
+Get:72 https://archive.ubuntu.com/ubuntu resolute/main amd64 automake all 1:1.18.1-3build1 [582 kB]
+Get:73 https://archive.ubuntu.com/ubuntu resolute/main amd64 autopoint all 0.23.2-1 [620 kB]
+Get:74 https://archive.ubuntu.com/ubuntu resolute/main amd64 cmake-data all 4.2.3-2ubuntu2 [2581 kB]
+Get:75 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libarchive13t64 amd64 3.8.5-1ubuntu2.2 [397 kB]
+Get:76 https://archive.ubuntu.com/ubuntu resolute/main amd64 libbrotli1 amd64 1.2.0-3build1 [343 kB]
+Get:77 https://archive.ubuntu.com/ubuntu resolute/main amd64 libsasl2-modules-db amd64 2.1.28+dfsg1-9ubuntu3 [21.1 kB]
+Get:78 https://archive.ubuntu.com/ubuntu resolute/main amd64 libsasl2-2 amd64 2.1.28+dfsg1-9ubuntu3 [54.0 kB]
+Get:79 https://archive.ubuntu.com/ubuntu resolute/main amd64 libldap-common all 2.6.10+dfsg-1ubuntu5 [36.0 kB]
+Get:80 https://archive.ubuntu.com/ubuntu resolute/main amd64 libldap2 amd64 2.6.10+dfsg-1ubuntu5 [204 kB]
+Get:81 https://archive.ubuntu.com/ubuntu resolute/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-3 [59.0 kB]
+Get:82 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libssh2-1t64 amd64 1.11.1-1ubuntu0.26.04.4 [138 kB]
+Get:83 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libcurl4t64 amd64 8.18.0-1ubuntu2.7 [428 kB]
+Get:84 https://archive.ubuntu.com/ubuntu resolute/main amd64 libjsoncpp26 amd64 1.9.6-5 [84.0 kB]
+Get:85 https://archive.ubuntu.com/ubuntu resolute/main amd64 librhash1 amd64 1.4.6-1.1 [133 kB]
+Get:86 https://archive.ubuntu.com/ubuntu resolute/main amd64 cmake amd64 4.2.3-2ubuntu2 [13.7 MB]
+Get:87 https://archive.ubuntu.com/ubuntu resolute/main amd64 libdebhelper-perl all 13.31ubuntu1 [78.8 kB]
+Get:88 https://archive.ubuntu.com/ubuntu resolute/main amd64 libtool all 2.5.4-9 [169 kB]
+Get:89 https://archive.ubuntu.com/ubuntu resolute/main amd64 dh-autoreconf all 21+nmu1 [11.9 kB]
+Get:90 https://archive.ubuntu.com/ubuntu resolute/main amd64 libarchive-zip-perl all 1.68-1 [90.2 kB]
+Get:91 https://archive.ubuntu.com/ubuntu resolute/main amd64 libfile-stripnondeterminism-perl all 1.15.0-1build1 [20.6 kB]
+Get:92 https://archive.ubuntu.com/ubuntu resolute/main amd64 dh-strip-nondeterminism all 1.15.0-1build1 [5110 B]
+Get:93 https://archive.ubuntu.com/ubuntu resolute/main amd64 libdw1t64 amd64 0.194-4 [285 kB]
+Get:94 https://archive.ubuntu.com/ubuntu resolute/main amd64 debugedit amd64 1:5.3-4 [52.9 kB]
+Get:95 https://archive.ubuntu.com/ubuntu resolute/main amd64 dwz amd64 0.16-4 [112 kB]
+Get:96 https://archive.ubuntu.com/ubuntu resolute/main amd64 gettext amd64 0.23.2-1 [1019 kB]
+Get:97 https://archive.ubuntu.com/ubuntu resolute/main amd64 intltool-debian all 0.35.0+20060710.6build1 [24.1 kB]
+Get:98 https://archive.ubuntu.com/ubuntu resolute/main amd64 po-debconf all 1.0.22 [215 kB]
+Get:99 https://archive.ubuntu.com/ubuntu resolute/main amd64 debhelper all 13.31ubuntu1 [925 kB]
+Get:100 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libfreetype6 amd64 2.14.2+dfsg-1ubuntu0.2 [409 kB]
+Get:101 https://archive.ubuntu.com/ubuntu resolute/main amd64 fonts-dejavu-mono all 2.37-8build1 [502 kB]
+Get:102 https://archive.ubuntu.com/ubuntu resolute/main amd64 fonts-dejavu-core all 2.37-8build1 [834 kB]
+Get:103 https://archive.ubuntu.com/ubuntu resolute/main amd64 fontconfig-config amd64 2.17.1-3ubuntu1 [38.5 kB]
+Get:104 https://archive.ubuntu.com/ubuntu resolute/main amd64 libfontconfig1 amd64 2.17.1-3ubuntu1 [144 kB]
+Get:105 https://archive.ubuntu.com/ubuntu resolute/main amd64 fontconfig amd64 2.17.1-3ubuntu1 [180 kB]
+Get:106 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libavahi-common-data amd64 0.8-18ubuntu1.1 [27.2 kB]
+Get:107 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libavahi-common3 amd64 0.8-18ubuntu1.1 [23.6 kB]
+Get:108 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libavahi-client3 amd64 0.8-18ubuntu1.1 [27.2 kB]
+Get:109 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libb2-1 amd64 0.98.1-1.1build2 [44.9 kB]
+Get:110 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libcups2t64 amd64 2.4.16-1ubuntu1.3 [269 kB]
+Get:111 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libcurl3t64-gnutls amd64 8.18.0-1ubuntu2.7 [419 kB]
+Get:112 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libdouble-conversion3 amd64 3.4.0-1 [41.4 kB]
+Get:113 https://archive.ubuntu.com/ubuntu resolute/main amd64 libdrm-amdgpu1 amd64 2.4.131-1 [23.2 kB]
+Get:114 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libpciaccess0 amd64 0.18.1-1ubuntu4.1 [19.0 kB]
+Get:115 https://archive.ubuntu.com/ubuntu resolute/main amd64 libdrm-intel1 amd64 2.4.131-1 [66.7 kB]
+Get:116 https://archive.ubuntu.com/ubuntu resolute/main amd64 libduktape207 amd64 2.7.0+tests-0ubuntu4 [144 kB]
+Get:117 https://archive.ubuntu.com/ubuntu resolute/main amd64 libllvm21 amd64 1:21.1.8-6ubuntu1 [30.7 MB]
+Get:118 https://archive.ubuntu.com/ubuntu resolute/main amd64 libx11-xcb1 amd64 2:1.8.13-1 [7960 B]
+Get:119 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-dri3-0 amd64 1.17.0-2ubuntu1 [7540 B]
+Get:120 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-present0 amd64 1.17.0-2ubuntu1 [6112 B]
+Get:121 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-randr0 amd64 1.17.0-2ubuntu1 [17.9 kB]
+Get:122 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-sync1 amd64 1.17.0-2ubuntu1 [9348 B]
+Get:123 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-xfixes0 amd64 1.17.0-2ubuntu1 [10.2 kB]
+Get:124 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxshmfence1 amd64 1.3.3-1build1 [5284 B]
+Get:125 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 mesa-libgallium amd64 26.0.8-1ubuntu0.3 [11.2 MB]
+Get:126 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libgbm1 amd64 26.0.8-1ubuntu0.3 [49.2 kB]
+Get:127 https://archive.ubuntu.com/ubuntu resolute/main amd64 libwayland-client0 amd64 1.24.0-2 [28.5 kB]
+Get:128 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-shm0 amd64 1.17.0-2ubuntu1 [5808 B]
+Get:129 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libegl-mesa0 amd64 26.0.8-1ubuntu0.3 [134 kB]
+Get:130 https://archive.ubuntu.com/ubuntu resolute/main amd64 libglvnd0 amd64 1.7.0-3 [64.1 kB]
+Get:131 https://archive.ubuntu.com/ubuntu resolute/main amd64 libvulkan1 amd64 1.4.341.0-1 [157 kB]
+Get:132 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libgl1-mesa-dri amd64 26.0.8-1ubuntu0.3 [38.2 kB]
+Get:133 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-glx0 amd64 1.17.0-2ubuntu1 [24.7 kB]
+Get:134 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxxf86vm1 amd64 1:1.1.4-2 [10.6 kB]
+Get:135 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libglx-mesa0 amd64 26.0.8-1ubuntu0.3 [126 kB]
+Get:136 https://archive.ubuntu.com/ubuntu resolute/main amd64 libglx0 amd64 1.7.0-3 [38.9 kB]
+Get:137 https://archive.ubuntu.com/ubuntu resolute/main amd64 libgl1 amd64 1.7.0-3 [98.3 kB]
+Get:138 https://archive.ubuntu.com/ubuntu resolute/main amd64 xorg-sgml-doctools all 1:1.11-1.1build1 [10.3 kB]
+Get:139 https://archive.ubuntu.com/ubuntu resolute/main amd64 x11proto-dev all 2025.1-1 [608 kB]
+Get:140 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxau-dev amd64 1:1.0.11-1build2 [9712 B]
+Get:141 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxdmcp-dev amd64 1:1.1.5-2 [25.7 kB]
+Get:142 https://archive.ubuntu.com/ubuntu resolute/main amd64 xtrans-dev all 1.6.0-1build1 [66.2 kB]
+Get:143 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb1-dev amd64 1.17.0-2ubuntu1 [86.3 kB]
+Get:144 https://archive.ubuntu.com/ubuntu resolute/main amd64 libx11-dev amd64 2:1.8.13-1 [739 kB]
+Get:145 https://archive.ubuntu.com/ubuntu resolute/main amd64 libglx-dev amd64 1.7.0-3 [14.1 kB]
+Get:146 https://archive.ubuntu.com/ubuntu resolute/main amd64 libgl-dev amd64 1.7.0-3 [103 kB]
+Get:147 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libgraphite2-3 amd64 1.3.14-11ubuntu1.1 [72.9 kB]
+Get:148 https://archive.ubuntu.com/ubuntu resolute/main amd64 libgudev-1.0-0 amd64 1:238-7build1 [15.9 kB]
+Get:149 https://archive.ubuntu.com/ubuntu resolute/main amd64 libharfbuzz0b amd64 12.3.2-2 [519 kB]
+Get:150 https://archive.ubuntu.com/ubuntu resolute/main amd64 x11-common all 1:7.7+26ubuntu1 [22.5 kB]
+Get:151 https://archive.ubuntu.com/ubuntu resolute/main amd64 libice6 amd64 2:1.1.1-1build1 [44.0 kB]
+Get:152 https://archive.ubuntu.com/ubuntu resolute/main amd64 libicu78 amd64 78.2-2ubuntu1 [11.5 MB]
+Get:153 https://archive.ubuntu.com/ubuntu resolute/main amd64 libwacom-common all 2.18.0-1 [117 kB]
+Get:154 https://archive.ubuntu.com/ubuntu resolute/main amd64 libwacom9 amd64 2.18.0-1 [28.4 kB]
+Get:155 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libinput-bin amd64 1.31.1-1ubuntu1.2 [24.5 kB]
+Get:156 https://archive.ubuntu.com/ubuntu resolute/main amd64 libmtdev1t64 amd64 1.1.7-1build1 [15.2 kB]
+Get:157 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libinput10 amd64 1.31.1-1ubuntu1.2 [161 kB]
+Get:158 https://archive.ubuntu.com/ubuntu resolute/main amd64 libjpeg-turbo8 amd64 2.1.5-4ubuntu4 [153 kB]
+Get:159 https://archive.ubuntu.com/ubuntu resolute/main amd64 libjpeg8 amd64 8c-2ubuntu12 [2142 B]
+Get:160 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libmd4c0 amd64 0.5.2-2build1 [43.7 kB]
+Get:161 https://archive.ubuntu.com/ubuntu resolute/main amd64 libopengl0 amd64 1.7.0-3 [32.8 kB]
+Get:162 https://archive.ubuntu.com/ubuntu resolute/main amd64 libopengl-dev amd64 1.7.0-3 [3396 B]
+Get:163 https://archive.ubuntu.com/ubuntu resolute/main amd64 libpcre2-16-0 amd64 10.46-1build1 [240 kB]
+Get:164 https://archive.ubuntu.com/ubuntu resolute/main amd64 libproxy1v5 amd64 0.5.12-1 [28.3 kB]
+Get:165 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6core6t64 amd64 6.10.2+dfsg-7 [2080 kB]
+Get:166 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6concurrent6 amd64 6.10.2+dfsg-7 [33.4 kB]
+Get:167 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6dbus6 amd64 6.10.2+dfsg-7 [285 kB]
+Get:168 https://archive.ubuntu.com/ubuntu resolute/main amd64 libegl1 amd64 1.7.0-3 [29.7 kB]
+Get:169 https://archive.ubuntu.com/ubuntu resolute/main amd64 libsm6 amd64 2:1.2.6-1build1 [16.9 kB]
+Get:170 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libts0t64 amd64 1.22-1.1build2 [64.0 kB]
+Get:171 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-util1 amd64 0.4.1-1build1 [11.1 kB]
+Get:172 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libxcb-image0 amd64 0.4.0-2build2 [11.0 kB]
+Get:173 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-render0 amd64 1.17.0-2ubuntu1 [16.2 kB]
+Get:174 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libxcb-render-util0 amd64 0.3.10-1build1 [10.4 kB]
+Get:175 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libxcb-cursor0 amd64 0.1.6-1 [10.6 kB]
+Get:176 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libxcb-icccm4 amd64 0.4.2-1build1 [11.0 kB]
+Get:177 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libxcb-keysyms1 amd64 0.4.1-1build1 [8704 B]
+Get:178 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-shape0 amd64 1.17.0-2ubuntu1 [6172 B]
+Get:179 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-xinput0 amd64 1.17.0-2ubuntu1 [32.5 kB]
+Get:180 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxcb-xkb1 amd64 1.17.0-2ubuntu1 [32.7 kB]
+Get:181 https://archive.ubuntu.com/ubuntu resolute/main amd64 libxkbcommon-x11-0 amd64 1.13.1-1 [15.0 kB]
+Get:182 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6gui6 amd64 6.10.2+dfsg-7 [3550 kB]
+Get:183 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6network6 amd64 6.10.2+dfsg-7 [859 kB]
+Get:184 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6opengl6 amd64 6.10.2+dfsg-7 [439 kB]
+Get:185 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6widgets6 amd64 6.10.2+dfsg-7 [2818 kB]
+Get:186 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6openglwidgets6 amd64 6.10.2+dfsg-7 [43.6 kB]
+Get:187 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6printsupport6 amd64 6.10.2+dfsg-7 [224 kB]
+Get:188 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6sql6 amd64 6.10.2+dfsg-7 [147 kB]
+Get:189 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6test6 amd64 6.10.2+dfsg-7 [194 kB]
+Get:190 https://archive.ubuntu.com/ubuntu resolute/main amd64 libwayland-cursor0 amd64 1.24.0-2 [10.8 kB]
+Get:191 https://archive.ubuntu.com/ubuntu resolute/main amd64 libwayland-egl1 amd64 1.24.0-2 [6248 B]
+Get:192 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6waylandclient6 amd64 6.10.2+dfsg-7 [376 kB]
+Get:193 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6wlshellintegration6 amd64 6.10.2+dfsg-7 [95.6 kB]
+Get:194 https://archive.ubuntu.com/ubuntu resolute/universe amd64 libqt6xml6 amd64 6.10.2+dfsg-7 [82.1 kB]
+Get:195 https://archive.ubuntu.com/ubuntu resolute/main amd64 libvulkan-dev amd64 1.4.341.0-1 [1710 kB]
+Get:196 https://archive.ubuntu.com/ubuntu resolute/universe amd64 qmake6-bin amd64 6.10.2+dfsg-7 [657 kB]
+Get:197 https://archive.ubuntu.com/ubuntu resolute/universe amd64 qmake6 amd64 6.10.2+dfsg-7 [143 kB]
+Get:198 https://archive.ubuntu.com/ubuntu resolute/universe amd64 qt6-base-dev-tools amd64 6.10.2+dfsg-7 [1160 kB]
+Get:199 https://archive.ubuntu.com/ubuntu resolute/universe amd64 qt6-qpa-plugins amd64 6.10.2+dfsg-7 [89.3 kB]
+Get:200 https://archive.ubuntu.com/ubuntu resolute/universe amd64 qt6-base-dev amd64 6.10.2+dfsg-7 [2292 kB]
+Preconfiguring packages ...
+Fetched 122 MB in 9min 9s (221 kB/s)
+Selecting previously unselected package libexpat1:amd64.
+(Reading database ... 13100 files and directories currently installed.)
+Preparing to unpack .../libexpat1_2.7.4-1ubuntu0.2_amd64.deb ...
+Unpacking libexpat1:amd64 (2.7.4-1ubuntu0.2) ...
+Selecting previously unselected package libpython3.14-minimal:amd64.
+Preparing to unpack .../libpython3.14-minimal_3.14.4-1ubuntu0.2_amd64.deb ...
+Unpacking libpython3.14-minimal:amd64 (3.14.4-1ubuntu0.2) ...
+Selecting previously unselected package python3.14-minimal.
+Preparing to unpack .../python3.14-minimal_3.14.4-1ubuntu0.2_amd64.deb ...
+Unpacking python3.14-minimal (3.14.4-1ubuntu0.2) ...
+Setting up libpython3.14-minimal:amd64 (3.14.4-1ubuntu0.2) ...
+Setting up libexpat1:amd64 (2.7.4-1ubuntu0.2) ...
+Setting up python3.14-minimal (3.14.4-1ubuntu0.2) ...
+Selecting previously unselected package python3-minimal.
+(Reading database ... 13454 files and directories currently installed.)
+Preparing to unpack .../00-python3-minimal_3.14.3-0ubuntu2_amd64.deb ...
+Unpacking python3-minimal (3.14.3-0ubuntu2) ...
+Selecting previously unselected package media-types.
+Preparing to unpack .../01-media-types_14.0.0build1_all.deb ...
+Unpacking media-types (14.0.0build1) ...
+Selecting previously unselected package netbase.
+Preparing to unpack .../02-netbase_6.5build1_all.deb ...
+Unpacking netbase (6.5build1) ...
+Selecting previously unselected package tzdata.
+Preparing to unpack .../03-tzdata_2026c-0ubuntu0.26.04.1_all.deb ...
+Unpacking tzdata (2026c-0ubuntu0.26.04.1) ...
+Selecting previously unselected package libffi8:amd64.
+Preparing to unpack .../04-libffi8_3.5.2-4_amd64.deb ...
+Unpacking libffi8:amd64 (3.5.2-4) ...
+Selecting previously unselected package libncursesw6:amd64.
+Preparing to unpack .../05-libncursesw6_6.6+20251231-1_amd64.deb ...
+Unpacking libncursesw6:amd64 (6.6+20251231-1) ...
+Selecting previously unselected package readline-common.
+Preparing to unpack .../06-readline-common_8.3-4_all.deb ...
+Unpacking readline-common (8.3-4) ...
+Selecting previously unselected package libreadline8t64:amd64.
+Preparing to unpack .../07-libreadline8t64_8.3-4_amd64.deb ...
+Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8 to /lib/x86_64-linux-gnu/libhistory.so.8.usr-is-merged by libreadline8t64'
+Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8.2 to /lib/x86_64-linux-gnu/libhistory.so.8.2.usr-is-merged by libreadline8t64'
+Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8 to /lib/x86_64-linux-gnu/libreadline.so.8.usr-is-merged by libreadline8t64'
+Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8.2 to /lib/x86_64-linux-gnu/libreadline.so.8.2.usr-is-merged by libreadline8t64'
+Unpacking libreadline8t64:amd64 (8.3-4) ...
+Selecting previously unselected package libsqlite3-0:amd64.
+Preparing to unpack .../08-libsqlite3-0_3.46.1-9ubuntu0.3_amd64.deb ...
+Unpacking libsqlite3-0:amd64 (3.46.1-9ubuntu0.3) ...
+Selecting previously unselected package libpython3.14-stdlib:amd64.
+Preparing to unpack .../09-libpython3.14-stdlib_3.14.4-1ubuntu0.2_amd64.deb ...
+Unpacking libpython3.14-stdlib:amd64 (3.14.4-1ubuntu0.2) ...
+Selecting previously unselected package python3.14.
+Preparing to unpack .../10-python3.14_3.14.4-1ubuntu0.2_amd64.deb ...
+Unpacking python3.14 (3.14.4-1ubuntu0.2) ...
+Selecting previously unselected package libpython3-stdlib:amd64.
+Preparing to unpack .../11-libpython3-stdlib_3.14.3-0ubuntu2_amd64.deb ...
+Unpacking libpython3-stdlib:amd64 (3.14.3-0ubuntu2) ...
+Setting up python3-minimal (3.14.3-0ubuntu2) ...
+Selecting previously unselected package python3.
+(Reading database ... 14494 files and directories currently installed.)
+Preparing to unpack .../000-python3_3.14.3-0ubuntu2_amd64.deb ...
+Unpacking python3 (3.14.3-0ubuntu2) ...
+Selecting previously unselected package libbsd0:amd64.
+Preparing to unpack .../001-libbsd0_0.12.2-2build2_amd64.deb ...
+Unpacking libbsd0:amd64 (0.12.2-2build2) ...
+Selecting previously unselected package libcom-err2:amd64.
+Preparing to unpack .../002-libcom-err2_1.47.2-3ubuntu4_amd64.deb ...
+Unpacking libcom-err2:amd64 (1.47.2-3ubuntu4) ...
+Selecting previously unselected package libproc2-0:amd64.
+Preparing to unpack .../003-libproc2-0_2%3a4.0.4-9ubuntu1_amd64.deb ...
+Unpacking libproc2-0:amd64 (2:4.0.4-9ubuntu1) ...
+Selecting previously unselected package procps.
+Preparing to unpack .../004-procps_2%3a4.0.4-9ubuntu1_amd64.deb ...
+Unpacking procps (2:4.0.4-9ubuntu1) ...
+Selecting previously unselected package sensible-utils.
+Preparing to unpack .../005-sensible-utils_0.0.26build1_all.deb ...
+Unpacking sensible-utils (0.0.26build1) ...
+Selecting previously unselected package libdbus-1-3:amd64.
+Preparing to unpack .../006-libdbus-1-3_1.16.2-2ubuntu4_amd64.deb ...
+Unpacking libdbus-1-3:amd64 (1.16.2-2ubuntu4) ...
+Selecting previously unselected package libedit2:amd64.
+Preparing to unpack .../007-libedit2_3.1-20251016-1_amd64.deb ...
+Unpacking libedit2:amd64 (3.1-20251016-1) ...
+Selecting previously unselected package libelf1t64:amd64.
+Preparing to unpack .../008-libelf1t64_0.194-4_amd64.deb ...
+Unpacking libelf1t64:amd64 (0.194-4) ...
+Selecting previously unselected package libglib2.0-0t64:amd64.
+Preparing to unpack .../009-libglib2.0-0t64_2.88.0-1ubuntu0.1_amd64.deb ...
+Unpacking libglib2.0-0t64:amd64 (2.88.0-1ubuntu0.1) ...
+Selecting previously unselected package libnettle8t64:amd64.
+Preparing to unpack .../010-libnettle8t64_3.10.2-1_amd64.deb ...
+Unpacking libnettle8t64:amd64 (3.10.2-1) ...
+Selecting previously unselected package libhogweed6t64:amd64.
+Preparing to unpack .../011-libhogweed6t64_3.10.2-1_amd64.deb ...
+Unpacking libhogweed6t64:amd64 (3.10.2-1) ...
+Selecting previously unselected package libunistring5:amd64.
+Preparing to unpack .../012-libunistring5_1.3-2build1_amd64.deb ...
+Unpacking libunistring5:amd64 (1.3-2build1) ...
+Selecting previously unselected package libidn2-0:amd64.
+Preparing to unpack .../013-libidn2-0_2.3.8-4build1_amd64.deb ...
+Unpacking libidn2-0:amd64 (2.3.8-4build1) ...
+Selecting previously unselected package libp11-kit0:amd64.
+Preparing to unpack .../014-libp11-kit0_0.26.2-2_amd64.deb ...
+Unpacking libp11-kit0:amd64 (0.26.2-2) ...
+Selecting previously unselected package libtasn1-6:amd64.
+Preparing to unpack .../015-libtasn1-6_4.21.0-2_amd64.deb ...
+Unpacking libtasn1-6:amd64 (4.21.0-2) ...
+Selecting previously unselected package libgnutls30t64:amd64.
+Preparing to unpack .../016-libgnutls30t64_3.8.12-2ubuntu1.1_amd64.deb ...
+Unpacking libgnutls30t64:amd64 (3.8.12-2ubuntu1.1) ...
+Selecting previously unselected package libkrb5support0:amd64.
+Preparing to unpack .../017-libkrb5support0_1.22.1-2ubuntu4.1_amd64.deb ...
+Unpacking libkrb5support0:amd64 (1.22.1-2ubuntu4.1) ...
+Selecting previously unselected package libk5crypto3:amd64.
+Preparing to unpack .../018-libk5crypto3_1.22.1-2ubuntu4.1_amd64.deb ...
+Unpacking libk5crypto3:amd64 (1.22.1-2ubuntu4.1) ...
+Selecting previously unselected package libkeyutils1:amd64.
+Preparing to unpack .../019-libkeyutils1_1.6.3-6ubuntu3_amd64.deb ...
+Unpacking libkeyutils1:amd64 (1.6.3-6ubuntu3) ...
+Selecting previously unselected package libkrb5-3:amd64.
+Preparing to unpack .../020-libkrb5-3_1.22.1-2ubuntu4.1_amd64.deb ...
+Unpacking libkrb5-3:amd64 (1.22.1-2ubuntu4.1) ...
+Selecting previously unselected package libgssapi-krb5-2:amd64.
+Preparing to unpack .../021-libgssapi-krb5-2_1.22.1-2ubuntu4.1_amd64.deb ...
+Unpacking libgssapi-krb5-2:amd64 (1.22.1-2ubuntu4.1) ...
+Selecting previously unselected package libxml2-16:amd64.
+Preparing to unpack .../022-libxml2-16_2.15.2+dfsg-0.1ubuntu0.2_amd64.deb ...
+Unpacking libxml2-16:amd64 (2.15.2+dfsg-0.1ubuntu0.2) ...
+Selecting previously unselected package shared-mime-info.
+Preparing to unpack .../023-shared-mime-info_2.4-5build3_amd64.deb ...
+Unpacking shared-mime-info (2.4-5build3) ...
+Selecting previously unselected package xkb-data.
+Preparing to unpack .../024-xkb-data_2.46-2_all.deb ...
+Unpacking xkb-data (2.46-2) ...
+Selecting previously unselected package bsdextrautils.
+Preparing to unpack .../025-bsdextrautils_2.41.3-3ubuntu2.2_amd64.deb ...
+Unpacking bsdextrautils (2.41.3-3ubuntu2.2) ...
+Selecting previously unselected package libmagic-mgc.
+Preparing to unpack .../026-libmagic-mgc_1%3a5.46-5build2_amd64.deb ...
+Unpacking libmagic-mgc (1:5.46-5build2) ...
+Selecting previously unselected package libmagic1t64:amd64.
+Preparing to unpack .../027-libmagic1t64_1%3a5.46-5build2_amd64.deb ...
+Unpacking libmagic1t64:amd64 (1:5.46-5build2) ...
+Selecting previously unselected package file.
+Preparing to unpack .../028-file_1%3a5.46-5build2_amd64.deb ...
+Unpacking file (1:5.46-5build2) ...
+Selecting previously unselected package gettext-base.
+Preparing to unpack .../029-gettext-base_0.23.2-1_amd64.deb ...
+Unpacking gettext-base (0.23.2-1) ...
+Selecting previously unselected package libuchardet0:amd64.
+Preparing to unpack .../030-libuchardet0_0.0.8-2_amd64.deb ...
+Unpacking libuchardet0:amd64 (0.0.8-2) ...
+Selecting previously unselected package groff-base.
+Preparing to unpack .../031-groff-base_1.23.0-10_amd64.deb ...
+Unpacking groff-base (1.23.0-10) ...
+Selecting previously unselected package libdrm-common.
+Preparing to unpack .../032-libdrm-common_2.4.131-1_all.deb ...
+Unpacking libdrm-common (2.4.131-1) ...
+Selecting previously unselected package libdrm2:amd64.
+Preparing to unpack .../033-libdrm2_2.4.131-1_amd64.deb ...
+Unpacking libdrm2:amd64 (2.4.131-1) ...
+Selecting previously unselected package libevdev2:amd64.
+Preparing to unpack .../034-libevdev2_1.13.6+dfsg-1_amd64.deb ...
+Unpacking libevdev2:amd64 (1.13.6+dfsg-1) ...
+Selecting previously unselected package libnghttp2-14:amd64.
+Preparing to unpack .../035-libnghttp2-14_1.68.0-2ubuntu0.2_amd64.deb ...
+Unpacking libnghttp2-14:amd64 (1.68.0-2ubuntu0.2) ...
+Selecting previously unselected package libpipeline1:amd64.
+Preparing to unpack .../036-libpipeline1_1.5.8-2_amd64.deb ...
+Unpacking libpipeline1:amd64 (1.5.8-2) ...
+Selecting previously unselected package libpng16-16t64:amd64.
+Preparing to unpack .../037-libpng16-16t64_1.6.57-1_amd64.deb ...
+Unpacking libpng16-16t64:amd64 (1.6.57-1) ...
+Selecting previously unselected package libpsl5t64:amd64.
+Preparing to unpack .../038-libpsl5t64_0.21.2-1.1build2_amd64.deb ...
+Unpacking libpsl5t64:amd64 (0.21.2-1.1build2) ...
+Selecting previously unselected package libsensors-config.
+Preparing to unpack .../039-libsensors-config_1%3a3.6.2-2build1_all.deb ...
+Unpacking libsensors-config (1:3.6.2-2build1) ...
+Selecting previously unselected package libsensors5:amd64.
+Preparing to unpack .../040-libsensors5_1%3a3.6.2-2build1_amd64.deb ...
+Unpacking libsensors5:amd64 (1:3.6.2-2build1) ...
+Selecting previously unselected package libuv1t64:amd64.
+Preparing to unpack .../041-libuv1t64_1.51.0-2ubuntu1_amd64.deb ...
+Unpacking libuv1t64:amd64 (1.51.0-2ubuntu1) ...
+Selecting previously unselected package libxau6:amd64.
+Preparing to unpack .../042-libxau6_1%3a1.0.11-1build2_amd64.deb ...
+Unpacking libxau6:amd64 (1:1.0.11-1build2) ...
+Selecting previously unselected package libxdmcp6:amd64.
+Preparing to unpack .../043-libxdmcp6_1%3a1.1.5-2_amd64.deb ...
+Unpacking libxdmcp6:amd64 (1:1.1.5-2) ...
+Selecting previously unselected package libxcb1:amd64.
+Preparing to unpack .../044-libxcb1_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb1:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libx11-data.
+Preparing to unpack .../045-libx11-data_2%3a1.8.13-1_all.deb ...
+Unpacking libx11-data (2:1.8.13-1) ...
+Selecting previously unselected package libx11-6:amd64.
+Preparing to unpack .../046-libx11-6_2%3a1.8.13-1_amd64.deb ...
+Unpacking libx11-6:amd64 (2:1.8.13-1) ...
+Selecting previously unselected package libxext6:amd64.
+Preparing to unpack .../047-libxext6_2%3a1.3.4-1build3_amd64.deb ...
+Unpacking libxext6:amd64 (2:1.3.4-1build3) ...
+Selecting previously unselected package libxkbcommon0:amd64.
+Preparing to unpack .../048-libxkbcommon0_1.13.1-1_amd64.deb ...
+Unpacking libxkbcommon0:amd64 (1.13.1-1) ...
+Selecting previously unselected package man-db.
+Preparing to unpack .../049-man-db_2.13.1-1build1_amd64.deb ...
+Unpacking man-db (2.13.1-1build1) ...
+Selecting previously unselected package m4.
+Preparing to unpack .../050-m4_1.4.21-1_amd64.deb ...
+Unpacking m4 (1.4.21-1) ...
+Selecting previously unselected package autoconf.
+Preparing to unpack .../051-autoconf_2.72-3.1ubuntu2_all.deb ...
+Unpacking autoconf (2.72-3.1ubuntu2) ...
+Selecting previously unselected package autotools-dev.
+Preparing to unpack .../052-autotools-dev_20240727.1build1_all.deb ...
+Unpacking autotools-dev (20240727.1build1) ...
+Selecting previously unselected package automake.
+Preparing to unpack .../053-automake_1%3a1.18.1-3build1_all.deb ...
+Unpacking automake (1:1.18.1-3build1) ...
+Selecting previously unselected package autopoint.
+Preparing to unpack .../054-autopoint_0.23.2-1_all.deb ...
+Unpacking autopoint (0.23.2-1) ...
+Selecting previously unselected package cmake-data.
+Preparing to unpack .../055-cmake-data_4.2.3-2ubuntu2_all.deb ...
+Unpacking cmake-data (4.2.3-2ubuntu2) ...
+Selecting previously unselected package libarchive13t64:amd64.
+Preparing to unpack .../056-libarchive13t64_3.8.5-1ubuntu2.2_amd64.deb ...
+Unpacking libarchive13t64:amd64 (3.8.5-1ubuntu2.2) ...
+Selecting previously unselected package libbrotli1:amd64.
+Preparing to unpack .../057-libbrotli1_1.2.0-3build1_amd64.deb ...
+Unpacking libbrotli1:amd64 (1.2.0-3build1) ...
+Selecting previously unselected package libsasl2-modules-db:amd64.
+Preparing to unpack .../058-libsasl2-modules-db_2.1.28+dfsg1-9ubuntu3_amd64.deb ...
+Unpacking libsasl2-modules-db:amd64 (2.1.28+dfsg1-9ubuntu3) ...
+Selecting previously unselected package libsasl2-2:amd64.
+Preparing to unpack .../059-libsasl2-2_2.1.28+dfsg1-9ubuntu3_amd64.deb ...
+Unpacking libsasl2-2:amd64 (2.1.28+dfsg1-9ubuntu3) ...
+Selecting previously unselected package libldap-common.
+Preparing to unpack .../060-libldap-common_2.6.10+dfsg-1ubuntu5_all.deb ...
+Unpacking libldap-common (2.6.10+dfsg-1ubuntu5) ...
+Selecting previously unselected package libldap2:amd64.
+Preparing to unpack .../061-libldap2_2.6.10+dfsg-1ubuntu5_amd64.deb ...
+Unpacking libldap2:amd64 (2.6.10+dfsg-1ubuntu5) ...
+Selecting previously unselected package librtmp1:amd64.
+Preparing to unpack .../062-librtmp1_2.4+20151223.gitfa8646d.1-3_amd64.deb ...
+Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-3) ...
+Selecting previously unselected package libssh2-1t64:amd64.
+Preparing to unpack .../063-libssh2-1t64_1.11.1-1ubuntu0.26.04.4_amd64.deb ...
+Unpacking libssh2-1t64:amd64 (1.11.1-1ubuntu0.26.04.4) ...
+Selecting previously unselected package libcurl4t64:amd64.
+Preparing to unpack .../064-libcurl4t64_8.18.0-1ubuntu2.7_amd64.deb ...
+Unpacking libcurl4t64:amd64 (8.18.0-1ubuntu2.7) ...
+Selecting previously unselected package libjsoncpp26:amd64.
+Preparing to unpack .../065-libjsoncpp26_1.9.6-5_amd64.deb ...
+Unpacking libjsoncpp26:amd64 (1.9.6-5) ...
+Selecting previously unselected package librhash1:amd64.
+Preparing to unpack .../066-librhash1_1.4.6-1.1_amd64.deb ...
+Unpacking librhash1:amd64 (1.4.6-1.1) ...
+Selecting previously unselected package cmake.
+Preparing to unpack .../067-cmake_4.2.3-2ubuntu2_amd64.deb ...
+Unpacking cmake (4.2.3-2ubuntu2) ...
+Selecting previously unselected package libdebhelper-perl.
+Preparing to unpack .../068-libdebhelper-perl_13.31ubuntu1_all.deb ...
+Unpacking libdebhelper-perl (13.31ubuntu1) ...
+Selecting previously unselected package libtool.
+Preparing to unpack .../069-libtool_2.5.4-9_all.deb ...
+Unpacking libtool (2.5.4-9) ...
+Selecting previously unselected package dh-autoreconf.
+Preparing to unpack .../070-dh-autoreconf_21+nmu1_all.deb ...
+Unpacking dh-autoreconf (21+nmu1) ...
+Selecting previously unselected package libarchive-zip-perl.
+Preparing to unpack .../071-libarchive-zip-perl_1.68-1_all.deb ...
+Unpacking libarchive-zip-perl (1.68-1) ...
+Selecting previously unselected package libfile-stripnondeterminism-perl.
+Preparing to unpack .../072-libfile-stripnondeterminism-perl_1.15.0-1build1_all.deb ...
+Unpacking libfile-stripnondeterminism-perl (1.15.0-1build1) ...
+Selecting previously unselected package dh-strip-nondeterminism.
+Preparing to unpack .../073-dh-strip-nondeterminism_1.15.0-1build1_all.deb ...
+Unpacking dh-strip-nondeterminism (1.15.0-1build1) ...
+Selecting previously unselected package libdw1t64:amd64.
+Preparing to unpack .../074-libdw1t64_0.194-4_amd64.deb ...
+Unpacking libdw1t64:amd64 (0.194-4) ...
+Selecting previously unselected package debugedit.
+Preparing to unpack .../075-debugedit_1%3a5.3-4_amd64.deb ...
+Unpacking debugedit (1:5.3-4) ...
+Selecting previously unselected package dwz.
+Preparing to unpack .../076-dwz_0.16-4_amd64.deb ...
+Unpacking dwz (0.16-4) ...
+Selecting previously unselected package gettext.
+Preparing to unpack .../077-gettext_0.23.2-1_amd64.deb ...
+Unpacking gettext (0.23.2-1) ...
+Selecting previously unselected package intltool-debian.
+Preparing to unpack .../078-intltool-debian_0.35.0+20060710.6build1_all.deb ...
+Unpacking intltool-debian (0.35.0+20060710.6build1) ...
+Selecting previously unselected package po-debconf.
+Preparing to unpack .../079-po-debconf_1.0.22_all.deb ...
+Unpacking po-debconf (1.0.22) ...
+Selecting previously unselected package debhelper.
+Preparing to unpack .../080-debhelper_13.31ubuntu1_all.deb ...
+Unpacking debhelper (13.31ubuntu1) ...
+Selecting previously unselected package extra-cmake-modules.
+Preparing to unpack .../081-extra-cmake-modules_6.30.0-0supralinux3_all.deb ...
+Unpacking extra-cmake-modules (6.30.0-0supralinux3) ...
+Selecting previously unselected package libfreetype6:amd64.
+Preparing to unpack .../082-libfreetype6_2.14.2+dfsg-1ubuntu0.2_amd64.deb ...
+Unpacking libfreetype6:amd64 (2.14.2+dfsg-1ubuntu0.2) ...
+Selecting previously unselected package fonts-dejavu-mono.
+Preparing to unpack .../083-fonts-dejavu-mono_2.37-8build1_all.deb ...
+Unpacking fonts-dejavu-mono (2.37-8build1) ...
+Selecting previously unselected package fonts-dejavu-core.
+Preparing to unpack .../084-fonts-dejavu-core_2.37-8build1_all.deb ...
+Unpacking fonts-dejavu-core (2.37-8build1) ...
+Selecting previously unselected package fontconfig-config.
+Preparing to unpack .../085-fontconfig-config_2.17.1-3ubuntu1_amd64.deb ...
+Unpacking fontconfig-config (2.17.1-3ubuntu1) ...
+Selecting previously unselected package libfontconfig1:amd64.
+Preparing to unpack .../086-libfontconfig1_2.17.1-3ubuntu1_amd64.deb ...
+Unpacking libfontconfig1:amd64 (2.17.1-3ubuntu1) ...
+Selecting previously unselected package fontconfig.
+Preparing to unpack .../087-fontconfig_2.17.1-3ubuntu1_amd64.deb ...
+Unpacking fontconfig (2.17.1-3ubuntu1) ...
+Selecting previously unselected package libavahi-common-data:amd64.
+Preparing to unpack .../088-libavahi-common-data_0.8-18ubuntu1.1_amd64.deb ...
+Unpacking libavahi-common-data:amd64 (0.8-18ubuntu1.1) ...
+Selecting previously unselected package libavahi-common3:amd64.
+Preparing to unpack .../089-libavahi-common3_0.8-18ubuntu1.1_amd64.deb ...
+Unpacking libavahi-common3:amd64 (0.8-18ubuntu1.1) ...
+Selecting previously unselected package libavahi-client3:amd64.
+Preparing to unpack .../090-libavahi-client3_0.8-18ubuntu1.1_amd64.deb ...
+Unpacking libavahi-client3:amd64 (0.8-18ubuntu1.1) ...
+Selecting previously unselected package libb2-1:amd64.
+Preparing to unpack .../091-libb2-1_0.98.1-1.1build2_amd64.deb ...
+Unpacking libb2-1:amd64 (0.98.1-1.1build2) ...
+Selecting previously unselected package libcups2t64:amd64.
+Preparing to unpack .../092-libcups2t64_2.4.16-1ubuntu1.3_amd64.deb ...
+Unpacking libcups2t64:amd64 (2.4.16-1ubuntu1.3) ...
+Selecting previously unselected package libcurl3t64-gnutls:amd64.
+Preparing to unpack .../093-libcurl3t64-gnutls_8.18.0-1ubuntu2.7_amd64.deb ...
+Unpacking libcurl3t64-gnutls:amd64 (8.18.0-1ubuntu2.7) ...
+Selecting previously unselected package libdouble-conversion3:amd64.
+Preparing to unpack .../094-libdouble-conversion3_3.4.0-1_amd64.deb ...
+Unpacking libdouble-conversion3:amd64 (3.4.0-1) ...
+Selecting previously unselected package libdrm-amdgpu1:amd64.
+Preparing to unpack .../095-libdrm-amdgpu1_2.4.131-1_amd64.deb ...
+Unpacking libdrm-amdgpu1:amd64 (2.4.131-1) ...
+Selecting previously unselected package libpciaccess0:amd64.
+Preparing to unpack .../096-libpciaccess0_0.18.1-1ubuntu4.1_amd64.deb ...
+Unpacking libpciaccess0:amd64 (0.18.1-1ubuntu4.1) ...
+Selecting previously unselected package libdrm-intel1:amd64.
+Preparing to unpack .../097-libdrm-intel1_2.4.131-1_amd64.deb ...
+Unpacking libdrm-intel1:amd64 (2.4.131-1) ...
+Selecting previously unselected package libduktape207:amd64.
+Preparing to unpack .../098-libduktape207_2.7.0+tests-0ubuntu4_amd64.deb ...
+Unpacking libduktape207:amd64 (2.7.0+tests-0ubuntu4) ...
+Selecting previously unselected package libllvm21:amd64.
+Preparing to unpack .../099-libllvm21_1%3a21.1.8-6ubuntu1_amd64.deb ...
+Unpacking libllvm21:amd64 (1:21.1.8-6ubuntu1) ...
+Selecting previously unselected package libx11-xcb1:amd64.
+Preparing to unpack .../100-libx11-xcb1_2%3a1.8.13-1_amd64.deb ...
+Unpacking libx11-xcb1:amd64 (2:1.8.13-1) ...
+Selecting previously unselected package libxcb-dri3-0:amd64.
+Preparing to unpack .../101-libxcb-dri3-0_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb-dri3-0:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libxcb-present0:amd64.
+Preparing to unpack .../102-libxcb-present0_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb-present0:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libxcb-randr0:amd64.
+Preparing to unpack .../103-libxcb-randr0_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb-randr0:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libxcb-sync1:amd64.
+Preparing to unpack .../104-libxcb-sync1_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb-sync1:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libxcb-xfixes0:amd64.
+Preparing to unpack .../105-libxcb-xfixes0_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb-xfixes0:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libxshmfence1:amd64.
+Preparing to unpack .../106-libxshmfence1_1.3.3-1build1_amd64.deb ...
+Unpacking libxshmfence1:amd64 (1.3.3-1build1) ...
+Selecting previously unselected package mesa-libgallium:amd64.
+Preparing to unpack .../107-mesa-libgallium_26.0.8-1ubuntu0.3_amd64.deb ...
+Unpacking mesa-libgallium:amd64 (26.0.8-1ubuntu0.3) ...
+Selecting previously unselected package libgbm1:amd64.
+Preparing to unpack .../108-libgbm1_26.0.8-1ubuntu0.3_amd64.deb ...
+Unpacking libgbm1:amd64 (26.0.8-1ubuntu0.3) ...
+Selecting previously unselected package libwayland-client0:amd64.
+Preparing to unpack .../109-libwayland-client0_1.24.0-2_amd64.deb ...
+Unpacking libwayland-client0:amd64 (1.24.0-2) ...
+Selecting previously unselected package libxcb-shm0:amd64.
+Preparing to unpack .../110-libxcb-shm0_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb-shm0:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libegl-mesa0:amd64.
+Preparing to unpack .../111-libegl-mesa0_26.0.8-1ubuntu0.3_amd64.deb ...
+Unpacking libegl-mesa0:amd64 (26.0.8-1ubuntu0.3) ...
+Selecting previously unselected package libglvnd0:amd64.
+Preparing to unpack .../112-libglvnd0_1.7.0-3_amd64.deb ...
+Unpacking libglvnd0:amd64 (1.7.0-3) ...
+Selecting previously unselected package libvulkan1:amd64.
+Preparing to unpack .../113-libvulkan1_1.4.341.0-1_amd64.deb ...
+Unpacking libvulkan1:amd64 (1.4.341.0-1) ...
+Selecting previously unselected package libgl1-mesa-dri:amd64.
+Preparing to unpack .../114-libgl1-mesa-dri_26.0.8-1ubuntu0.3_amd64.deb ...
+Unpacking libgl1-mesa-dri:amd64 (26.0.8-1ubuntu0.3) ...
+Selecting previously unselected package libxcb-glx0:amd64.
+Preparing to unpack .../115-libxcb-glx0_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb-glx0:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libxxf86vm1:amd64.
+Preparing to unpack .../116-libxxf86vm1_1%3a1.1.4-2_amd64.deb ...
+Unpacking libxxf86vm1:amd64 (1:1.1.4-2) ...
+Selecting previously unselected package libglx-mesa0:amd64.
+Preparing to unpack .../117-libglx-mesa0_26.0.8-1ubuntu0.3_amd64.deb ...
+Unpacking libglx-mesa0:amd64 (26.0.8-1ubuntu0.3) ...
+Selecting previously unselected package libglx0:amd64.
+Preparing to unpack .../118-libglx0_1.7.0-3_amd64.deb ...
+Unpacking libglx0:amd64 (1.7.0-3) ...
+Selecting previously unselected package libgl1:amd64.
+Preparing to unpack .../119-libgl1_1.7.0-3_amd64.deb ...
+Unpacking libgl1:amd64 (1.7.0-3) ...
+Selecting previously unselected package xorg-sgml-doctools.
+Preparing to unpack .../120-xorg-sgml-doctools_1%3a1.11-1.1build1_all.deb ...
+Unpacking xorg-sgml-doctools (1:1.11-1.1build1) ...
+Selecting previously unselected package x11proto-dev.
+Preparing to unpack .../121-x11proto-dev_2025.1-1_all.deb ...
+Unpacking x11proto-dev (2025.1-1) ...
+Selecting previously unselected package libxau-dev:amd64.
+Preparing to unpack .../122-libxau-dev_1%3a1.0.11-1build2_amd64.deb ...
+Unpacking libxau-dev:amd64 (1:1.0.11-1build2) ...
+Selecting previously unselected package libxdmcp-dev:amd64.
+Preparing to unpack .../123-libxdmcp-dev_1%3a1.1.5-2_amd64.deb ...
+Unpacking libxdmcp-dev:amd64 (1:1.1.5-2) ...
+Selecting previously unselected package xtrans-dev.
+Preparing to unpack .../124-xtrans-dev_1.6.0-1build1_all.deb ...
+Unpacking xtrans-dev (1.6.0-1build1) ...
+Selecting previously unselected package libxcb1-dev:amd64.
+Preparing to unpack .../125-libxcb1-dev_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb1-dev:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libx11-dev:amd64.
+Preparing to unpack .../126-libx11-dev_2%3a1.8.13-1_amd64.deb ...
+Unpacking libx11-dev:amd64 (2:1.8.13-1) ...
+Selecting previously unselected package libglx-dev:amd64.
+Preparing to unpack .../127-libglx-dev_1.7.0-3_amd64.deb ...
+Unpacking libglx-dev:amd64 (1.7.0-3) ...
+Selecting previously unselected package libgl-dev:amd64.
+Preparing to unpack .../128-libgl-dev_1.7.0-3_amd64.deb ...
+Unpacking libgl-dev:amd64 (1.7.0-3) ...
+Selecting previously unselected package libgraphite2-3:amd64.
+Preparing to unpack .../129-libgraphite2-3_1.3.14-11ubuntu1.1_amd64.deb ...
+Unpacking libgraphite2-3:amd64 (1.3.14-11ubuntu1.1) ...
+Selecting previously unselected package libgudev-1.0-0:amd64.
+Preparing to unpack .../130-libgudev-1.0-0_1%3a238-7build1_amd64.deb ...
+Unpacking libgudev-1.0-0:amd64 (1:238-7build1) ...
+Selecting previously unselected package libharfbuzz0b:amd64.
+Preparing to unpack .../131-libharfbuzz0b_12.3.2-2_amd64.deb ...
+Unpacking libharfbuzz0b:amd64 (12.3.2-2) ...
+Selecting previously unselected package x11-common.
+Preparing to unpack .../132-x11-common_1%3a7.7+26ubuntu1_all.deb ...
+Unpacking x11-common (1:7.7+26ubuntu1) ...
+Selecting previously unselected package libice6:amd64.
+Preparing to unpack .../133-libice6_2%3a1.1.1-1build1_amd64.deb ...
+Unpacking libice6:amd64 (2:1.1.1-1build1) ...
+Selecting previously unselected package libicu78:amd64.
+Preparing to unpack .../134-libicu78_78.2-2ubuntu1_amd64.deb ...
+Unpacking libicu78:amd64 (78.2-2ubuntu1) ...
+Selecting previously unselected package libwacom-common.
+Preparing to unpack .../135-libwacom-common_2.18.0-1_all.deb ...
+Unpacking libwacom-common (2.18.0-1) ...
+Selecting previously unselected package libwacom9:amd64.
+Preparing to unpack .../136-libwacom9_2.18.0-1_amd64.deb ...
+Unpacking libwacom9:amd64 (2.18.0-1) ...
+Selecting previously unselected package libinput-bin.
+Preparing to unpack .../137-libinput-bin_1.31.1-1ubuntu1.2_amd64.deb ...
+Unpacking libinput-bin (1.31.1-1ubuntu1.2) ...
+Selecting previously unselected package libmtdev1t64:amd64.
+Preparing to unpack .../138-libmtdev1t64_1.1.7-1build1_amd64.deb ...
+Unpacking libmtdev1t64:amd64 (1.1.7-1build1) ...
+Selecting previously unselected package libinput10:amd64.
+Preparing to unpack .../139-libinput10_1.31.1-1ubuntu1.2_amd64.deb ...
+Unpacking libinput10:amd64 (1.31.1-1ubuntu1.2) ...
+Selecting previously unselected package libjpeg-turbo8:amd64.
+Preparing to unpack .../140-libjpeg-turbo8_2.1.5-4ubuntu4_amd64.deb ...
+Unpacking libjpeg-turbo8:amd64 (2.1.5-4ubuntu4) ...
+Selecting previously unselected package libjpeg8:amd64.
+Preparing to unpack .../141-libjpeg8_8c-2ubuntu12_amd64.deb ...
+Unpacking libjpeg8:amd64 (8c-2ubuntu12) ...
+Selecting previously unselected package libmd4c0:amd64.
+Preparing to unpack .../142-libmd4c0_0.5.2-2build1_amd64.deb ...
+Unpacking libmd4c0:amd64 (0.5.2-2build1) ...
+Selecting previously unselected package libopengl0:amd64.
+Preparing to unpack .../143-libopengl0_1.7.0-3_amd64.deb ...
+Unpacking libopengl0:amd64 (1.7.0-3) ...
+Selecting previously unselected package libopengl-dev:amd64.
+Preparing to unpack .../144-libopengl-dev_1.7.0-3_amd64.deb ...
+Unpacking libopengl-dev:amd64 (1.7.0-3) ...
+Selecting previously unselected package libpcre2-16-0:amd64.
+Preparing to unpack .../145-libpcre2-16-0_10.46-1build1_amd64.deb ...
+Unpacking libpcre2-16-0:amd64 (10.46-1build1) ...
+Selecting previously unselected package libproxy1v5:amd64.
+Preparing to unpack .../146-libproxy1v5_0.5.12-1_amd64.deb ...
+Unpacking libproxy1v5:amd64 (0.5.12-1) ...
+Selecting previously unselected package libqt6core6t64:amd64.
+Preparing to unpack .../147-libqt6core6t64_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6core6t64:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libqt6concurrent6:amd64.
+Preparing to unpack .../148-libqt6concurrent6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6concurrent6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libqt6dbus6:amd64.
+Preparing to unpack .../149-libqt6dbus6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6dbus6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libegl1:amd64.
+Preparing to unpack .../150-libegl1_1.7.0-3_amd64.deb ...
+Unpacking libegl1:amd64 (1.7.0-3) ...
+Selecting previously unselected package libsm6:amd64.
+Preparing to unpack .../151-libsm6_2%3a1.2.6-1build1_amd64.deb ...
+Unpacking libsm6:amd64 (2:1.2.6-1build1) ...
+Selecting previously unselected package libts0t64:amd64.
+Preparing to unpack .../152-libts0t64_1.22-1.1build2_amd64.deb ...
+Unpacking libts0t64:amd64 (1.22-1.1build2) ...
+Selecting previously unselected package libxcb-util1:amd64.
+Preparing to unpack .../153-libxcb-util1_0.4.1-1build1_amd64.deb ...
+Unpacking libxcb-util1:amd64 (0.4.1-1build1) ...
+Selecting previously unselected package libxcb-image0:amd64.
+Preparing to unpack .../154-libxcb-image0_0.4.0-2build2_amd64.deb ...
+Unpacking libxcb-image0:amd64 (0.4.0-2build2) ...
+Selecting previously unselected package libxcb-render0:amd64.
+Preparing to unpack .../155-libxcb-render0_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb-render0:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libxcb-render-util0:amd64.
+Preparing to unpack .../156-libxcb-render-util0_0.3.10-1build1_amd64.deb ...
+Unpacking libxcb-render-util0:amd64 (0.3.10-1build1) ...
+Selecting previously unselected package libxcb-cursor0:amd64.
+Preparing to unpack .../157-libxcb-cursor0_0.1.6-1_amd64.deb ...
+Unpacking libxcb-cursor0:amd64 (0.1.6-1) ...
+Selecting previously unselected package libxcb-icccm4:amd64.
+Preparing to unpack .../158-libxcb-icccm4_0.4.2-1build1_amd64.deb ...
+Unpacking libxcb-icccm4:amd64 (0.4.2-1build1) ...
+Selecting previously unselected package libxcb-keysyms1:amd64.
+Preparing to unpack .../159-libxcb-keysyms1_0.4.1-1build1_amd64.deb ...
+Unpacking libxcb-keysyms1:amd64 (0.4.1-1build1) ...
+Selecting previously unselected package libxcb-shape0:amd64.
+Preparing to unpack .../160-libxcb-shape0_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb-shape0:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libxcb-xinput0:amd64.
+Preparing to unpack .../161-libxcb-xinput0_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb-xinput0:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libxcb-xkb1:amd64.
+Preparing to unpack .../162-libxcb-xkb1_1.17.0-2ubuntu1_amd64.deb ...
+Unpacking libxcb-xkb1:amd64 (1.17.0-2ubuntu1) ...
+Selecting previously unselected package libxkbcommon-x11-0:amd64.
+Preparing to unpack .../163-libxkbcommon-x11-0_1.13.1-1_amd64.deb ...
+Unpacking libxkbcommon-x11-0:amd64 (1.13.1-1) ...
+Selecting previously unselected package libqt6gui6:amd64.
+Preparing to unpack .../164-libqt6gui6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6gui6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libqt6network6:amd64.
+Preparing to unpack .../165-libqt6network6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6network6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libqt6opengl6:amd64.
+Preparing to unpack .../166-libqt6opengl6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6opengl6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libqt6widgets6:amd64.
+Preparing to unpack .../167-libqt6widgets6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6widgets6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libqt6openglwidgets6:amd64.
+Preparing to unpack .../168-libqt6openglwidgets6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6openglwidgets6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libqt6printsupport6:amd64.
+Preparing to unpack .../169-libqt6printsupport6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6printsupport6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libqt6sql6:amd64.
+Preparing to unpack .../170-libqt6sql6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6sql6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libqt6test6:amd64.
+Preparing to unpack .../171-libqt6test6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6test6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libwayland-cursor0:amd64.
+Preparing to unpack .../172-libwayland-cursor0_1.24.0-2_amd64.deb ...
+Unpacking libwayland-cursor0:amd64 (1.24.0-2) ...
+Selecting previously unselected package libwayland-egl1:amd64.
+Preparing to unpack .../173-libwayland-egl1_1.24.0-2_amd64.deb ...
+Unpacking libwayland-egl1:amd64 (1.24.0-2) ...
+Selecting previously unselected package libqt6waylandclient6:amd64.
+Preparing to unpack .../174-libqt6waylandclient6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6waylandclient6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libqt6wlshellintegration6:amd64.
+Preparing to unpack .../175-libqt6wlshellintegration6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6wlshellintegration6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libqt6xml6:amd64.
+Preparing to unpack .../176-libqt6xml6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking libqt6xml6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package libvulkan-dev:amd64.
+Preparing to unpack .../177-libvulkan-dev_1.4.341.0-1_amd64.deb ...
+Unpacking libvulkan-dev:amd64 (1.4.341.0-1) ...
+Selecting previously unselected package plasma-wayland-protocols.
+Preparing to unpack .../178-plasma-wayland-protocols_1.22.0-0supralinux1_all.deb ...
+Unpacking plasma-wayland-protocols (1.22.0-0supralinux1) ...
+Selecting previously unselected package qmake6-bin.
+Preparing to unpack .../179-qmake6-bin_6.10.2+dfsg-7_amd64.deb ...
+Unpacking qmake6-bin (6.10.2+dfsg-7) ...
+Selecting previously unselected package qmake6:amd64.
+Preparing to unpack .../180-qmake6_6.10.2+dfsg-7_amd64.deb ...
+Unpacking qmake6:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package qt6-base-dev-tools.
+Preparing to unpack .../181-qt6-base-dev-tools_6.10.2+dfsg-7_amd64.deb ...
+Unpacking qt6-base-dev-tools (6.10.2+dfsg-7) ...
+Selecting previously unselected package qt6-qpa-plugins:amd64.
+Preparing to unpack .../182-qt6-qpa-plugins_6.10.2+dfsg-7_amd64.deb ...
+Unpacking qt6-qpa-plugins:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package qt6-base-dev:amd64.
+Preparing to unpack .../183-qt6-base-dev_6.10.2+dfsg-7_amd64.deb ...
+Unpacking qt6-base-dev:amd64 (6.10.2+dfsg-7) ...
+Selecting previously unselected package sbuild-build-depends-main-dummy.
+Preparing to unpack .../184-sbuild-build-depends-main-dummy_0.invalid.0_amd64.deb ...
+Unpacking sbuild-build-depends-main-dummy (0.invalid.0) ...
+Setting up media-types (14.0.0build1) ...
+Setting up libb2-1:amd64 (0.98.1-1.1build2) ...
+Setting up libpipeline1:amd64 (1.5.8-2) ...
+Setting up libgraphite2-3:amd64 (1.3.14-11ubuntu1.1) ...
+Setting up libpciaccess0:amd64 (0.18.1-1ubuntu4.1) ...
+Setting up libxau6:amd64 (1:1.0.11-1build2) ...
+Setting up libxdmcp6:amd64 (1:1.1.5-2) ...
+Setting up libdouble-conversion3:amd64 (3.4.0-1) ...
+Setting up libkeyutils1:amd64 (1.6.3-6ubuntu3) ...
+Setting up libxcb1:amd64 (1.17.0-2ubuntu1) ...
+Setting up libxcb-xfixes0:amd64 (1.17.0-2ubuntu1) ...
+Setting up bsdextrautils (2.41.3-3ubuntu2.2) ...
+Setting up libxcb-xinput0:amd64 (1.17.0-2ubuntu1) ...
+Setting up libmagic-mgc (1:5.46-5build2) ...
+Setting up libxcb-render0:amd64 (1.17.0-2ubuntu1) ...
+Setting up libarchive-zip-perl (1.68-1) ...
+Setting up libglvnd0:amd64 (1.7.0-3) ...
+Setting up libxml2-16:amd64 (2.15.2+dfsg-0.1ubuntu0.2) ...
+Setting up libts0t64:amd64 (1.22-1.1build2) ...
+Setting up libxcb-glx0:amd64 (1.17.0-2ubuntu1) ...
+Setting up libdebhelper-perl (13.31ubuntu1) ...
+Setting up libbrotli1:amd64 (1.2.0-3build1) ...
+Setting up libsqlite3-0:amd64 (3.46.1-9ubuntu0.3) ...
+Setting up libuv1t64:amd64 (1.51.0-2ubuntu1) ...
+Setting up libmagic1t64:amd64 (1:5.46-5build2) ...
+Setting up libxcb-keysyms1:amd64 (0.4.1-1build1) ...
+Setting up libxcb-shape0:amd64 (1.17.0-2ubuntu1) ...
+Setting up x11-common (1:7.7+26ubuntu1) ...
+invoke-rc.d: could not determine current runlevel
+invoke-rc.d: WARNING: No init system and policy-rc.d missing! Defaulting to block.
+Setting up libsensors-config (1:3.6.2-2build1) ...
+Setting up libnghttp2-14:amd64 (1.68.0-2ubuntu0.2) ...
+Setting up gettext-base (0.23.2-1) ...
+Setting up m4 (1.4.21-1) ...
+Setting up libxcb-render-util0:amd64 (0.3.10-1build1) ...
+Setting up xkb-data (2.46-2) ...
+Setting up libxcb-shm0:amd64 (1.17.0-2ubuntu1) ...
+Setting up libxcb-icccm4:amd64 (0.4.2-1build1) ...
+Setting up libcom-err2:amd64 (1.47.2-3ubuntu4) ...
+Setting up file (1:5.46-5build2) ...
+Setting up libldap-common (2.6.10+dfsg-1ubuntu5) ...
+Setting up libpcre2-16-0:amd64 (10.46-1build1) ...
+Setting up libopengl0:amd64 (1.7.0-3) ...
+Setting up libelf1t64:amd64 (0.194-4) ...
+Setting up libxcb-util1:amd64 (0.4.1-1build1) ...
+Setting up libxcb-xkb1:amd64 (1.17.0-2ubuntu1) ...
+Setting up libxcb-image0:amd64 (0.4.0-2build2) ...
+Setting up libkrb5support0:amd64 (1.22.1-2ubuntu4.1) ...
+Setting up libdw1t64:amd64 (0.194-4) ...
+Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg1-9ubuntu3) ...
+Setting up tzdata (2026c-0ubuntu0.26.04.1) ...
+
+Current default time zone: 'Etc/UTC'
+Local time is now:      Wed Oct  7 22:22:57 UTC 2026.
+Universal Time is now:  Wed Oct  7 22:22:57 UTC 2026.
+Run 'dpkg-reconfigure tzdata' if you wish to change it.
+
+Setting up libicu78:amd64 (78.2-2ubuntu1) ...
+Setting up libxcb-present0:amd64 (1.17.0-2ubuntu1) ...
+Setting up xtrans-dev (1.6.0-1build1) ...
+Setting up libnettle8t64:amd64 (3.10.2-1) ...
+Setting up autotools-dev (20240727.1build1) ...
+Setting up libx11-data (2:1.8.13-1) ...
+Setting up libxcb-sync1:amd64 (1.17.0-2ubuntu1) ...
+Setting up libjsoncpp26:amd64 (1.9.6-5) ...
+Setting up libxcb-cursor0:amd64 (0.1.6-1) ...
+Setting up libavahi-common-data:amd64 (0.8-18ubuntu1.1) ...
+Setting up libdbus-1-3:amd64 (1.16.2-2ubuntu4) ...
+Setting up libproc2-0:amd64 (2:4.0.4-9ubuntu1) ...
+Setting up libunistring5:amd64 (1.3-2build1) ...
+Setting up fonts-dejavu-mono (2.37-8build1) ...
+Setting up libpng16-16t64:amd64 (1.6.57-1) ...
+Setting up autopoint (0.23.2-1) ...
+Setting up fonts-dejavu-core (2.37-8build1) ...
+Setting up libsensors5:amd64 (1:3.6.2-2build1) ...
+Setting up libncursesw6:amd64 (6.6+20251231-1) ...
+Setting up libk5crypto3:amd64 (1.22.1-2ubuntu4.1) ...
+Setting up libjpeg-turbo8:amd64 (2.1.5-4ubuntu4) ...
+Setting up libsasl2-2:amd64 (2.1.28+dfsg1-9ubuntu3) ...
+Setting up libvulkan1:amd64 (1.4.341.0-1) ...
+Setting up autoconf (2.72-3.1ubuntu2) ...
+Setting up libffi8:amd64 (3.5.2-4) ...
+Setting up dwz (0.16-4) ...
+Setting up libhogweed6t64:amd64 (3.10.2-1) ...
+Setting up libmtdev1t64:amd64 (1.1.7-1build1) ...
+Setting up sensible-utils (0.0.26build1) ...
+Setting up libduktape207:amd64 (2.7.0+tests-0ubuntu4) ...
+Setting up libxshmfence1:amd64 (1.3.3-1build1) ...
+Setting up libxcb-randr0:amd64 (1.17.0-2ubuntu1) ...
+Setting up libuchardet0:amd64 (0.0.8-2) ...
+Setting up procps (2:4.0.4-9ubuntu1) ...
+Setting up libtasn1-6:amd64 (4.21.0-2) ...
+Setting up debugedit (1:5.3-4) ...
+Setting up libmd4c0:amd64 (0.5.2-2build1) ...
+Setting up libx11-6:amd64 (2:1.8.13-1) ...
+Setting up xorg-sgml-doctools (1:1.11-1.1build1) ...
+Setting up netbase (6.5build1) ...
+Setting up cmake-data (4.2.3-2ubuntu2) ...
+Setting up librhash1:amd64 (1.4.6-1.1) ...
+Setting up libkrb5-3:amd64 (1.22.1-2ubuntu4.1) ...
+Setting up libwayland-egl1:amd64 (1.24.0-2) ...
+Setting up plasma-wayland-protocols (1.22.0-0supralinux1) ...
+Setting up libssh2-1t64:amd64 (1.11.1-1ubuntu0.26.04.4) ...
+Setting up libopengl-dev:amd64 (1.7.0-3) ...
+Setting up libbsd0:amd64 (0.12.2-2build2) ...
+Setting up libdrm-common (2.4.131-1) ...
+Setting up libarchive13t64:amd64 (3.8.5-1ubuntu2.2) ...
+Setting up libevdev2:amd64 (1.13.6+dfsg-1) ...
+Setting up readline-common (8.3-4) ...
+Setting up libldap2:amd64 (2.6.10+dfsg-1ubuntu5) ...
+Setting up libwacom-common (2.18.0-1) ...
+Setting up libxkbcommon0:amd64 (1.13.1-1) ...
+Setting up libwayland-client0:amd64 (1.24.0-2) ...
+Setting up libjpeg8:amd64 (8c-2ubuntu12) ...
+Setting up automake (1:1.18.1-3build1) ...
+update-alternatives: using /usr/bin/automake-1.18 to provide /usr/bin/automake (automake) in auto mode
+Setting up x11proto-dev (2025.1-1) ...
+Setting up libfile-stripnondeterminism-perl (1.15.0-1build1) ...
+Setting up libxcb-dri3-0:amd64 (1.17.0-2ubuntu1) ...
+Setting up libx11-xcb1:amd64 (2:1.8.13-1) ...
+Setting up libice6:amd64 (2:1.1.1-1build1) ...
+Setting up gettext (0.23.2-1) ...
+Setting up libxau-dev:amd64 (1:1.0.11-1build2) ...
+Setting up libtool (2.5.4-9) ...
+Setting up fontconfig-config (2.17.1-3ubuntu1) ...
+Setting up libedit2:amd64 (3.1-20251016-1) ...
+Setting up libavahi-common3:amd64 (0.8-18ubuntu1.1) ...
+Setting up libxext6:amd64 (2:1.3.4-1build3) ...
+Setting up libidn2-0:amd64 (2.3.8-4build1) ...
+Setting up libxxf86vm1:amd64 (1:1.1.4-2) ...
+Setting up intltool-debian (0.35.0+20060710.6build1) ...
+Setting up dh-autoreconf (21+nmu1) ...
+Setting up libxdmcp-dev:amd64 (1:1.1.5-2) ...
+Setting up libglib2.0-0t64:amd64 (2.88.0-1ubuntu0.1) ...
+No schema files found: doing nothing.
+Setting up libfreetype6:amd64 (2.14.2+dfsg-1ubuntu0.2) ...
+Setting up libllvm21:amd64 (1:21.1.8-6ubuntu1) ...
+Setting up shared-mime-info (2.4-5build3) ...
+Setting up libp11-kit0:amd64 (0.26.2-2) ...
+Setting up libxkbcommon-x11-0:amd64 (1.13.1-1) ...
+Setting up libgssapi-krb5-2:amd64 (1.22.1-2ubuntu4.1) ...
+Setting up libreadline8t64:amd64 (8.3-4) ...
+Setting up dh-strip-nondeterminism (1.15.0-1build1) ...
+Setting up libdrm2:amd64 (2.4.131-1) ...
+Setting up groff-base (1.23.0-10) ...
+Setting up libwayland-cursor0:amd64 (1.24.0-2) ...
+Setting up libharfbuzz0b:amd64 (12.3.2-2) ...
+Setting up libfontconfig1:amd64 (2.17.1-3ubuntu1) ...
+Setting up libsm6:amd64 (2:1.2.6-1build1) ...
+Setting up libavahi-client3:amd64 (0.8-18ubuntu1.1) ...
+Setting up libgudev-1.0-0:amd64 (1:238-7build1) ...
+Setting up libdrm-amdgpu1:amd64 (2.4.131-1) ...
+Setting up libgnutls30t64:amd64 (3.8.12-2ubuntu1.1) ...
+Setting up libqt6core6t64:amd64 (6.10.2+dfsg-7) ...
+Setting up fontconfig (2.17.1-3ubuntu1) ...
+Regenerating fonts cache... done.
+Setting up libqt6test6:amd64 (6.10.2+dfsg-7) ...
+Setting up libxcb1-dev:amd64 (1.17.0-2ubuntu1) ...
+Setting up libpython3.14-stdlib:amd64 (3.14.4-1ubuntu0.2) ...
+Setting up libwacom9:amd64 (2.18.0-1) ...
+Setting up po-debconf (1.0.22) ...
+Setting up libdrm-intel1:amd64 (2.4.131-1) ...
+Setting up libpsl5t64:amd64 (0.21.2-1.1build2) ...
+Setting up libx11-dev:amd64 (2:1.8.13-1) ...
+Setting up man-db (2.13.1-1build1) ...
+Not building database; man-db/auto-update is not 'true'.
+Setting up libinput-bin (1.31.1-1ubuntu1.2) ...
+Setting up libqt6xml6:amd64 (6.10.2+dfsg-7) ...
+Setting up libqt6sql6:amd64 (6.10.2+dfsg-7) ...
+Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-3) ...
+Setting up qmake6-bin (6.10.2+dfsg-7) ...
+Setting up python3.14 (3.14.4-1ubuntu0.2) ...
+Setting up libcups2t64:amd64 (2.4.16-1ubuntu1.3) ...
+Setting up libpython3-stdlib:amd64 (3.14.3-0ubuntu2) ...
+Setting up libqt6dbus6:amd64 (6.10.2+dfsg-7) ...
+Setting up libqt6concurrent6:amd64 (6.10.2+dfsg-7) ...
+Setting up libinput10:amd64 (1.31.1-1ubuntu1.2) ...
+Setting up mesa-libgallium:amd64 (26.0.8-1ubuntu0.3) ...
+Setting up qt6-base-dev-tools (6.10.2+dfsg-7) ...
+Setting up libcurl4t64:amd64 (8.18.0-1ubuntu2.7) ...
+Setting up libgbm1:amd64 (26.0.8-1ubuntu0.3) ...
+Setting up libgl1-mesa-dri:amd64 (26.0.8-1ubuntu0.3) ...
+Setting up libcurl3t64-gnutls:amd64 (8.18.0-1ubuntu2.7) ...
+Setting up debhelper (13.31ubuntu1) ...
+Setting up python3 (3.14.3-0ubuntu2) ...
+Setting up qmake6:amd64 (6.10.2+dfsg-7) ...
+Setting up libegl-mesa0:amd64 (26.0.8-1ubuntu0.3) ...
+Setting up libegl1:amd64 (1.7.0-3) ...
+Setting up cmake (4.2.3-2ubuntu2) ...
+Setting up libproxy1v5:amd64 (0.5.12-1) ...
+Setting up libvulkan-dev:amd64 (1.4.341.0-1) ...
+Setting up libglx-mesa0:amd64 (26.0.8-1ubuntu0.3) ...
+Setting up libglx0:amd64 (1.7.0-3) ...
+Setting up extra-cmake-modules (6.30.0-0supralinux3) ...
+Setting up libgl1:amd64 (1.7.0-3) ...
+Setting up libqt6gui6:amd64 (6.10.2+dfsg-7) ...
+Setting up libqt6network6:amd64 (6.10.2+dfsg-7) ...
+Setting up libglx-dev:amd64 (1.7.0-3) ...
+Setting up libgl-dev:amd64 (1.7.0-3) ...
+Setting up qt6-qpa-plugins:amd64 (6.10.2+dfsg-7) ...
+Setting up libqt6opengl6:amd64 (6.10.2+dfsg-7) ...
+Setting up libqt6widgets6:amd64 (6.10.2+dfsg-7) ...
+Setting up libqt6waylandclient6:amd64 (6.10.2+dfsg-7) ...
+Setting up libqt6openglwidgets6:amd64 (6.10.2+dfsg-7) ...
+Setting up libqt6wlshellintegration6:amd64 (6.10.2+dfsg-7) ...
+Setting up libqt6printsupport6:amd64 (6.10.2+dfsg-7) ...
+Setting up qt6-base-dev:amd64 (6.10.2+dfsg-7) ...
+Setting up sbuild-build-depends-main-dummy (0.invalid.0) ...
+Processing triggers for libc-bin (2.43-2ubuntu2.4) ...
+
++------------------------------------------------------------------------------+
+| Check architectures                          Wed, 07 Oct 2026 22:23:01 +0000 |
++------------------------------------------------------------------------------+
+
+Arch check ok (amd64 included in any)
+
++------------------------------------------------------------------------------+
+| Build environment                            Wed, 07 Oct 2026 22:23:01 +0000 |
++------------------------------------------------------------------------------+
+
+Kernel: Linux 7.0.0-34-generic #34-Ubuntu SMP PREEMPT_DYNAMIC Wed Sep  2 14:29:37 UTC 2026 amd64 (x86_64)
+Toolchain package versions: binutils_2.46-3ubuntu2 dpkg-dev_1.23.7ubuntu1 g++-15_15.2.0-16ubuntu1 gcc-15_15.2.0-16ubuntu1 libc6-dev_2.43-2ubuntu2.4 libstdc++-15-dev_15.2.0-16ubuntu1 libstdc++6_16-20260322-1ubuntu1 linux-libc-dev_7.0.0-38.38
+Package versions: apt_3.2.0 autoconf_2.72-3.1ubuntu2 automake_1:1.18.1-3build1 autopoint_0.23.2-1 autotools-dev_20240727.1build1 base-files_14ubuntu6.2 base-passwd_3.6.8 bash_5.3-2ubuntu1 binutils_2.46-3ubuntu2 binutils-common_2.46-3ubuntu2 binutils-x86-64-linux-gnu_2.46-3ubuntu2 bsdextrautils_2.41.3-3ubuntu2.2 build-essential_12.12ubuntu2.26.04.2 bzip2_1.0.8-6ubuntu0.1 cmake_4.2.3-2ubuntu2 cmake-data_4.2.3-2ubuntu2 coreutils_9.5-1ubuntu2+0.0.0~ubuntu25 coreutils-from-uutils_0.0.0~ubuntu25 cpp_4:15.2.0-5ubuntu1 cpp-15_15.2.0-16ubuntu1 cpp-15-x86-64-linux-gnu_15.2.0-16ubuntu1 cpp-x86-64-linux-gnu_4:15.2.0-5ubuntu1 dash_0.5.12-12ubuntu3 debconf_1.5.92 debhelper_13.31ubuntu1 debianutils_5.23.2build1 debugedit_1:5.3-4 dh-autoreconf_21+nmu1 dh-strip-nondeterminism_1.15.0-1build1 diffutils_1:3.12-1ubuntu0.1 dpkg_1.23.7ubuntu1 dpkg-dev_1.23.7ubuntu1 dwz_0.16-4 extra-cmake-modules_6.30.0-0supralinux3 file_1:5.46-5build2 findutils_4.10.0-3build2 fontconfig_2.17.1-3ubuntu1 fontconfig-config_2.17.1-3ubuntu1 fonts-dejavu-core_2.37-8build1 fonts-dejavu-mono_2.37-8build1 g++_4:15.2.0-5ubuntu1 g++-15_15.2.0-16ubuntu1 g++-15-x86-64-linux-gnu_15.2.0-16ubuntu1 g++-x86-64-linux-gnu_4:15.2.0-5ubuntu1 gcc_4:15.2.0-5ubuntu1 gcc-15_15.2.0-16ubuntu1 gcc-15-base_15.2.0-16ubuntu1 gcc-15-x86-64-linux-gnu_15.2.0-16ubuntu1 gcc-16-base_16-20260322-1ubuntu1 gcc-x86-64-linux-gnu_4:15.2.0-5ubuntu1 gettext_0.23.2-1 gettext-base_0.23.2-1 gnu-coreutils_9.7-3ubuntu2.1 gpgv_2.4.8-4ubuntu3.1 grep_3.12-1 groff-base_1.23.0-10 gzip_1.14-1~exp2ubuntu1.1 hostname_3.25build1 init-system-helpers_1.69 intltool-debian_0.35.0+20060710.6build1 libacl1_2.3.2-2 libapt-pkg7.0_3.2.0 libarchive-zip-perl_1.68-1 libarchive13t64_3.8.5-1ubuntu2.2 libasan8_16-20260322-1ubuntu1 libatomic1_16-20260322-1ubuntu1 libattr1_1:2.5.2-4ubuntu0.1 libaudit-common_1:4.1.2-1ubuntu0.1 libaudit1_1:4.1.2-1ubuntu0.1 libavahi-client3_0.8-18ubuntu1.1 libavahi-common-data_0.8-18ubuntu1.1 libavahi-common3_0.8-18ubuntu1.1 libb2-1_0.98.1-1.1build2 libbinutils_2.46-3ubuntu2 libblkid1_2.41.3-3ubuntu2.2 libbrotli1_1.2.0-3build1 libbsd0_0.12.2-2build2 libbz2-1.0_1.0.8-6ubuntu0.1 libc-bin_2.43-2ubuntu2.4 libc-dev-bin_2.43-2ubuntu2.4 libc-gconv-modules-extra_2.43-2ubuntu2.4 libc6_2.43-2ubuntu2.4 libc6-dev_2.43-2ubuntu2.4 libcap-ng0_0.8.5-4build5 libcc1-0_16-20260322-1ubuntu1 libcom-err2_1.47.2-3ubuntu4 libcrypt-dev_1:4.5.1-1 libcrypt1_1:4.5.1-1 libctf-nobfd0_2.46-3ubuntu2 libctf0_2.46-3ubuntu2 libcups2t64_2.4.16-1ubuntu1.3 libcurl3t64-gnutls_8.18.0-1ubuntu2.7 libcurl4t64_8.18.0-1ubuntu2.7 libdb5.3t64_5.3.28+dfsg2-10ubuntu1 libdbus-1-3_1.16.2-2ubuntu4 libdebconfclient0_0.280ubuntu1 libdebhelper-perl_13.31ubuntu1 libdouble-conversion3_3.4.0-1 libdpkg-perl_1.23.7ubuntu1 libdrm-amdgpu1_2.4.131-1 libdrm-common_2.4.131-1 libdrm-intel1_2.4.131-1 libdrm2_2.4.131-1 libduktape207_2.7.0+tests-0ubuntu4 libdw1t64_0.194-4 libedit2_3.1-20251016-1 libegl-mesa0_26.0.8-1ubuntu0.3 libegl1_1.7.0-3 libelf1t64_0.194-4 libevdev2_1.13.6+dfsg-1 libexpat1_2.7.4-1ubuntu0.2 libffi8_3.5.2-4 libfile-stripnondeterminism-perl_1.15.0-1build1 libfontconfig1_2.17.1-3ubuntu1 libfreetype6_2.14.2+dfsg-1ubuntu0.2 libgbm1_26.0.8-1ubuntu0.3 libgcc-15-dev_15.2.0-16ubuntu1 libgcc-s1_16-20260322-1ubuntu1 libgcrypt20_1.12.0-2ubuntu1.1 libgdbm-compat4t64_1.26-1build1 libgdbm6t64_1.26-1build1 libgl-dev_1.7.0-3 libgl1_1.7.0-3 libgl1-mesa-dri_26.0.8-1ubuntu0.3 libglib2.0-0t64_2.88.0-1ubuntu0.1 libglvnd0_1.7.0-3 libglx-dev_1.7.0-3 libglx-mesa0_26.0.8-1ubuntu0.3 libglx0_1.7.0-3 libgmp10_2:6.3.0+dfsg-5ubuntu2 libgnutls30t64_3.8.12-2ubuntu1.1 libgomp1_16-20260322-1ubuntu1 libgpg-error0_1.58-2 libgprofng0_2.46-3ubuntu2 libgraphite2-3_1.3.14-11ubuntu1.1 libgssapi-krb5-2_1.22.1-2ubuntu4.1 libgudev-1.0-0_1:238-7build1 libharfbuzz0b_12.3.2-2 libhogweed6t64_3.10.2-1 libhwasan0_16-20260322-1ubuntu1 libice6_2:1.1.1-1build1 libicu78_78.2-2ubuntu1 libidn2-0_2.3.8-4build1 libinput-bin_1.31.1-1ubuntu1.2 libinput10_1.31.1-1ubuntu1.2 libisl23_0.27-1build1 libitm1_16-20260322-1ubuntu1 libjansson4_2.14-2build4 libjpeg-turbo8_2.1.5-4ubuntu4 libjpeg8_8c-2ubuntu12 libjsoncpp26_1.9.6-5 libk5crypto3_1.22.1-2ubuntu4.1 libkeyutils1_1.6.3-6ubuntu3 libkrb5-3_1.22.1-2ubuntu4.1 libkrb5support0_1.22.1-2ubuntu4.1 libldap-common_2.6.10+dfsg-1ubuntu5 libldap2_2.6.10+dfsg-1ubuntu5 libllvm21_1:21.1.8-6ubuntu1 liblsan0_16-20260322-1ubuntu1 liblz4-1_1.10.0-8 liblzma5_5.8.3-1 libmagic-mgc_1:5.46-5build2 libmagic1t64_1:5.46-5build2 libmd0_1.1.0-2build4 libmd4c0_0.5.2-2build1 libmount1_2.41.3-3ubuntu2.2 libmpc3_1.3.1-3 libmpfr6_4.2.2-3 libmtdev1t64_1.1.7-1build1 libncursesw6_6.6+20251231-1 libnettle8t64_3.10.2-1 libnghttp2-14_1.68.0-2ubuntu0.2 libopengl-dev_1.7.0-3 libopengl0_1.7.0-3 libp11-kit0_0.26.2-2 libpam-modules_1.7.0-5ubuntu3.2 libpam-modules-bin_1.7.0-5ubuntu3.2 libpam-runtime_1.7.0-5ubuntu3.2 libpam0g_1.7.0-5ubuntu3.2 libpciaccess0_0.18.1-1ubuntu4.1 libpcre2-16-0_10.46-1build1 libpcre2-8-0_10.46-1build1 libperl5.40_5.40.1-7ubuntu0.3 libpipeline1_1.5.8-2 libpng16-16t64_1.6.57-1 libproc2-0_2:4.0.4-9ubuntu1 libproxy1v5_0.5.12-1 libpsl5t64_0.21.2-1.1build2 libpython3-stdlib_3.14.3-0ubuntu2 libpython3.14-minimal_3.14.4-1ubuntu0.2 libpython3.14-stdlib_3.14.4-1ubuntu0.2 libqt6concurrent6_6.10.2+dfsg-7 libqt6core6t64_6.10.2+dfsg-7 libqt6dbus6_6.10.2+dfsg-7 libqt6gui6_6.10.2+dfsg-7 libqt6network6_6.10.2+dfsg-7 libqt6opengl6_6.10.2+dfsg-7 libqt6openglwidgets6_6.10.2+dfsg-7 libqt6printsupport6_6.10.2+dfsg-7 libqt6sql6_6.10.2+dfsg-7 libqt6test6_6.10.2+dfsg-7 libqt6waylandclient6_6.10.2+dfsg-7 libqt6widgets6_6.10.2+dfsg-7 libqt6wlshellintegration6_6.10.2+dfsg-7 libqt6xml6_6.10.2+dfsg-7 libquadmath0_16-20260322-1ubuntu1 libreadline8t64_8.3-4 librhash1_1.4.6-1.1 librtmp1_2.4+20151223.gitfa8646d.1-3 libsasl2-2_2.1.28+dfsg1-9ubuntu3 libsasl2-modules-db_2.1.28+dfsg1-9ubuntu3 libseccomp2_2.6.0-2ubuntu5 libselinux1_3.9-4build1 libsensors-config_1:3.6.2-2build1 libsensors5_1:3.6.2-2build1 libsframe3_2.46-3ubuntu2 libsm6_2:1.2.6-1build1 libsmartcols1_2.41.3-3ubuntu2.2 libsqlite3-0_3.46.1-9ubuntu0.3 libssh2-1t64_1.11.1-1ubuntu0.26.04.4 libssl3t64_3.5.5-1ubuntu3.7 libstdc++-15-dev_15.2.0-16ubuntu1 libstdc++6_16-20260322-1ubuntu1 libsystemd0_259.5-0ubuntu3.4 libtasn1-6_4.21.0-2 libtinfo6_6.6+20251231-1 libtool_2.5.4-9 libts0t64_1.22-1.1build2 libtsan2_16-20260322-1ubuntu1 libubsan1_16-20260322-1ubuntu1 libuchardet0_0.0.8-2 libudev1_259.5-0ubuntu3.4 libunistring5_1.3-2build1 libuuid1_2.41.3-3ubuntu2.2 libuv1t64_1.51.0-2ubuntu1 libvulkan-dev_1.4.341.0-1 libvulkan1_1.4.341.0-1 libwacom-common_2.18.0-1 libwacom9_2.18.0-1 libwayland-client0_1.24.0-2 libwayland-cursor0_1.24.0-2 libwayland-egl1_1.24.0-2 libx11-6_2:1.8.13-1 libx11-data_2:1.8.13-1 libx11-dev_2:1.8.13-1 libx11-xcb1_2:1.8.13-1 libxau-dev_1:1.0.11-1build2 libxau6_1:1.0.11-1build2 libxcb-cursor0_0.1.6-1 libxcb-dri3-0_1.17.0-2ubuntu1 libxcb-glx0_1.17.0-2ubuntu1 libxcb-icccm4_0.4.2-1build1 libxcb-image0_0.4.0-2build2 libxcb-keysyms1_0.4.1-1build1 libxcb-present0_1.17.0-2ubuntu1 libxcb-randr0_1.17.0-2ubuntu1 libxcb-render-util0_0.3.10-1build1 libxcb-render0_1.17.0-2ubuntu1 libxcb-shape0_1.17.0-2ubuntu1 libxcb-shm0_1.17.0-2ubuntu1 libxcb-sync1_1.17.0-2ubuntu1 libxcb-util1_0.4.1-1build1 libxcb-xfixes0_1.17.0-2ubuntu1 libxcb-xinput0_1.17.0-2ubuntu1 libxcb-xkb1_1.17.0-2ubuntu1 libxcb1_1.17.0-2ubuntu1 libxcb1-dev_1.17.0-2ubuntu1 libxdmcp-dev_1:1.1.5-2 libxdmcp6_1:1.1.5-2 libxext6_2:1.3.4-1build3 libxkbcommon-x11-0_1.13.1-1 libxkbcommon0_1.13.1-1 libxml2-16_2.15.2+dfsg-0.1ubuntu0.2 libxshmfence1_1.3.3-1build1 libxxf86vm1_1:1.1.4-2 libxxhash0_0.8.3-2build1 libzstd1_1.5.7+dfsg-3 linux-libc-dev_7.0.0-38.38 lto-disabled-list_79 m4_1.4.21-1 make_4.4.1-3 man-db_2.13.1-1build1 mawk_1.3.4.20260129-1 media-types_14.0.0build1 mesa-libgallium_26.0.8-1ubuntu0.3 ncurses-base_6.6+20251231-1 ncurses-bin_6.6+20251231-1 netbase_6.5build1 openssl-provider-legacy_3.5.5-1ubuntu3.7 patch_2.8-2build1 perl_5.40.1-7ubuntu0.3 perl-base_5.40.1-7ubuntu0.3 perl-modules-5.40_5.40.1-7ubuntu0.3 plasma-wayland-protocols_1.22.0-0supralinux1 po-debconf_1.0.22 procps_2:4.0.4-9ubuntu1 python3_3.14.3-0ubuntu2 python3-minimal_3.14.3-0ubuntu2 python3.14_3.14.4-1ubuntu0.2 python3.14-minimal_3.14.4-1ubuntu0.2 qmake6_6.10.2+dfsg-7 qmake6-bin_6.10.2+dfsg-7 qt6-base-dev_6.10.2+dfsg-7 qt6-base-dev-tools_6.10.2+dfsg-7 qt6-qpa-plugins_6.10.2+dfsg-7 readline-common_8.3-4 rpcsvc-proto_1.4.3-1build1 rust-coreutils_0.10.0-1ubuntu2~26.04.1 sbuild-build-depends-main-dummy_0.invalid.0 sed_4.9-2ubuntu1 sensible-utils_0.0.26build1 shared-mime-info_2.4-5build3 sysvinit-utils_3.15-5ubuntu1 tar_1.35+dfsg-4ubuntu0.4 tzdata_2026c-0ubuntu0.26.04.1 ubuntu-keyring_2023.11.28.1build1 util-linux_2.41.3-3ubuntu2.2 x11-common_1:7.7+26ubuntu1 x11proto-dev_2025.1-1 xkb-data_2.46-2 xorg-sgml-doctools_1:1.11-1.1build1 xtrans-dev_1.6.0-1build1 xz-utils_5.8.3-1 zlib1g_1:1.3.dfsg+really1.3.1-1ubuntu3.1
+
++------------------------------------------------------------------------------+
+| Build                                        Wed, 07 Oct 2026 22:23:01 +0000 |
++------------------------------------------------------------------------------+
+
+
+Unpack source
+-------------
+
+Format: 3.0 (native)
+Source: supralinux-cache-probe
+Binary: supralinux-cache-probe
+Architecture: any
+Version: 1.0
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Standards-Version: 4.7.0
+Build-Depends: debhelper-compat (= 13), cmake, extra-cmake-modules (= 6.30.0-0supralinux3), qt6-base-dev, python3, plasma-wayland-protocols (= 1.22.0-0supralinux1)
+Package-List:
+ supralinux-cache-probe deb devel optional arch=any
+Checksums-Sha1:
+ 3be20e3930b7513fb8debadafb8b9c1af13acea5 1708 supralinux-cache-probe_1.0.tar.xz
+Checksums-Sha256:
+ 5a534d34f8a57eda33ec2aa24652f97ec471828a7b522328fa6a0b00a245e8d0 1708 supralinux-cache-probe_1.0.tar.xz
+Files:
+ 8c7d2831140a7cc8652d5cc790bbaa57 1708 supralinux-cache-probe_1.0.tar.xz
+
+dpkg-source: warning: extracting unsigned source package (supralinux-cache-probe_1.0.dsc)
+dpkg-source: info: extracting supralinux-cache-probe in /build/reproducible-path/supralinux-cache-probe-1.0
+dpkg-source: info: unpacking supralinux-cache-probe_1.0.tar.xz
+
+Check disk space
+----------------
+
+Sufficient free space for build
+
+User Environment
+----------------
+
+APT_CONFIG=/var/lib/sbuild/apt.conf
+HOME=/sbuild-nonexistent
+LANG=C.UTF-8
+LC_ALL=C.UTF-8
+LOGNAME=sbuild
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+SHELL=/bin/sh
+USER=sbuild
+
+dpkg-buildpackage
+-----------------
+
+Command: dpkg-buildpackage --sanitize-env -us -uc -b
+dpkg-buildpackage: info: source package supralinux-cache-probe
+dpkg-buildpackage: info: source version 1.0
+dpkg-buildpackage: info: source distribution resolute
+dpkg-buildpackage: info: source changed by SupraLINUX Project <packages@supralinux.invalid>
+ dpkg-source --before-build .
+dpkg-buildpackage: info: host architecture amd64
+ debian/rules clean
+dh clean
+   dh_clean
+ debian/rules binary
+dh binary
+   dh_update_autotools_config
+   dh_autoreconf
+   dh_auto_configure
+	cd obj-x86_64-linux-gnu && DEB_PYTHON_INSTALL_LAYOUT=deb PKG_CONFIG=/usr/bin/pkg-config cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_SYSCONFDIR=/etc -DCMAKE_INSTALL_LOCALSTATEDIR=/var -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON -DFETCHCONTENT_FULLY_DISCONNECTED=ON -DCMAKE_INSTALL_RUNSTATEDIR=/run -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON "-GUnix Makefiles" -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu ..
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+CMake Warning at /usr/share/ECM/kde-modules/KDEInstallDirsCommon.cmake:169 (message):
+  KDE_INSTALL_LIBDIR got its value from CMAKE_INSTALL_LIBDIR.  In most cases
+  this is unintended, check if you included GNUInstallDirs before
+  KDEInstallDirs.  Some third party modules include GNUInstallDirs too so eg.
+  find_package(Qt6 ...) is equivalent to include(GNUInstallDirs).  If you set
+  CMAKE_INSTALL_LIBDIR deliberately before including KDEInstallDirs its
+  recommended to use KDE_INSTALL_LIBDIR instead to suppress this message.
+Call Stack (most recent call first):
+  /usr/share/ECM/kde-modules/KDEInstallDirsCommon.cmake:261 (_define_relative)
+  /usr/share/ECM/kde-modules/KDEInstallDirs6.cmake:203 (include)
+  /usr/share/ECM/kde-modules/KDEInstallDirs.cmake:17 (include)
+  CMakeLists.txt:5 (include)
+
+
+CMake Warning at /usr/share/ECM/kde-modules/KDEInstallDirsCommon.cmake:169 (message):
+  KDE_INSTALL_LOCALSTATEDIR got its value from CMAKE_INSTALL_LOCALSTATEDIR.
+  In most cases this is unintended, check if you included GNUInstallDirs
+  before KDEInstallDirs.  Some third party modules include GNUInstallDirs too
+  so eg.  find_package(Qt6 ...) is equivalent to include(GNUInstallDirs).  If
+  you set CMAKE_INSTALL_LOCALSTATEDIR deliberately before including
+  KDEInstallDirs its recommended to use KDE_INSTALL_LOCALSTATEDIR instead to
+  suppress this message.
+Call Stack (most recent call first):
+  /usr/share/ECM/kde-modules/KDEInstallDirsCommon.cmake:220 (_define_relative)
+  /usr/share/ECM/kde-modules/KDEInstallDirsCommon.cmake:288 (_define_absolute)
+  /usr/share/ECM/kde-modules/KDEInstallDirs6.cmake:203 (include)
+  /usr/share/ECM/kde-modules/KDEInstallDirs.cmake:17 (include)
+  CMakeLists.txt:5 (include)
+
+
+CMake Warning at /usr/share/ECM/kde-modules/KDEInstallDirsCommon.cmake:169 (message):
+  KDE_INSTALL_SYSCONFDIR got its value from CMAKE_INSTALL_SYSCONFDIR.  In
+  most cases this is unintended, check if you included GNUInstallDirs before
+  KDEInstallDirs.  Some third party modules include GNUInstallDirs too so eg.
+  find_package(Qt6 ...) is equivalent to include(GNUInstallDirs).  If you set
+  CMAKE_INSTALL_SYSCONFDIR deliberately before including KDEInstallDirs its
+  recommended to use KDE_INSTALL_SYSCONFDIR instead to suppress this message.
+Call Stack (most recent call first):
+  /usr/share/ECM/kde-modules/KDEInstallDirsCommon.cmake:220 (_define_relative)
+  /usr/share/ECM/kde-modules/KDEInstallDirsCommon.cmake:387 (_define_absolute)
+  /usr/share/ECM/kde-modules/KDEInstallDirs6.cmake:203 (include)
+  /usr/share/ECM/kde-modules/KDEInstallDirs.cmake:17 (include)
+  CMakeLists.txt:5 (include)
+
+
+-- Installing in the same prefix as Qt, adopting their path scheme.
+-- Found Python3: /usr/bin/python3 (found version "3.14.4") found components: Interpreter
+-- Performing Test HAVE_STDATOMIC
+-- Performing Test HAVE_STDATOMIC - Success
+-- Found WrapAtomic: TRUE
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    CMAKE_EXPORT_NO_PACKAGE_REGISTRY
+    CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY
+    FETCHCONTENT_FULLY_DISCONNECTED
+
+
+-- Build files have been written to: /build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu
+   dh_auto_build
+	cd obj-x86_64-linux-gnu && make -j6 INSTALL="install --strip-program=true" VERBOSE=1
+make[1]: Entering directory '/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu'
+/usr/bin/cmake -S/build/reproducible-path/supralinux-cache-probe-1.0 -B/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu --check-build-system CMakeFiles/Makefile.cmake 0
+/usr/bin/cmake -E cmake_progress_start /build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu/CMakeFiles /build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu//CMakeFiles/progress.marks
+make  -f CMakeFiles/Makefile2 all
+make[2]: Entering directory '/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu'
+make  -f CMakeFiles/cache-probe.dir/build.make CMakeFiles/cache-probe.dir/depend
+make[3]: Entering directory '/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu'
+cd /build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /build/reproducible-path/supralinux-cache-probe-1.0 /build/reproducible-path/supralinux-cache-probe-1.0 /build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu /build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu /build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu/CMakeFiles/cache-probe.dir/DependInfo.cmake "--color=" cache-probe
+make[3]: Leaving directory '/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu'
+make  -f CMakeFiles/cache-probe.dir/build.make CMakeFiles/cache-probe.dir/build
+make[3]: Entering directory '/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu'
+[ 50%] Building CXX object CMakeFiles/cache-probe.dir/main.cpp.o
+/usr/bin/c++ -DQT_CORE_LIB -DQT_NO_DEBUG -isystem /usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /usr/include/x86_64-linux-gnu/qt6 -isystem /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/reproducible-path/supralinux-cache-probe-1.0=. -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/build/reproducible-path/supralinux-cache-probe-1.0=/usr/src/supralinux-cache-probe-1.0 -Wdate-time -D_FORTIFY_SOURCE=3 -MD -MT CMakeFiles/cache-probe.dir/main.cpp.o -MF CMakeFiles/cache-probe.dir/main.cpp.o.d -o CMakeFiles/cache-probe.dir/main.cpp.o -c /build/reproducible-path/supralinux-cache-probe-1.0/main.cpp
+[100%] Linking CXX executable cache-probe
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cache-probe.dir/link.txt --verbose=1
+/usr/bin/c++ -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/reproducible-path/supralinux-cache-probe-1.0=. -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security -fcf-protection -fdebug-prefix-map=/build/reproducible-path/supralinux-cache-probe-1.0=/usr/src/supralinux-cache-probe-1.0 -Wdate-time -D_FORTIFY_SOURCE=3 -Wl,-Bsymbolic-functions -Wl,--package-metadata=%7B%22type%22:%22deb%22%2C%22os%22:%22ubuntu%22%2C%22name%22:%22supralinux-cache-probe%22%2C%22version%22:%221.0%22%2C%22architecture%22:%22amd64%22%7D -flto=auto -ffat-lto-objects -Wl,-z,relro -Wl,--dependency-file=CMakeFiles/cache-probe.dir/link.d "CMakeFiles/cache-probe.dir/main.cpp.o" -o cache-probe  /usr/lib/x86_64-linux-gnu/libQt6Core.so.6.10.2
+make[3]: Leaving directory '/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu'
+[100%] Built target cache-probe
+make[2]: Leaving directory '/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu'
+/usr/bin/cmake -E cmake_progress_start /build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu/CMakeFiles 0
+make[1]: Leaving directory '/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu'
+   debian/rules override_dh_auto_test
+make[1]: Entering directory '/build/reproducible-path/supralinux-cache-probe-1.0'
+./obj-*/cache-probe
+Retained ECM 6.30.0 and Ubuntu Qt 6.10.2: PASS
+python3 verify-predecessors.py
+Reviewed predecessor versions installed in clean sbuild: PASS (2)
+make[1]: Leaving directory '/build/reproducible-path/supralinux-cache-probe-1.0'
+   create-stamp debian/debhelper-build-stamp
+   dh_prep
+   dh_auto_install --destdir=debian/supralinux-cache-probe/
+	cd obj-x86_64-linux-gnu && make -j6 install DESTDIR=/build/reproducible-path/supralinux-cache-probe-1.0/debian/supralinux-cache-probe AM_UPDATE_INFO_DIR=no INSTALL="install --strip-program=true"
+make[1]: Entering directory '/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu'
+/usr/bin/cmake -S/build/reproducible-path/supralinux-cache-probe-1.0 -B/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu --check-build-system CMakeFiles/Makefile.cmake 0
+make  -f CMakeFiles/Makefile2 preinstall
+make[2]: Entering directory '/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu'
+make[2]: Nothing to be done for 'preinstall'.
+make[2]: Leaving directory '/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu'
+Install the project...
+/usr/bin/cmake -P cmake_install.cmake
+-- Install configuration: "None"
+-- Installing: /build/reproducible-path/supralinux-cache-probe-1.0/debian/supralinux-cache-probe/usr/bin/cache-probe
+make[1]: Leaving directory '/build/reproducible-path/supralinux-cache-probe-1.0/obj-x86_64-linux-gnu'
+   dh_installdocs
+   dh_installchangelogs
+   dh_perl
+   dh_link
+   dh_strip_nondeterminism
+   dh_compress
+   dh_fixperms
+   dh_missing
+   dh_dwz -a
+   dh_strip -a
+16ffdc519f6f476f082d8687438b9cde1e0c59af
+   dh_makeshlibs -a
+   dh_shlibdeps -a
+   dh_installdeb
+   dh_gencontrol
+   dh_md5sums
+   dh_builddeb
+dpkg-deb: building package 'supralinux-cache-probe' in '../supralinux-cache-probe_1.0_amd64.deb'.
+dpkg-deb: building package 'supralinux-cache-probe-dbgsym' in 'debian/.debhelper/scratch-space/build-supralinux-cache-probe/supralinux-cache-probe-dbgsym_1.0_amd64.deb'.
+	Renaming supralinux-cache-probe-dbgsym_1.0_amd64.deb to supralinux-cache-probe-dbgsym_1.0_amd64.ddeb
+ dpkg-genbuildinfo --build=binary -O../supralinux-cache-probe_1.0_amd64.buildinfo
+ dpkg-genchanges --build=binary -O../supralinux-cache-probe_1.0_amd64.changes
+dpkg-genchanges: info: binary-only upload (no source code included)
+ dpkg-source --after-build .
+dpkg-buildpackage: info: binary-only upload (no source included)
+--------------------------------------------------------------------------------
+Build finished at 2026-10-07T22:23:07Z
+
+Finished
+--------
+
+I: Built successfully
+
++------------------------------------------------------------------------------+
+| Changes                                      Wed, 07 Oct 2026 22:23:08 +0000 |
++------------------------------------------------------------------------------+
+
+
+supralinux-cache-probe_1.0_amd64.changes:
+-----------------------------------------
+
+Format: 1.8
+Date: Sun, 04 Oct 2026 18:00:00 -0300
+Source: supralinux-cache-probe
+Binary: supralinux-cache-probe
+Built-For-Profiles: derivative.ubuntu noudeb
+Architecture: amd64
+Version: 1.0
+Distribution: resolute
+Urgency: medium
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Changed-By: SupraLINUX Project <packages@supralinux.invalid>
+Description:
+ supralinux-cache-probe - Infrastructure consumer for retained Frameworks input transport
+Changes:
+ supralinux-cache-probe (1.0) resolute; urgency=medium
+ .
+   * Certify explicit retained ECM transport into a clean sbuild environment.
+Checksums-Sha1:
+ 68ecbf9bbb1350bb1f2d9f0140eba0c4a58c4284 109124 supralinux-cache-probe-dbgsym_1.0_amd64.ddeb
+ c092383a1542ec81b2030366472658842e3c9291 11667 supralinux-cache-probe_1.0_amd64.buildinfo
+ 11907a72c36d6759b86a70bd527da2680bd0c3d7 3788 supralinux-cache-probe_1.0_amd64.deb
+Checksums-Sha256:
+ 73e21739811299c05e13dc9f9c092c221928e361748060ecef6e89de16bd4c5f 109124 supralinux-cache-probe-dbgsym_1.0_amd64.ddeb
+ 36a160b150a085de7808b076dbc4302811df2606ce42429e3fb9248e0902695d 11667 supralinux-cache-probe_1.0_amd64.buildinfo
+ 84a6a876d747b2d7d657f31ea815904355c957ca626e4cf4c97c640124f3e93d 3788 supralinux-cache-probe_1.0_amd64.deb
+Files:
+ 9442753123aba47795794d45c38b2a5f 109124 debug optional supralinux-cache-probe-dbgsym_1.0_amd64.ddeb
+ 3ce4a3ecddb8f99d2d7c0810895315e4 11667 devel optional supralinux-cache-probe_1.0_amd64.buildinfo
+ 4e517c16239d0fc6b62ce1030b8c69ce 3788 devel optional supralinux-cache-probe_1.0_amd64.deb
+
++------------------------------------------------------------------------------+
+| Buildinfo                                    Wed, 07 Oct 2026 22:23:08 +0000 |
++------------------------------------------------------------------------------+
+
+Format: 1.0
+Source: supralinux-cache-probe
+Binary: supralinux-cache-probe supralinux-cache-probe-dbgsym
+Architecture: amd64
+Version: 1.0
+Checksums-Md5:
+ 9442753123aba47795794d45c38b2a5f 109124 supralinux-cache-probe-dbgsym_1.0_amd64.ddeb
+ 4e517c16239d0fc6b62ce1030b8c69ce 3788 supralinux-cache-probe_1.0_amd64.deb
+Checksums-Sha1:
+ 68ecbf9bbb1350bb1f2d9f0140eba0c4a58c4284 109124 supralinux-cache-probe-dbgsym_1.0_amd64.ddeb
+ 11907a72c36d6759b86a70bd527da2680bd0c3d7 3788 supralinux-cache-probe_1.0_amd64.deb
+Checksums-Sha256:
+ 73e21739811299c05e13dc9f9c092c221928e361748060ecef6e89de16bd4c5f 109124 supralinux-cache-probe-dbgsym_1.0_amd64.ddeb
+ 84a6a876d747b2d7d657f31ea815904355c957ca626e4cf4c97c640124f3e93d 3788 supralinux-cache-probe_1.0_amd64.deb
+Build-Origin: Ubuntu
+Build-Architecture: amd64
+Build-Date: Wed, 07 Oct 2026 22:23:07 +0000
+Build-Path: /build/reproducible-path/supralinux-cache-probe-1.0
+Installed-Build-Depends:
+ autoconf (= 2.72-3.1ubuntu2),
+ automake (= 1:1.18.1-3build1),
+ autopoint (= 0.23.2-1),
+ autotools-dev (= 20240727.1build1),
+ base-files (= 14ubuntu6.2),
+ base-passwd (= 3.6.8),
+ bash (= 5.3-2ubuntu1),
+ binutils (= 2.46-3ubuntu2),
+ binutils-common (= 2.46-3ubuntu2),
+ binutils-x86-64-linux-gnu (= 2.46-3ubuntu2),
+ bsdextrautils (= 2.41.3-3ubuntu2.2),
+ build-essential (= 12.12ubuntu2.26.04.2),
+ bzip2 (= 1.0.8-6ubuntu0.1),
+ cmake (= 4.2.3-2ubuntu2),
+ cmake-data (= 4.2.3-2ubuntu2),
+ coreutils (= 9.5-1ubuntu2+0.0.0~ubuntu25),
+ coreutils-from-uutils (= 0.0.0~ubuntu25),
+ cpp (= 4:15.2.0-5ubuntu1),
+ cpp-15 (= 15.2.0-16ubuntu1),
+ cpp-15-x86-64-linux-gnu (= 15.2.0-16ubuntu1),
+ cpp-x86-64-linux-gnu (= 4:15.2.0-5ubuntu1),
+ dash (= 0.5.12-12ubuntu3),
+ debconf (= 1.5.92),
+ debhelper (= 13.31ubuntu1),
+ debianutils (= 5.23.2build1),
+ debugedit (= 1:5.3-4),
+ dh-autoreconf (= 21+nmu1),
+ dh-strip-nondeterminism (= 1.15.0-1build1),
+ diffutils (= 1:3.12-1ubuntu0.1),
+ dpkg (= 1.23.7ubuntu1),
+ dpkg-dev (= 1.23.7ubuntu1),
+ dwz (= 0.16-4),
+ extra-cmake-modules (= 6.30.0-0supralinux3),
+ file (= 1:5.46-5build2),
+ findutils (= 4.10.0-3build2),
+ fontconfig (= 2.17.1-3ubuntu1),
+ fontconfig-config (= 2.17.1-3ubuntu1),
+ fonts-dejavu-core (= 2.37-8build1),
+ fonts-dejavu-mono (= 2.37-8build1),
+ g++ (= 4:15.2.0-5ubuntu1),
+ g++-15 (= 15.2.0-16ubuntu1),
+ g++-15-x86-64-linux-gnu (= 15.2.0-16ubuntu1),
+ g++-x86-64-linux-gnu (= 4:15.2.0-5ubuntu1),
+ gcc (= 4:15.2.0-5ubuntu1),
+ gcc-15 (= 15.2.0-16ubuntu1),
+ gcc-15-base (= 15.2.0-16ubuntu1),
+ gcc-15-x86-64-linux-gnu (= 15.2.0-16ubuntu1),
+ gcc-16-base (= 16-20260322-1ubuntu1),
+ gcc-x86-64-linux-gnu (= 4:15.2.0-5ubuntu1),
+ gettext (= 0.23.2-1),
+ gettext-base (= 0.23.2-1),
+ gnu-coreutils (= 9.7-3ubuntu2.1),
+ grep (= 3.12-1),
+ groff-base (= 1.23.0-10),
+ gzip (= 1.14-1~exp2ubuntu1.1),
+ hostname (= 3.25build1),
+ init-system-helpers (= 1.69),
+ intltool-debian (= 0.35.0+20060710.6build1),
+ libacl1 (= 2.3.2-2),
+ libarchive-zip-perl (= 1.68-1),
+ libarchive13t64 (= 3.8.5-1ubuntu2.2),
+ libasan8 (= 16-20260322-1ubuntu1),
+ libatomic1 (= 16-20260322-1ubuntu1),
+ libattr1 (= 1:2.5.2-4ubuntu0.1),
+ libaudit-common (= 1:4.1.2-1ubuntu0.1),
+ libaudit1 (= 1:4.1.2-1ubuntu0.1),
+ libavahi-client3 (= 0.8-18ubuntu1.1),
+ libavahi-common-data (= 0.8-18ubuntu1.1),
+ libavahi-common3 (= 0.8-18ubuntu1.1),
+ libb2-1 (= 0.98.1-1.1build2),
+ libbinutils (= 2.46-3ubuntu2),
+ libblkid1 (= 2.41.3-3ubuntu2.2),
+ libbrotli1 (= 1.2.0-3build1),
+ libbsd0 (= 0.12.2-2build2),
+ libbz2-1.0 (= 1.0.8-6ubuntu0.1),
+ libc-bin (= 2.43-2ubuntu2.4),
+ libc-dev-bin (= 2.43-2ubuntu2.4),
+ libc-gconv-modules-extra (= 2.43-2ubuntu2.4),
+ libc6 (= 2.43-2ubuntu2.4),
+ libc6-dev (= 2.43-2ubuntu2.4),
+ libcap-ng0 (= 0.8.5-4build5),
+ libcc1-0 (= 16-20260322-1ubuntu1),
+ libcom-err2 (= 1.47.2-3ubuntu4),
+ libcrypt-dev (= 1:4.5.1-1),
+ libcrypt1 (= 1:4.5.1-1),
+ libctf-nobfd0 (= 2.46-3ubuntu2),
+ libctf0 (= 2.46-3ubuntu2),
+ libcups2t64 (= 2.4.16-1ubuntu1.3),
+ libcurl3t64-gnutls (= 8.18.0-1ubuntu2.7),
+ libcurl4t64 (= 8.18.0-1ubuntu2.7),
+ libdb5.3t64 (= 5.3.28+dfsg2-10ubuntu1),
+ libdbus-1-3 (= 1.16.2-2ubuntu4),
+ libdebconfclient0 (= 0.280ubuntu1),
+ libdebhelper-perl (= 13.31ubuntu1),
+ libdouble-conversion3 (= 3.4.0-1),
+ libdpkg-perl (= 1.23.7ubuntu1),
+ libdrm-amdgpu1 (= 2.4.131-1),
+ libdrm-common (= 2.4.131-1),
+ libdrm-intel1 (= 2.4.131-1),
+ libdrm2 (= 2.4.131-1),
+ libduktape207 (= 2.7.0+tests-0ubuntu4),
+ libdw1t64 (= 0.194-4),
+ libedit2 (= 3.1-20251016-1),
+ libegl-mesa0 (= 26.0.8-1ubuntu0.3),
+ libegl1 (= 1.7.0-3),
+ libelf1t64 (= 0.194-4),
+ libevdev2 (= 1.13.6+dfsg-1),
+ libexpat1 (= 2.7.4-1ubuntu0.2),
+ libffi8 (= 3.5.2-4),
+ libfile-stripnondeterminism-perl (= 1.15.0-1build1),
+ libfontconfig1 (= 2.17.1-3ubuntu1),
+ libfreetype6 (= 2.14.2+dfsg-1ubuntu0.2),
+ libgbm1 (= 26.0.8-1ubuntu0.3),
+ libgcc-15-dev (= 15.2.0-16ubuntu1),
+ libgcc-s1 (= 16-20260322-1ubuntu1),
+ libgdbm-compat4t64 (= 1.26-1build1),
+ libgdbm6t64 (= 1.26-1build1),
+ libgl-dev (= 1.7.0-3),
+ libgl1 (= 1.7.0-3),
+ libgl1-mesa-dri (= 26.0.8-1ubuntu0.3),
+ libglib2.0-0t64 (= 2.88.0-1ubuntu0.1),
+ libglvnd0 (= 1.7.0-3),
+ libglx-dev (= 1.7.0-3),
+ libglx-mesa0 (= 26.0.8-1ubuntu0.3),
+ libglx0 (= 1.7.0-3),
+ libgmp10 (= 2:6.3.0+dfsg-5ubuntu2),
+ libgnutls30t64 (= 3.8.12-2ubuntu1.1),
+ libgomp1 (= 16-20260322-1ubuntu1),
+ libgprofng0 (= 2.46-3ubuntu2),
+ libgraphite2-3 (= 1.3.14-11ubuntu1.1),
+ libgssapi-krb5-2 (= 1.22.1-2ubuntu4.1),
+ libgudev-1.0-0 (= 1:238-7build1),
+ libharfbuzz0b (= 12.3.2-2),
+ libhogweed6t64 (= 3.10.2-1),
+ libhwasan0 (= 16-20260322-1ubuntu1),
+ libice6 (= 2:1.1.1-1build1),
+ libicu78 (= 78.2-2ubuntu1),
+ libidn2-0 (= 2.3.8-4build1),
+ libinput-bin (= 1.31.1-1ubuntu1.2),
+ libinput10 (= 1.31.1-1ubuntu1.2),
+ libisl23 (= 0.27-1build1),
+ libitm1 (= 16-20260322-1ubuntu1),
+ libjansson4 (= 2.14-2build4),
+ libjpeg-turbo8 (= 2.1.5-4ubuntu4),
+ libjpeg8 (= 8c-2ubuntu12),
+ libjsoncpp26 (= 1.9.6-5),
+ libk5crypto3 (= 1.22.1-2ubuntu4.1),
+ libkeyutils1 (= 1.6.3-6ubuntu3),
+ libkrb5-3 (= 1.22.1-2ubuntu4.1),
+ libkrb5support0 (= 1.22.1-2ubuntu4.1),
+ libldap-common (= 2.6.10+dfsg-1ubuntu5),
+ libldap2 (= 2.6.10+dfsg-1ubuntu5),
+ libllvm21 (= 1:21.1.8-6ubuntu1),
+ liblsan0 (= 16-20260322-1ubuntu1),
+ liblz4-1 (= 1.10.0-8),
+ liblzma5 (= 5.8.3-1),
+ libmagic-mgc (= 1:5.46-5build2),
+ libmagic1t64 (= 1:5.46-5build2),
+ libmd0 (= 1.1.0-2build4),
+ libmd4c0 (= 0.5.2-2build1),
+ libmount1 (= 2.41.3-3ubuntu2.2),
+ libmpc3 (= 1.3.1-3),
+ libmpfr6 (= 4.2.2-3),
+ libmtdev1t64 (= 1.1.7-1build1),
+ libncursesw6 (= 6.6+20251231-1),
+ libnettle8t64 (= 3.10.2-1),
+ libnghttp2-14 (= 1.68.0-2ubuntu0.2),
+ libopengl-dev (= 1.7.0-3),
+ libopengl0 (= 1.7.0-3),
+ libp11-kit0 (= 0.26.2-2),
+ libpam-modules (= 1.7.0-5ubuntu3.2),
+ libpam-modules-bin (= 1.7.0-5ubuntu3.2),
+ libpam-runtime (= 1.7.0-5ubuntu3.2),
+ libpam0g (= 1.7.0-5ubuntu3.2),
+ libpciaccess0 (= 0.18.1-1ubuntu4.1),
+ libpcre2-16-0 (= 10.46-1build1),
+ libpcre2-8-0 (= 10.46-1build1),
+ libperl5.40 (= 5.40.1-7ubuntu0.3),
+ libpipeline1 (= 1.5.8-2),
+ libpng16-16t64 (= 1.6.57-1),
+ libproc2-0 (= 2:4.0.4-9ubuntu1),
+ libproxy1v5 (= 0.5.12-1),
+ libpsl5t64 (= 0.21.2-1.1build2),
+ libpython3-stdlib (= 3.14.3-0ubuntu2),
+ libpython3.14-minimal (= 3.14.4-1ubuntu0.2),
+ libpython3.14-stdlib (= 3.14.4-1ubuntu0.2),
+ libqt6concurrent6 (= 6.10.2+dfsg-7),
+ libqt6core6t64 (= 6.10.2+dfsg-7),
+ libqt6dbus6 (= 6.10.2+dfsg-7),
+ libqt6gui6 (= 6.10.2+dfsg-7),
+ libqt6network6 (= 6.10.2+dfsg-7),
+ libqt6opengl6 (= 6.10.2+dfsg-7),
+ libqt6openglwidgets6 (= 6.10.2+dfsg-7),
+ libqt6printsupport6 (= 6.10.2+dfsg-7),
+ libqt6sql6 (= 6.10.2+dfsg-7),
+ libqt6test6 (= 6.10.2+dfsg-7),
+ libqt6waylandclient6 (= 6.10.2+dfsg-7),
+ libqt6widgets6 (= 6.10.2+dfsg-7),
+ libqt6wlshellintegration6 (= 6.10.2+dfsg-7),
+ libqt6xml6 (= 6.10.2+dfsg-7),
+ libquadmath0 (= 16-20260322-1ubuntu1),
+ libreadline8t64 (= 8.3-4),
+ librhash1 (= 1.4.6-1.1),
+ librtmp1 (= 2.4+20151223.gitfa8646d.1-3),
+ libsasl2-2 (= 2.1.28+dfsg1-9ubuntu3),
+ libsasl2-modules-db (= 2.1.28+dfsg1-9ubuntu3),
+ libseccomp2 (= 2.6.0-2ubuntu5),
+ libselinux1 (= 3.9-4build1),
+ libsensors-config (= 1:3.6.2-2build1),
+ libsensors5 (= 1:3.6.2-2build1),
+ libsframe3 (= 2.46-3ubuntu2),
+ libsm6 (= 2:1.2.6-1build1),
+ libsmartcols1 (= 2.41.3-3ubuntu2.2),
+ libsqlite3-0 (= 3.46.1-9ubuntu0.3),
+ libssh2-1t64 (= 1.11.1-1ubuntu0.26.04.4),
+ libssl3t64 (= 3.5.5-1ubuntu3.7),
+ libstdc++-15-dev (= 15.2.0-16ubuntu1),
+ libstdc++6 (= 16-20260322-1ubuntu1),
+ libsystemd0 (= 259.5-0ubuntu3.4),
+ libtasn1-6 (= 4.21.0-2),
+ libtinfo6 (= 6.6+20251231-1),
+ libtool (= 2.5.4-9),
+ libts0t64 (= 1.22-1.1build2),
+ libtsan2 (= 16-20260322-1ubuntu1),
+ libubsan1 (= 16-20260322-1ubuntu1),
+ libuchardet0 (= 0.0.8-2),
+ libudev1 (= 259.5-0ubuntu3.4),
+ libunistring5 (= 1.3-2build1),
+ libuuid1 (= 2.41.3-3ubuntu2.2),
+ libuv1t64 (= 1.51.0-2ubuntu1),
+ libvulkan-dev (= 1.4.341.0-1),
+ libvulkan1 (= 1.4.341.0-1),
+ libwacom-common (= 2.18.0-1),
+ libwacom9 (= 2.18.0-1),
+ libwayland-client0 (= 1.24.0-2),
+ libwayland-cursor0 (= 1.24.0-2),
+ libwayland-egl1 (= 1.24.0-2),
+ libx11-6 (= 2:1.8.13-1),
+ libx11-data (= 2:1.8.13-1),
+ libx11-dev (= 2:1.8.13-1),
+ libx11-xcb1 (= 2:1.8.13-1),
+ libxau-dev (= 1:1.0.11-1build2),
+ libxau6 (= 1:1.0.11-1build2),
+ libxcb-cursor0 (= 0.1.6-1),
+ libxcb-dri3-0 (= 1.17.0-2ubuntu1),
+ libxcb-glx0 (= 1.17.0-2ubuntu1),
+ libxcb-icccm4 (= 0.4.2-1build1),
+ libxcb-image0 (= 0.4.0-2build2),
+ libxcb-keysyms1 (= 0.4.1-1build1),
+ libxcb-present0 (= 1.17.0-2ubuntu1),
+ libxcb-randr0 (= 1.17.0-2ubuntu1),
+ libxcb-render-util0 (= 0.3.10-1build1),
+ libxcb-render0 (= 1.17.0-2ubuntu1),
+ libxcb-shape0 (= 1.17.0-2ubuntu1),
+ libxcb-shm0 (= 1.17.0-2ubuntu1),
+ libxcb-sync1 (= 1.17.0-2ubuntu1),
+ libxcb-util1 (= 0.4.1-1build1),
+ libxcb-xfixes0 (= 1.17.0-2ubuntu1),
+ libxcb-xinput0 (= 1.17.0-2ubuntu1),
+ libxcb-xkb1 (= 1.17.0-2ubuntu1),
+ libxcb1 (= 1.17.0-2ubuntu1),
+ libxcb1-dev (= 1.17.0-2ubuntu1),
+ libxdmcp-dev (= 1:1.1.5-2),
+ libxdmcp6 (= 1:1.1.5-2),
+ libxext6 (= 2:1.3.4-1build3),
+ libxkbcommon-x11-0 (= 1.13.1-1),
+ libxkbcommon0 (= 1.13.1-1),
+ libxml2-16 (= 2.15.2+dfsg-0.1ubuntu0.2),
+ libxshmfence1 (= 1.3.3-1build1),
+ libxxf86vm1 (= 1:1.1.4-2),
+ libxxhash0 (= 0.8.3-2build1),
+ libzstd1 (= 1.5.7+dfsg-3),
+ linux-libc-dev (= 7.0.0-38.38),
+ lto-disabled-list (= 79),
+ m4 (= 1.4.21-1),
+ make (= 4.4.1-3),
+ man-db (= 2.13.1-1build1),
+ mawk (= 1.3.4.20260129-1),
+ media-types (= 14.0.0build1),
+ mesa-libgallium (= 26.0.8-1ubuntu0.3),
+ ncurses-base (= 6.6+20251231-1),
+ ncurses-bin (= 6.6+20251231-1),
+ netbase (= 6.5build1),
+ openssl-provider-legacy (= 3.5.5-1ubuntu3.7),
+ patch (= 2.8-2build1),
+ perl (= 5.40.1-7ubuntu0.3),
+ perl-base (= 5.40.1-7ubuntu0.3),
+ perl-modules-5.40 (= 5.40.1-7ubuntu0.3),
+ plasma-wayland-protocols (= 1.22.0-0supralinux1),
+ po-debconf (= 1.0.22),
+ procps (= 2:4.0.4-9ubuntu1),
+ python3 (= 3.14.3-0ubuntu2),
+ python3-minimal (= 3.14.3-0ubuntu2),
+ python3.14 (= 3.14.4-1ubuntu0.2),
+ python3.14-minimal (= 3.14.4-1ubuntu0.2),
+ qmake6 (= 6.10.2+dfsg-7),
+ qmake6-bin (= 6.10.2+dfsg-7),
+ qt6-base-dev (= 6.10.2+dfsg-7),
+ qt6-base-dev-tools (= 6.10.2+dfsg-7),
+ qt6-qpa-plugins (= 6.10.2+dfsg-7),
+ readline-common (= 8.3-4),
+ rpcsvc-proto (= 1.4.3-1build1),
+ rust-coreutils (= 0.10.0-1ubuntu2~26.04.1),
+ sed (= 4.9-2ubuntu1),
+ sensible-utils (= 0.0.26build1),
+ shared-mime-info (= 2.4-5build3),
+ sysvinit-utils (= 3.15-5ubuntu1),
+ tar (= 1.35+dfsg-4ubuntu0.4),
+ tzdata (= 2026c-0ubuntu0.26.04.1),
+ util-linux (= 2.41.3-3ubuntu2.2),
+ x11-common (= 1:7.7+26ubuntu1),
+ x11proto-dev (= 2025.1-1),
+ xkb-data (= 2.46-2),
+ xorg-sgml-doctools (= 1:1.11-1.1build1),
+ xtrans-dev (= 1.6.0-1build1),
+ xz-utils (= 5.8.3-1),
+ zlib1g (= 1:1.3.dfsg+really1.3.1-1ubuntu3.1)
+Environment:
+ DEB_BUILD_OPTIONS="parallel=6"
+ DEB_BUILD_PROFILES="derivative.ubuntu noudeb"
+ LANG="C.UTF-8"
+ LC_COLLATE="C.UTF-8"
+ LC_CTYPE="C.UTF-8"
+ SOURCE_DATE_EPOCH="1791147600"
+
+
++------------------------------------------------------------------------------+
+| Package contents                             Wed, 07 Oct 2026 22:23:08 +0000 |
++------------------------------------------------------------------------------+
+
+
+supralinux-cache-probe_1.0_amd64.deb
+------------------------------------
+
+ new Debian package, version 2.0.
+ size 3788 bytes: control archive=500 bytes.
+     423 bytes,    10 lines      control
+     138 bytes,     2 lines      md5sums
+ Package: supralinux-cache-probe
+ Version: 1.0
+ Architecture: amd64
+ Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+ Installed-Size: 23
+ Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), libqt6core6t64 (>= 6.10.2), libstdc++6 (>= 13.1)
+ Section: devel
+ Priority: optional
+ Description: Infrastructure consumer for retained Frameworks input transport
+  An infrastructure-only sample. Never published as a desktop package.
+
+drwxr-xr-x root/root         0 2026-10-04 21:00 ./
+drwxr-xr-x root/root         0 2026-10-04 21:00 ./usr/
+drwxr-xr-x root/root         0 2026-10-04 21:00 ./usr/bin/
+-rwxr-xr-x root/root     14752 2026-10-04 21:00 ./usr/bin/cache-probe
+drwxr-xr-x root/root         0 2026-10-04 21:00 ./usr/share/
+drwxr-xr-x root/root         0 2026-10-04 21:00 ./usr/share/doc/
+drwxr-xr-x root/root         0 2026-10-04 21:00 ./usr/share/doc/supralinux-cache-probe/
+-rw-r--r-- root/root       200 2026-10-04 21:00 ./usr/share/doc/supralinux-cache-probe/changelog.gz
+
+
++------------------------------------------------------------------------------+
+| Post Build                                   Wed, 07 Oct 2026 22:23:09 +0000 |
++------------------------------------------------------------------------------+
+
+
++------------------------------------------------------------------------------+
+| Cleanup                                      Wed, 07 Oct 2026 22:23:09 +0000 |
++------------------------------------------------------------------------------+
+
+Purging /build/reproducible-path
+Not cleaning session: cloned chroot in use
+
++------------------------------------------------------------------------------+
+| Summary                                      Wed, 07 Oct 2026 22:23:09 +0000 |
++------------------------------------------------------------------------------+
+
+Build Architecture: amd64
+Build Type: binary
+Build-Space: 2224
+Build-Time: 5
+Distribution: resolute
+Host Architecture: amd64
+Install-Time: 564
+Job: /opt/actions-runner/_work/SupraLINUX/SupraLINUX/.work/authoritative-plasma-package/cache-probe/supralinux-cache-probe_1.0.dsc
+Machine Architecture: amd64
+Package: supralinux-cache-probe
+Package-Time: 821
+Source-Version: 1.0
+Space: 2224
+Status: successful
+Version: 1.0
+--------------------------------------------------------------------------------
+Finished at 2026-10-07T22:23:07Z
+Build needed 00:13:41, 2224k disk space

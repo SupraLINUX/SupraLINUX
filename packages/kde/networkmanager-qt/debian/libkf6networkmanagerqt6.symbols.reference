@@ -1,0 +1,6 @@
+# Debian sid symbols baseline retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=networkmanager-qt
+path=trees/debian/networkmanager-qt/debian/libkf6networkmanagerqt6.symbols
+sha256=324a154e35a6dab6c2ab10c5857517a20253d7d65f279294a62e7ced3c8ebfaa

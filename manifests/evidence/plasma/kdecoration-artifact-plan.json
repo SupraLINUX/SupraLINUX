@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "kdecoration",
+      "package_version": "4:6.7.5-0supralinux1",
+      "artifact_id": 11320766520,
+      "workflow_run_id": 37249338022,
+      "artifact_sha256": "fbb4bc690ea851fc44af28e6ce2f9ad661ccfa2cd5320b61722bbd10798f1e50",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

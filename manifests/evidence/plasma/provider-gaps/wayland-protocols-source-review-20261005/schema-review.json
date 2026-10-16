@@ -1,0 +1,81 @@
+{
+  "state": "PASS",
+  "scope": "installed stable/staging/unstable XML opcode, argument and enum-value structure; local source review only",
+  "baseline_xml_files": 57,
+  "candidate_xml_files": 58,
+  "changed_files": [
+    {
+      "file": "stable/tablet/tablet-v2.xml",
+      "changes": []
+    },
+    {
+      "file": "staging/ext-workspace/ext-workspace-v1.xml",
+      "changes": []
+    },
+    {
+      "file": "staging/ext-foreign-toplevel-list/ext-foreign-toplevel-list-v1.xml",
+      "changes": []
+    },
+    {
+      "file": "staging/color-management/color-management-v1.xml",
+      "changes": []
+    },
+    {
+      "file": "staging/xdg-toplevel-icon/xdg-toplevel-icon-v1.xml",
+      "changes": []
+    },
+    {
+      "file": "unstable/xdg-decoration/xdg-decoration-unstable-v1.xml",
+      "changes": [
+        {
+          "interface": "zxdg_decoration_manager_v1",
+          "kind": "interface-version",
+          "old": "1",
+          "new": "2"
+        },
+        {
+          "interface": "zxdg_toplevel_decoration_v1",
+          "kind": "interface-version",
+          "old": "1",
+          "new": "2"
+        }
+      ]
+    },
+    {
+      "file": "unstable/text-input/text-input-unstable-v3.xml",
+      "changes": [
+        {
+          "interface": "zwp_text_input_v3",
+          "kind": "interface-version",
+          "old": "1",
+          "new": "2"
+        },
+        {
+          "interface": "zwp_text_input_manager_v3",
+          "kind": "interface-version",
+          "old": "1",
+          "new": "2"
+        }
+      ]
+    },
+    {
+      "file": "unstable/pointer-gestures/pointer-gestures-unstable-v1.xml",
+      "changes": [
+        {
+          "interface": "zwp_pointer_gesture_swipe_v1",
+          "kind": "interface-version",
+          "old": "2",
+          "new": "3"
+        },
+        {
+          "interface": "zwp_pointer_gesture_pinch_v1",
+          "kind": "interface-version",
+          "old": "2",
+          "new": "3"
+        }
+      ]
+    }
+  ],
+  "incompatible": [],
+  "experimental_scope": "not installed by upstream default; independent protocol phase without backwards compatibility guarantee"
+}

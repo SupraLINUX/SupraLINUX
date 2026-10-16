@@ -1,0 +1,20 @@
+Source: plasma-workspace-wallpapers
+Section: kde
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               qt6-base-dev (>= 6.10.0~),
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/plasma-workspace-wallpapers
+Vcs-Browser: https://github.com/SupraLINUX/SupraLINUX/tree/architecture/bootstrap-v1/packages/plasma/plasma-workspace-wallpapers
+Vcs-Git: https://github.com/SupraLINUX/SupraLINUX.git
+Rules-Requires-Root: no
+
+Package: plasma-workspace-wallpapers
+Architecture: all
+Depends: ${misc:Depends},
+Description: Wallpapers for Plasma 6
+ Wallpapers for integrated use with the Plasma workspace.

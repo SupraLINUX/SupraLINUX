@@ -1,0 +1,247 @@
+Test project /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/plasma-protocols-native-preflight/build
+        Start  74: plasma-shell_client-header
+        Start  18: fake-input_client-header
+        Start  67: output-management_server-header
+        Start 115: wayland-eglstream-controller_server-header
+  1/121 Test  #74: plasma-shell_client-header .....................   Passed    0.00 sec
+  2/121 Test  #18: fake-input_client-header .......................   Passed    0.00 sec
+  3/121 Test  #67: output-management_server-header ................   Passed    0.00 sec
+        Start  63: org-kde-plasma-virtual-desktop_server-header
+        Start  70: outputdevice_client-header
+        Start 118: zkde-screencast-unstable-v1_client-header
+  4/121 Test #115: wayland-eglstream-controller_server-header .....   Passed    0.01 sec
+  5/121 Test  #63: org-kde-plasma-virtual-desktop_server-header ...   Passed    0.00 sec
+  6/121 Test  #70: outputdevice_client-header .....................   Passed    0.00 sec
+        Start 111: text-input_server-header
+        Start  19: fake-input_server-header
+        Start  14: dpms_client-header
+  7/121 Test #118: zkde-screencast-unstable-v1_client-header ......   Passed    0.01 sec
+  8/121 Test #111: text-input_server-header .......................   Passed    0.00 sec
+  9/121 Test  #19: fake-input_server-header .......................   Passed    0.00 sec
+        Start  34: kde-lockscreen-overlay-v1_client-header
+        Start   2: appmenu_client-header
+        Start  68: output-management_code
+ 10/121 Test  #14: dpms_client-header .............................   Passed    0.00 sec
+ 11/121 Test  #34: kde-lockscreen-overlay-v1_client-header ........   Passed    0.00 sec
+ 12/121 Test   #2: appmenu_client-header ..........................   Passed    0.00 sec
+        Start 116: wayland-eglstream-controller_code
+        Start   6: blur_client-header
+        Start  22: fullscreen-shell_client-header
+ 13/121 Test  #68: output-management_code .........................   Passed    0.00 sec
+ 14/121 Test #116: wayland-eglstream-controller_code ..............   Passed    0.00 sec
+ 15/121 Test   #6: blur_client-header .............................   Passed    0.00 sec
+        Start 112: text-input_code
+        Start  26: idle_client-header
+        Start  30: kde-external-brightness-v1_client-header
+ 16/121 Test  #22: fullscreen-shell_client-header .................   Passed    0.00 sec
+ 17/121 Test #112: text-input_code ................................   Passed    0.00 sec
+ 18/121 Test  #26: idle_client-header .............................   Passed    0.00 sec
+        Start  86: server-decoration-palette_client-header
+        Start  10: contrast_client-header
+        Start  47: kde-output-order-v1_server-header
+ 19/121 Test  #30: kde-external-brightness-v1_client-header .......   Passed    0.00 sec
+ 20/121 Test  #86: server-decoration-palette_client-header ........   Passed    0.00 sec
+ 21/121 Test  #10: contrast_client-header .........................   Passed    0.00 sec
+        Start  38: kde-output-device-v2_client-header
+        Start 106: text-input-unstable-v2_client-header
+        Start  59: keystate_server-header
+ 22/121 Test  #47: kde-output-order-v1_server-header ..............   Passed    0.00 sec
+ 23/121 Test  #38: kde-output-device-v2_client-header .............   Passed    0.00 sec
+        Start 108: text-input-unstable-v2_code
+        Start  43: kde-output-management-v2_server-header
+ 24/121 Test #106: text-input-unstable-v2_client-header ...........   Passed    0.00 sec
+ 25/121 Test  #59: keystate_server-header .........................   Passed    0.00 sec
+        Start  40: kde-output-device-v2_code
+        Start  55: kde-screen-edge-v1_server-header
+ 26/121 Test #108: text-input-unstable-v2_code ....................   Passed    0.00 sec
+ 27/121 Test  #43: kde-output-management-v2_server-header .........   Passed    0.00 sec
+        Start  64: org-kde-plasma-virtual-desktop_code
+        Start  98: slide_client-header
+ 28/121 Test  #40: kde-output-device-v2_code ......................   Passed    0.00 sec
+ 29/121 Test  #55: kde-screen-edge-v1_server-header ...............   Passed    0.00 sec
+ 30/121 Test  #64: org-kde-plasma-virtual-desktop_code ............   Passed    0.00 sec
+        Start 102: surface-extension_client-header
+        Start  90: server-decoration_client-header
+        Start  51: kde-primary-output-v1_server-header
+ 31/121 Test  #98: slide_client-header ............................   Passed    0.00 sec
+ 32/121 Test #102: surface-extension_client-header ................   Passed    0.00 sec
+ 33/121 Test  #90: server-decoration_client-header ................   Passed    0.00 sec
+        Start  94: shadow_client-header
+        Start  83: remote-access_server-header
+        Start  71: outputdevice_server-header
+ 34/121 Test  #51: kde-primary-output-v1_server-header ............   Passed    0.00 sec
+ 35/121 Test  #94: shadow_client-header ...........................   Passed    0.00 sec
+ 36/121 Test  #83: remote-access_server-header ....................   Passed    0.00 sec
+        Start  15: dpms_server-header
+        Start 119: zkde-screencast-unstable-v1_server-header
+        Start  35: kde-lockscreen-overlay-v1_server-header
+ 37/121 Test  #71: outputdevice_server-header .....................   Passed    0.01 sec
+ 38/121 Test  #15: dpms_server-header .............................   Passed    0.01 sec
+ 39/121 Test #119: zkde-screencast-unstable-v1_server-header ......   Passed    0.00 sec
+        Start  80: plasma-window-management_code
+        Start 110: text-input_client-header
+        Start   3: appmenu_server-header
+ 40/121 Test  #35: kde-lockscreen-overlay-v1_server-header ........   Passed    0.00 sec
+ 41/121 Test  #80: plasma-window-management_code ..................   Passed    0.00 sec
+        Start  79: plasma-window-management_server-header
+        Start  44: kde-output-management-v2_code
+ 42/121 Test #110: text-input_client-header .......................   Passed    0.00 sec
+ 43/121 Test   #3: appmenu_server-header ..........................   Passed    0.00 sec
+        Start  78: plasma-window-management_client-header
+        Start  42: kde-output-management-v2_client-header
+ 44/121 Test  #79: plasma-window-management_server-header .........   Passed    0.00 sec
+ 45/121 Test  #44: kde-output-management-v2_code ..................   Passed    0.00 sec
+        Start  31: kde-external-brightness-v1_server-header
+        Start  76: plasma-shell_code
+ 46/121 Test  #78: plasma-window-management_client-header .........   Passed    0.00 sec
+ 47/121 Test  #42: kde-output-management-v2_client-header .........   Passed    0.00 sec
+ 48/121 Test  #31: kde-external-brightness-v1_server-header .......   Passed    0.00 sec
+        Start  20: fake-input_code
+        Start  23: fullscreen-shell_server-header
+        Start   7: blur_server-header
+ 49/121 Test  #76: plasma-shell_code ..............................   Passed    0.00 sec
+ 50/121 Test  #20: fake-input_code ................................   Passed    0.00 sec
+ 51/121 Test  #23: fullscreen-shell_server-header .................   Passed    0.00 sec
+        Start  27: idle_server-header
+        Start 107: text-input-unstable-v2_server-header
+        Start  87: server-decoration-palette_server-header
+ 52/121 Test   #7: blur_server-header .............................   Passed    0.00 sec
+ 53/121 Test  #27: idle_server-header .............................   Passed    0.00 sec
+        Start  60: keystate_code
+        Start 114: wayland-eglstream-controller_client-header
+ 54/121 Test #107: text-input-unstable-v2_server-header ...........   Passed    0.00 sec
+ 55/121 Test  #87: server-decoration-palette_server-header ........   Passed    0.00 sec
+ 56/121 Test  #60: keystate_code ..................................   Passed    0.00 sec
+        Start  39: kde-output-device-v2_server-header
+        Start  48: kde-output-order-v1_code
+        Start  11: contrast_server-header
+ 57/121 Test #114: wayland-eglstream-controller_client-header .....   Passed    0.00 sec
+ 58/121 Test  #39: kde-output-device-v2_server-header .............   Passed    0.00 sec
+ 59/121 Test  #48: kde-output-order-v1_code .......................   Passed    0.00 sec
+        Start 103: surface-extension_server-header
+        Start  75: plasma-shell_server-header
+        Start  56: kde-screen-edge-v1_code
+ 60/121 Test  #11: contrast_server-header .........................   Passed    0.00 sec
+ 61/121 Test #103: surface-extension_server-header ................   Passed    0.00 sec
+ 62/121 Test  #75: plasma-shell_server-header .....................   Passed    0.00 sec
+        Start  99: slide_server-header
+        Start  91: server-decoration_server-header
+        Start  52: kde-primary-output-v1_code
+ 63/121 Test  #56: kde-screen-edge-v1_code ........................   Passed    0.00 sec
+ 64/121 Test  #99: slide_server-header ............................   Passed    0.00 sec
+ 65/121 Test  #91: server-decoration_server-header ................   Passed    0.00 sec
+        Start  95: shadow_server-header
+        Start  66: output-management_client-header
+        Start  16: dpms_code
+ 66/121 Test  #52: kde-primary-output-v1_code .....................   Passed    0.01 sec
+ 67/121 Test  #95: shadow_server-header ...........................   Passed    0.01 sec
+ 68/121 Test  #66: output-management_client-header ................   Passed    0.01 sec
+        Start  72: outputdevice_code
+        Start  84: remote-access_code
+        Start  82: remote-access_client-header
+ 69/121 Test  #16: dpms_code ......................................   Passed    0.01 sec
+ 70/121 Test  #72: outputdevice_code ..............................   Passed    0.00 sec
+ 71/121 Test  #84: remote-access_code .............................   Passed    0.00 sec
+        Start   4: appmenu_code
+        Start  36: kde-lockscreen-overlay-v1_code
+        Start  32: kde-external-brightness-v1_code
+ 72/121 Test  #82: remote-access_client-header ....................   Passed    0.00 sec
+ 73/121 Test   #4: appmenu_code ...................................   Passed    0.00 sec
+ 74/121 Test  #36: kde-lockscreen-overlay-v1_code .................   Passed    0.00 sec
+        Start 120: zkde-screencast-unstable-v1_code
+        Start   8: blur_code
+        Start  24: fullscreen-shell_code
+ 75/121 Test  #32: kde-external-brightness-v1_code ................   Passed    0.00 sec
+ 76/121 Test #120: zkde-screencast-unstable-v1_code ...............   Passed    0.00 sec
+ 77/121 Test   #8: blur_code ......................................   Passed    0.00 sec
+        Start  46: kde-output-order-v1_client-header
+        Start  88: server-decoration-palette_code
+        Start  62: org-kde-plasma-virtual-desktop_client-header
+ 78/121 Test  #24: fullscreen-shell_code ..........................   Passed    0.00 sec
+ 79/121 Test  #46: kde-output-order-v1_client-header ..............   Passed    0.00 sec
+ 80/121 Test  #88: server-decoration-palette_code .................   Passed    0.00 sec
+        Start  58: keystate_client-header
+        Start  12: contrast_code
+        Start  28: idle_code
+ 81/121 Test  #62: org-kde-plasma-virtual-desktop_client-header ...   Passed    0.00 sec
+ 82/121 Test  #58: keystate_client-header .........................   Passed    0.00 sec
+ 83/121 Test  #12: contrast_code ..................................   Passed    0.00 sec
+        Start 100: slide_code
+        Start  96: shadow_code
+        Start  92: server-decoration_code
+ 84/121 Test  #28: idle_code ......................................   Passed    0.00 sec
+ 85/121 Test #100: slide_code .....................................   Passed    0.00 sec
+ 86/121 Test  #96: shadow_code ....................................   Passed    0.00 sec
+        Start  54: kde-screen-edge-v1_client-header
+        Start  50: kde-primary-output-v1_client-header
+        Start 104: surface-extension_code
+ 87/121 Test  #92: server-decoration_code .........................   Passed    0.00 sec
+ 88/121 Test  #54: kde-screen-edge-v1_client-header ...............   Passed    0.00 sec
+ 89/121 Test  #50: kde-primary-output-v1_client-header ............   Passed    0.00 sec
+        Start  93: server-decoration_build
+        Start  85: remote-access_build
+        Start  81: plasma-window-management_build
+ 90/121 Test #104: surface-extension_code .........................   Passed    0.00 sec
+        Start  69: output-management_build
+ 91/121 Test  #85: remote-access_build ............................   Passed    0.07 sec
+        Start  97: shadow_build
+ 92/121 Test  #81: plasma-window-management_build .................   Passed    0.07 sec
+        Start  73: outputdevice_build
+ 93/121 Test  #93: server-decoration_build ........................   Passed    0.07 sec
+        Start  65: org-kde-plasma-virtual-desktop_build
+ 94/121 Test  #69: output-management_build ........................   Passed    0.07 sec
+        Start   5: appmenu_build
+ 95/121 Test  #97: shadow_build ...................................   Passed    0.07 sec
+        Start  89: server-decoration-palette_build
+ 96/121 Test  #65: org-kde-plasma-virtual-desktop_build ...........   Passed    0.07 sec
+        Start  77: plasma-shell_build
+ 97/121 Test  #73: outputdevice_build .............................   Passed    0.07 sec
+        Start  37: kde-lockscreen-overlay-v1_build
+ 98/121 Test   #5: appmenu_build ..................................   Passed    0.07 sec
+        Start  61: keystate_build
+ 99/121 Test  #89: server-decoration-palette_build ................   Passed    0.07 sec
+        Start  13: contrast_build
+100/121 Test  #37: kde-lockscreen-overlay-v1_build ................   Passed    0.07 sec
+        Start  41: kde-output-device-v2_build
+101/121 Test  #77: plasma-shell_build .............................   Passed    0.08 sec
+        Start  57: kde-screen-edge-v1_build
+102/121 Test  #61: keystate_build .................................   Passed    0.10 sec
+        Start  45: kde-output-management-v2_build
+103/121 Test  #13: contrast_build .................................   Passed    0.07 sec
+        Start 113: text-input_build
+104/121 Test  #41: kde-output-device-v2_build .....................   Passed    0.08 sec
+        Start 101: slide_build
+105/121 Test  #57: kde-screen-edge-v1_build .......................   Passed    0.07 sec
+        Start  53: kde-primary-output-v1_build
+106/121 Test  #45: kde-output-management-v2_build .................   Passed    0.07 sec
+        Start 109: text-input-unstable-v2_build
+107/121 Test #113: text-input_build ...............................   Passed    0.07 sec
+        Start 105: surface-extension_build
+108/121 Test #101: slide_build ....................................   Passed    0.07 sec
+        Start   9: blur_build
+109/121 Test  #53: kde-primary-output-v1_build ....................   Passed    0.06 sec
+        Start  49: kde-output-order-v1_build
+110/121 Test #109: text-input-unstable-v2_build ...................   Passed    0.06 sec
+        Start  17: dpms_build
+111/121 Test #105: surface-extension_build ........................   Passed    0.07 sec
+        Start  21: fake-input_build
+112/121 Test  #49: kde-output-order-v1_build ......................   Passed    0.06 sec
+        Start 117: wayland-eglstream-controller_build
+113/121 Test   #9: blur_build .....................................   Passed    0.07 sec
+        Start 121: zkde-screencast-unstable-v1_build
+114/121 Test  #17: dpms_build .....................................   Passed    0.07 sec
+        Start  33: kde-external-brightness-v1_build
+115/121 Test  #21: fake-input_build ...............................   Passed    0.06 sec
+        Start  25: fullscreen-shell_build
+116/121 Test #117: wayland-eglstream-controller_build .............   Passed    0.06 sec
+117/121 Test #121: zkde-screencast-unstable-v1_build ..............   Passed    0.06 sec
+        Start  29: idle_build
+        Start   1: appstreamtest
+118/121 Test   #1: appstreamtest ..................................   Passed    0.01 sec
+119/121 Test  #33: kde-external-brightness-v1_build ...............   Passed    0.06 sec
+120/121 Test  #25: fullscreen-shell_build .........................   Passed    0.06 sec
+121/121 Test  #29: idle_build .....................................   Passed    0.06 sec
+
+100% tests passed, 0 tests failed out of 121
+
+Total Test time (real) =   0.65 sec

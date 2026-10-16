@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "kind": "reviewed-ubuntu-fixture-dependency-repair",
+  "source_commit": "7b39ada44a387984a23af11cc05204bfb36b2ec3",
+  "workflow_run_id": 37529687593,
+  "workflow_job_id": 112495584329,
+  "original_preflight_verification": "manifests/evidence/package-revalidation/kpipewire-preflight15/verification.json",
+  "original_state": "INFRA_INVALID",
+  "package_attempt_consumed": false,
+  "candidate_source_prepared": false,
+  "candidate_build_started": false,
+  "cause": "Ubuntu 6.6.4 DmaBufHandler publicly includes epoxy/egl.h, while its libkpipewire-dev package does not install libepoxy-dev. The fixture had depended on a host-installed header.",
+  "repair": "Declare libepoxy-dev explicitly in baseline setup and consumer test dependencies. Preserve upstream and reviewed client bytes.",
+  "candidate_public_header_exposes_epoxy": false,
+  "authoritative_repair_validation": "pending fresh KVM input preflight",
+  "files_sha256": {
+    "cleanup.json": "d0d7143738253020b9aab256f168c6a2558a5e28a35519dd1e8da56d788ee3f6",
+    "original-ubuntu-baseline.log": "5bbd5038242c7d64a010a6a56500e8447e97d529051e859570878825057c4ae1",
+    "original-summary.txt": "28c3bc0a5634f3b1b0c584fa68e9101beb6086e2f6d7a14c3a2a657bfd3191ac"
+  },
+  "client_sha256": "978a172186732bb1a5ad7f1acf7f6c68bafc28a656eb7e312a0e3bd05c2a4b59"
+}

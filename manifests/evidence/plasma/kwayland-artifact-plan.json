@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "kwayland",
+      "package_version": "4:6.7.5-0supralinux2",
+      "artifact_id": 11521014122,
+      "workflow_run_id": 37705452980,
+      "artifact_sha256": "6b91c079662c80ee8936d04d3a27fd5c47244488499526b580447a11145a66c2",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

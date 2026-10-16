@@ -1,0 +1,6 @@
+# Debian sid symbols baseline retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=bluez-qt
+path=trees/debian/bluez-qt/debian/libkf6bluezqt6.symbols
+sha256=b72bea28842160da234b3bbab7975623616cd58f3e522b1e5d8705a279eef4f7

@@ -1,0 +1,3 @@
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6AuthCore.so.6
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6AuthCore.so.6.*
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/plugins/kf6/kauth/

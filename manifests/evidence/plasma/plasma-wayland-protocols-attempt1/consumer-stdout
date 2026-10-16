@@ -1,0 +1,40 @@
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/tmp_zgqpg1g/build
+Exact installed 30 protocols, two legacy aliases and CMake 1.22.0 consumer: PASS
+appmenu.xml
+blur.xml
+contrast.xml
+dpms.xml
+fake-input.xml
+fullscreen-shell.xml
+idle.xml
+kde-external-brightness-v1.xml
+kde-lockscreen-overlay-v1.xml
+kde-output-device-v2.xml
+kde-output-management-v2.xml
+kde-output-order-v1.xml
+kde-primary-output-v1.xml
+kde-screen-edge-v1.xml
+keystate.xml
+org-kde-plasma-virtual-desktop.xml
+output-management.xml
+outputdevice.xml
+plasma-shell.xml
+plasma-window-management.xml
+remote-access.xml
+server-decoration-palette.xml
+server-decoration.xml
+shadow.xml
+slide.xml
+surface-extension.xml
+text-input-unstable-v2.xml
+text-input.xml
+wayland-eglstream-controller.xml
+zkde-screencast-unstable-v1.xml
+All 30 installed client headers, actual server headers and protocol code compiled: PASS
+Unchanged Ubuntu protocol client, negotiated version 1, candidate server PID event 4242: PASS
+Unchanged Ubuntu protocol client, negotiated version 7, candidate server PID event 4242: PASS
+Unchanged Ubuntu protocol client, negotiated version 8, candidate server PID event 4242: PASS
+Unchanged Ubuntu protocol client, negotiated version 20, candidate server PID event 4242: PASS
+all foreign

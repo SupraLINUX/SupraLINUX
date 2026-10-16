@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-kactivitymanagerd-baseline
+cmake -S "${BASE}/source" -B "${AUTOPKGTEST_TMP}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${AUTOPKGTEST_TMP}/build" --parallel 2
+python3 "${BASE}/source/run-session.py" "${AUTOPKGTEST_TMP}/build/ubuntu-kactivitymanagerd-client" "${AUTOPKGTEST_ARTIFACTS}/rebuilt-consumer"

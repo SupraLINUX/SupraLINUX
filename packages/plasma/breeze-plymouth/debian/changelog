@@ -1,0 +1,717 @@
+breeze-plymouth (6.7.5-0supralinux1) resolute; urgency=medium
+
+  * Build official stable KDE release with the Ubuntu Plymouth ABI.
+  * Configure SupraLINUX title and declare the graphical label/font runtime.
+  * Verify resources and an unchanged Ubuntu SDK client after upgrade.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Mon, 05 Oct 2026 01:30:00 +0000
+
+breeze-plymouth (6.6.4-0ubuntu1) resolute; urgency=medium
+
+  * New upstream bugfix release (6.6.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 07 Apr 2026 13:04:48 +0100
+
+breeze-plymouth (6.6.3-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.3)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 18 Mar 2026 14:40:29 +0000
+
+breeze-plymouth (6.6.2-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 03 Mar 2026 12:20:50 +0000
+
+breeze-plymouth (6.6.1-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.0)
+  * New upstream release (6.6.1)
+
+ -- Rik Mills <rikmills@kde.org>  Sat, 28 Feb 2026 22:12:07 +0000
+
+breeze-plymouth (6.5.5-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 13 Jan 2026 14:53:32 +0000
+
+breeze-plymouth (6.5.4-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 09 Dec 2025 11:16:13 +0000
+
+breeze-plymouth (6.5.3-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.3)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 18 Nov 2025 12:05:53 +0000
+
+breeze-plymouth (6.5.2-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 04 Nov 2025 17:10:31 +0000
+
+breeze-plymouth (6.5.1-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.1)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 29 Oct 2025 05:44:47 +0000
+
+breeze-plymouth (6.5.0-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.0)
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 20 Oct 2025 18:35:28 +0100
+
+breeze-plymouth (6.4.5-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.4.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 09 Sep 2025 17:00:31 +0100
+
+breeze-plymouth (6.4.4-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.4.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 12 Aug 2025 17:26:53 +0100
+
+breeze-plymouth (6.3.5-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.3.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 06 May 2025 21:32:31 +0100
+
+breeze-plymouth (6.3.4-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.4)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 02 Apr 2025 08:53:34 +0100
+
+breeze-plymouth (6.3.3-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.3)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 11 Mar 2025 15:15:14 +0000
+
+breeze-plymouth (6.3.2-1ubuntu1) plucky; urgency=medium
+
+  * Merge from Debian unstable. Remaining changes:
+    - Kubuntu Vcs and maintainer fields.
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 10 Mar 2025 14:38:08 +0000
+
+breeze-plymouth (6.3.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.3.1).
+  * New upstream release (6.3.2).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 28 Feb 2025 00:50:44 +0100
+
+breeze-plymouth (6.3.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.3.0).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 10 Feb 2025 14:51:43 +0100
+
+breeze-plymouth (6.2.91-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.91).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 23 Jan 2025 23:50:05 +0100
+
+breeze-plymouth (6.2.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.90).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 11 Jan 2025 23:05:52 +0100
+
+breeze-plymouth (6.2.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.5).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 05 Jan 2025 10:55:56 +0100
+
+breeze-plymouth (6.2.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 03 Dec 2024 16:20:50 +0100
+
+breeze-plymouth (6.2.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.3).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 23 Nov 2024 21:57:21 +0100
+
+breeze-plymouth (6.2.1-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.1).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 15 Oct 2024 17:42:22 +0200
+
+breeze-plymouth (6.2.0-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.90).
+  * New upstream release (6.2.0).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 05 Oct 2024 23:17:38 +0200
+
+breeze-plymouth (6.1.5-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 11 Sep 2024 23:27:26 +0200
+
+breeze-plymouth (6.1.4-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 11 Aug 2024 23:58:14 +0200
+
+breeze-plymouth (6.1.3-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.3).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 21 Jul 2024 23:46:06 +0200
+
+breeze-plymouth (6.1.0-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (6.1.0).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 18 Jun 2024 19:40:43 +0200
+
+breeze-plymouth (5.27.11-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Bump Standards-Version to 4.7.0 (No changes needed).
+  * New upstream release (5.27.11).
+  * Remove inactive uploaders, thanks for your work.
+
+ -- Patrick Franz <deltaone@debian.org>  Sun, 19 May 2024 12:20:04 +0200
+
+breeze-plymouth (5.27.10-2) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Add missing build-dependencies.
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 12 Jan 2024 19:23:27 +0100
+
+breeze-plymouth (5.27.10-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.10).
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 11 Jan 2024 23:20:48 +0100
+
+breeze-plymouth (5.27.9-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.9).
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 27 Oct 2023 21:53:17 +0200
+
+breeze-plymouth (5.27.8-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.8).
+
+ -- Patrick Franz <deltaone@debian.org>  Wed, 13 Sep 2023 20:49:08 +0200
+
+breeze-plymouth (5.27.7-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.7).
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 03 Aug 2023 18:50:34 +0200
+
+breeze-plymouth (5.27.5-2) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 27 May 2023 18:23:39 +0200
+
+breeze-plymouth (5.27.5-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.5).
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 09 May 2023 23:24:18 +0200
+
+breeze-plymouth (5.27.3-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.3).
+
+ -- Patrick Franz <deltaone@debian.org>  Wed, 22 Mar 2023 23:15:56 +0100
+
+breeze-plymouth (5.27.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.27.1).
+  * New upstream release (5.27.2).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 28 Feb 2023 14:58:44 +0100
+
+breeze-plymouth (5.27.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.27.0).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 18 Feb 2023 17:08:34 +0100
+
+breeze-plymouth (5.26.90-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.90).
+  * Bump Standards-Version to 4.6.2, no change required.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 23 Jan 2023 21:50:51 +0100
+
+breeze-plymouth (5.26.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 07 Jan 2023 00:20:02 +0100
+
+breeze-plymouth (5.26.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 29 Nov 2022 15:58:36 +0100
+
+breeze-plymouth (5.26.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.3).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 08 Nov 2022 15:41:41 +0100
+
+breeze-plymouth (5.26.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.1).
+  * New upstream release (5.26.2).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 27 Oct 2022 23:24:52 +0200
+
+breeze-plymouth (5.26.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.0).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 11 Oct 2022 15:43:57 +0200
+
+breeze-plymouth (5.25.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.90).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 25 Sep 2022 00:14:19 +0200
+
+breeze-plymouth (5.25.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 09 Sep 2022 23:20:17 +0200
+
+breeze-plymouth (5.25.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 02 Aug 2022 17:30:06 +0200
+
+breeze-plymouth (5.25.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.2).
+  * New upstream release (5.25.3).
+  * Release to unstable
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 17 Jul 2022 15:25:53 +0200
+
+breeze-plymouth (5.25.1-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.25.1).
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 21 Jun 2022 21:45:52 +0200
+
+breeze-plymouth (5.25.0-1) experimental; urgency=medium
+
+  * New upstream release (5.25.0).
+  * Bump Standards-Version to 4.6.1, no change required.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 14 Jun 2022 21:25:56 +0200
+
+breeze-plymouth (5.24.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.90).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 20 May 2022 11:25:04 +0200
+
+breeze-plymouth (5.24.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 12 May 2022 21:38:51 +0200
+
+breeze-plymouth (5.24.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 30 Mar 2022 13:42:55 +0200
+
+breeze-plymouth (5.24.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.3).
+  * Added myself to the uploaders.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 10 Mar 2022 07:43:47 +0100
+
+breeze-plymouth (5.24.2-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.24.2).
+  * Bump Standards-Version to 4.6.0 (no changes needed).
+  * Re-export signing key without extra signatures.
+
+ -- Patrick Franz <deltaone@debian.org>  Sat, 26 Feb 2022 21:57:44 +0100
+
+breeze-plymouth (5.23.5-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.23.5).
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 07 Jan 2022 15:43:13 +0100
+
+breeze-plymouth (5.23.4-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.4).
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 02 Dec 2021 20:23:48 +0100
+
+breeze-plymouth (5.23.3-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.3).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 10 Nov 2021 08:36:58 +0900
+
+breeze-plymouth (5.23.2-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Update upstream signing-key.
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.1).
+  * New upstream release (5.23.2).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 03 Nov 2021 22:21:01 +0900
+
+breeze-plymouth (5.23.0-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.0).
+  * Bump B-D of e-c-m to 5.82 (not specified but necessary).
+
+ -- Norbert Preining <norbert@preining.info>  Thu, 14 Oct 2021 20:13:13 +0900
+
+breeze-plymouth (5.21.5-2) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Release to unstable.
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 17 Aug 2021 03:23:05 +0200
+
+breeze-plymouth (5.21.5-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.5).
+
+ -- Patrick Franz <patfra71@gmail.com>  Fri, 07 May 2021 13:53:46 +0200
+
+breeze-plymouth (5.21.4-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.4).
+
+ -- Patrick Franz <patfra71@gmail.com>  Tue, 06 Apr 2021 17:46:14 +0200
+
+breeze-plymouth (5.21.3-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.3).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 17 Mar 2021 05:49:40 +0900
+
+breeze-plymouth (5.21.2-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.2).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 03 Mar 2021 05:33:48 +0900
+
+breeze-plymouth (5.21.1-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.1).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 24 Feb 2021 14:36:38 +0900
+
+breeze-plymouth (5.21.0-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.0).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 17 Feb 2021 05:42:25 +0900
+
+breeze-plymouth (5.20.5-1) unstable; urgency=medium
+
+  * New upstream release (5.20.5).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 06 Jan 2021 23:50:50 +0900
+
+breeze-plymouth (5.20.4-3) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 22 Dec 2020 14:30:15 +0100
+
+breeze-plymouth (5.20.4-2) experimental; urgency=medium
+
+  * Team upload.
+  * Rebuild against new version of libplymouth.
+  * Bump Standards-Version to 4.5.1, no change required.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 15 Dec 2020 16:29:31 +0100
+
+breeze-plymouth (5.20.4-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.20.4).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 09 Dec 2020 14:17:31 +0900
+
+breeze-plymouth (5.19.5-3) unstable; urgency=medium
+
+  [ Scarlett Moore ]
+  * Remove uneeded --as-needed ld flag as it is now default.
+  * Remove obsolete entries in d/upstream/metadata already
+    defined in d/copyright.
+
+ -- Norbert Preining <norbert@preining.info>  Fri, 06 Nov 2020 08:37:21 +0900
+
+breeze-plymouth (5.19.5-2) experimental; urgency=medium
+
+  * Rebuild for Qt 5.15
+
+ -- Norbert Preining <norbert@preining.info>  Mon, 02 Nov 2020 09:27:38 +0900
+
+breeze-plymouth (5.19.5-1) experimental; urgency=medium
+
+  [ Scarlett Moore ]
+  * New upstream release (5.19.5).
+
+  [ Norbert Preining ]
+  * Add Patrick and myself to uploaders.
+
+ -- Norbert Preining <norbert@preining.info>  Mon, 19 Oct 2020 10:20:42 +0900
+
+breeze-plymouth (5.19.4-1) experimental; urgency=medium
+
+  [ Scarlett Moore ]
+  * Bump compat level to 13.
+  * Add Rules-Requires-Root field to control.
+  * New upstream release (5.18.5).
+  * Add myself to Uploaders.
+  * Update Homepage link to point to new invent.kde.org
+  * Update field Source in debian/copyright to invent.kde.org move.
+  * Set/Update field Upstream-Contact in debian/copyright.
+  * Use set -e in maintainer scripts. (lintian)
+  * Release to experimental.
+
+  [ John Scott ]
+  * Add Suggests: kde-config-plymouth.
+
+  [ Patrick Franz ]
+  * Add hardening=+all build flag.
+  * Update matching files in debian/copyright.
+  * Update data in /debian/upstream/metadata.
+  * Add reproducible=+fixfilepath build flag.
+  * New upstream release (5.19.4).
+  * Change Maintainer in debian/control to Debian Qt/KDE Maintainers.
+  * Remove Maxy from Uploaders as requested.
+
+ -- Scarlett Moore <sgmoore@kde.org>  Thu, 27 Aug 2020 18:29:47 -0700
+
+breeze-plymouth (5.17.5-2) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+  * Bump Standards-Version to 4.5.0, no changes required.
+
+ -- Pino Toscano <pino@debian.org>  Fri, 14 Feb 2020 22:01:44 +0100
+
+breeze-plymouth (5.17.5-1) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.16.5).
+  * Salsa CI automatic initialization by Tuco
+
+  [ Pino Toscano ]
+  * New upstream release.
+  * Bump the debhelper compatibility to 12:
+    - switch the debhelper build dependency to debhelper-compat 12
+    - remove debian/compat
+  * Use https for Format in copyright.
+  * Bump Standards-Version to 4.4.1, no changes required.
+  * Remove empty line at the end of rules.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 19 Jan 2020 13:05:12 +0100
+
+breeze-plymouth (5.14.5-1) unstable; urgency=medium
+
+  * New upstream release (5.14.5).
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 24 Jan 2019 09:25:40 -0300
+
+breeze-plymouth (5.14.3-1) unstable; urgency=medium
+
+  * Update upsteam signing-key
+  * New upstream release (5.14.3).
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 23 Nov 2018 08:50:25 -0300
+
+breeze-plymouth (5.13.4-1) unstable; urgency=medium
+
+  * New upstream release (5.13.4).
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 19 Aug 2018 23:17:50 +0200
+
+breeze-plymouth (5.13.1-1) unstable; urgency=medium
+
+  * New upstream release (5.12.2).
+  * New upstream release (5.13.1).
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 26 Jun 2018 13:42:47 +0200
+
+breeze-plymouth (5.12.1-1) sid; urgency=medium
+
+  * Use the salsa canonical urls
+  * New upstream release (5.12.1).
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 20 Feb 2018 22:08:37 +0100
+
+breeze-plymouth (5.12.0-2) sid; urgency=medium
+
+  * New revision
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 12 Feb 2018 16:03:26 +0100
+
+breeze-plymouth (5.12.0-1) experimental; urgency=medium
+
+  * Bump debhelper build-dep and compat to 11.
+  * Build without build_stamp
+  * Add Bhushan Shah upstream signing key
+  * New upstream release (5.12.0).
+  * Bump Standards-Version to 4.1.3.
+  * Use https uri for uscan
+  * Release to experimental
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 08 Feb 2018 15:20:26 +0100
+
+breeze-plymouth (5.11.4-1) experimental; urgency=medium
+
+  * New upstream release (5.11.4).
+  * Bump Standards-Version to 4.1.2.
+  * Release to experimental
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 03 Jan 2018 16:48:43 -0300
+
+breeze-plymouth (5.10.5-2) sid; urgency=medium
+
+  * Bump Standards-Version to 4.1.0.
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 12 Sep 2017 20:11:18 +0200
+
+breeze-plymouth (5.10.5-1) experimental; urgency=medium
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.10.3).
+  * Bump Standards-Version to 4.0.0.
+  * Update upstream metadata
+  * Set the right path for the old text.plymouth alternative
+  * New upstream release (5.10.4).
+  * Update build-deps and deps with the info from cmake
+  * New upstream release (5.10.5).
+  * Release to experimental
+
+  [ Jonathan Riddell ]
+  * update watch file to version=4 with pgp signature checking
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 28 Aug 2017 15:28:03 +0200
+
+breeze-plymouth (5.8.5-2) experimental; urgency=medium
+
+  * Drop alternatives (plymouth-set-default-theme deletes the alternative
+    anyway) (Closes: 852110)
+  * Add a README.Debian file explaining how to enable the theme
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 14 Mar 2017 09:33:35 +0100
+
+breeze-plymouth (5.8.5-1) experimental; urgency=medium
+
+  [ Jonathan Riddell ]
+  * Initial release.
+  * add text.plymouth alternative
+  * allow for new plymouth theme install dir in xenial
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.6.4).
+  * Update pre/post inst scripts.
+  * Drop dbus-x11 build dependency
+  * New upstream release (5.8.5).
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 30 Dec 2016 18:46:12 +0100

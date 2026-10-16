@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "synthetic bridge-free KVM guest network isolation and JIT startup",
+  "source_commit": "b9a8d86dc39e6cc381a7e35737b519d63c08e4aa",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-jit-startup-preflight-20261009t194257z-1266195",
+  "host_evidence_seal_sha256": "2ce41a95335bca50ce0872f7370703c575c90feb17710c5e16cec0245269f148",
+  "package_attempt_consumed": false,
+  "package_execution_started": false,
+  "workflow_triggered": false,
+  "host_network_modified": false,
+  "host_packages_installed": false,
+  "host_firewall_modified": false,
+  "host_health_samples": 26,
+  "hardware_hang_observed": false,
+  "physical_link_retained": true,
+  "cleanup_verified": true,
+  "inputs_sha256": {
+    "scripts/check-kvm-network.py": "d1f06a21e59327994a3b842e61d0eeaf80322629f74e849c9867eb0eeb7d8053",
+    "scripts/configure-kvm-guest-network.py": "d538d155e9e0e7a9aa76b9cb8a5341bba14fe448ce50d3394e51bd97a3169459",
+    "scripts/run-kvm-jit-gate-core.sh": "7a9eeaf94a66cc9b85c45b2dfa41caa903d2b87440c33bea74ec0da22b9e8a04",
+    "scripts/check-kvm-host.sh": "27bdeab3e551fa0aa823d908f55799f561498cb4e705bb1536e9dc4a6c4dfa0e",
+    "scripts/provision-kvm-host.sh": "74587522d312a9a3efb4d359047cf5e18df92a506957270c407917c52f0e6cfc",
+    "scripts/test-kvm-network.py": "0fc1e2db7efe2cc48d6287b3fee0054aa211a476b2aca950608196946d806514"
+  },
+  "files_sha256": {
+    "cleanup.json": "b0500cd553a78724b9bc17cd954ccb02eb3588467df09de98562fa1a68fa4931",
+    "evidence-sha256.txt": "2ce41a95335bca50ce0872f7370703c575c90feb17710c5e16cec0245269f148",
+    "host-health.jsonl": "5ca9fd3f70b05ddbffe860b04af110aee53fe9c164a4b14595e500451c2cc812",
+    "host-result.json": "ab7cdaa45e2245c58435db57f1b57aceb7008744ac99d1a7f6a85afdbe3e55f1",
+    "jit-startup-preflight-result.txt": "b416f39a25d78fb226cb84620b1f5527c4bfabc7f31d59fc78835c3b5b121f21",
+    "local-retention-index.json": "93ad267a6cf713065d9682f731dd42a280b6f4f20fb9d4caddff21ec68e3bfbe",
+    "network-guest-connectivity-execution.json": "64e1135bbd40346b33661569584497ce334523e44a3808893f99f0f0c49008c6",
+    "network-guest-connectivity.json": "df481dde9d824a58c91e2a6902b89b17ea8798d28b36a20028b740f709851667",
+    "network-guest-policy-execution.json": "4b4427dc8affb42850438ac797968b6dc323ef654d371d29775f6586f85d8051",
+    "network-guest-safety.json": "1cd4b713cf1d6b73823853a4165a2a6b498524371a92162d6cf575d47aeba58e",
+    "network-live-domain-enabled.xml": "a85c8bfba7a7e85b26b462c19986a8d840c9cf28269f70c7ec0e633623c01672",
+    "network-live-domain.xml": "f5101bcb70614444511269e9358165e6927fe45341350f90328900dcb0401ad7",
+    "qemu-cpu-policy.json": "b60213e45f35d74af31f58e6bfa1751c4015da826d17aa86f3088ba3647205b4"
+  },
+  "local_archive_sha256": "7259ebd25131d68ec39ea56a9fa09feb64f34219f1e67b814781e2ab75371a49",
+  "offline_restore_verified": true
+}

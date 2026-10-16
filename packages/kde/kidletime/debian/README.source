@@ -1,0 +1,18 @@
+# SupraLINUX KIdleTime packaging
+
+KDE Frameworks 6.30.0 is the source/build authority. Ubuntu Resolute and Debian sid
+packaging trees are compatibility references only.
+
+The full symbols file is intentionally not duplicated in Git. The Batch 5 hosted
+runner verifies and injects the exact Debian 6.28.0 baseline from workflow run
+34708030450 / artifact 10301938362 before dpkg-source -b. Debian is selected for
+the symbols baseline because it is closer to KDE 6.30; Ubuntu remains the direct
+binary-compatibility target. Any KDE 6.30 ABI delta must be reviewed from a real build.
+
+Symbols reference: `libkf6idletime6.symbols`, SHA-256 `1ae402305be324fc97b61bb099d3c6e001ec2bfc8eaf2ae09f1cd69eafbe914c`.
+Copyright reference SHA-256: `1afa9e5366e809877f085a8918ac733de4935be71be1aee3ff785362aee2bd0b`.
+
+QDoc is disabled in the current common Frameworks profile. The established
+documentation binary package name is retained as a compatibility stub and does not
+claim QCH payload. Upstream autotests remain enabled except for explicitly documented
+service-dependent tests that cannot be satisfied in the isolated package-build lane.

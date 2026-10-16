@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "plasma-thunderbolt",
+      "package_version": "6.7.5-0supralinux2",
+      "artifact_id": 11413393102,
+      "workflow_run_id": 37462870275,
+      "artifact_sha256": "e6678124a9e330827fb96db90ff0a55eeaae6399596a728e4629e13ba5fe57be",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

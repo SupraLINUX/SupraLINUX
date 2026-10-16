@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "kind": "private-nat-guest-bandwidth-startup-certification",
+  "state": "PASS",
+  "source_commit": "c9e890755852cde0a25565953014164bbd7a89e4",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-jit-startup-preflight-20261006t202631z-130614",
+  "host_evidence_manifest_sha256": "bf03f10fed476767cd831f5ab1485a16b828f4528a892be9128256eafe5a386b",
+  "checks": {
+    "private_nat_admission": "PASS",
+    "live_guest_limits": "PASS",
+    "kernel_download_htb": "PASS",
+    "kernel_upload_policer_present": "PASS",
+    "jit_online_idle": "PASS",
+    "host_gate": "PASS",
+    "vm_removed": "PASS",
+    "writable_overlay_removed": "PASS",
+    "runner_removed_http_404": "PASS"
+  },
+  "runner_id": 225,
+  "host_kernel": "7.0.0-38-generic",
+  "libguestfs_kernel_sha256": "9f55ef7253055a9cf68f8a04323c93dead2fca617386d842fbde9ca7b178b27e",
+  "package_attempt_consumed": false,
+  "package_execution_started": false,
+  "workflow_started": false,
+  "host_physical_network_modified": false,
+  "traffic_scope": "one outer guest tap; nested test traffic shares the limit",
+  "bandwidth_readback": {
+    "domain_inbound_average": 256,
+    "domain_inbound_peak": 256,
+    "domain_outbound_average": 128,
+    "kernel_download_bytes_per_second": 256000,
+    "kernel_upload_rate_visible_in_tc_json": false,
+    "throughput_benchmark_performed": false
+  },
+  "mechanism_inputs_sha256": {
+    "scripts/check-kvm-network.py": "9c70e6d94084e56f2e30a84325daa73daec163a2dda4c7962cf10aca4024c539",
+    "scripts/run-kvm-jit-gate-core.sh": "b1ad009fd0db63c03bdc532032293a9332cc48a7df08d943d846d7ae3bbe054d",
+    "scripts/test-kvm-network.py": "2d91966e20605b2cda617a243b08607bc7761166106840eb9fcd6432497bf415"
+  },
+  "files_sha256": {
+    "host-result.json": "48ffde0feec3dc25ac3d058d93a50e49c2a5712922df60da4ab966f2f1f4c441",
+    "network-admission.json": "776b1fba8967e6064cc737f8d8ab85b953ff243c2491c0b977ba61d707e33333",
+    "network-live-domain.xml": "8bc033ed4e4b07a32bdbdaa0a8c64112be42e2e08e17756b3d58b05e033b2ed5",
+    "network-guest-limits.json": "398d5f97b0c855f3b0e943789ce7982ad40d2ce9a6ab131a63a5fae694aa9529",
+    "network-tap-qdisc.json": "0484cc11866056db455fb2227df00be8467f20c17751c92873f03bdb889c4fb8",
+    "network-tap-classes.json": "a6b87c02116660a255fb4b88d5d541175223626676bbb0ea12e719d51719f62a",
+    "network-tap-ingress.json": "49f2cffcf12980e47e6d18f3e4681fd2b5ba2672e88070d4e49c5d504c3ed379",
+    "runner-online.json": "ac2d3af3f2b4aaed16f4e0324954e2df4d1d5dfab7eefc9d08a7732883d4d7a9",
+    "qemu-cpu-policy.json": "b60213e45f35d74af31f58e6bfa1751c4015da826d17aa86f3088ba3647205b4",
+    "host-environment.txt": "1a99bffbb86eb81be05a53d20332133d65456e60b01376f9a3a4d8f7ac5c0749",
+    "libguestfs-runtime.txt": "1acb36510cd445459b4e38623cb1d972d8e380bfb5888930aff207d8ccfaca35",
+    "evidence-sha256.txt": "bf03f10fed476767cd831f5ab1485a16b828f4528a892be9128256eafe5a386b"
+  }
+}

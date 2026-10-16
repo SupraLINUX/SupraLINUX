@@ -1,0 +1,67 @@
+Source: knighttime
+Section: kde
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+XSBC-Original-Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               libkf6config-dev (= 6.30.0-0supralinux4),
+               libkf6coreaddons-dev (= 6.30.0-0supralinux4),
+               libkf6dbusaddons-dev (= 6.30.0-0supralinux3),
+               libkf6holidays-dev (= 6.30.0-0supralinux4),
+               libkf6i18n-dev (= 6.30.0-0supralinux1),
+               pkgconf,
+               qt6-base-dev (>= 6.10.0~),
+               qt6-positioning-dev (>= 6.10.0~),
+Standards-Version: 4.7.2
+Homepage: https://invent.kde.org/plasma/knighttime
+Vcs-Browser: https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/knighttime
+Vcs-Git: https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/knighttime
+
+Package: knighttime
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${shlibs:Depends},
+Description: helpers for scheduling the dark-light cycle for the Plasma desktop
+ The KNightTime provides helpers for scheduling the dark-light cycle. It can be
+ used to implement features such as adjusting the screen color temperature
+ based on time of day, etc. Features
+ .
+ The KNightTime offers a system service that provides the schedule and a client
+ library to subscribe to the updates from the daemon.
+
+Package: knighttime-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libknighttime0 (= ${binary:Version}),
+         qt6-base-dev (>= 6.10.0~),
+         ${misc:Depends},
+Description: dark-light cycle scheduling helpers for Plasma - development files
+ The KNightTime provides helpers for scheduling the dark-light cycle. It can be
+ used to implement features such as adjusting the screen color temperature
+ based on time of day, etc. Features
+ .
+ The KNightTime offers a system service that provides the schedule and a client
+ library to subscribe to the updates from the daemon.
+ .
+ This package contains the development files for the libknighttime shared
+ library.
+
+Package: libknighttime0
+Section: libs
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends},
+Multi-Arch: same
+Description: dark-light cycle scheduling helpers for Plasma - shared library
+ The KNightTime provides helpers for scheduling the dark-light cycle. It can be
+ used to implement features such as adjusting the screen color temperature
+ based on time of day, etc. Features
+ .
+ The KNightTime offers a system service that provides the schedule and a client
+ library to subscribe to the updates from the daemon.
+ .
+ This package contains the shared library.

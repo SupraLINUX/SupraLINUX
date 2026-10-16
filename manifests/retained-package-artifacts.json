@@ -1,0 +1,48 @@
+{
+  "archive_index": "index.json",
+  "archive_index_sha256": "039e1b1cf9548e9051baaf553d6810e2b155b0d260e0ec54c3c44cf6c24e2ee3",
+  "archive_root": ".artifacts/frameworks-6.30",
+  "artifact_count": 65,
+  "binary_count_including_debug": 503,
+  "canonical_package_state_effect": "none",
+  "consumes_package_attempt": false,
+  "kind": "workspace-local-retained-artifact-archive",
+  "legacy_source_gaps": [
+    "extra-cmake-modules"
+  ],
+  "missing_debug_packages": [
+    {
+      "files": [
+        "libkf6attica6-dbgsym_6.30.0-0supralinux2_amd64.ddeb"
+      ],
+      "node": "attica"
+    },
+    {
+      "files": [
+        "libkf6codecs6-dbgsym_6.30.0-0supralinux4_amd64.ddeb"
+      ],
+      "node": "kcodecs"
+    },
+    {
+      "files": [
+        "libkf6dbusaddons-bin-dbgsym_6.30.0-0supralinux3_amd64.ddeb",
+        "libkf6dbusaddons6-dbgsym_6.30.0-0supralinux3_amd64.ddeb"
+      ],
+      "node": "kdbusaddons"
+    },
+    {
+      "files": [
+        "libkf6threadweaver6-dbgsym_6.30.0-0supralinux3_amd64.ddeb"
+      ],
+      "node": "threadweaver"
+    }
+  ],
+  "off_host_backup_verified": false,
+  "requires_github_for_restore": false,
+  "result": "PASS_WITH_LEGACY_SOURCE_GAPS",
+  "schema": 1,
+  "source_complete_artifact_count": 64,
+  "source_manifest": "manifests/kde-dag.json",
+  "source_plan_sha256": "db2bf0f6d31faaaf79a88c017c7e51fcece54dd721f54bcf0c233bee0d350018",
+  "verification_script_sha256": "68537a2f804716a35834747bb8d6ef5c51f10293a13ac3e3650f123128084544"
+}

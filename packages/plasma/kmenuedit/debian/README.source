@@ -1,0 +1,25 @@
+SupraLINUX integrates the unchanged signed official Plasma 6.7.5 source.
+Preserve the authenticated Ubuntu single binary, metadata, icons, translations
+and documentation; BUILD_DOC stays enabled. Source declares no native CTest
+suites. The native-test result is not-applicable, never an invented test PASS.
+
+All direct Frameworks build dependencies are pinned to the reviewed eligible
+29-node, 117-binary closure. Historical scope is preserved; actual reuse checks
+bytes, source package, Debian version and architecture in the KVM lane.
+
+Original Ubuntu preparation compiled the public Qt client and exercised the
+installed menu editor on a closed owned bus and private Xvfb/XDG profile. The
+same client bytes and original fixture run after APT upgrade. Actual operations
+rename a private seed entry, create a submenu and application with exact Exec,
+save menu/desktop/directory files, select through the public D-Bus API, capture
+actual software pixels, close/reopen and edit the persisted entry. The original
+seed remains byte-identical. The fixture explicitly uses ShowMenuBar=true and
+waits for modal sycoca rebuilds on its bare Xvfb server. Input targets require
+the explicit owned display, verified process PID and a mapped window. Metadata
+BadWindow races are tolerated only for reads; invalid focus still fails through
+cleanup. Whole owned groups and runtime are removed on both outcomes.
+
+No launcher program runs. Full desktop/global shortcuts, default hidden-menu-bar
+interaction, cutting/reordering and actual launch integration remain session QA.
+No KDE source patch, Qt substitution or removed product function is introduced.
+Local preparation is not candidate package certification or a package Attempt.

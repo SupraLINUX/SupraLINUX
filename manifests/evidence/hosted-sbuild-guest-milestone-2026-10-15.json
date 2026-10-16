@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "kind": "hosted-ubuntu-guest-sbuild-unshare-mechanism-milestone",
+  "date": "2026-10-15",
+  "state": "PASS",
+  "classification": "mechanism-PASS-not-KDE-package-or-release-proof",
+  "repo": "SupraLINUX/SupraLINUX",
+  "branch": "architecture/bootstrap-v1",
+  "source_commit": "f1f2cb8366dc3edadc5b1d54772c13413475b608",
+  "suite": "ubuntu-26.04-resolute",
+  "architecture": "amd64",
+  "environment": "GitHub-hosted Ubuntu 26.04 runner with QEMU-KVM Ubuntu 26.04 amd64 guest, sbuild 0.91.2ubuntu3",
+  "runner_mechanism": "QEMU-KVM guest overlay, DEP-8 + rootless mmdebstrap/sbuild",
+  "execution": "mmdebstrap --mode=unshare; sbuild --chroot-mode=unshare with non-root guest user",
+  "scope": "source Debian fixture 0.1 clean build and .deb/.changes/.buildinfo identity; no Qt/KDE or APT compatibility claims",
+  "run": {
+    "id": 38750289548,
+    "conclusion": "success",
+    "pr_ci_run_id": 38750025273,
+    "pr_ci_conclusion": "success",
+    "artifact_id": 11981310968,
+    "artifact_digest_sha256": "662b6b308fdd540fc352812a146dd5b4968545ade1a807a65d0d8af1c44410d1",
+    "artifact_retention_days": 30,
+    "autopkgtest_summary_sha256": "8aa5951ad5bd0b763cb76c6f5a283d5fe16f6e2f4540de19d18ff4fe1f871774",
+    "result_marker_sha256": "a9275a925b883a05c1241a99a623d5887286fbba10556170c5f3909ded432c4b",
+    "result": "guest-smoke PASS; rootfs=PASS; host_sbuild=PASS; GUEST_SBUILD_UNSHARE_MECHANISM_PASS"
+  },
+  "snapshot": {
+    "key": "hosted-ubuntu26-qemu-base-v1-2026-W42-07fe81049f1c34f47e14bab9821bd9f73b29501be0a0cfe334abab942497b140",
+    "cache_hit": true,
+    "base_sha256_verified_before_and_after": true,
+    "base_rebuilt": false,
+    "base_resealed": false,
+    "ephemeral_cache": true
+  },
+  "package_attempt_consumed": false,
+  "cli_tools_preflight_3": "pending",
+  "cli_tools_attempt_4": "not-started",
+  "historical_root_mode_infra_invalid_runs": [
+    38700751372,
+    38701383856,
+    38747014708
+  ],
+  "nonroot_host_run": 38747868023,
+  "nonroot_host_result": "PASS",
+  "off_host_release_archive": false,
+  "fixture_binaries_not_retained": true,
+  "boundary": [
+    "Does not certify KDE CLI Tools or any KDE package",
+    "Does not confer authoritative release KVM runner parity",
+    "Do not promote candidate without eligible source/ABI/predecessor input preflight",
+    "Previous root-mode failure remains unexplained",
+    "GitHub cache and artifacts remain ephemeral"
+  ]
+}

@@ -1,0 +1,43 @@
+Source: kwallet-pam
+Section: admin
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               dh-sequence-kf6,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               libgcrypt20-dev (>= 1.5.0~),
+               libpam0g-dev,
+               pkgconf,
+               qt6-base-dev,
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/kwallet-pam
+Vcs-Browser: https://github.com/SupraLINUX/SupraLINUX/tree/architecture/bootstrap-v1/packages/plasma/kwallet-pam
+Vcs-Git: https://github.com/SupraLINUX/SupraLINUX.git
+Rules-Requires-Root: no
+
+Package: libpam-kwallet-common
+Architecture: all
+Depends: socat, ${misc:Depends},
+Description: KWallet integration with PAM (common files)
+ The KDE Wallet system provides a secure way to store passwords and other
+ secret information, allowing the user to remember only a single KDE Wallet
+ password instead of numerous different passwords and credentials.
+ .
+ This package provides the common files needed by all versions
+ of the PAM integration.
+
+Package: libpam-kwallet5
+Architecture: any
+Depends: libpam-kwallet-common (= ${source:Version}),
+         kwallet6,
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: KWallet integration with PAM
+ The KDE Wallet system provides a secure way to store passwords and other
+ secret information, allowing the user to remember only a single KDE Wallet
+ password instead of numerous different passwords and credentials.
+ .
+ This package provides a simple PAM integration for KWallet, so you can log in
+ to open a KWallet.

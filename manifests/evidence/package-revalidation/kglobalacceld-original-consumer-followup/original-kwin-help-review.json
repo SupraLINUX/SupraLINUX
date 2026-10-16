@@ -1,0 +1,26 @@
+{
+  "state": "PASS",
+  "scope": "read-only help of authenticated original Ubuntu KWin in owned Xvfb/DBus; no compositor, hardware or candidate transition certification",
+  "package_version": "4:6.6.6-0ubuntu0.1",
+  "executable_sha256": "31858ca3969a93efff4909693db543444bd52286dd5f9eb945bc2df5b6d3dbf3",
+  "command": [
+    "kwin_wayland",
+    "--help"
+  ],
+  "returncode": 0,
+  "owned_resource_cleanup": "PASS",
+  "supported_probe_options": [
+    "--virtual",
+    "--socket",
+    "--width",
+    "--height",
+    "--exit-with-session"
+  ],
+  "compositor_runtime": "NOT RUN",
+  "candidate_transition_admitted": false,
+  "canonical_effect": "none",
+  "files_sha256": {
+    "original-kwin-owned-help-20261009.stdout": "fa4ba234346a5ca4192d5fc757edce386169ac428bc0b3ae4c1764524ccce344",
+    "original-kwin-owned-help-20261009.stderr": "c61e96a9178ab73232e305dd710a4640e3b6782d3bdc2b38f9b145713b8690a9"
+  }
+}

@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(kconfig_consumer LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+find_package(KF6Config 6.30.0 REQUIRED)
+add_executable(kconfig-consumer main.cpp)
+target_link_libraries(kconfig-consumer PRIVATE KF6::ConfigCore KF6::ConfigGui KF6::ConfigQml)

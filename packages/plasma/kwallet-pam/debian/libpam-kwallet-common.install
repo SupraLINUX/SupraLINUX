@@ -1,0 +1,3 @@
+etc/xdg/autostart/pam_kwallet_init.desktop
+usr/lib/systemd/user/plasma-kwallet-pam.service
+usr/share/libpam-kwallet-common/

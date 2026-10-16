@@ -1,0 +1,30 @@
+{
+  "state": "PASS",
+  "kind": "actual-build-predecessor-version-verification",
+  "source_package": "kwayland",
+  "version": "4:6.7.5-0supralinux2",
+  "build_architecture": "amd64",
+  "available_predecessor_count": 2,
+  "required_direct_predecessors": [
+    "extra-cmake-modules",
+    "plasma-wayland-protocols"
+  ],
+  "installed_predecessors": [
+    {
+      "package": "extra-cmake-modules",
+      "node": "extra-cmake-modules",
+      "version": "6.30.0-0supralinux3",
+      "architecture": "all"
+    },
+    {
+      "package": "plasma-wayland-protocols",
+      "node": "plasma-wayland-protocols",
+      "version": "1.22.0-0supralinux1",
+      "architecture": "all"
+    }
+  ],
+  "available_predecessors_not_installed": [],
+  "complete_available_input_transport": "certified separately by the infrastructure consumer",
+  "control_sha256": "03c2b38eb5a867aa0b65cd7040d68217303b10e4358af3d224e495a06c066ae2",
+  "buildinfo_sha256": "eaf633ab63d5ea2e860c2b27d19e6c4fb3981dc87e0e6a5e459ac1a2d24f6d23"
+}

@@ -1,0 +1,23 @@
+{
+  "state": "PASS",
+  "scope": "unchanged original Ubuntu runtime/compiled public SDK client and private sensor provider with revised HOME/cleanup fixture; no SDK recompilation or candidate/native certification",
+  "versions": "libksysguardformatter2 4:6.6.5-0ubuntu0.1 amd64\nlibksysguardsensorfaces2 4:6.6.5-0ubuntu0.1 amd64\nlibksysguardsensors2 4:6.6.5-0ubuntu0.1 amd64\nlibksysguardsystemstats2 4:6.6.5-0ubuntu0.1 amd64\nlibprocesscore10 4:6.6.5-0ubuntu0.1 amd64\n",
+  "client_sha256": "ff0ad957ecef089b0b2ad5e58bc9d1b508d0dbc8bad16b7189e47d617bbbd9e6",
+  "provider_sha256": "503297180e41a4fc938694afa9e5f93b8286a0506056f5c3c90e6b512e05831c",
+  "run_private_sha256": "1b81e187c146b4f463972e47f779c31dd51e9402b676f2495d0707b7af80a912",
+  "returncode": 0,
+  "cleanup_marker": "Owned sensor provider and D-Bus daemon reaped; runtime directory removed",
+  "metadata_collection_followup": "Client execution completed successfully and passed its returncode assertion before the first reporting query failed on a nonexistent package name. Reporting corrected to the actual libprocesscore10 binary; no test rerun or result change.",
+  "candidate_execution": "NOT RUN",
+  "native_execution": "NOT RUN",
+  "package_attempt_consumed": false,
+  "results_files_sha256": {
+    "actual-interface.txt": "c925569475582ac73bf2d62374b2fd438a5e13f3ee3dca6ead52e1631db52d48",
+    "client-stderr": "c61a1ddd8e716dcda2d5aaa17753b8d7b102776ecd39804de3bbead279ab3a97",
+    "provider-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bus-stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "client-stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "provider-stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sensor-face.png": "2d449314bc1b826eb66a754965585e781ec344969d3d4c051c8a461c576eb0c4"
+  }
+}

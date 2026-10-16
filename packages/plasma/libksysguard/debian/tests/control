@@ -1,0 +1,3 @@
+Tests: ubuntu-abi-client consumer
+Depends: @, build-essential, cmake, libsensors-dev, qt6-base-dev, qt6-declarative-dev, qt6-qpa-plugins, fonts-dejavu-core, python3, dbus, libglib2.0-bin, binutils
+Restrictions: needs-root, allow-stderr

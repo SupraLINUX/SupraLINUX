@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "scope": "reviewed-ubuntu-baseline-preflight",
+  "node": "libkscreen",
+  "state": "PASS",
+  "exit_code": 0,
+  "source_commit": "e8b8daf0d0a6c3a41166beb8b0d326bdb59ed798",
+  "workflow_run_id": "37819092001",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "candidate_installed": false,
+  "inputs_sha256": {
+    "scripts/probe-reviewed-ubuntu-baseline.py": "242b1ad8d6e85027155391d11747f1d2cee77a9a8371bb6d1f4d57d4731dc03b",
+    "scripts/plasma-package-testing.py": "1ce68a6a5cfecd43b93943235cddb8a57b00aa531a02b9174cc2363d6650dfbb",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "packages/plasma/libkscreen/debian/tests/baseline-setup": "773c238a97285b7298b7925befaa029f5cc5224529c74a42e9ad7f58a9f9fcb9",
+    "packages/plasma/libkscreen/debian/tests/client/CMakeLists.txt": "e423f65a208956321b11379d896ccefa3e1d9577d9531592069457c3acc0d1bf",
+    "packages/plasma/libkscreen/debian/tests/client/main.cpp": "81f3c7d91100dbeb94a7955394933cb877ec6b5ef44b1bd7fe479c1ac093e510",
+    "packages/plasma/libkscreen/debian/tests/client/profile.json": "f58f4fb95b40fdeffc497019208a9d9d283c5008a76251415033e0b95b508898",
+    "packages/plasma/libkscreen/debian/tests/client/run-private.py": "c4989e20a147deb1c508a5db44fe07c1fa138612610f8de02d01565cce6320ff",
+    "packages/plasma/libkscreen/debian/tests/consumer": "7659a133444640553ffeca058ebeb4c33ef7cbc74d553799b781315a2394cbee",
+    "packages/plasma/libkscreen/debian/tests/control": "b5389a5f913a651f6603d4e42e987581ea824789776d082f77fe20d6779caf55",
+    "packages/plasma/libkscreen/debian/tests/ubuntu-abi-client": "c633c8a1ab4f4d8af8a1afbef12c4ed98bec167e71600719d078826752c82cce",
+    "packages/plasma/libkscreen/debian/tests/upstream-session": "30a934a1e7f4703aaa51ad3b0eb36b55bf739361488cbd7381254c9e0d143d94"
+  },
+  "files_sha256": {
+    "autopkgtest/log": "4e73993497751106ae91d1ffc1e643a44147c9fca8cee94d6527cf895435883b",
+    "autopkgtest/reviewed-baseline-packages": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/reviewed-baseline-stdout": "d3b4cc1ff51e072e6cdc994df4920876c3641850e045eb736371c334bd043401",
+    "autopkgtest/summary": "36e1952a68e082ee9b1d71c36e7ee1d26054668b01a97ed5e481b3e31a7962e2",
+    "autopkgtest/testbed-packages": "0cf6e4db8b2f214312bba11b65e0fefc82949cb2396a194a958c278a012b386a",
+    "autopkgtest/testinfo.json": "92f4607e1b393552e0d84437d7ad822c8b4ae4d2b2e4a3174dddb6ab18865040",
+    "baseline-setup": "773c238a97285b7298b7925befaa029f5cc5224529c74a42e9ad7f58a9f9fcb9",
+    "reviewed-inputs.json": "939bc35c9a33cb23b65906c3fdd9ad0a88069774d48a0bce4504578aa9faf8db",
+    "setup-commands.txt": "e55ec7ac993cd3a7a87369d7bd37d22fbe09af7847b879a5af034269ad01972c"
+  }
+}

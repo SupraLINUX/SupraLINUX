@@ -1,0 +1,16 @@
+SupraLINUX ksshaskpass
+
+Official signed source remains unchanged. Preserve the Ubuntu epoch, openssh
+dependency, ssh-askpass alternatives priority/manpage slave, and documentation.
+Upstream now uses QtKeychain rather than linking directly to KWallet. Required
+Frameworks inputs are frozen; Qt and QtKeychain come from Ubuntu.
+
+The private offscreen fixture is built against Ubuntu Qt before upgrade. It
+interposes only Qt dialog/event-loop entrypoints to schedule public widget input
+and button clicks, then calls the original event loops and application result
+handling. Password masking, cancellation and OpenSSH confirm/none prompt modes
+must match real Ubuntu behavior. No return result or keychain data is fabricated.
+The prompts never request wallet lookup or storage. D-Bus, HOME/XDG directories
+and subprocess groups are private; input/output is synthetic. Consumer tests
+rebuild the fixture after upgrade. Local Ubuntu preparation does not certify the
+candidate; real KDE/SSH/keychain session integration remains a separate gate.

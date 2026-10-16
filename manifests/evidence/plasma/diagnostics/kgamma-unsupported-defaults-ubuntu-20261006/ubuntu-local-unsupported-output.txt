@@ -1,0 +1,3 @@
+KGamma: Unable to query gamma correction
+Unsupported controls: buttons=7 defaults=0 needsSave=0
+Invoking exposed default action

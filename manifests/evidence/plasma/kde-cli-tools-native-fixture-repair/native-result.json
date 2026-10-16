@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "state": "NATIVE_CONTROL_MATRIX_COMPLETED",
+  "scope": "Private execution of exact staged native launcher/cache helper, complete unchanged ten native CLI rows with original frozen native binary and providers. Launcher owns HOME/XDG/private bus and waits only after successful real helper calls; no package Attempt, upstream patch or candidate certification.",
+  "canonical_effect": "none",
+  "package_attempt_consumed": false,
+  "checks": {
+    "unchanged_critical_inputs_before": "PASS",
+    "guest_loader_prerequisites": "PASS",
+    "unchanged_critical_inputs_after": "PASS"
+  },
+  "controls": {
+    "exact-staged-native-launcher": {
+      "state": "PASS",
+      "exit_code": 0,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "blacklisted": 0,
+      "mime_settle_seconds": 0,
+      "precreate_qt_test_directories": false,
+      "fixture_files": {},
+      "tool_extra_arguments": {},
+      "tool_settle_seconds": {},
+      "native_launcher": "staged-tests/upstream-session",
+      "failed_functions": [],
+      "all_source_assertions_unchanged": true
+    }
+  }
+}

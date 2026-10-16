@@ -1,0 +1,6 @@
+provider=debian
+reference_version=6.28.0
+workflow_run=34708030450
+artifact_id=10301938362
+path=trees/debian/kcalendarcore/debian/copyright
+sha256=578646ab9522f3decfc3f64fa153f599f9004c213e5df03c21b5ee31e2584d13

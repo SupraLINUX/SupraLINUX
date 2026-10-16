@@ -1,0 +1,8 @@
+wayland-protocols:
+  Installed: 1.47-1
+  Candidate: 1.47-1
+  Version table:
+ *** 1.47-1 500
+        500 http://archive.ubuntu.com/ubuntu resolute/main amd64 Packages
+        500 http://archive.ubuntu.com/ubuntu resolute/main i386 Packages
+        100 /var/lib/dpkg/status

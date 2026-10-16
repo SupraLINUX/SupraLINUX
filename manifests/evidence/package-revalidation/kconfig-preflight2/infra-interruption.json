@@ -1,0 +1,11 @@
+{
+  "scope": "agent-observed-preflight-infrastructure-interruption",
+  "reason": "Autopkgtest runcmd remains blocked in KVM asynchronous page-fault wait after the client and configuration migration printed PASS. Balloon reduction to 8 GiB did not recover it.",
+  "at": "2026-10-05T15:03:36.156281+00:00",
+  "target_pid": 1679,
+  "target_process": "autopkgtest",
+  "signal": "SIGTERM",
+  "observed_wait": "kvm_async_pf_task_wait_schedule",
+  "package_attempt_consumed": false,
+  "candidate_installed": false
+}

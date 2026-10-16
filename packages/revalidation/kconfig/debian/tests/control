@@ -1,0 +1,7 @@
+Tests: ubuntu-abi-client, consumer
+Depends: @, build-essential, cmake, binutils, dbus-daemon, qt6-qpa-plugins, qml6-module-qtqml, qml6-module-qtqml-models
+Restrictions: needs-root, allow-stderr
+
+Tests: retained-upgrade
+Depends: build-essential, cmake, binutils, dbus-daemon, qt6-qpa-plugins, qml6-module-qtqml, qml6-module-qtqml-models
+Restrictions: needs-root, allow-stderr

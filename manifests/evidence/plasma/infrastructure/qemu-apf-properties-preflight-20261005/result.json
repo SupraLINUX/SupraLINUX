@@ -1,0 +1,29 @@
+{
+  "state": "PASS",
+  "scope": "local-QEMU-CPU-property-preflight; not full KVM build certification",
+  "flags": {
+    "kvm-asyncpf": false,
+    "kvm-asyncpf-int": false
+  },
+  "command": [
+    "qemu-system-x86_64",
+    "-machine",
+    "q35,accel=kvm",
+    "-m",
+    "128",
+    "-cpu",
+    "host",
+    "-nodefaults",
+    "-display",
+    "none",
+    "-S",
+    "-qmp",
+    "stdio",
+    "-global",
+    "host-x86_64-cpu.kvm-asyncpf=off",
+    "-global",
+    "host-x86_64-cpu.kvm-asyncpf-int=off"
+  ],
+  "qemu_version": "QEMU emulator version 10.2.1 (Debian 1:10.2.1+ds-1ubuntu3.2)",
+  "stderr": ""
+}

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "plasma-activities",
+      "package_version": "6.7.5-0supralinux1",
+      "artifact_id": 11360225929,
+      "workflow_run_id": 37342986284,
+      "artifact_sha256": "a5dc17991834c035236668339250a1790d5e6cc06e35d91279f23a5bbad7b3c8",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

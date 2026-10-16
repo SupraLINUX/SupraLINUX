@@ -1,0 +1,190 @@
+{
+  "schema": 1,
+  "batch": "tier2-batch-5",
+  "lane": "kmime-frameworks-transition-clean-build",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "frameworks_series": "6.30.0",
+  "state": "PASS",
+  "canonical_snapshot": "15 PASS / 0 pending / 0 current FAIL / 0 BLOCKED",
+  "selected_nodes": [
+    "kmime"
+  ],
+  "scheduling": {
+    "fail_fast": false,
+    "independent_nodes": true,
+    "shared_resolute_rootfs": true,
+    "shared_retained_input_bundle": true,
+    "only_pass_predecessor_artifacts": true
+  },
+  "semantics": {
+    "pre_sbuild_failure": "INFRA",
+    "package_attempt_begins": "immediately-before-sbuild",
+    "blocked_is_not_fail": true,
+    "fail_requires": "node-owned-root-cause",
+    "post_sbuild_failure": "root-cause-classification-required",
+    "pass_requires": [
+      "clean-sbuild",
+      "nonzero-ctest-pass",
+      "exact-binary-set",
+      "lintian-errors-pass",
+      "abi-soname",
+      "apt-runtime-closure",
+      "cmake-consumer-smoke",
+      "all-predecessor-buildinfo-proof",
+      "legacy-runtime-coinstallation",
+      "no-fake-legacy-abi-metadata"
+    ],
+    "stable_promotion_requires_explicit_user_approval": true
+  },
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "artifact_sha256": "181ea1434e803453d61d345a28adeba5ad9cee09a7c93948c6ce3ef1214984ff",
+      "debs": {
+        "extra-cmake-modules": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+      }
+    }
+  },
+  "retained_predecessors": {
+    "kcodecs": {
+      "version": "6.30.0-0supralinux4",
+      "workflow_run": 34716761551,
+      "artifact_id": 10305050385,
+      "artifact_sha256": "d83b29f7ee32e4f170d15bd9f36caa643ab3a0a7b357496071d198e8b366fe45",
+      "dev_package": "libkf6codecs-dev",
+      "debs": {
+        "libkf6codecs-data": "70f2197d5fa6f475d2d414ef9a13a3e885bceee73e7dcf95983f3a3313565c24",
+        "libkf6codecs-dev": "87be51ba7f3ea8813e1ce61b3c6975b312db9c62d24f41e0909edb4d344f92dd",
+        "libkf6codecs-doc": "a84b0b5a59e9e0098975d5e247910ab5d2d65b42b85076f02ce7b17c4907337a",
+        "libkf6codecs6": "66b34b1ec140e1942d906c4e8537661bd540f959277e41de9a772e1e0956be13"
+      }
+    }
+  },
+  "nodes": {
+    "kmime": {
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "source_package": "kf6-kmime",
+      "upstream_version": "6.30.0",
+      "source_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+      "package_version": "6.30.0-0supralinux1",
+      "expected_binary_packages": [
+        "libkf6mime-data",
+        "libkf6mime-dev",
+        "libkf6mime6"
+      ],
+      "runtime_package": "libkf6mime6",
+      "dev_package": "libkf6mime-dev",
+      "soname": "libKF6Mime.so.6",
+      "cmake_package": "KF6Mime",
+      "cmake_target": "KF6::Mime",
+      "python_module": null,
+      "qml_packages": [],
+      "extra_abi_contracts": [],
+      "predecessors": [
+        "kcodecs"
+      ],
+      "package_dependency_closure": [],
+      "materialization": {
+        "workflow_run": 35687009946,
+        "run_attempt": 2,
+        "job_id": 106616152530,
+        "artifact_id": 10677073138,
+        "artifact_sha256": "539745b0f656efeed14c703f6cfb23670bfc8f79d07d270991dde5eafe2f6ea4",
+        "tree_sha256": "eecfc8d314ff8ff9715c561c7c9be1c2c4c5f239ca6c563214eeaee33bf50ba6",
+        "debian_tree_sha256": "65f384007ae703c2480b297cea68843fe32d11f5c6deb51eee9e2dc911559820",
+        "dsc_sha256": "f646a30a01e0bfce647cceb2869bb3316a2414f09a16c3d7c4f965690fd1a7b3",
+        "debian_tar_sha256": "fa598699697f8a835f69935aab534da3e664f1eec955e6d56273495c8be878f3",
+        "orig_tar_sha256": "2969a5ef484e98f91bf78e88c98a9d613bdd3bb86ac154ceece0557b70f373bc",
+        "package_version": "6.30.0-0supralinux1",
+        "package_attempted": false,
+        "package_state_effect": "none"
+      },
+      "compatibility": {
+        "legacy_runtime_package": "libkpim6mime6",
+        "legacy_data_package": "libkmime-data",
+        "legacy_runtime_soname": "libKPim6Mime.so.6",
+        "legacy_source_version": "25.12.3-0ubuntu1",
+        "runtime_coinstallation_required": true,
+        "fake_abi_metadata_forbidden": true,
+        "audit_status": "PASS",
+        "stock_provider_observation": {
+          "legacy_packages": [
+            "libkpim6mime6",
+            "libkmime-data"
+          ],
+          "solver_action": "removes-frameworks-provider",
+          "removed_packages": [
+            "libkf6mime-data",
+            "libkf6mime-dev",
+            "libkf6mime6"
+          ],
+          "framework_metadata_gate": "PASS",
+          "framework_build_and_tests": "PASS"
+        },
+        "audit_evidence": {
+          "workflow_run": 35690284355,
+          "job_id": 106625630885,
+          "artifact_id": 10678073973,
+          "artifact_sha256": "7b0c9175b1e0f48eb1d18e9ceb1af03381c4de8d0b322bc619dd7be224307c5b"
+        },
+        "provider_status": "PASS",
+        "provider_manifest": "manifests/kde-tier2-kmime-legacy-provider.json"
+      },
+      "last_failure_evidence": {
+        "result": "INFRA",
+        "workflow_run": 35687831684,
+        "run_attempt": 2,
+        "job_id": 106619132039,
+        "artifact_id": 10677716050,
+        "artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36",
+        "rootfs_artifact_id": 10677870006,
+        "rootfs_artifact_sha256": "14bce5a6b91833dcbc0531492cbd7e46127c7baa9da8b58d16b3d4b7fa905dd5",
+        "package_attempted": true,
+        "sbuild_started": true,
+        "stage": "legacy-runtime-coinstallation",
+        "package_state_effect": "none",
+        "tests": "17/17 PASS",
+        "lintian": "PASS-errors",
+        "consumer_smoke": "PASS",
+        "legacy_abi_metadata": "PASS",
+        "cause": "Installing Ubuntu Resolute libkpim6mime6 + libkmime-data causes APT to remove libkf6mime-data, libkf6mime-dev and libkf6mime6. The Frameworks package itself built and validated successfully; the unresolved defect is the stock legacy-provider packaging/co-installation contract."
+      },
+      "pass_evidence": {
+        "result": "PASS",
+        "framework_build": {
+          "workflow_run": 35687831684,
+          "run_attempt": 2,
+          "job_id": 106619132039,
+          "artifact_id": 10677716050,
+          "artifact_sha256": "ffd9f73bc684c4ca7e42f90448694381917dfd1d4ccf5f99f2d0629b17e6eb36",
+          "tests": "17/17 PASS",
+          "lintian": "PASS-errors",
+          "apt_check": "PASS",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6Mime.so.6"
+        },
+        "compatibility_provider": {
+          "workflow_run": 35691309612,
+          "job_id": 106628834481,
+          "artifact_id": 10679420779,
+          "artifact_sha256": "f77517f13eab6a282d6050cb738f78b233a9392c076a23d54131073468d2ad4b",
+          "package_version": "25.12.3-0ubuntu1+supralinux1",
+          "coinstallation": "PASS",
+          "apt_check": "PASS",
+          "legacy_consumer": "PASS",
+          "framework_consumer": "PASS"
+        }
+      }
+    }
+  },
+  "activation": {
+    "status": "PASS",
+    "reason": "framework-build-plus-compatibility-provider-closure-pass",
+    "package_state_effect": "none"
+  }
+}

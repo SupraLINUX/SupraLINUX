@@ -1,0 +1,13 @@
+{
+  "kind": "build-predecessor-verification-false-negative",
+  "original_buildinfo_path": "packages/plasma-thunderbolt_6.7.5-0supralinux1_amd64.buildinfo",
+  "files_sha256": {
+    "package.buildinfo": "5bb92d226bb7c94a2a9d17d5b2c0f2295f144b2c6899aaee0e8b90d90e2089e4",
+    "source-control": "f403d905c2ae21f2d4392b94d99864730e797e848c849b830fb959664ac10cbc",
+    "build-predecessors.json": "e3e970abce4ee641e93849e946e346b64a459245ca8d7392b0d165ee39a04e0a"
+  },
+  "original_state": "FAIL",
+  "original_result_sha256": "750ebee66808cffd180381418256ed59cfe84b34fb7bd6a438488fcb54f27838",
+  "candidate_outputs_retained": true,
+  "package_result": "incomplete; requires remaining package tests"
+}

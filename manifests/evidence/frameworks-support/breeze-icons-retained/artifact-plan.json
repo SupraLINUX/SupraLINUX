@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "artifact_id": 10682012012,
+      "artifact_sha256": "daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577",
+      "node": "breeze-icons",
+      "package_version": "4:6.30.0-0supralinux1",
+      "payload_prefix": ""
+    }
+  ],
+  "kind": "retained-support-predecessor-artifact-plan",
+  "schema": 1
+}

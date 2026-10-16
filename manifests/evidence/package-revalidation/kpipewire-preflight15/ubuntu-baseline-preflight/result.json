@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "scope": "reviewed-ubuntu-baseline-preflight",
+  "node": "kpipewire",
+  "state": "INFRA_INVALID",
+  "exit_code": 16,
+  "source_commit": "7b39ada44a387984a23af11cc05204bfb36b2ec3",
+  "workflow_run_id": "37529687593",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "candidate_installed": false,
+  "inputs_sha256": {
+    "scripts/probe-reviewed-ubuntu-baseline.py": "a18a4681da1cdc4f6736f18bbe806a8a44acb2b80a4d56eccda53a33d04de04c",
+    "scripts/plasma-package-testing.py": "3243b06c833cf3c583aeca5552aa577fcc1f0c1c3a868ca7b143c8ca2c71f25e",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "packages/plasma/kpipewire/debian/tests/baseline-setup": "e0611afa074a6cfcba85149378f6a87104214de472e4567f471531a2654fe868",
+    "packages/plasma/kpipewire/debian/tests/client/CMakeLists.txt": "d101b5389d40130e886f1b35eeb94112a44f640b2e16f85b866844d1f584adb2",
+    "packages/plasma/kpipewire/debian/tests/client/client.conf": "64ddc09e4be561b49df18ac6909ca849db40482b801f2521c9227061d4a003e2",
+    "packages/plasma/kpipewire/debian/tests/client/main.cpp": "978a172186732bb1a5ad7f1acf7f6c68bafc28a656eb7e312a0e3bd05c2a4b59",
+    "packages/plasma/kpipewire/debian/tests/client/private-pipewire.conf": "95e50cd629ca8e4b2bc4f19ccf1189d7ef11bfebaffefa06ae6f8a1061c237ee",
+    "packages/plasma/kpipewire/debian/tests/client/run-private-video.py": "fd6b127188f3e6d1dc38612bc197e6400d5797721fc53dc6ec52217319ed4b82",
+    "packages/plasma/kpipewire/debian/tests/client/video-source.c": "6b5e5f03a6df35a782f7cc48b045d2dbb2f008462170dd387c90e6f06e55add4",
+    "packages/plasma/kpipewire/debian/tests/consumer": "94914848ce4015634d452a12b44fd5024483d5288ab1bacb428827d6365a7d62",
+    "packages/plasma/kpipewire/debian/tests/control": "b460aab122c68c8b67bab52c96ef5dd6b035ba1c7edd95101d3dc4a0747adf4b",
+    "packages/plasma/kpipewire/debian/tests/ubuntu-abi-client": "99c9e567363d6f14a90435c67ca662a421dedb1927794890a8b413de1c790257",
+    "packages/plasma/kpipewire/debian/tests/upstream-session": "f4e81f2437e3e38f1c420e6f2d67f45c1631c8acb76413fa9d1e977c1c26e4e2"
+  },
+  "files_sha256": {
+    "autopkgtest/log": "60971a99208cfc194bac0d19dcb0d097b000ad8bc81da23a67cd9e3c8250c504",
+    "autopkgtest/summary": "28c3bc0a5634f3b1b0c584fa68e9101beb6086e2f6d7a14c3a2a657bfd3191ac",
+    "autopkgtest/testinfo.json": "cffb0ec3759dd141ae49f3f26f3b6111d6d6ac611b3d66f078a611754876d8ae",
+    "baseline-setup": "e0611afa074a6cfcba85149378f6a87104214de472e4567f471531a2654fe868",
+    "reviewed-inputs.json": "61de38d5d19b6b6dad76246b9283c1d400c7b63576bf1ba5e63a54e1b9b9b9cb",
+    "setup-commands.txt": "7e7296efa77e3f61b121cf59aa0d4adb011f8c4842fc34d031337f980e6de4c5"
+  }
+}

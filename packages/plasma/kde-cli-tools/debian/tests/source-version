@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Check installed binaries against the exact authenticated Debian source version.
+# This file is sourced by both DEP-8 consumers from their unpacked source tree.
+source_version_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+expected_package_version="$(dpkg-parsechangelog --file="${source_version_dir}/../changelog" --show-field=Version)"
+if [[ -z "${expected_package_version}" ]]; then
+    echo "Missing candidate source version" >&2
+    exit 1
+fi
+for candidate_binary in kde-cli-tools kde-cli-tools-data; do
+    installed_package_version="$(dpkg-query -W -f='${Version}' "${candidate_binary}")"
+    if [[ "${installed_package_version}" != "${expected_package_version}" ]]; then
+        printf 'Version mismatch: %s installed=%s source=%s\n' \
+            "${candidate_binary}" "${installed_package_version}" "${expected_package_version}" >&2
+        exit 1
+    fi
+done

@@ -1,0 +1,1267 @@
+NOTE: This is only a simulation!
+      apt-get needs root privileges for real execution.
+      Keep also in mind that locking is deactivated,
+      so don't depend on the relevance to the real current situation!
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Solving dependencies...
+The following additional packages will be installed:
+  adduser assistant-qt6 base-passwd debconf designer-qt6 dirmngr docbook-xml
+  docbook-xsl fontconfig fontconfig-config fonts-dejavu-core fonts-dejavu-mono
+  gcc-16-base gettext gettext-base gir1.2-glib-2.0 gir1.2-glib-2.0-dev
+  gir1.2-gudev-1.0 girepository-tools gnupg gpg gpg-agent gpgconf gpgsm
+  hicolor-icon-theme iso-codes kded6 libacl1 libasound2-data libasound2t64
+  libassuan9 libatomic1 libattr1 libaudit-common libaudit1 libavahi-client3
+  libavahi-common-data libavahi-common3 libb2-1 libblkid-dev libblkid1
+  libbrotli-dev libbrotli1 libbsd0 libbz2-1.0 libbz2-dev libc-dev-bin
+  libc-gconv-modules-extra libc6 libc6-dev libcanberra0 libcap-ng0
+  libclang-cpp21 libclang1-21 libcom-err2 libcrypt1 libcups2t64
+  libcurl3t64-gnutls libdb5.3t64 libdbus-1-3 libdebconfclient0
+  libdouble-conversion3 libdrm-amdgpu1 libdrm-common libdrm-intel1 libdrm2
+  libduktape207 libedit2 libegl-mesa0 libegl1 libelf1t64 libevdev-dev
+  libevdev2 libexpat1 libexpat1-dev libffi-dev libffi8 libfontconfig-dev
+  libfontconfig1 libfreetype-dev libfreetype6 libgbm1 libgcc-s1 libgcrypt20
+  libgdbm-compat4t64 libgdbm6t64 libgio-2.0-dev libgio-2.0-dev-bin
+  libgirepository-2.0-0 libgl-dev libgl1 libgl1-mesa-dri libglib2.0-0t64
+  libglib2.0-bin libglib2.0-data libglib2.0-dev libglib2.0-dev-bin libglvnd0
+  libglx-dev libglx-mesa0 libglx0 libgmp10 libgnutls30t64 libgomp1
+  libgpg-error0 libgpgme45 libgpgmepp7 libgraphite2-3 libgssapi-krb5-2
+  libgudev-1.0-0 libgudev-1.0-dev libharfbuzz0b libhogweed6t64 libice6
+  libicu78 libidn2-0 libimobiledevice-1.0-6 libimobiledevice-glue-1.0-0
+  libinput-bin libinput-dev libinput10 libjpeg-turbo8 libjpeg8 libk5crypto3
+  libkeyutils1 libkf6configwidgets-data libkf6configwidgets-dev
+  libkf6configwidgets6 libkrb5-3 libkrb5support0 libksba8 libldap-common
+  libldap2 libllvm21 libltdl7 liblzma5 libmd0 libmd4c0 libmount-dev libmount1
+  libmtdev-dev libmtdev1t64 libncursesw6 libnettle8t64 libnghttp2-14
+  libnpth0t64 libogg0 libopengl-dev libopengl0 libp11-kit0 libpam-modules
+  libpam-modules-bin libpam0g libpciaccess0 libpcre2-16-0 libpcre2-32-0
+  libpcre2-8-0 libpcre2-dev libpcre2-posix3 libperl5.40 libpkgconf7
+  libplist-2.0-4 libpng-dev libpng16-16t64 libproxy1v5 libpsl5t64
+  libpyside6-py3-6.10 libpython3-stdlib libpython3.14 libpython3.14-minimal
+  libpython3.14-stdlib libqca-qt6-2 libqca-qt6-dev libqca-qt6-plugins
+  libqt6concurrent6 libqt6core5compat6 libqt6core6t64 libqt6dbus6
+  libqt6designer6 libqt6designercomponents6 libqt6gui6 libqt6help6
+  libqt6labsplatform6 libqt6labssynchronizer6 libqt6network6 libqt6opengl6
+  libqt6openglwidgets6 libqt6printsupport6 libqt6qml6 libqt6qmlcompiler6
+  libqt6qmlmeta6 libqt6qmlmodels6 libqt6qmlnetwork6 libqt6qmlworkerscript6
+  libqt6quick6 libqt6quickcontrols2-6 libqt6quickshapes6
+  libqt6quickshapesdesignhelpers6 libqt6quicktemplates2-6 libqt6quicktest6
+  libqt6quickvectorimage6 libqt6quickvectorimagegenerator6
+  libqt6quickvectorimagehelpers6 libqt6quickwidgets6 libqt6sql6
+  libqt6sql6-sqlite libqt6svg6 libqt6svgwidgets6 libqt6test6 libqt6uitools6
+  libqt6waylandclient6 libqt6waylandcompositor6
+  libqt6waylandcompositoriviapplication6
+  libqt6waylandcompositorpresentationtime6 libqt6waylandcompositorwlshell6
+  libqt6waylandcompositorxdgshell6 libqt6widgets6 libqt6wlshellintegration6
+  libqt6xml6 libreadline8t64 librtmp1 libsasl2-2 libsasl2-modules-db
+  libsecret-1-0 libsecret-common libselinux-dev libselinux1 libsemanage-common
+  libsemanage2 libsensors-config libsensors5 libsepol-dev libsepol2
+  libshiboken6-py3-6.10 libsm6 libsqlite3-0 libssh2-1t64 libssl3t64 libstdc++6
+  libsysprof-capture-4-dev libsystemd0 libtasn1-6 libtdb1 libtinfo6 libts0t64
+  libudev-dev libudev1 libunistring5 libusbmuxd-2.0-7 libuuid1 libvorbis0a
+  libvorbisfile3 libvulkan-dev libvulkan1 libwacom-common libwacom-dev
+  libwacom9 libwayland-bin libwayland-client0 libwayland-cursor0
+  libwayland-dev libwayland-egl1 libwayland-server0 libx11-6 libx11-data
+  libx11-dev libx11-xcb1 libxau-dev libxau6 libxcb-cursor0 libxcb-dri3-0
+  libxcb-glx0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-present0
+  libxcb-randr0 libxcb-render-util0 libxcb-render0 libxcb-res0 libxcb-shape0
+  libxcb-shm0 libxcb-sync1 libxcb-util1 libxcb-xfixes0 libxcb-xinput0
+  libxcb-xkb1 libxcb1 libxcb1-dev libxdmcp-dev libxdmcp6 libxext6 libxfixes3
+  libxkbcommon-dev libxkbcommon-x11-0 libxkbcommon0 libxml2-16 libxml2-utils
+  libxshmfence1 libxslt1.1 libxxf86vm1 libzstd1 linguist-qt6 linux-libc-dev
+  login.defs lsb-base media-types mesa-libgallium native-architecture netbase
+  openssl-provider-legacy passwd perl perl-base perl-modules-5.40
+  pinentry-curses pkgconf pkgconf-bin python3 python3-minimal
+  python3-packaging python3-pyside6.qtcore python3-pyside6.qtgui
+  python3-pyside6.qtwidgets python3.14 python3.14-minimal qdbus-qt6 qdoc-qt6
+  qmake6 qmake6-bin qml6-module-qml qml6-module-qmltime
+  qml6-module-qt-labs-animation qml6-module-qt-labs-assetdownloader
+  qml6-module-qt-labs-folderlistmodel qml6-module-qt-labs-platform
+  qml6-module-qt-labs-qmlmodels qml6-module-qt-labs-settings
+  qml6-module-qt-labs-sharedimage qml6-module-qt-labs-synchronizer
+  qml6-module-qt-labs-wavefrontmesh qml6-module-qtcore qml6-module-qtnetwork
+  qml6-module-qtqml qml6-module-qtqml-models qml6-module-qtqml-workerscript
+  qml6-module-qtqml-xmllistmodel qml6-module-qtquick
+  qml6-module-qtquick-controls qml6-module-qtquick-dialogs
+  qml6-module-qtquick-effects qml6-module-qtquick-layouts
+  qml6-module-qtquick-localstorage qml6-module-qtquick-particles
+  qml6-module-qtquick-shapes qml6-module-qtquick-shapes-designhelpers
+  qml6-module-qtquick-templates qml6-module-qtquick-tooling
+  qml6-module-qtquick-vectorimage qml6-module-qtquick-vectorimage-helpers
+  qml6-module-qtquick-window qml6-module-qttest
+  qml6-module-qtwayland-client-texturesharing qml6-module-qtwayland-compositor
+  qt6-base-dev qt6-base-dev-tools qt6-base-private-dev qt6-declarative-dev
+  qt6-declarative-dev-tools qt6-documentation-tools qt6-l10n-tools
+  qt6-qmllint-plugins qt6-qmlls-plugins qt6-qmltooling-plugins qt6-qpa-plugins
+  qt6-svg-dev qt6-tools-dev qt6-tools-dev-tools qt6-wayland-dev
+  readline-common rpcsvc-proto sed sgml-base sgml-data shared-mime-info
+  sound-theme-freedesktop sysvinit-utils tzdata uuid-dev x11-common
+  x11proto-dev xkb-data xml-core xorg-sgml-doctools xtrans-dev zlib1g
+  zlib1g-dev
+Suggested packages:
+  liblocale-gettext-perl cron quota ecryptfs-utils debconf-doc
+  debconf-kde-helper debconf-utils libgtk3-perl libnet-ldap-perl
+  libterm-readline-gnu-perl whiptail | dialog dbus-user-session libpam-systemd
+  pinentry-gnome3 tor docbook docbook-defguide docbook-dsssl dbtoepub
+  docbook-xsl-doc-html | docbook-xsl-doc-pdf | docbook-xsl-doc-text
+  | docbook-xsl-doc docbook-xsl-saxon fop libsaxon-java libxalan2-java
+  libxslthl-java xalan autopoint gettext-doc libasprintf-dev libgettextpo-dev
+  gnulib-l10n gpg-wks-server parcimonie xloadimage scdaemon tpm2daemon
+  isoquery systemsettings alsa-utils libasound2-plugins libc-devtools
+  glibc-doc locales libnss-nis libnss-nisplus manpages-dev libcanberra-pulse
+  cups-common libevdev-doc freetype2-doc rng-tools gdbm-l10n libglib2.0-doc
+  libgdk-pixbuf2.0-bin low-memory-monitor gnutls-bin krb5-doc krb5-user
+  libusbmuxd-tools cryptsetup-bin libpam-doc pciutils sensible-utils
+  libqca2-doc lm-sensors liblz4-1 uuid-runtime libwacom-bin libwayland-doc
+  libx11-doc libxcb-doc perl-doc libterm-readline-gnu-perl
+  | libterm-readline-perl-perl make libtap-harness-archive-perl pinentry-doc
+  python3-doc python3-tk python3-venv python-pyside6-doc python3.14-venv
+  python3.14-doc binutils binfmt-support cmake readline-doc sgml-base-doc
+  perlsgml w3-recs opensp debhelper
+Recommended packages:
+  apt | apt-utils debconf-i18n curl | wget | lynx gnupg-l10n gnupg-utils
+  gpg-wks-client gpgv switcheroo-control alsa-ucm-conf alsa-topology-conf
+  bzip2-doc manpages manpages-dev ca-certificates dbus xdg-user-dirs
+  libgpg-error-l10n usbmuxd libkf6archive-doc libkf6bookmarks-doc
+  keditbookmarks libkf6codecs-doc libkf6colorscheme-doc libkf6completion-doc
+  libkf6config-doc libkf6configwidgets-doc libkf6coreaddons-doc
+  libkf6crash-doc libkf6dbusaddons-doc libkf6doctools-doc
+  libkf6globalaccel-doc libkf6guiaddons-doc libkf6i18n-doc
+  libkf6iconthemes-doc libkf6itemviews-doc libkf6jobwidgets-doc libkf6kio-doc
+  libkf6notifications-doc libkf6service-doc udisks2 upower libkf6solid-doc
+  media-player-info libkf6wallet-doc libkf6widgetsaddons-doc
+  libkf6windowsystem-doc qt6-wayland krb5-locales libgpm2 libpng-tools
+  publicsuffix qt6-translations-l10n qt6-gtk-platformtheme qt6-svg-plugins
+  libsasl2-modules mesa-vulkan-drivers | vulkan-icd sensible-utils
+The following NEW packages will be installed:
+  adduser assistant-qt6 base-passwd breeze-icon-theme breeze-icon-theme-rcc
+  debconf designer-qt6 dirmngr docbook-xml docbook-xsl extra-cmake-modules
+  fontconfig fontconfig-config fonts-dejavu-core fonts-dejavu-mono gcc-16-base
+  gettext gettext-base gir1.2-glib-2.0 gir1.2-glib-2.0-dev gir1.2-gudev-1.0
+  girepository-tools gnupg gpg gpg-agent gpgconf gpgsm hicolor-icon-theme
+  iso-codes kded6 kdoctools6 kf6-breeze-icon-theme kf6-breeze-icon-theme-rcc
+  kio6 kwallet6 libacl1 libasound2-data libasound2t64 libassuan9 libatomic1
+  libattr1 libaudit-common libaudit1 libavahi-client3 libavahi-common-data
+  libavahi-common3 libb2-1 libblkid-dev libblkid1 libbrotli-dev libbrotli1
+  libbsd0 libbz2-1.0 libbz2-dev libc-dev-bin libc-gconv-modules-extra libc6
+  libc6-dev libcanberra0 libcap-ng0 libclang-cpp21 libclang1-21 libcom-err2
+  libcrypt1 libcups2t64 libcurl3t64-gnutls libdb5.3t64 libdbus-1-3
+  libdebconfclient0 libdouble-conversion3 libdrm-amdgpu1 libdrm-common
+  libdrm-intel1 libdrm2 libduktape207 libedit2 libegl-mesa0 libegl1 libelf1t64
+  libevdev-dev libevdev2 libexpat1 libexpat1-dev libffi-dev libffi8
+  libfontconfig-dev libfontconfig1 libfreetype-dev libfreetype6 libgbm1
+  libgcc-s1 libgcrypt20 libgdbm-compat4t64 libgdbm6t64 libgio-2.0-dev
+  libgio-2.0-dev-bin libgirepository-2.0-0 libgl-dev libgl1 libgl1-mesa-dri
+  libglib2.0-0t64 libglib2.0-bin libglib2.0-data libglib2.0-dev
+  libglib2.0-dev-bin libglvnd0 libglx-dev libglx-mesa0 libglx0 libgmp10
+  libgnutls30t64 libgomp1 libgpg-error0 libgpgme45 libgpgmepp7 libgraphite2-3
+  libgssapi-krb5-2 libgudev-1.0-0 libgudev-1.0-dev libharfbuzz0b
+  libhogweed6t64 libice6 libicu78 libidn2-0 libimobiledevice-1.0-6
+  libimobiledevice-glue-1.0-0 libinput-bin libinput-dev libinput10
+  libjpeg-turbo8 libjpeg8 libk5crypto3 libkeyutils1 libkf6archive-data
+  libkf6archive-dev libkf6archive6 libkf6bookmarks-data libkf6bookmarks-dev
+  libkf6bookmarks6 libkf6bookmarkswidgets6 libkf6breezeicons-dev
+  libkf6breezeicons6 libkf6codecs-data libkf6codecs-dev libkf6codecs6
+  libkf6colorscheme-data libkf6colorscheme-dev libkf6colorscheme6
+  libkf6completion-data libkf6completion-dev libkf6completion6
+  libkf6config-bin libkf6config-data libkf6config-dev libkf6config-dev-bin
+  libkf6configcore6 libkf6configgui6 libkf6configqml6 libkf6configwidgets-data
+  libkf6configwidgets-dev libkf6configwidgets6 libkf6coreaddons-data
+  libkf6coreaddons-dev libkf6coreaddons6 libkf6crash-dev libkf6crash6
+  libkf6dbusaddons-bin libkf6dbusaddons-data libkf6dbusaddons-dev
+  libkf6dbusaddons6 libkf6doctools-dev libkf6doctools6 libkf6globalaccel-data
+  libkf6globalaccel-dev libkf6globalaccel6 libkf6guiaddons-bin
+  libkf6guiaddons-data libkf6guiaddons-dev libkf6guiaddons6 libkf6i18n-data
+  libkf6i18n-dev libkf6i18n6 libkf6i18nlocaledata6 libkf6i18nqml6
+  libkf6iconthemes-bin libkf6iconthemes-data libkf6iconthemes-dev
+  libkf6iconthemes6 libkf6iconwidgets6 libkf6itemviews-data
+  libkf6itemviews-dev libkf6itemviews6 libkf6jobwidgets-data
+  libkf6jobwidgets-dev libkf6jobwidgets6 libkf6kio-dev libkf6kiocore6
+  libkf6kiofilewidgets6 libkf6kiogui6 libkf6kiowidgets6
+  libkf6notifications-data libkf6notifications-dev libkf6notifications6
+  libkf6service-bin libkf6service-data libkf6service-dev libkf6service6
+  libkf6solid-bin libkf6solid-data libkf6solid-dev libkf6solid6
+  libkf6wallet-data libkf6wallet-dev libkf6wallet6 libkf6walletbackend6
+  libkf6widgetsaddons-data libkf6widgetsaddons-dev libkf6widgetsaddons6
+  libkf6windowsystem-data libkf6windowsystem-dev libkf6windowsystem6 libkrb5-3
+  libkrb5support0 libksba8 libldap-common libldap2 libllvm21 libltdl7 liblzma5
+  libmd0 libmd4c0 libmount-dev libmount1 libmtdev-dev libmtdev1t64
+  libncursesw6 libnettle8t64 libnghttp2-14 libnpth0t64 libogg0 libopengl-dev
+  libopengl0 libp11-kit0 libpam-modules libpam-modules-bin libpam0g
+  libpciaccess0 libpcre2-16-0 libpcre2-32-0 libpcre2-8-0 libpcre2-dev
+  libpcre2-posix3 libperl5.40 libpkgconf7 libplist-2.0-4 libpng-dev
+  libpng16-16t64 libproxy1v5 libpsl5t64 libpyside6-py3-6.10 libpython3-stdlib
+  libpython3.14 libpython3.14-minimal libpython3.14-stdlib libqca-qt6-2
+  libqca-qt6-dev libqca-qt6-plugins libqt6concurrent6 libqt6core5compat6
+  libqt6core6t64 libqt6dbus6 libqt6designer6 libqt6designercomponents6
+  libqt6gui6 libqt6help6 libqt6labsplatform6 libqt6labssynchronizer6
+  libqt6network6 libqt6opengl6 libqt6openglwidgets6 libqt6printsupport6
+  libqt6qml6 libqt6qmlcompiler6 libqt6qmlmeta6 libqt6qmlmodels6
+  libqt6qmlnetwork6 libqt6qmlworkerscript6 libqt6quick6 libqt6quickcontrols2-6
+  libqt6quickshapes6 libqt6quickshapesdesignhelpers6 libqt6quicktemplates2-6
+  libqt6quicktest6 libqt6quickvectorimage6 libqt6quickvectorimagegenerator6
+  libqt6quickvectorimagehelpers6 libqt6quickwidgets6 libqt6sql6
+  libqt6sql6-sqlite libqt6svg6 libqt6svgwidgets6 libqt6test6 libqt6uitools6
+  libqt6waylandclient6 libqt6waylandcompositor6
+  libqt6waylandcompositoriviapplication6
+  libqt6waylandcompositorpresentationtime6 libqt6waylandcompositorwlshell6
+  libqt6waylandcompositorxdgshell6 libqt6widgets6 libqt6wlshellintegration6
+  libqt6xml6 libreadline8t64 librtmp1 libsasl2-2 libsasl2-modules-db
+  libsecret-1-0 libsecret-common libselinux-dev libselinux1 libsemanage-common
+  libsemanage2 libsensors-config libsensors5 libsepol-dev libsepol2
+  libshiboken6-py3-6.10 libsm6 libsqlite3-0 libssh2-1t64 libssl3t64 libstdc++6
+  libsysprof-capture-4-dev libsystemd0 libtasn1-6 libtdb1 libtinfo6 libts0t64
+  libudev-dev libudev1 libunistring5 libusbmuxd-2.0-7 libuuid1 libvorbis0a
+  libvorbisfile3 libvulkan-dev libvulkan1 libwacom-common libwacom-dev
+  libwacom9 libwayland-bin libwayland-client0 libwayland-cursor0
+  libwayland-dev libwayland-egl1 libwayland-server0 libx11-6 libx11-data
+  libx11-dev libx11-xcb1 libxau-dev libxau6 libxcb-cursor0 libxcb-dri3-0
+  libxcb-glx0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-present0
+  libxcb-randr0 libxcb-render-util0 libxcb-render0 libxcb-res0 libxcb-shape0
+  libxcb-shm0 libxcb-sync1 libxcb-util1 libxcb-xfixes0 libxcb-xinput0
+  libxcb-xkb1 libxcb1 libxcb1-dev libxdmcp-dev libxdmcp6 libxext6 libxfixes3
+  libxkbcommon-dev libxkbcommon-x11-0 libxkbcommon0 libxml2-16 libxml2-utils
+  libxshmfence1 libxslt1.1 libxxf86vm1 libzstd1 linguist-qt6 linux-libc-dev
+  login.defs lsb-base media-types mesa-libgallium native-architecture netbase
+  openssl-provider-legacy passwd perl perl-base perl-modules-5.40
+  pinentry-curses pkgconf pkgconf-bin python3 python3-kcoreaddons
+  python3-kf6jobwidgets python3-kf6notifications python3-kguiaddons
+  python3-kwidgetsaddons python3-minimal python3-packaging
+  python3-pyside6.qtcore python3-pyside6.qtgui python3-pyside6.qtwidgets
+  python3.14 python3.14-minimal qdbus-qt6 qdoc-qt6 qmake6 qmake6-bin
+  qml6-module-org-kde-config qml6-module-org-kde-coreaddons
+  qml6-module-org-kde-guiaddons qml6-module-org-kde-i18n-localedata
+  qml6-module-org-kde-iconthemes qml6-module-org-kde-ki18n
+  qml6-module-org-kde-kwindowsystem qml6-module-org-kde-notifications
+  qml6-module-qml qml6-module-qmltime qml6-module-qt-labs-animation
+  qml6-module-qt-labs-assetdownloader qml6-module-qt-labs-folderlistmodel
+  qml6-module-qt-labs-platform qml6-module-qt-labs-qmlmodels
+  qml6-module-qt-labs-settings qml6-module-qt-labs-sharedimage
+  qml6-module-qt-labs-synchronizer qml6-module-qt-labs-wavefrontmesh
+  qml6-module-qtcore qml6-module-qtnetwork qml6-module-qtqml
+  qml6-module-qtqml-models qml6-module-qtqml-workerscript
+  qml6-module-qtqml-xmllistmodel qml6-module-qtquick
+  qml6-module-qtquick-controls qml6-module-qtquick-dialogs
+  qml6-module-qtquick-effects qml6-module-qtquick-layouts
+  qml6-module-qtquick-localstorage qml6-module-qtquick-particles
+  qml6-module-qtquick-shapes qml6-module-qtquick-shapes-designhelpers
+  qml6-module-qtquick-templates qml6-module-qtquick-tooling
+  qml6-module-qtquick-vectorimage qml6-module-qtquick-vectorimage-helpers
+  qml6-module-qtquick-window qml6-module-qttest
+  qml6-module-qtwayland-client-texturesharing qml6-module-qtwayland-compositor
+  qt6-base-dev qt6-base-dev-tools qt6-base-private-dev qt6-declarative-dev
+  qt6-declarative-dev-tools qt6-documentation-tools qt6-l10n-tools
+  qt6-qmllint-plugins qt6-qmlls-plugins qt6-qmltooling-plugins qt6-qpa-plugins
+  qt6-svg-dev qt6-tools-dev qt6-tools-dev-tools qt6-wayland-dev
+  readline-common rpcsvc-proto sed sgml-base sgml-data shared-mime-info
+  sound-theme-freedesktop sysvinit-utils tzdata uuid-dev x11-common
+  x11proto-dev xkb-data xml-core xorg-sgml-doctools xtrans-dev zlib1g
+  zlib1g-dev
+0 upgraded, 503 newly installed, 0 to remove and 0 not upgraded.
+Inst gcc-16-base (16-20260322-1ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf gcc-16-base (16-20260322-1ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libc-gconv-modules-extra (2.43-2ubuntu2.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libc-gconv-modules-extra (2.43-2ubuntu2.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libc6 (2.43-2ubuntu2.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64]) []
+Inst libgcc-s1 (16-20260322-1ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libgcc-s1 (16-20260322-1ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libc6 (2.43-2ubuntu2.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libcrypt1 (1:4.5.1-1 Ubuntu:26.04/resolute [amd64])
+Conf libcrypt1 (1:4.5.1-1 Ubuntu:26.04/resolute [amd64])
+Inst perl-base (5.40.1-7ubuntu0.3 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf perl-base (5.40.1-7ubuntu0.3 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libacl1 (2.3.2-2 Ubuntu:26.04/resolute [amd64])
+Conf libacl1 (2.3.2-2 Ubuntu:26.04/resolute [amd64])
+Inst libpcre2-8-0 (10.46-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libpcre2-8-0 (10.46-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libselinux1 (3.9-4build1 Ubuntu:26.04/resolute [amd64])
+Conf libselinux1 (3.9-4build1 Ubuntu:26.04/resolute [amd64])
+Inst sed (4.9-2ubuntu1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf sed (4.9-2ubuntu1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libdebconfclient0 (0.280ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libdebconfclient0 (0.280ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst base-passwd (3.6.8 Ubuntu:26.04/resolute [amd64])
+Conf base-passwd (3.6.8 Ubuntu:26.04/resolute [amd64])
+Inst sysvinit-utils (3.15-5ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf sysvinit-utils (3.15-5ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libaudit-common (1:4.1.2-1ubuntu0.1 Ubuntu:26.04/resolute-updates [all])
+Inst libcap-ng0 (0.8.5-4build5 Ubuntu:26.04/resolute [amd64])
+Inst libaudit1 (1:4.1.2-1ubuntu0.1 Ubuntu:26.04/resolute-updates [amd64])
+Inst libdb5.3t64 (5.3.28+dfsg2-10ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst debconf (1.5.92 Ubuntu:26.04/resolute [all])
+Inst libpam0g (1.7.0-5ubuntu3.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libsystemd0 (259.5-0ubuntu3.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libpam-modules-bin (1.7.0-5ubuntu3.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libaudit-common (1:4.1.2-1ubuntu0.1 Ubuntu:26.04/resolute-updates [all])
+Conf libcap-ng0 (0.8.5-4build5 Ubuntu:26.04/resolute [amd64])
+Conf libaudit1 (1:4.1.2-1ubuntu0.1 Ubuntu:26.04/resolute-updates [amd64])
+Conf libdb5.3t64 (5.3.28+dfsg2-10ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf debconf (1.5.92 Ubuntu:26.04/resolute [all])
+Conf libpam0g (1.7.0-5ubuntu3.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libsystemd0 (259.5-0ubuntu3.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libpam-modules-bin (1.7.0-5ubuntu3.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libpam-modules (1.7.0-5ubuntu3.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libexpat1 (2.7.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libzstd1 (1.5.7+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst zlib1g (1:1.3.dfsg+really1.3.1-1ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst openssl-provider-legacy (3.5.5-1ubuntu3.7 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64]) []
+Inst libssl3t64 (3.5.5-1ubuntu3.7 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libpython3.14-minimal (3.14.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst python3.14-minimal (3.14.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libzstd1 (1.5.7+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf zlib1g (1:1.3.dfsg+really1.3.1-1ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf openssl-provider-legacy (3.5.5-1ubuntu3.7 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libssl3t64 (3.5.5-1ubuntu3.7 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libpython3.14-minimal (3.14.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libexpat1 (2.7.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf python3.14-minimal (3.14.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst python3-minimal (3.14.3-0ubuntu2 Ubuntu:26.04/resolute [amd64])
+Inst media-types (14.0.0build1 Ubuntu:26.04/resolute [all])
+Inst netbase (6.5build1 Ubuntu:26.04/resolute [all])
+Inst tzdata (2026c-0ubuntu0.26.04.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [all])
+Inst libbz2-1.0 (1.0.8-6ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libffi8 (3.5.2-4 Ubuntu:26.04/resolute [amd64])
+Inst liblzma5 (5.8.3-1 Ubuntu:26.04/resolute [amd64])
+Inst libtinfo6 (6.6+20251231-1 Ubuntu:26.04/resolute [amd64])
+Inst libncursesw6 (6.6+20251231-1 Ubuntu:26.04/resolute [amd64])
+Inst readline-common (8.3-4 Ubuntu:26.04/resolute [all])
+Inst libreadline8t64 (8.3-4 Ubuntu:26.04/resolute [amd64])
+Inst libsqlite3-0 (3.46.1-9ubuntu0.3 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libuuid1 (2.41.3-3ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libpython3.14-stdlib (3.14.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst python3.14 (3.14.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libpython3-stdlib (3.14.3-0ubuntu2 Ubuntu:26.04/resolute [amd64])
+Conf python3-minimal (3.14.3-0ubuntu2 Ubuntu:26.04/resolute [amd64])
+Inst python3 (3.14.3-0ubuntu2 Ubuntu:26.04/resolute [amd64])
+Inst libattr1 (1:2.5.2-4ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libblkid1 (2.41.3-3ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libmd0 (1.1.0-2build4 Ubuntu:26.04/resolute [amd64])
+Inst libbsd0 (0.12.2-2build2 Ubuntu:26.04/resolute [amd64])
+Inst libcom-err2 (1.47.2-3ubuntu4 Ubuntu:26.04/resolute [amd64])
+Inst libgmp10 (2:6.3.0+dfsg-5ubuntu2 Ubuntu:26.04/resolute [amd64])
+Inst libmount1 (2.41.3-3ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libsemanage-common (3.9-1build1 Ubuntu:26.04/resolute [all])
+Inst libsepol2 (3.9-2 Ubuntu:26.04/resolute [amd64])
+Inst libsemanage2 (3.9-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libudev1 (259.5-0ubuntu3.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst login.defs (1:4.17.4-2ubuntu3 Ubuntu:26.04/resolute [all])
+Inst passwd (1:4.17.4-2ubuntu3 Ubuntu:26.04/resolute [amd64])
+Inst adduser (3.153ubuntu1 Ubuntu:26.04/resolute [all])
+Inst libatomic1 (16-20260322-1ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libglib2.0-0t64 (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst gir1.2-glib-2.0 (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst iso-codes (4.20.1-1 Ubuntu:26.04/resolute [all])
+Inst libdbus-1-3 (1.16.2-2ubuntu4 Ubuntu:26.04/resolute [amd64])
+Inst libedit2 (3.1-20251016-1 Ubuntu:26.04/resolute [amd64])
+Inst libelf1t64 (0.194-4 Ubuntu:26.04/resolute [amd64])
+Inst libgpg-error0 (1.58-2 Ubuntu:26.04/resolute [amd64])
+Inst libgcrypt20 (1.12.0-2ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libgirepository-2.0-0 (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libglib2.0-data (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [all])
+Inst libnettle8t64 (3.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst libhogweed6t64 (3.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst libunistring5 (1.3-2build1 Ubuntu:26.04/resolute [amd64])
+Inst libidn2-0 (2.3.8-4build1 Ubuntu:26.04/resolute [amd64])
+Inst libp11-kit0 (0.26.2-2 Ubuntu:26.04/resolute [amd64])
+Inst libtasn1-6 (4.21.0-2 Ubuntu:26.04/resolute [amd64])
+Inst libgnutls30t64 (3.8.12-2ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libkrb5support0 (1.22.1-2ubuntu4.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libk5crypto3 (1.22.1-2ubuntu4.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libkeyutils1 (1.6.3-6ubuntu3 Ubuntu:26.04/resolute [amd64])
+Inst libkrb5-3 (1.22.1-2ubuntu4.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libgssapi-krb5-2 (1.22.1-2ubuntu4.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libstdc++6 (16-20260322-1ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxml2-16 (2.15.2+dfsg-0.1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst shared-mime-info (2.4-5build3 Ubuntu:26.04/resolute [amd64])
+Inst xkb-data (2.46-2 Ubuntu:26.04/resolute [all])
+Inst gettext-base (0.23.2-1 Ubuntu:26.04/resolute [amd64])
+Inst libdrm-common (2.4.131-1 Ubuntu:26.04/resolute [all])
+Inst libdrm2 (2.4.131-1 Ubuntu:26.04/resolute [amd64])
+Inst libevdev2 (1.13.6+dfsg-1 Ubuntu:26.04/resolute [amd64])
+Inst libgdbm6t64 (1.26-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libnghttp2-14 (1.68.0-2ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libpng16-16t64 (1.6.57-1 Ubuntu:26.04/resolute [amd64])
+Inst libpsl5t64 (0.21.2-1.1build2 Ubuntu:26.04/resolute [amd64])
+Inst libsensors-config (1:3.6.2-2build1 Ubuntu:26.04/resolute [all])
+Inst libsensors5 (1:3.6.2-2build1 Ubuntu:26.04/resolute [amd64])
+Inst libxau6 (1:1.0.11-1build2 Ubuntu:26.04/resolute [amd64])
+Inst libxdmcp6 (1:1.1.5-2 Ubuntu:26.04/resolute [amd64])
+Inst libxcb1 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libx11-data (2:1.8.13-1 Ubuntu:26.04/resolute [all])
+Inst libx11-6 (2:1.8.13-1 Ubuntu:26.04/resolute [amd64])
+Inst libxext6 (2:1.3.4-1build3 Ubuntu:26.04/resolute [amd64])
+Inst libxkbcommon0 (1.13.1-1 Ubuntu:26.04/resolute [amd64])
+Inst libgomp1 (16-20260322-1ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libb2-1 (0.98.1-1.1build2 Ubuntu:26.04/resolute [amd64])
+Inst libdouble-conversion3 (3.4.0-1 Ubuntu:26.04/resolute [amd64])
+Inst libicu78 (78.2-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libpcre2-16-0 (10.46-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libqt6core6t64 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libbrotli1 (1.2.0-3build1 Ubuntu:26.04/resolute [amd64])
+Inst libfreetype6 (2.14.2+dfsg-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst fonts-dejavu-mono (2.37-8build1 Ubuntu:26.04/resolute [all])
+Inst fonts-dejavu-core (2.37-8build1 Ubuntu:26.04/resolute [all])
+Inst fontconfig-config (2.17.1-3ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libfontconfig1 (2.17.1-3ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst fontconfig (2.17.1-3ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libglvnd0 (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Inst libdrm-amdgpu1 (2.4.131-1 Ubuntu:26.04/resolute [amd64])
+Inst libpciaccess0 (0.18.1-1ubuntu4.1 Ubuntu:26.04/resolute-updates [amd64])
+Inst libdrm-intel1 (2.4.131-1 Ubuntu:26.04/resolute [amd64])
+Inst libllvm21 (1:21.1.8-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libx11-xcb1 (2:1.8.13-1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-dri3-0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-present0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-randr0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-sync1 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-xfixes0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxshmfence1 (1.3.3-1build1 Ubuntu:26.04/resolute [amd64])
+Inst mesa-libgallium (26.0.8-1ubuntu0.3 Ubuntu:26.04/resolute-updates [amd64])
+Inst libgbm1 (26.0.8-1ubuntu0.3 Ubuntu:26.04/resolute-updates [amd64])
+Inst libwayland-client0 (1.24.0-2 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-shm0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libegl-mesa0 (26.0.8-1ubuntu0.3 Ubuntu:26.04/resolute-updates [amd64])
+Inst libegl1 (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Inst libvulkan1 (1.4.341.0-1 Ubuntu:26.04/resolute [amd64])
+Inst libgl1-mesa-dri (26.0.8-1ubuntu0.3 Ubuntu:26.04/resolute-updates [amd64])
+Inst libxcb-glx0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxxf86vm1 (1:1.1.4-2 Ubuntu:26.04/resolute [amd64])
+Inst libglx-mesa0 (26.0.8-1ubuntu0.3 Ubuntu:26.04/resolute-updates [amd64])
+Inst libglx0 (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Inst libgraphite2-3 (1.3.14-11ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libharfbuzz0b (12.3.2-2 Ubuntu:26.04/resolute [amd64])
+Inst lsb-base (11.6build1 Ubuntu:26.04/resolute [all])
+Inst x11-common (1:7.7+26ubuntu1 Ubuntu:26.04/resolute [all])
+Inst libice6 (2:1.1.1-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libmtdev1t64 (1.1.7-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libgudev-1.0-0 (1:238-7build1 Ubuntu:26.04/resolute [amd64])
+Inst libwacom-common (2.18.0-1 Ubuntu:26.04/resolute [all])
+Inst libwacom9 (2.18.0-1 Ubuntu:26.04/resolute [amd64])
+Inst libinput-bin (1.31.1-1ubuntu1.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libinput10 (1.31.1-1ubuntu1.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libjpeg-turbo8 (2.1.5-4ubuntu4 Ubuntu:26.04/resolute [amd64])
+Inst libjpeg8 (8c-2ubuntu12 Ubuntu:26.04/resolute [amd64])
+Inst libmd4c0 (0.5.2-2build1 Ubuntu:26.04/resolute [amd64])
+Inst libopengl0 (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6dbus6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libsm6 (2:1.2.6-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libts0t64 (1.22-1.1build2 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-util1 (0.4.1-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-image0 (0.4.0-2build2 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-render0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-render-util0 (0.3.10-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-cursor0 (0.1.6-1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-icccm4 (0.4.2-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-keysyms1 (0.4.1-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-shape0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-xinput0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxcb-xkb1 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxkbcommon-x11-0 (1.13.1-1 Ubuntu:26.04/resolute [amd64])
+Inst libqt6gui6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libqt6sql6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libqt6widgets6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libqt6help6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst libavahi-common-data (0.8-18ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libavahi-common3 (0.8-18ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libavahi-client3 (0.8-18ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libcups2t64 (2.4.16-1ubuntu1.3 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libqt6printsupport6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst assistant-qt6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst hicolor-icon-theme (0.18-2build1 Ubuntu:26.04/resolute [all])
+Inst breeze-icon-theme (4:6.30.0-0supralinux1 localhost [all])
+Inst breeze-icon-theme-rcc (4:6.30.0-0supralinux1 localhost [all])
+Inst libqt6opengl6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libqt6openglwidgets6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libqt6xml6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libqt6designer6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst libqt6designercomponents6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst libsasl2-modules-db (2.1.28+dfsg1-9ubuntu3 Ubuntu:26.04/resolute [amd64])
+Inst libsasl2-2 (2.1.28+dfsg1-9ubuntu3 Ubuntu:26.04/resolute [amd64])
+Inst libldap-common (2.6.10+dfsg-1ubuntu5 Ubuntu:26.04/resolute [all])
+Inst libldap2 (2.6.10+dfsg-1ubuntu5 Ubuntu:26.04/resolute [amd64])
+Inst librtmp1 (2.4+20151223.gitfa8646d.1-3 Ubuntu:26.04/resolute [amd64])
+Inst libssh2-1t64 (1.11.1-1ubuntu0.26.04.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libcurl3t64-gnutls (8.18.0-1ubuntu2.7 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libduktape207 (2.7.0+tests-0ubuntu4 Ubuntu:26.04/resolute [amd64])
+Inst libproxy1v5 (0.5.12-1 Ubuntu:26.04/resolute [amd64])
+Inst libqt6network6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst designer-qt6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst libassuan9 (3.0.2-2build1 Ubuntu:26.04/resolute [amd64])
+Inst gpgconf (2.4.8-4ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libksba8 (1.6.7-2build1 Ubuntu:26.04/resolute [amd64])
+Inst libnpth0t64 (1.8-3build1 Ubuntu:26.04/resolute [amd64])
+Inst dirmngr (2.4.8-4ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst perl-modules-5.40 (5.40.1-7ubuntu0.3 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [all])
+Inst libgdbm-compat4t64 (1.26-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libperl5.40 (5.40.1-7ubuntu0.3 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst perl (5.40.1-7ubuntu0.3 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst sgml-base (1.31+nmu1build1 Ubuntu:26.04/resolute [all])
+Inst xml-core (0.19build1 Ubuntu:26.04/resolute [all])
+Inst sgml-data (2.0.11+nmu1build1 Ubuntu:26.04/resolute [all])
+Inst docbook-xml (4.5-13build1 Ubuntu:26.04/resolute [all])
+Inst docbook-xsl (1.79.2+dfsg-8 Ubuntu:26.04/resolute [all])
+Inst extra-cmake-modules (6.30.0-0supralinux3 localhost [all])
+Inst gettext (0.23.2-1 Ubuntu:26.04/resolute [amd64])
+Inst gir1.2-glib-2.0-dev (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst gir1.2-gudev-1.0 (1:238-7build1 Ubuntu:26.04/resolute [amd64])
+Inst native-architecture (0.2.6build1 Ubuntu:26.04/resolute [all])
+Inst girepository-tools (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst gpg (2.4.8-4ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst pinentry-curses (1.3.2-3ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst gpg-agent (2.4.8-4ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst gpgsm (2.4.8-4ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst gnupg (2.4.8-4ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [all])
+Inst libkf6config-data (6.30.0-0supralinux5 localhost [all])
+Inst libkf6configcore6 (6.30.0-0supralinux5 localhost [amd64])
+Inst libkf6coreaddons-data (6.30.0-0supralinux4 localhost [all])
+Inst libkf6coreaddons6 (6.30.0-0supralinux4 localhost [amd64])
+Inst libkf6crash6 (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6dbusaddons-data (6.30.0-0supralinux3 localhost [all])
+Inst libkf6dbusaddons6 (6.30.0-0supralinux3 localhost [amd64])
+Inst libkf6i18n-data (6.30.0-0supralinux1 localhost [all])
+Inst libqt6qml6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libkf6i18n6 (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6service-data (6.30.0-0supralinux1 localhost [all])
+Inst libkf6service6 (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6service-bin (6.30.0-0supralinux1 localhost [amd64])
+Inst kded6 (6.24.0-0ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxml2-utils (2.15.2+dfsg-0.1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libkf6archive-data (6.30.0-0supralinux4 localhost [all])
+Inst libkf6archive6 (6.30.0-0supralinux4 localhost [amd64])
+Inst libxslt1.1 (1.1.45-0.1 Ubuntu:26.04/resolute [amd64])
+Inst kdoctools6 (6.30.0-0supralinux1 localhost [amd64])
+Inst kf6-breeze-icon-theme (4:6.30.0-0supralinux1 localhost [all])
+Inst kf6-breeze-icon-theme-rcc (4:6.30.0-0supralinux1 localhost [all])
+Inst libkf6wallet-data (6.30.0-0supralinux4 localhost [all])
+Inst libgpgme45 (2.0.1-2build1 Ubuntu:26.04/resolute [amd64])
+Inst libgpgmepp7 (2.0.0-2 Ubuntu:26.04/resolute [amd64])
+Inst libkf6configgui6 (6.30.0-0supralinux5 localhost [amd64])
+Inst libkf6notifications-data (6.30.0-0supralinux1 localhost [all])
+Inst libasound2-data (1.2.15.3-1ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [all])
+Inst libasound2t64 (1.2.15.3-1ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libltdl7 (2.5.4-9 Ubuntu:26.04/resolute [amd64])
+Inst libtdb1 (2:1.4.14+samba4.23.6+dfsg-1ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libogg0 (1.3.6-2 Ubuntu:26.04/resolute [amd64])
+Inst libvorbis0a (1.3.7-3build2 Ubuntu:26.04/resolute [amd64])
+Inst libvorbisfile3 (1.3.7-3build2 Ubuntu:26.04/resolute [amd64])
+Inst sound-theme-freedesktop (0.8-7build1 Ubuntu:26.04/resolute [all])
+Inst libcanberra0 (0.30-18ubuntu3 Ubuntu:26.04/resolute [amd64])
+Inst libkf6notifications6 (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6widgetsaddons-data (6.30.0-0supralinux7 localhost [all])
+Inst libkf6widgetsaddons6 (6.30.0-0supralinux7 localhost [amd64])
+Inst libkf6walletbackend6 (6.30.0-0supralinux4 localhost [amd64])
+Inst libqt6core5compat6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst libqca-qt6-2 (2.3.10-2 Ubuntu:26.04/resolute [amd64])
+Inst libqca-qt6-plugins (2.3.10-2 Ubuntu:26.04/resolute [amd64])
+Inst libkf6colorscheme-data (6.30.0-0supralinux1 localhost [all])
+Inst libkf6guiaddons-data (6.30.0-0supralinux2 localhost [all])
+Inst libwayland-cursor0 (1.24.0-2 Ubuntu:26.04/resolute [amd64])
+Inst libwayland-egl1 (1.24.0-2 Ubuntu:26.04/resolute [amd64])
+Inst libqt6waylandclient6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libkf6guiaddons6 (6.30.0-0supralinux2 localhost [amd64])
+Inst libkf6colorscheme6 (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6wallet6 (6.30.0-0supralinux4 localhost [amd64])
+Inst libkf6windowsystem-data (6.30.0-0supralinux4 localhost [all])
+Inst libxcb-res0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libxfixes3 (1:6.0.0-2build2 Ubuntu:26.04/resolute [amd64])
+Inst libkf6windowsystem6 (6.30.0-0supralinux4 localhost [amd64])
+Inst libsecret-common (0.21.7-2build1 Ubuntu:26.04/resolute [all])
+Inst libsecret-1-0 (0.21.7-2build1 Ubuntu:26.04/resolute [amd64])
+Inst kwallet6 (6.30.0-0supralinux4 localhost [amd64])
+Inst libkf6doctools6 (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6kiocore6 (6.30.0-0supralinux10 localhost [amd64])
+Inst libkf6bookmarks-data (6.30.0-0supralinux1 localhost [all])
+Inst libkf6bookmarks6 (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6bookmarkswidgets6 (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6completion-data (6.30.0-0supralinux1 localhost [all])
+Inst libkf6codecs-data (6.30.0-0supralinux4 localhost [all])
+Inst libkf6codecs6 (6.30.0-0supralinux4 localhost [amd64])
+Inst libkf6completion6 (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6iconthemes-data (6.30.0-0supralinux3 localhost [all])
+Inst libqt6svg6 (6.10.2-2 Ubuntu:26.04/resolute [amd64])
+Inst libkf6breezeicons6 (4:6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6iconthemes6 (6.30.0-0supralinux3 localhost [amd64])
+Inst libkf6iconwidgets6 (6.30.0-0supralinux3 localhost [amd64])
+Inst libkf6itemviews-data (6.30.0-0supralinux1 localhost [all])
+Inst libkf6itemviews6 (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6solid-data (6.30.0-0supralinux2 localhost [all])
+Inst libplist-2.0-4 (2.7.0+git20250820-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libimobiledevice-glue-1.0-0 (1.3.2-2build1 Ubuntu:26.04/resolute [amd64])
+Inst libusbmuxd-2.0-7 (2.1.1-1 Ubuntu:26.04/resolute [amd64])
+Inst libimobiledevice-1.0-6 (1.4.0-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libkf6solid6 (6.30.0-0supralinux2 localhost [amd64])
+Inst libqt6concurrent6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libkf6kiogui6 (6.30.0-0supralinux10 localhost [amd64])
+Inst libkf6jobwidgets-data (6.30.0-0supralinux4 localhost [all])
+Inst libkf6jobwidgets6 (6.30.0-0supralinux4 localhost [amd64])
+Inst libkf6kiowidgets6 (6.30.0-0supralinux10 localhost [amd64])
+Inst libkf6kiofilewidgets6 (6.30.0-0supralinux10 localhost [amd64])
+Inst kio6 (6.30.0-0supralinux10 localhost [amd64])
+Inst libbrotli-dev (1.2.0-3build1 Ubuntu:26.04/resolute [amd64])
+Inst libc-dev-bin (2.43-2ubuntu2.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst linux-libc-dev (7.0.0-38.38 Ubuntu:26.04/resolute-updates [amd64])
+Inst rpcsvc-proto (1.4.3-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libc6-dev (2.43-2ubuntu2.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libbz2-dev (1.0.8-6ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libclang-cpp21 (1:21.1.8-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libclang1-21 (1:21.1.8-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libexpat1-dev (2.7.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst zlib1g-dev (1:1.3.dfsg+really1.3.1-1ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libpng-dev (1.6.57-1 Ubuntu:26.04/resolute [amd64])
+Inst libfreetype-dev (2.14.2+dfsg-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst uuid-dev (2.41.3-3ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libpkgconf7 (2.5.1-4 Ubuntu:26.04/resolute [amd64])
+Inst pkgconf-bin (2.5.1-4 Ubuntu:26.04/resolute [amd64])
+Inst pkgconf (2.5.1-4 Ubuntu:26.04/resolute [amd64])
+Inst libfontconfig-dev (2.17.1-3ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libffi-dev (3.5.2-4 Ubuntu:26.04/resolute [amd64])
+Inst libblkid-dev (2.41.3-3ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libsepol-dev (3.9-2 Ubuntu:26.04/resolute [amd64])
+Inst libpcre2-32-0 (10.46-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libpcre2-posix3 (10.46-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libpcre2-dev (10.46-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libselinux-dev (3.9-4build1 Ubuntu:26.04/resolute [amd64])
+Inst libmount-dev (2.41.3-3ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libsysprof-capture-4-dev (50.0-1 Ubuntu:26.04/resolute [amd64])
+Inst libgio-2.0-dev (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst python3-packaging (26.0-1 Ubuntu:26.04/resolute [all])
+Inst libgio-2.0-dev-bin (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libgl1 (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Inst xorg-sgml-doctools (1:1.11-1.1build1 Ubuntu:26.04/resolute [all])
+Inst x11proto-dev (2025.1-1 Ubuntu:26.04/resolute [all])
+Inst libxau-dev (1:1.0.11-1build2 Ubuntu:26.04/resolute [amd64])
+Inst libxdmcp-dev (1:1.1.5-2 Ubuntu:26.04/resolute [amd64])
+Inst xtrans-dev (1.6.0-1build1 Ubuntu:26.04/resolute [all])
+Inst libxcb1-dev (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libx11-dev (2:1.8.13-1 Ubuntu:26.04/resolute [amd64])
+Inst libglx-dev (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Inst libgl-dev (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Inst libglib2.0-bin (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libglib2.0-dev-bin (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libglib2.0-dev (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libudev-dev (259.5-0ubuntu3.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libgudev-1.0-dev (1:238-7build1 Ubuntu:26.04/resolute [amd64])
+Inst libopengl-dev (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6test6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libqt6wlshellintegration6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libvulkan-dev (1.4.341.0-1 Ubuntu:26.04/resolute [amd64])
+Inst qmake6-bin (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst qmake6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst qt6-base-dev-tools (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst qt6-qpa-plugins (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst qt6-base-dev (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libkf6archive-dev (6.30.0-0supralinux4 localhost [amd64])
+Inst libkf6codecs-dev (6.30.0-0supralinux4 localhost [amd64])
+Inst libkf6config-bin (6.30.0-0supralinux5 localhost [amd64])
+Inst libkf6config-dev-bin (6.30.0-0supralinux5 localhost [amd64])
+Inst libqt6qmlmodels6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6qmlworkerscript6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6qmlmeta6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6quick6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libkf6configqml6 (6.30.0-0supralinux5 localhost [amd64])
+Inst qml6-module-qtqml-models (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtqml-workerscript (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtqml (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-org-kde-config (6.30.0-0supralinux5 localhost [amd64])
+Inst libqt6quicktemplates2-6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6labsplatform6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6labssynchronizer6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6qmlcompiler6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6qmlnetwork6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6quickcontrols2-6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6quickshapes6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6quickshapesdesignhelpers6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6quicktest6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6quickvectorimagegenerator6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6quickvectorimage6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6quickvectorimagehelpers6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6quickwidgets6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qml (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qmltime (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qt-labs-animation (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qt-labs-assetdownloader (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qt-labs-folderlistmodel (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-templates (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qt-labs-platform (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qt-labs-qmlmodels (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qt-labs-settings (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qt-labs-sharedimage (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qt-labs-synchronizer (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qt-labs-wavefrontmesh (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtcore (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtnetwork (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtqml-xmllistmodel (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-shapes (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-window (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-controls (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-layouts (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-dialogs (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-effects (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-localstorage (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-particles (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-shapes-designhelpers (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-tooling (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-vectorimage-helpers (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtquick-vectorimage (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qttest (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qt6-declarative-dev-tools (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qt6-qmllint-plugins (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qt6-qmlls-plugins (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst qt6-qmltooling-plugins (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6svgwidgets6 (6.10.2-2 Ubuntu:26.04/resolute [amd64])
+Inst qt6-svg-dev (6.10.2-2 Ubuntu:26.04/resolute [amd64])
+Inst qt6-declarative-dev (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Inst libqt6uitools6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst linguist-qt6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst qdbus-qt6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst libqt6sql6-sqlite (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst qdoc-qt6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst qt6-documentation-tools (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst qt6-l10n-tools (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst qt6-tools-dev-tools (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst qt6-tools-dev (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Inst libkf6config-dev (6.30.0-0supralinux5 localhost [amd64])
+Inst libkf6colorscheme-dev (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6configwidgets-data (6.24.0-0ubuntu1 Ubuntu:26.04/resolute [all])
+Inst libkf6configwidgets6 (6.24.0-0ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-org-kde-coreaddons (6.30.0-0supralinux4 localhost [amd64])
+Inst libkf6coreaddons-dev (6.30.0-0supralinux4 localhost [amd64])
+Inst libwayland-server0 (1.24.0-2 Ubuntu:26.04/resolute [amd64])
+Inst libqt6waylandcompositor6 (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Inst libqt6waylandcompositoriviapplication6 (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Inst libqt6waylandcompositorpresentationtime6 (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Inst libqt6waylandcompositorwlshell6 (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Inst libqt6waylandcompositorxdgshell6 (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Inst libwayland-bin (1.24.0-2 Ubuntu:26.04/resolute [amd64])
+Inst libwayland-dev (1.24.0-2 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtwayland-client-texturesharing (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Inst qml6-module-qtwayland-compositor (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Inst qt6-wayland-dev (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Inst libkf6guiaddons-dev (6.30.0-0supralinux2 localhost [amd64])
+Inst libkf6i18nlocaledata6 (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6i18nqml6 (6.30.0-0supralinux1 localhost [amd64])
+Inst qml6-module-org-kde-i18n-localedata (6.30.0-0supralinux1 localhost [amd64])
+Inst qml6-module-org-kde-ki18n (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6i18n-dev (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6widgetsaddons-dev (6.30.0-0supralinux7 localhost [amd64])
+Inst libkf6configwidgets-dev (6.24.0-0ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libkf6bookmarks-dev (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6breezeicons-dev (4:6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6completion-dev (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6crash-dev (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6dbusaddons-bin (6.30.0-0supralinux3 localhost [amd64])
+Inst libkf6dbusaddons-dev (6.30.0-0supralinux3 localhost [amd64])
+Inst libkf6doctools-dev (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6globalaccel-data (6.30.0-0supralinux2 localhost [all])
+Inst libkf6globalaccel6 (6.30.0-0supralinux2 localhost [amd64])
+Inst libkf6globalaccel-dev (6.30.0-0supralinux2 localhost [amd64])
+Inst libkf6guiaddons-bin (6.30.0-0supralinux2 localhost [amd64])
+Inst libkf6iconthemes-bin (6.30.0-0supralinux3 localhost [amd64])
+Inst qml6-module-org-kde-iconthemes (6.30.0-0supralinux3 localhost [amd64])
+Inst libkf6iconthemes-dev (6.30.0-0supralinux3 localhost [amd64])
+Inst libkf6itemviews-dev (6.30.0-0supralinux1 localhost [amd64])
+Inst qml6-module-org-kde-notifications (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6notifications-dev (6.30.0-0supralinux1 localhost [amd64])
+Inst libmtdev-dev (1.1.7-1build1 Ubuntu:26.04/resolute [amd64])
+Inst libevdev-dev (1.13.6+dfsg-1 Ubuntu:26.04/resolute [amd64])
+Inst libwacom-dev (2.18.0-1 Ubuntu:26.04/resolute [amd64])
+Inst libinput-dev (1.31.1-1ubuntu1.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst libxkbcommon-dev (1.13.1-1 Ubuntu:26.04/resolute [amd64])
+Inst qt6-base-private-dev (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Inst libkf6jobwidgets-dev (6.30.0-0supralinux4 localhost [amd64])
+Inst libkf6service-dev (6.30.0-0supralinux1 localhost [amd64])
+Inst libkf6solid-dev (6.30.0-0supralinux2 localhost [amd64])
+Inst qml6-module-org-kde-kwindowsystem (6.30.0-0supralinux4 localhost [amd64])
+Inst libkf6windowsystem-dev (6.30.0-0supralinux4 localhost [amd64])
+Inst libkf6kio-dev (6.30.0-0supralinux10 localhost [amd64])
+Inst libkf6solid-bin (6.30.0-0supralinux2 localhost [amd64])
+Inst libqca-qt6-dev (2.3.10-2 Ubuntu:26.04/resolute [amd64])
+Inst libkf6wallet-dev (6.30.0-0supralinux4 localhost [amd64])
+Inst libshiboken6-py3-6.10 (6.10.2-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libpyside6-py3-6.10 (6.10.2-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst libpython3.14 (3.14.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Inst python3-pyside6.qtcore (6.10.2-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst python3-kcoreaddons (6.30.0-0supralinux4 localhost [amd64])
+Inst python3-pyside6.qtgui (6.10.2-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst python3-pyside6.qtwidgets (6.10.2-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Inst python3-kf6jobwidgets (6.30.0-0supralinux4 localhost [amd64])
+Inst python3-kf6notifications (6.30.0-0supralinux1 localhost [amd64])
+Inst python3-kguiaddons (6.30.0-0supralinux2 localhost [amd64])
+Inst python3-kwidgetsaddons (6.30.0-0supralinux7 localhost [amd64])
+Inst qml6-module-org-kde-guiaddons (6.30.0-0supralinux2 localhost [amd64])
+Conf libpam-modules (1.7.0-5ubuntu3.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf media-types (14.0.0build1 Ubuntu:26.04/resolute [all])
+Conf netbase (6.5build1 Ubuntu:26.04/resolute [all])
+Conf tzdata (2026c-0ubuntu0.26.04.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [all])
+Conf libbz2-1.0 (1.0.8-6ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libffi8 (3.5.2-4 Ubuntu:26.04/resolute [amd64])
+Conf liblzma5 (5.8.3-1 Ubuntu:26.04/resolute [amd64])
+Conf libtinfo6 (6.6+20251231-1 Ubuntu:26.04/resolute [amd64])
+Conf libncursesw6 (6.6+20251231-1 Ubuntu:26.04/resolute [amd64])
+Conf readline-common (8.3-4 Ubuntu:26.04/resolute [all])
+Conf libreadline8t64 (8.3-4 Ubuntu:26.04/resolute [amd64])
+Conf libsqlite3-0 (3.46.1-9ubuntu0.3 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libuuid1 (2.41.3-3ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libpython3.14-stdlib (3.14.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf python3.14 (3.14.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libpython3-stdlib (3.14.3-0ubuntu2 Ubuntu:26.04/resolute [amd64])
+Conf python3 (3.14.3-0ubuntu2 Ubuntu:26.04/resolute [amd64])
+Conf libattr1 (1:2.5.2-4ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libblkid1 (2.41.3-3ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libmd0 (1.1.0-2build4 Ubuntu:26.04/resolute [amd64])
+Conf libbsd0 (0.12.2-2build2 Ubuntu:26.04/resolute [amd64])
+Conf libcom-err2 (1.47.2-3ubuntu4 Ubuntu:26.04/resolute [amd64])
+Conf libgmp10 (2:6.3.0+dfsg-5ubuntu2 Ubuntu:26.04/resolute [amd64])
+Conf libmount1 (2.41.3-3ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libsemanage-common (3.9-1build1 Ubuntu:26.04/resolute [all])
+Conf libsepol2 (3.9-2 Ubuntu:26.04/resolute [amd64])
+Conf libsemanage2 (3.9-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libudev1 (259.5-0ubuntu3.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf login.defs (1:4.17.4-2ubuntu3 Ubuntu:26.04/resolute [all])
+Conf passwd (1:4.17.4-2ubuntu3 Ubuntu:26.04/resolute [amd64])
+Conf adduser (3.153ubuntu1 Ubuntu:26.04/resolute [all])
+Conf libatomic1 (16-20260322-1ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libglib2.0-0t64 (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf gir1.2-glib-2.0 (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf iso-codes (4.20.1-1 Ubuntu:26.04/resolute [all])
+Conf libdbus-1-3 (1.16.2-2ubuntu4 Ubuntu:26.04/resolute [amd64])
+Conf libedit2 (3.1-20251016-1 Ubuntu:26.04/resolute [amd64])
+Conf libelf1t64 (0.194-4 Ubuntu:26.04/resolute [amd64])
+Conf libgpg-error0 (1.58-2 Ubuntu:26.04/resolute [amd64])
+Conf libgcrypt20 (1.12.0-2ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libgirepository-2.0-0 (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libglib2.0-data (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [all])
+Conf libnettle8t64 (3.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf libhogweed6t64 (3.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf libunistring5 (1.3-2build1 Ubuntu:26.04/resolute [amd64])
+Conf libidn2-0 (2.3.8-4build1 Ubuntu:26.04/resolute [amd64])
+Conf libp11-kit0 (0.26.2-2 Ubuntu:26.04/resolute [amd64])
+Conf libtasn1-6 (4.21.0-2 Ubuntu:26.04/resolute [amd64])
+Conf libgnutls30t64 (3.8.12-2ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libkrb5support0 (1.22.1-2ubuntu4.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libk5crypto3 (1.22.1-2ubuntu4.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libkeyutils1 (1.6.3-6ubuntu3 Ubuntu:26.04/resolute [amd64])
+Conf libkrb5-3 (1.22.1-2ubuntu4.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libgssapi-krb5-2 (1.22.1-2ubuntu4.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libstdc++6 (16-20260322-1ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxml2-16 (2.15.2+dfsg-0.1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf shared-mime-info (2.4-5build3 Ubuntu:26.04/resolute [amd64])
+Conf xkb-data (2.46-2 Ubuntu:26.04/resolute [all])
+Conf gettext-base (0.23.2-1 Ubuntu:26.04/resolute [amd64])
+Conf libdrm-common (2.4.131-1 Ubuntu:26.04/resolute [all])
+Conf libdrm2 (2.4.131-1 Ubuntu:26.04/resolute [amd64])
+Conf libevdev2 (1.13.6+dfsg-1 Ubuntu:26.04/resolute [amd64])
+Conf libgdbm6t64 (1.26-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libnghttp2-14 (1.68.0-2ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libpng16-16t64 (1.6.57-1 Ubuntu:26.04/resolute [amd64])
+Conf libpsl5t64 (0.21.2-1.1build2 Ubuntu:26.04/resolute [amd64])
+Conf libsensors-config (1:3.6.2-2build1 Ubuntu:26.04/resolute [all])
+Conf libsensors5 (1:3.6.2-2build1 Ubuntu:26.04/resolute [amd64])
+Conf libxau6 (1:1.0.11-1build2 Ubuntu:26.04/resolute [amd64])
+Conf libxdmcp6 (1:1.1.5-2 Ubuntu:26.04/resolute [amd64])
+Conf libxcb1 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libx11-data (2:1.8.13-1 Ubuntu:26.04/resolute [all])
+Conf libx11-6 (2:1.8.13-1 Ubuntu:26.04/resolute [amd64])
+Conf libxext6 (2:1.3.4-1build3 Ubuntu:26.04/resolute [amd64])
+Conf libxkbcommon0 (1.13.1-1 Ubuntu:26.04/resolute [amd64])
+Conf libgomp1 (16-20260322-1ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libb2-1 (0.98.1-1.1build2 Ubuntu:26.04/resolute [amd64])
+Conf libdouble-conversion3 (3.4.0-1 Ubuntu:26.04/resolute [amd64])
+Conf libicu78 (78.2-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libpcre2-16-0 (10.46-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libqt6core6t64 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libbrotli1 (1.2.0-3build1 Ubuntu:26.04/resolute [amd64])
+Conf libfreetype6 (2.14.2+dfsg-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf fonts-dejavu-mono (2.37-8build1 Ubuntu:26.04/resolute [all])
+Conf fonts-dejavu-core (2.37-8build1 Ubuntu:26.04/resolute [all])
+Conf fontconfig-config (2.17.1-3ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libfontconfig1 (2.17.1-3ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf fontconfig (2.17.1-3ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libglvnd0 (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Conf libdrm-amdgpu1 (2.4.131-1 Ubuntu:26.04/resolute [amd64])
+Conf libpciaccess0 (0.18.1-1ubuntu4.1 Ubuntu:26.04/resolute-updates [amd64])
+Conf libdrm-intel1 (2.4.131-1 Ubuntu:26.04/resolute [amd64])
+Conf libllvm21 (1:21.1.8-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libx11-xcb1 (2:1.8.13-1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-dri3-0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-present0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-randr0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-sync1 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-xfixes0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxshmfence1 (1.3.3-1build1 Ubuntu:26.04/resolute [amd64])
+Conf mesa-libgallium (26.0.8-1ubuntu0.3 Ubuntu:26.04/resolute-updates [amd64])
+Conf libgbm1 (26.0.8-1ubuntu0.3 Ubuntu:26.04/resolute-updates [amd64])
+Conf libwayland-client0 (1.24.0-2 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-shm0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libegl-mesa0 (26.0.8-1ubuntu0.3 Ubuntu:26.04/resolute-updates [amd64])
+Conf libegl1 (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Conf libvulkan1 (1.4.341.0-1 Ubuntu:26.04/resolute [amd64])
+Conf libgl1-mesa-dri (26.0.8-1ubuntu0.3 Ubuntu:26.04/resolute-updates [amd64])
+Conf libxcb-glx0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxxf86vm1 (1:1.1.4-2 Ubuntu:26.04/resolute [amd64])
+Conf libglx-mesa0 (26.0.8-1ubuntu0.3 Ubuntu:26.04/resolute-updates [amd64])
+Conf libglx0 (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Conf libgraphite2-3 (1.3.14-11ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libharfbuzz0b (12.3.2-2 Ubuntu:26.04/resolute [amd64])
+Conf lsb-base (11.6build1 Ubuntu:26.04/resolute [all])
+Conf x11-common (1:7.7+26ubuntu1 Ubuntu:26.04/resolute [all])
+Conf libice6 (2:1.1.1-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libmtdev1t64 (1.1.7-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libgudev-1.0-0 (1:238-7build1 Ubuntu:26.04/resolute [amd64])
+Conf libwacom-common (2.18.0-1 Ubuntu:26.04/resolute [all])
+Conf libwacom9 (2.18.0-1 Ubuntu:26.04/resolute [amd64])
+Conf libinput-bin (1.31.1-1ubuntu1.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libinput10 (1.31.1-1ubuntu1.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libjpeg-turbo8 (2.1.5-4ubuntu4 Ubuntu:26.04/resolute [amd64])
+Conf libjpeg8 (8c-2ubuntu12 Ubuntu:26.04/resolute [amd64])
+Conf libmd4c0 (0.5.2-2build1 Ubuntu:26.04/resolute [amd64])
+Conf libopengl0 (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6dbus6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libsm6 (2:1.2.6-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libts0t64 (1.22-1.1build2 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-util1 (0.4.1-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-image0 (0.4.0-2build2 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-render0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-render-util0 (0.3.10-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-cursor0 (0.1.6-1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-icccm4 (0.4.2-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-keysyms1 (0.4.1-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-shape0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-xinput0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxcb-xkb1 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxkbcommon-x11-0 (1.13.1-1 Ubuntu:26.04/resolute [amd64])
+Conf libqt6gui6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libqt6sql6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libqt6widgets6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libqt6help6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf libavahi-common-data (0.8-18ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libavahi-common3 (0.8-18ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libavahi-client3 (0.8-18ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libcups2t64 (2.4.16-1ubuntu1.3 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libqt6printsupport6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf assistant-qt6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf hicolor-icon-theme (0.18-2build1 Ubuntu:26.04/resolute [all])
+Conf breeze-icon-theme (4:6.30.0-0supralinux1 localhost [all])
+Conf breeze-icon-theme-rcc (4:6.30.0-0supralinux1 localhost [all])
+Conf libqt6opengl6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libqt6openglwidgets6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libqt6xml6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libqt6designer6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf libqt6designercomponents6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf libsasl2-modules-db (2.1.28+dfsg1-9ubuntu3 Ubuntu:26.04/resolute [amd64])
+Conf libsasl2-2 (2.1.28+dfsg1-9ubuntu3 Ubuntu:26.04/resolute [amd64])
+Conf libldap-common (2.6.10+dfsg-1ubuntu5 Ubuntu:26.04/resolute [all])
+Conf libldap2 (2.6.10+dfsg-1ubuntu5 Ubuntu:26.04/resolute [amd64])
+Conf librtmp1 (2.4+20151223.gitfa8646d.1-3 Ubuntu:26.04/resolute [amd64])
+Conf libssh2-1t64 (1.11.1-1ubuntu0.26.04.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libcurl3t64-gnutls (8.18.0-1ubuntu2.7 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libduktape207 (2.7.0+tests-0ubuntu4 Ubuntu:26.04/resolute [amd64])
+Conf libproxy1v5 (0.5.12-1 Ubuntu:26.04/resolute [amd64])
+Conf libqt6network6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf designer-qt6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf libassuan9 (3.0.2-2build1 Ubuntu:26.04/resolute [amd64])
+Conf gpgconf (2.4.8-4ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libksba8 (1.6.7-2build1 Ubuntu:26.04/resolute [amd64])
+Conf libnpth0t64 (1.8-3build1 Ubuntu:26.04/resolute [amd64])
+Conf dirmngr (2.4.8-4ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf perl-modules-5.40 (5.40.1-7ubuntu0.3 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [all])
+Conf libgdbm-compat4t64 (1.26-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libperl5.40 (5.40.1-7ubuntu0.3 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf perl (5.40.1-7ubuntu0.3 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf sgml-base (1.31+nmu1build1 Ubuntu:26.04/resolute [all])
+Conf xml-core (0.19build1 Ubuntu:26.04/resolute [all])
+Conf sgml-data (2.0.11+nmu1build1 Ubuntu:26.04/resolute [all])
+Conf docbook-xml (4.5-13build1 Ubuntu:26.04/resolute [all])
+Conf docbook-xsl (1.79.2+dfsg-8 Ubuntu:26.04/resolute [all])
+Conf extra-cmake-modules (6.30.0-0supralinux3 localhost [all])
+Conf gettext (0.23.2-1 Ubuntu:26.04/resolute [amd64])
+Conf gir1.2-glib-2.0-dev (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf gir1.2-gudev-1.0 (1:238-7build1 Ubuntu:26.04/resolute [amd64])
+Conf native-architecture (0.2.6build1 Ubuntu:26.04/resolute [all])
+Conf girepository-tools (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf gpg (2.4.8-4ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf pinentry-curses (1.3.2-3ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf gpg-agent (2.4.8-4ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf gpgsm (2.4.8-4ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf gnupg (2.4.8-4ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [all])
+Conf libkf6config-data (6.30.0-0supralinux5 localhost [all])
+Conf libkf6configcore6 (6.30.0-0supralinux5 localhost [amd64])
+Conf libkf6coreaddons-data (6.30.0-0supralinux4 localhost [all])
+Conf libkf6coreaddons6 (6.30.0-0supralinux4 localhost [amd64])
+Conf libkf6crash6 (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6dbusaddons-data (6.30.0-0supralinux3 localhost [all])
+Conf libkf6dbusaddons6 (6.30.0-0supralinux3 localhost [amd64])
+Conf libkf6i18n-data (6.30.0-0supralinux1 localhost [all])
+Conf libqt6qml6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libkf6i18n6 (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6service-data (6.30.0-0supralinux1 localhost [all])
+Conf libkf6service6 (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6service-bin (6.30.0-0supralinux1 localhost [amd64])
+Conf kded6 (6.24.0-0ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxml2-utils (2.15.2+dfsg-0.1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libkf6archive-data (6.30.0-0supralinux4 localhost [all])
+Conf libkf6archive6 (6.30.0-0supralinux4 localhost [amd64])
+Conf libxslt1.1 (1.1.45-0.1 Ubuntu:26.04/resolute [amd64])
+Conf kdoctools6 (6.30.0-0supralinux1 localhost [amd64])
+Conf kf6-breeze-icon-theme (4:6.30.0-0supralinux1 localhost [all])
+Conf kf6-breeze-icon-theme-rcc (4:6.30.0-0supralinux1 localhost [all])
+Conf libkf6wallet-data (6.30.0-0supralinux4 localhost [all])
+Conf libgpgme45 (2.0.1-2build1 Ubuntu:26.04/resolute [amd64])
+Conf libgpgmepp7 (2.0.0-2 Ubuntu:26.04/resolute [amd64])
+Conf libkf6configgui6 (6.30.0-0supralinux5 localhost [amd64])
+Conf libkf6notifications-data (6.30.0-0supralinux1 localhost [all])
+Conf libasound2-data (1.2.15.3-1ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [all])
+Conf libasound2t64 (1.2.15.3-1ubuntu1.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libltdl7 (2.5.4-9 Ubuntu:26.04/resolute [amd64])
+Conf libtdb1 (2:1.4.14+samba4.23.6+dfsg-1ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libogg0 (1.3.6-2 Ubuntu:26.04/resolute [amd64])
+Conf libvorbis0a (1.3.7-3build2 Ubuntu:26.04/resolute [amd64])
+Conf libvorbisfile3 (1.3.7-3build2 Ubuntu:26.04/resolute [amd64])
+Conf sound-theme-freedesktop (0.8-7build1 Ubuntu:26.04/resolute [all])
+Conf libcanberra0 (0.30-18ubuntu3 Ubuntu:26.04/resolute [amd64])
+Conf libkf6notifications6 (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6widgetsaddons-data (6.30.0-0supralinux7 localhost [all])
+Conf libkf6widgetsaddons6 (6.30.0-0supralinux7 localhost [amd64])
+Conf libkf6walletbackend6 (6.30.0-0supralinux4 localhost [amd64])
+Conf libqt6core5compat6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf libqca-qt6-2 (2.3.10-2 Ubuntu:26.04/resolute [amd64])
+Conf libqca-qt6-plugins (2.3.10-2 Ubuntu:26.04/resolute [amd64])
+Conf libkf6colorscheme-data (6.30.0-0supralinux1 localhost [all])
+Conf libkf6guiaddons-data (6.30.0-0supralinux2 localhost [all])
+Conf libwayland-cursor0 (1.24.0-2 Ubuntu:26.04/resolute [amd64])
+Conf libwayland-egl1 (1.24.0-2 Ubuntu:26.04/resolute [amd64])
+Conf libqt6waylandclient6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libkf6guiaddons6 (6.30.0-0supralinux2 localhost [amd64])
+Conf libkf6colorscheme6 (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6wallet6 (6.30.0-0supralinux4 localhost [amd64])
+Conf libkf6windowsystem-data (6.30.0-0supralinux4 localhost [all])
+Conf libxcb-res0 (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libxfixes3 (1:6.0.0-2build2 Ubuntu:26.04/resolute [amd64])
+Conf libkf6windowsystem6 (6.30.0-0supralinux4 localhost [amd64])
+Conf libsecret-common (0.21.7-2build1 Ubuntu:26.04/resolute [all])
+Conf libsecret-1-0 (0.21.7-2build1 Ubuntu:26.04/resolute [amd64])
+Conf kwallet6 (6.30.0-0supralinux4 localhost [amd64])
+Conf libkf6doctools6 (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6kiocore6 (6.30.0-0supralinux10 localhost [amd64])
+Conf libkf6bookmarks-data (6.30.0-0supralinux1 localhost [all])
+Conf libkf6bookmarks6 (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6bookmarkswidgets6 (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6completion-data (6.30.0-0supralinux1 localhost [all])
+Conf libkf6codecs-data (6.30.0-0supralinux4 localhost [all])
+Conf libkf6codecs6 (6.30.0-0supralinux4 localhost [amd64])
+Conf libkf6completion6 (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6iconthemes-data (6.30.0-0supralinux3 localhost [all])
+Conf libqt6svg6 (6.10.2-2 Ubuntu:26.04/resolute [amd64])
+Conf libkf6breezeicons6 (4:6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6iconthemes6 (6.30.0-0supralinux3 localhost [amd64])
+Conf libkf6iconwidgets6 (6.30.0-0supralinux3 localhost [amd64])
+Conf libkf6itemviews-data (6.30.0-0supralinux1 localhost [all])
+Conf libkf6itemviews6 (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6solid-data (6.30.0-0supralinux2 localhost [all])
+Conf libplist-2.0-4 (2.7.0+git20250820-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libimobiledevice-glue-1.0-0 (1.3.2-2build1 Ubuntu:26.04/resolute [amd64])
+Conf libusbmuxd-2.0-7 (2.1.1-1 Ubuntu:26.04/resolute [amd64])
+Conf libimobiledevice-1.0-6 (1.4.0-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libkf6solid6 (6.30.0-0supralinux2 localhost [amd64])
+Conf libqt6concurrent6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libkf6kiogui6 (6.30.0-0supralinux10 localhost [amd64])
+Conf libkf6jobwidgets-data (6.30.0-0supralinux4 localhost [all])
+Conf libkf6jobwidgets6 (6.30.0-0supralinux4 localhost [amd64])
+Conf libkf6kiowidgets6 (6.30.0-0supralinux10 localhost [amd64])
+Conf libkf6kiofilewidgets6 (6.30.0-0supralinux10 localhost [amd64])
+Conf kio6 (6.30.0-0supralinux10 localhost [amd64])
+Conf libbrotli-dev (1.2.0-3build1 Ubuntu:26.04/resolute [amd64])
+Conf libc-dev-bin (2.43-2ubuntu2.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf linux-libc-dev (7.0.0-38.38 Ubuntu:26.04/resolute-updates [amd64])
+Conf rpcsvc-proto (1.4.3-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libc6-dev (2.43-2ubuntu2.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libbz2-dev (1.0.8-6ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libclang-cpp21 (1:21.1.8-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libclang1-21 (1:21.1.8-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libexpat1-dev (2.7.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf zlib1g-dev (1:1.3.dfsg+really1.3.1-1ubuntu3.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libpng-dev (1.6.57-1 Ubuntu:26.04/resolute [amd64])
+Conf libfreetype-dev (2.14.2+dfsg-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf uuid-dev (2.41.3-3ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libpkgconf7 (2.5.1-4 Ubuntu:26.04/resolute [amd64])
+Conf pkgconf-bin (2.5.1-4 Ubuntu:26.04/resolute [amd64])
+Conf pkgconf (2.5.1-4 Ubuntu:26.04/resolute [amd64])
+Conf libfontconfig-dev (2.17.1-3ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libffi-dev (3.5.2-4 Ubuntu:26.04/resolute [amd64])
+Conf libblkid-dev (2.41.3-3ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libsepol-dev (3.9-2 Ubuntu:26.04/resolute [amd64])
+Conf libpcre2-32-0 (10.46-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libpcre2-posix3 (10.46-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libpcre2-dev (10.46-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libselinux-dev (3.9-4build1 Ubuntu:26.04/resolute [amd64])
+Conf libmount-dev (2.41.3-3ubuntu2.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libsysprof-capture-4-dev (50.0-1 Ubuntu:26.04/resolute [amd64])
+Conf libgio-2.0-dev (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf python3-packaging (26.0-1 Ubuntu:26.04/resolute [all])
+Conf libgio-2.0-dev-bin (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libgl1 (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Conf xorg-sgml-doctools (1:1.11-1.1build1 Ubuntu:26.04/resolute [all])
+Conf x11proto-dev (2025.1-1 Ubuntu:26.04/resolute [all])
+Conf libxau-dev (1:1.0.11-1build2 Ubuntu:26.04/resolute [amd64])
+Conf libxdmcp-dev (1:1.1.5-2 Ubuntu:26.04/resolute [amd64])
+Conf xtrans-dev (1.6.0-1build1 Ubuntu:26.04/resolute [all])
+Conf libxcb1-dev (1.17.0-2ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libx11-dev (2:1.8.13-1 Ubuntu:26.04/resolute [amd64])
+Conf libglx-dev (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Conf libgl-dev (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Conf libglib2.0-bin (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libglib2.0-dev-bin (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libglib2.0-dev (2.88.0-1ubuntu0.1 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libudev-dev (259.5-0ubuntu3.4 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libgudev-1.0-dev (1:238-7build1 Ubuntu:26.04/resolute [amd64])
+Conf libopengl-dev (1.7.0-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6test6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libqt6wlshellintegration6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libvulkan-dev (1.4.341.0-1 Ubuntu:26.04/resolute [amd64])
+Conf qmake6-bin (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf qmake6 (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf qt6-base-dev-tools (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf qt6-qpa-plugins (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf qt6-base-dev (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libkf6archive-dev (6.30.0-0supralinux4 localhost [amd64])
+Conf libkf6codecs-dev (6.30.0-0supralinux4 localhost [amd64])
+Conf libkf6config-bin (6.30.0-0supralinux5 localhost [amd64])
+Conf libkf6config-dev-bin (6.30.0-0supralinux5 localhost [amd64])
+Conf libqt6qmlmodels6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6qmlworkerscript6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6qmlmeta6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6quick6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libkf6configqml6 (6.30.0-0supralinux5 localhost [amd64])
+Conf qml6-module-qtqml-models (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtqml-workerscript (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtqml (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-org-kde-config (6.30.0-0supralinux5 localhost [amd64])
+Conf libqt6quicktemplates2-6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6labsplatform6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6labssynchronizer6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6qmlcompiler6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6qmlnetwork6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6quickcontrols2-6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6quickshapes6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6quickshapesdesignhelpers6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6quicktest6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6quickvectorimagegenerator6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6quickvectorimage6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6quickvectorimagehelpers6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6quickwidgets6 (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qml (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qmltime (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qt-labs-animation (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qt-labs-assetdownloader (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qt-labs-folderlistmodel (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-templates (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qt-labs-platform (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qt-labs-qmlmodels (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qt-labs-settings (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qt-labs-sharedimage (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qt-labs-synchronizer (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qt-labs-wavefrontmesh (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtcore (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtnetwork (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtqml-xmllistmodel (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-shapes (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-window (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-controls (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-layouts (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-dialogs (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-effects (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-localstorage (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-particles (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-shapes-designhelpers (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-tooling (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-vectorimage-helpers (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtquick-vectorimage (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qttest (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qt6-declarative-dev-tools (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qt6-qmllint-plugins (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qt6-qmlls-plugins (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf qt6-qmltooling-plugins (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6svgwidgets6 (6.10.2-2 Ubuntu:26.04/resolute [amd64])
+Conf qt6-svg-dev (6.10.2-2 Ubuntu:26.04/resolute [amd64])
+Conf qt6-declarative-dev (6.10.2+dfsg-3 Ubuntu:26.04/resolute [amd64])
+Conf libqt6uitools6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf linguist-qt6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf qdbus-qt6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf libqt6sql6-sqlite (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf qdoc-qt6 (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf qt6-documentation-tools (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf qt6-l10n-tools (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf qt6-tools-dev-tools (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf qt6-tools-dev (6.10.2-1 Ubuntu:26.04/resolute [amd64])
+Conf libkf6config-dev (6.30.0-0supralinux5 localhost [amd64])
+Conf libkf6colorscheme-dev (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6configwidgets-data (6.24.0-0ubuntu1 Ubuntu:26.04/resolute [all])
+Conf libkf6configwidgets6 (6.24.0-0ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-org-kde-coreaddons (6.30.0-0supralinux4 localhost [amd64])
+Conf libkf6coreaddons-dev (6.30.0-0supralinux4 localhost [amd64])
+Conf libwayland-server0 (1.24.0-2 Ubuntu:26.04/resolute [amd64])
+Conf libqt6waylandcompositor6 (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Conf libqt6waylandcompositoriviapplication6 (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Conf libqt6waylandcompositorpresentationtime6 (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Conf libqt6waylandcompositorwlshell6 (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Conf libqt6waylandcompositorxdgshell6 (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Conf libwayland-bin (1.24.0-2 Ubuntu:26.04/resolute [amd64])
+Conf libwayland-dev (1.24.0-2 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtwayland-client-texturesharing (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Conf qml6-module-qtwayland-compositor (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Conf qt6-wayland-dev (6.10.2-4 Ubuntu:26.04/resolute [amd64])
+Conf libkf6guiaddons-dev (6.30.0-0supralinux2 localhost [amd64])
+Conf libkf6i18nlocaledata6 (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6i18nqml6 (6.30.0-0supralinux1 localhost [amd64])
+Conf qml6-module-org-kde-i18n-localedata (6.30.0-0supralinux1 localhost [amd64])
+Conf qml6-module-org-kde-ki18n (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6i18n-dev (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6widgetsaddons-dev (6.30.0-0supralinux7 localhost [amd64])
+Conf libkf6configwidgets-dev (6.24.0-0ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libkf6bookmarks-dev (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6breezeicons-dev (4:6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6completion-dev (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6crash-dev (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6dbusaddons-bin (6.30.0-0supralinux3 localhost [amd64])
+Conf libkf6dbusaddons-dev (6.30.0-0supralinux3 localhost [amd64])
+Conf libkf6doctools-dev (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6globalaccel-data (6.30.0-0supralinux2 localhost [all])
+Conf libkf6globalaccel6 (6.30.0-0supralinux2 localhost [amd64])
+Conf libkf6globalaccel-dev (6.30.0-0supralinux2 localhost [amd64])
+Conf libkf6guiaddons-bin (6.30.0-0supralinux2 localhost [amd64])
+Conf libkf6iconthemes-bin (6.30.0-0supralinux3 localhost [amd64])
+Conf qml6-module-org-kde-iconthemes (6.30.0-0supralinux3 localhost [amd64])
+Conf libkf6iconthemes-dev (6.30.0-0supralinux3 localhost [amd64])
+Conf libkf6itemviews-dev (6.30.0-0supralinux1 localhost [amd64])
+Conf qml6-module-org-kde-notifications (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6notifications-dev (6.30.0-0supralinux1 localhost [amd64])
+Conf libmtdev-dev (1.1.7-1build1 Ubuntu:26.04/resolute [amd64])
+Conf libevdev-dev (1.13.6+dfsg-1 Ubuntu:26.04/resolute [amd64])
+Conf libwacom-dev (2.18.0-1 Ubuntu:26.04/resolute [amd64])
+Conf libinput-dev (1.31.1-1ubuntu1.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf libxkbcommon-dev (1.13.1-1 Ubuntu:26.04/resolute [amd64])
+Conf qt6-base-private-dev (6.10.2+dfsg-7 Ubuntu:26.04/resolute [amd64])
+Conf libkf6jobwidgets-dev (6.30.0-0supralinux4 localhost [amd64])
+Conf libkf6service-dev (6.30.0-0supralinux1 localhost [amd64])
+Conf libkf6solid-dev (6.30.0-0supralinux2 localhost [amd64])
+Conf qml6-module-org-kde-kwindowsystem (6.30.0-0supralinux4 localhost [amd64])
+Conf libkf6windowsystem-dev (6.30.0-0supralinux4 localhost [amd64])
+Conf libkf6kio-dev (6.30.0-0supralinux10 localhost [amd64])
+Conf libkf6solid-bin (6.30.0-0supralinux2 localhost [amd64])
+Conf libqca-qt6-dev (2.3.10-2 Ubuntu:26.04/resolute [amd64])
+Conf libkf6wallet-dev (6.30.0-0supralinux4 localhost [amd64])
+Conf libshiboken6-py3-6.10 (6.10.2-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libpyside6-py3-6.10 (6.10.2-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf libpython3.14 (3.14.4-1ubuntu0.2 Ubuntu:26.04/resolute-updates, Ubuntu:26.04/resolute-security [amd64])
+Conf python3-pyside6.qtcore (6.10.2-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf python3-kcoreaddons (6.30.0-0supralinux4 localhost [amd64])
+Conf python3-pyside6.qtgui (6.10.2-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf python3-pyside6.qtwidgets (6.10.2-6ubuntu1 Ubuntu:26.04/resolute [amd64])
+Conf python3-kf6jobwidgets (6.30.0-0supralinux4 localhost [amd64])
+Conf python3-kf6notifications (6.30.0-0supralinux1 localhost [amd64])
+Conf python3-kguiaddons (6.30.0-0supralinux2 localhost [amd64])
+Conf python3-kwidgetsaddons (6.30.0-0supralinux7 localhost [amd64])
+Conf qml6-module-org-kde-guiaddons (6.30.0-0supralinux2 localhost [amd64])

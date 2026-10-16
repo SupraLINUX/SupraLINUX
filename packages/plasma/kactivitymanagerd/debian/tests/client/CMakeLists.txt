@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
+project(ubuntu-kactivitymanagerd-client LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+find_package(PlasmaActivities 6.6 CONFIG REQUIRED)
+find_package(Qt6 6.10 CONFIG REQUIRED COMPONENTS Core Gui Qml DBus)
+add_executable(ubuntu-kactivitymanagerd-client main.cpp)
+target_link_libraries(ubuntu-kactivitymanagerd-client Plasma::Activities Qt6::Core Qt6::Gui Qt6::Qml Qt6::DBus)

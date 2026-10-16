@@ -1,0 +1,64 @@
+Source: kf6-kitemmodels
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-qmldeps,
+               cmake (>= 3.29~),
+               extra-cmake-modules (>= 6.30.0~),
+               qml6-module-qtqml-models <!nocheck>,
+               qml6-module-qtqml-workerscript <!nocheck>,
+               qml6-module-qtquick <!nocheck>,
+               qt6-base-dev (>= 6.9.0~),
+               qt6-declarative-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+               xauth <!nocheck>,
+               xvfb <!nocheck>,
+Standards-Version: 4.7.3
+Homepage: https://invent.kde.org/frameworks/kitemmodels
+Rules-Requires-Root: no
+
+Package: libkf6itemmodels-dev
+Section: libdevel
+Architecture: any
+Depends: libkf6itemmodels6 (= ${binary:Version}),
+         qml6-module-org-kde-kitemmodels (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         ${misc:Depends},
+Recommends: libkf6itemmodels-doc (= ${source:Version}),
+Description: additional item/view models for Qt Itemview
+ KItemModels provides additional item/view models for the Qt model-view framework.
+ .
+ This package contains the development files for KDE Frameworks 6 KItemModels.
+
+Package: libkf6itemmodels-doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: KItemModels documentation compatibility package
+ This package preserves the Debian-family KItemModels documentation package name
+ for package compatibility.
+ .
+ The current SupraLINUX build profile does not ship QCH documentation files.
+Section: doc
+
+Package: libkf6itemmodels6
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: additional item/view models for Qt Itemview
+ KItemModels provides additional item/view models for the Qt model-view framework.
+ .
+ This package is part of KDE Frameworks 6.
+
+Package: qml6-module-org-kde-kitemmodels
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+Description: QML bindings for KDE Frameworks KItemModels
+ This package contains the QML module for KItemModels.

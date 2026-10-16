@@ -1,0 +1,19 @@
+kf6-attica (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Keep the first hosted package attempt as historical FAIL evidence.
+  * Assemble the 3.0 (quilt) source package with dpkg-source -b so KDE/Debian
+    build helpers are resolved only inside the clean sbuild environment.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 13:28:00 -0300
+
+kf6-attica (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Frameworks Attica 6.30.0 from KDE upstream stable.
+  * Preserve the Ubuntu/Debian KF6 Attica binary package names and Multi-Arch
+    contracts while selecting dependencies from KDE 6.30 requirements.
+  * Build against the retained SupraLINUX Extra CMake Modules 6.30 package.
+  * Keep upstream tests enabled except for the network-dependent provider test.
+  * Keep QDoc generation outside the default package-build profile, matching
+    Attica 6.30 upstream target semantics.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 13:00:00 -0300

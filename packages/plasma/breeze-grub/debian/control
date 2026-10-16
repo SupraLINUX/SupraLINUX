@@ -1,0 +1,19 @@
+Source: breeze-grub
+Section: kde
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+XSBC-Original-Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/breeze-grub
+Vcs-Browser: https://github.com/SupraLINUX/SupraLINUX/tree/architecture/bootstrap-v1/packages/plasma/breeze-grub
+Vcs-Git: https://github.com/SupraLINUX/SupraLINUX.git
+Rules-Requires-Root: no
+Testsuite: autopkgtest
+
+Package: grub-theme-breeze
+Architecture: linux-any
+Depends: ${misc:Depends},
+Description: Breeze theme for GRUB 2
+ Breeze theme for the GRUB boot loader to fit in with KDE Plasma's
+ themeing.

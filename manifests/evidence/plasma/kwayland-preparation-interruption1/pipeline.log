@@ -1,0 +1,7 @@
+Scoped authoritative package revalidation contract: PASS
+Reviewed Plasma package build: PASS; authorized=['kwayland']; states={'breeze-grub': 'PASS', 'ocean-sound-theme': 'PASS', 'oxygen-sounds': 'PASS', 'kdecoration': 'PASS', 'plasma-workspace-wallpapers': 'PASS', 'breeze-plymouth': 'PASS', 'layer-shell-qt': 'PASS', 'knighttime': 'PASS', 'plasma-activities': 'PASS', 'kwrited': 'PASS', 'ksshaskpass': 'PASS', 'kwallet-pam': 'PASS', 'plasma-thunderbolt': 'PASS', 'kactivitymanagerd': 'PASS', 'kpipewire': 'PASS', 'plasma-wayland-protocols': 'PASS', 'kwayland': 'build-pending'}
+kwayland: current execution contract frozen; unrelated campaign history stays in its own evidence
+Actions runner runtime provenance verification: PASS
+runtime_version=2.337.0
+runtime_commit=397b032cbf865e9c3ddfab89d533ec19325e1273
+Nested KVM runtime probe: PASS (/opt/actions-runner/_work/SupraLINUX/SupraLINUX/evidence/authoritative-plasma-package/nested-kvm-runtime.txt)
