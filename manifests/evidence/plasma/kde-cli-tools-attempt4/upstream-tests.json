@@ -1,0 +1,13 @@
+{
+  "state": "PASS",
+  "expected_tests": [
+    "filetypestest",
+    "kcm_smoketest"
+  ],
+  "executed_tests": [
+    "appstreamtest",
+    "filetypestest",
+    "kcm_smoketest"
+  ],
+  "scope": "CTest suite executed during the clean package build"
+}

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "kde-cli-tools",
+      "package_version": "4:6.7.5-0supralinux3",
+      "artifact_id": 12068613037,
+      "workflow_run_id": 38949969504,
+      "artifact_sha256": "ffd6c726542b156703f419799f3b193fe3becf82965f8ea143bec1d2cf57707e",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

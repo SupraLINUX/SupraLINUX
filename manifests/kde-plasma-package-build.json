@@ -1,11 +1,9 @@
 {
   "schema": 1,
   "role": "reviewed-plasma-package-build",
-  "state": "execution-authorized",
-  "authorized_nodes": [
-    "kde-cli-tools"
-  ],
-  "package_execution_authorized": true,
+  "state": "partial-PASS",
+  "authorized_nodes": [],
+  "package_execution_authorized": false,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "scope": "Per-node clean builds, upstream tests, package/Ubuntu upgrade and ABI client checks on KVM; graphical desktop and final distro integration remain later gates",
   "nodes": {
@@ -8444,7 +8442,7 @@
       }
     },
     "kde-cli-tools": {
-      "state": "build-pending",
+      "state": "PASS",
       "source_package": "kde-cli-tools",
       "version": "4:6.7.5-0supralinux3",
       "upstream_version": "6.7.5",
@@ -9504,6 +9502,31 @@
           "host_evidence_manifest_sha256": "5143f82acb56dd9c064c07187382a0284deca1630017ea266638c81613c5d0ba",
           "cause": "sbuild PASS; official FileTypesTest 10/0 PASS; lintian PASS; original Ubuntu ABI/functional client PASS after candidate upgrade. Installed consumer exits 1 before CMake or payload assertions because its stale version guard requires 4:6.7.5-0supralinux1 while installed candidate is 4:6.7.5-0supralinux2. Original overall FAIL retained; rebuilt consumer and payload assertions NOT RUN. AppStream process skipped installed payload validation.",
           "repair": "Correct the installed consumer version guard against reviewed authenticated source identity; review candidate revision and full packaging/native-fixture-proof applicability, validate the repair and obtain an applicable fresh input gate before another Attempt. Do not rerun unchanged or admit downstream binaries."
+        },
+        {
+          "attempt": 4,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 38949969504,
+          "workflow_job_id": 117138582416,
+          "source_commit": "ab019b710840a45d7fd9d02f28b522aaea69838a",
+          "artifact_id": 12068613037,
+          "artifact_sha256": "ffd6c726542b156703f419799f3b193fe3becf82965f8ea143bec1d2cf57707e",
+          "result_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/result.json",
+          "result_sha256": "3a4c40bc7bc84f783f5cd243f2b9da87f6d6be0717267e7cc0b801189ce3c794",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261016t184508z-659917",
+          "host_evidence_manifest_sha256": "f100a9bcb535f3f1bbd025e9b4cfd1243565d0602f88412cf22fa505e8b95c10",
+          "rootfs_admission_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/rootfs-admission.json",
+          "rootfs_admission_sha256": "ef30a28abb1ba113147d32c153ff7c490e462aa12cca1acb45a90816db3e95b1",
+          "baseline_preflight_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/ubuntu-baseline-preflight.json",
+          "baseline_preflight_sha256": "acc72e858ff51f9298405ca9b3e0c5d76eba2c66b90534efa90050e03d263f9e",
+          "workflow_job_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/workflow-job.json",
+          "workflow_job_sha256": "698e8b22aaa18636965d4f66d8fd584e76b2dd0eec95f9cf473869e7eb328d91",
+          "host_result_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/host-result.json",
+          "host_result_sha256": "4c056215cdf545b2447b914a5cb7d9150f7fc31503cb0832368e17efa949ed91"
         }
       ],
       "review": {
@@ -9555,6 +9578,46 @@
         "path": "manifests/evidence/plasma/kde-cli-tools-native-fixture-repair/fixture-review.json",
         "sha256": "0b01a46291616bfe8ad627a066e1c1497699668d84cdf287f426ff45b5c5803c",
         "scope": "revision2-unchanged-native-test-fixture; historical-only; not a revision3 certification"
+      },
+      "evidence": {
+        "workflow_run_id": 38949969504,
+        "workflow_job_id": 117138582416,
+        "source_commit": "ab019b710840a45d7fd9d02f28b522aaea69838a",
+        "artifact_id": 12068613037,
+        "artifact_sha256": "ffd6c726542b156703f419799f3b193fe3becf82965f8ea143bec1d2cf57707e",
+        "result_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/result.json",
+        "result_sha256": "3a4c40bc7bc84f783f5cd243f2b9da87f6d6be0717267e7cc0b801189ce3c794",
+        "contract_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261016t184508z-659917",
+        "host_evidence_manifest_sha256": "f100a9bcb535f3f1bbd025e9b4cfd1243565d0602f88412cf22fa505e8b95c10",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/kde-cli-tools-attempt4",
+          "archive_index_sha256": "10664273b15b6154181c841e1c259e2c28b016f9c4bba821ab215489bb5e51bb",
+          "plan_path": "manifests/evidence/plasma/kde-cli-tools-artifact-plan.json",
+          "plan_sha256": "ddec3093a25ca8d6621d12c4ef6734addeefc05f29af56c17c77c16a8a627b01",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 3,
+          "binary_payload_file_count": 3,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/cache-probe-result.json",
+        "cache_probe_result_sha256": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+        "upstream_tests_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/upstream-tests.json",
+        "upstream_tests_sha256": "36b82a80a4c45ab531dd31f1efef4d71485cd4bb2445d0a7fad99c0b4728e0da",
+        "rootfs_admission_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/rootfs-admission.json",
+        "rootfs_admission_sha256": "ef30a28abb1ba113147d32c153ff7c490e462aa12cca1acb45a90816db3e95b1",
+        "baseline_preflight_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/ubuntu-baseline-preflight.json",
+        "baseline_preflight_sha256": "acc72e858ff51f9298405ca9b3e0c5d76eba2c66b90534efa90050e03d263f9e",
+        "workflow_job_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/workflow-job.json",
+        "workflow_job_sha256": "698e8b22aaa18636965d4f66d8fd584e76b2dd0eec95f9cf473869e7eb328d91",
+        "host_result_path": "manifests/evidence/plasma/kde-cli-tools-attempt4/host-result.json",
+        "host_result_sha256": "4c056215cdf545b2447b914a5cb7d9150f7fc31503cb0832368e17efa949ed91"
       }
     }
   },
@@ -9831,6 +9894,12 @@
       "attempt": 3,
       "archive_root": ".artifacts/plasma-6.7.5/kde-cli-tools-attempt3",
       "archive_index_sha256": "ee3cf6d12947aff481796c0c4b1268d15655f143bee0ae869e4dc2e06441ddf7"
+    },
+    {
+      "node": "kde-cli-tools",
+      "attempt": 4,
+      "archive_root": ".artifacts/plasma-6.7.5/kde-cli-tools-attempt4",
+      "archive_index_sha256": "10664273b15b6154181c841e1c259e2c28b016f9c4bba821ab215489bb5e51bb"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
