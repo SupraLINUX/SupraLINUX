@@ -27,8 +27,8 @@ blocks = {p.name: on_block(p.read_text()) for p in files}
 
 router = blocks.get("pr-ci-router.yml", "")
 req("  pull_request:" in router, "PR router must be the normal pull_request entrypoint")
-req(re.search(r"pull_request:\s*\n\s+types:\s*\[opened, synchronize, reopened\]", router) is not None,
-    "PR router must handle opened/synchronize/reopened")
+req(re.search(r"pull_request:\s*\n\s+types:\s*\[opened, synchronize, reopened, labeled\]", router) is not None,
+    "PR router must handle opened/synchronize/reopened plus controlled labeled gates")
 
 special = {
     "hosted-kvm-probe.yml",
@@ -75,6 +75,16 @@ req("  push:" in policy, "Repository Policy must retain main push validation")
 router_text = (WF / "pr-ci-router.yml").read_text()
 req("uses: ./.github/workflows/repository-policy.yml" in router_text,
     "PR router must invoke Repository Policy on every normal PR")
+
+host_workspace = blocks.get("host-workspace.yml", "")
+req("  workflow_call:" in host_workspace,
+    "Host workspace must be reusable from the PR router")
+req("  pull_request:" not in host_workspace,
+    "Host workspace must not listen to PR directly")
+req("uses: ./.github/workflows/host-workspace.yml" in router_text,
+    "PR router must own the host workspace entrypoint")
+req("github.event.label.name == 'ci:host-workspace'" in router_text,
+    "PR router must require the exact host workspace opt-in label")
 
 historical = [
     p.name for p in files
