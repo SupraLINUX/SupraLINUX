@@ -1,0 +1,70 @@
+name: SupraLINUX host workspace VM
+
+on:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  host-workspace:
+    if: >-
+      ${{ github.event.label.name == 'ci:host-workspace' &&
+          github.event.pull_request.head.repo.full_name == github.repository }}
+    name: Execute arbitrary task inside disposable KVM workspace
+    runs-on: [self-hosted, linux, x64, supralinux-host-orchestrator]
+    timeout-minutes: 180
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Validate workspace request
+        shell: bash
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          GITHUB_RUN_ID_VALUE: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          request = json.loads(Path("ops/host-workspace/request.json").read_text())
+          assert request.get("schema") == 1
+          task = request.get("task_id")
+          script = request.get("script")
+          assert isinstance(task, str) and re.fullmatch(r"[A-Za-z0-9._-]{1,64}", task)
+          assert isinstance(script, str) and 0 < len(script.encode()) <= 500_000
+          assert "\x00" not in script
+          print(f"task_id={task}")
+          print(f"payload_bytes={len(script.encode())}")
+          print(f"source_commit={os.environ['PR_HEAD_SHA']}")
+          print(f"run_id={os.environ['GITHUB_RUN_ID_VALUE']}")
+          PY
+
+      - name: Execute request in disposable VM
+        shell: bash
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          GITHUB_RUN_ID_VALUE: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          jq \
+            --arg source_commit "${PR_HEAD_SHA}" \
+            --arg run_id "${GITHUB_RUN_ID_VALUE}" \
+            '. + {source_commit:$source_commit, run_id:$run_id}' \
+            ops/host-workspace/request.json \
+            | sudo -n /usr/local/libexec/supralinux-vm-workspace-broker
+
+      - name: Upload workspace result
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: host-workspace-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}
+          path: /var/lib/supralinux/workspace-results/${{ github.run_id }}/
+          if-no-files-found: error
+          retention-days: 30
+          include-hidden-files: true
