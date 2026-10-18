@@ -42,9 +42,14 @@ jobs:
           assert request.get("gate") == "plasma-package-build"
           assert isinstance(request.get("runner_group_id"), int) and request["runner_group_id"] > 0
           cancel = request.get("cancel_run_id")
+          cancel_head = request.get("cancel_run_head_sha")
           assert cancel is None or (isinstance(cancel, int) and cancel > 0)
+          if cancel is None:
+              assert cancel_head is None
+          else:
+              assert isinstance(cancel_head, str) and re.fullmatch(r"[0-9a-f]{40}", cancel_head)
           if request["mode"] == "execute":
-              assert cancel is None
+              assert cancel is None and cancel_head is None
           assert re.fullmatch(r"[0-9a-f]{40}", os.environ["PR_HEAD_SHA"])
           assert re.fullmatch(r"[0-9]+", os.environ["CONTROL_RUN_ID"])
           print("Authoritative host control request: PASS")

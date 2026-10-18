@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import grp
 import json
 import os
 import pwd
@@ -31,7 +32,7 @@ if not raw or len(raw) > MAX_REQUEST_BYTES:
 request = json.loads(raw)
 allowed_keys = {
     "schema", "mode", "gate", "runner_group_id", "cancel_run_id",
-    "source_commit", "control_run_id",
+    "cancel_run_head_sha", "source_commit", "control_run_id",
 }
 unknown = set(request) - allowed_keys
 if unknown:
@@ -47,6 +48,7 @@ source_commit = request.get("source_commit")
 control_run_id = request.get("control_run_id")
 runner_group_id = request.get("runner_group_id")
 cancel_run_id = request.get("cancel_run_id")
+cancel_run_head_sha = request.get("cancel_run_head_sha")
 if not isinstance(source_commit, str) or len(source_commit) != 40 or any(c not in "0123456789abcdef" for c in source_commit):
     raise SystemExit("Invalid source commit.")
 if not isinstance(control_run_id, str) or not control_run_id.isdigit():
@@ -55,7 +57,17 @@ if not isinstance(runner_group_id, int) or runner_group_id <= 0:
     raise SystemExit("Invalid runner group id.")
 if cancel_run_id is not None and (not isinstance(cancel_run_id, int) or cancel_run_id <= 0):
     raise SystemExit("Invalid cancellation run id.")
-if request["mode"] == "execute" and cancel_run_id is not None:
+if cancel_run_id is None:
+    if cancel_run_head_sha is not None:
+        raise SystemExit("Cancellation head SHA requires a cancellation run id.")
+else:
+    if (
+        not isinstance(cancel_run_head_sha, str)
+        or len(cancel_run_head_sha) != 40
+        or any(c not in "0123456789abcdef" for c in cancel_run_head_sha)
+    ):
+        raise SystemExit("Invalid cancellation head SHA.")
+if request["mode"] == "execute" and (cancel_run_id is not None or cancel_run_head_sha is not None):
     raise SystemExit("execute mode refuses cancellation; stale-run cleanup belongs to preflight.")
 
 for command in ("curl", "git", "gh", "jq", "python3"):
@@ -107,12 +119,19 @@ def resolve_operator() -> pwd.struct_passwd:
 
 operator = resolve_operator()
 
-def demote():
-    os.initgroups(operator.pw_name, operator.pw_gid)
-    os.setgid(operator.pw_gid)
-    os.setuid(operator.pw_uid)
+def make_demote(extra_groups=()):
+    def demote():
+        os.initgroups(operator.pw_name, operator.pw_gid)
+        groups = set(os.getgroups())
+        groups.update(extra_groups)
+        os.setgroups(sorted(groups))
+        os.setgid(operator.pw_gid)
+        os.setuid(operator.pw_uid)
+    return demote
 
-def run_as_operator(args, *, cwd=None, extra_env=None, check=True, capture_output=True):
+def run_as_operator(
+    args, *, cwd=None, extra_env=None, extra_groups=(), check=True, capture_output=True
+):
     env = os.environ.copy()
     env.update({
         "HOME": operator.pw_dir,
@@ -128,18 +147,37 @@ def run_as_operator(args, *, cwd=None, extra_env=None, check=True, capture_outpu
         check=check,
         capture_output=capture_output,
         text=True,
-        preexec_fn=demote,
+        preexec_fn=make_demote(extra_groups),
     )
 
 libvirt_group = pwd.getpwnam("libvirt-qemu").pw_gid
-group_names = set(
-    run_as_operator(["id", "-nG"]).stdout.split()
-)
-libvirt_group_name = __import__("grp").getgrgid(libvirt_group).gr_name
+group_names = set(run_as_operator(["id", "-nG"]).stdout.split())
+libvirt_group_name = grp.getgrgid(libvirt_group).gr_name
 if libvirt_group_name not in group_names:
     raise SystemExit("Resolved operator lacks libvirt QEMU group.")
-run_as_operator(["test", "-r", "/dev/kvm"])
-run_as_operator(["test", "-w", "/dev/kvm"])
+
+kvm_stat = os.stat("/dev/kvm")
+kvm_group = kvm_stat.st_gid
+kvm_group_name = grp.getgrgid(kvm_group).gr_name
+privileged_groups = tuple(sorted({libvirt_group, kvm_group}))
+write_result(
+    "operator-diagnostic.txt",
+    "\n".join(
+        [
+            f"operator_user={operator.pw_name}",
+            f"operator_groups={','.join(sorted(group_names))}",
+            f"kvm_gid={kvm_group}",
+            f"kvm_group={kvm_group_name}",
+            f"libvirt_qemu_gid={libvirt_group}",
+            f"libvirt_qemu_group={libvirt_group_name}",
+            "persistent_group_membership_changed=no",
+            "privilege_scope=child-process-only",
+            "",
+        ]
+    ),
+)
+run_as_operator(["test", "-r", "/dev/kvm"], extra_groups=privileged_groups)
+run_as_operator(["test", "-w", "/dev/kvm"], extra_groups=privileged_groups)
 run_as_operator(["gh", "auth", "status", "--hostname", "github.com"])
 token_result = run_as_operator(["gh", "auth", "token"])
 token = token_result.stdout.strip()
@@ -185,7 +223,7 @@ if cancel_run_id is not None:
     already_cancelled = (
         run.get("name") == "KDE Plasma authoritative KVM package build"
         and run.get("event") == "pull_request"
-        and run.get("head_sha") == source_commit
+        and run.get("head_sha") == cancel_run_head_sha
         and run.get("status") == "completed"
         and run.get("conclusion") == "cancelled"
     )
@@ -193,7 +231,7 @@ if cancel_run_id is not None:
         valid_stale = (
             run.get("name") == "KDE Plasma authoritative KVM package build"
             and run.get("event") == "pull_request"
-            and run.get("head_sha") == source_commit
+            and run.get("head_sha") == cancel_run_head_sha
             and run.get("status") == "queued"
             and run.get("conclusion") is None
         )
@@ -260,7 +298,7 @@ try:
         ["scripts/check-kvm-host.sh"],
         ["scripts/with-libguestfs-runtime.sh", "true"],
     ):
-        proc = run_as_operator(command, cwd=checkout)
+        proc = run_as_operator(command, cwd=checkout, extra_groups=privileged_groups)
         preflight_log.append(proc.stdout)
         preflight_log.append(proc.stderr)
 
@@ -273,6 +311,7 @@ try:
         ],
         cwd=checkout,
         extra_env={"SUPRALINUX_GOLDEN_COMPAT_COMMIT": source_commit},
+        extra_groups=privileged_groups,
     )
     preflight_log.extend([proc.stdout, proc.stderr])
     write_result("host-preflight.log", "".join(preflight_log))
@@ -323,7 +362,7 @@ try:
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
-            preexec_fn=demote,
+            preexec_fn=make_demote(privileged_groups),
         )
         assert process.stdout is not None
         for line in process.stdout:

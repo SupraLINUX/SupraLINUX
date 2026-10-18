@@ -14,11 +14,16 @@ request = json.loads(REQUEST.read_text())
 required_broker = [
     'os.environ.get("SUDO_USER") != RUNNER_USER',
     '"mode", "gate", "runner_group_id", "cancel_run_id"',
+    '"cancel_run_head_sha"',
     'request.get("mode") not in {"preflight", "execute"}',
     'request.get("gate") != "plasma-package-build"',
     '"execute" and cancel_run_id is not None',
     'run.get("status") == "queued"',
     'job.get("status") != "queued"',
+    'make_demote(extra_groups=())',
+    'privileged_groups = tuple(sorted({libvirt_group, kvm_group}))',
+    '"persistent_group_membership_changed=no"',
+    '"privilege_scope=child-process-only"',
     '/actions/runs/{cancel_run_id}/cancel',
     '/labels/ci%3Aplasma-package-build',
     'refs/pull/{PR_NUMBER}/head',
@@ -58,6 +63,7 @@ expected_request = {
     "gate": "plasma-package-build",
     "runner_group_id": 3,
     "cancel_run_id": 39106846518,
+    "cancel_run_head_sha": "faf9e633db4218c88a7b7df0bdc737c6079ca216",
 }
 if request != expected_request:
     raise SystemExit(f"unexpected initial authoritative host request: {request!r}")
