@@ -10553,6 +10553,10 @@
     {
       "path": "manifests/evidence/package-revalidation/kde-cli-tools-preflight44/verification.json",
       "sha256": "fd84db53d62c5bce4f1578dec112bc5d49f75e2170fc3dcfe7c476693e969779"
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/polkit-kde-agent-1-preflight45/verification.json",
+      "sha256": "56244634575e3d861979ee534914d9b8bf4e199f1dd0a400f4dc9b2a5d2ef097"
     }
   ],
   "package_input_incidents": [

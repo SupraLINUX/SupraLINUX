@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "scope": "reviewed-ubuntu-baseline-preflight",
+  "node": "polkit-kde-agent-1",
+  "state": "PASS",
+  "exit_code": 0,
+  "source_commit": "a0806b32d333ed762b76bcfd9d36e231d9c74d9f",
+  "workflow_run_id": "39098276395",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "candidate_installed": false,
+  "inputs_sha256": {
+    "scripts/probe-reviewed-ubuntu-baseline.py": "242b1ad8d6e85027155391d11747f1d2cee77a9a8371bb6d1f4d57d4731dc03b",
+    "scripts/plasma-package-testing.py": "5fe6280e23080e98b13fbfd92f5db0988987e2b833567fbd4583ae88a8ec74d1",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "packages/plasma/polkit-kde-agent-1/debian/tests/baseline-setup": "003565a02f6bfc037f5bc9dc5490e66ccf8b6b28b1573e91f9c5e3c30c751074",
+    "packages/plasma/polkit-kde-agent-1/debian/tests/control": "0a06ec471542f4e07e7c3c4ea81e42ad634dddf425c0d917d1cc05996673a1f8",
+    "packages/plasma/polkit-kde-agent-1/debian/tests/installed-payload": "374ba2728efd55249bb5b414d7a3123718e5209c21822dee7550975279045ca2",
+    "packages/plasma/polkit-kde-agent-1/debian/tests/ubuntu-upgrade": "dcbee022f7a31e47bfb17bb92b78880d982957ce82befe20cb35616b2334a84f"
+  },
+  "files_sha256": {
+    "autopkgtest/log": "582ec506d2b43812c74e3f68441db90328e8ac0efb490da546b89210d93935b5",
+    "autopkgtest/reviewed-baseline-packages": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/reviewed-baseline-stdout": "d3b4cc1ff51e072e6cdc994df4920876c3641850e045eb736371c334bd043401",
+    "autopkgtest/summary": "36e1952a68e082ee9b1d71c36e7ee1d26054668b01a97ed5e481b3e31a7962e2",
+    "autopkgtest/testbed-packages": "2ffc74dc5a5da012a81b4ffe11c337b28392ff9b56baf018705e2da682a7056a",
+    "autopkgtest/testinfo.json": "92f4607e1b393552e0d84437d7ad822c8b4ae4d2b2e4a3174dddb6ab18865040",
+    "baseline-setup": "003565a02f6bfc037f5bc9dc5490e66ccf8b6b28b1573e91f9c5e3c30c751074",
+    "reviewed-inputs.json": "c67dc312aedaad7d25b621f1d431f3bdc84ffdc5d157e20a2c5cf03b13cf4afa",
+    "setup-commands.txt": "f81186a83b4041ceb8c422c487ce121dce72b787ba7f2a38f71bf378addb3438"
+  }
+}

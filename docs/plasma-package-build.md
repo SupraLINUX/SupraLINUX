@@ -1,5 +1,20 @@
 # Authoritative Plasma package builds
 
+PolicyKit KDE Agent 1 `4:6.7.5-0supralinux1` input preflight 45 on
+`a0806b32d333ed762b76bcfd9d36e231d9c74d9f`, run 39098276395, job
+117589122221, closes authoritative input PASS. The clean bare Frameworks
+milestone probe admits the exact 9-source/52-binary predecessor closure,
+including KConfig `6.30.0-0supralinux5`, and the original Ubuntu baseline
+passes in nested KVM. The candidate package was not built or installed and no
+Package Attempt was consumed. Actions artifact 12125169553 has SHA-256
+`ce3d4e33170477dfef28965808109208f2e24a97fb17b8277f6e1d31a37d750d`; the sealed host evidence manifest has SHA-256 `280a0696a08fd7ebdf4eec375402874cb7f0a5ffc9941e38d69f015034caa9b1`.
+The original artifact and complete host evidence are retained independently
+with empty offline restoration under local archive SHA-256 `7de1aca6892dc6fa8a45da219c6bce2fbe61f6a0ae77dff591b4d62e6b49a533`.
+Direct VM/runner/overlay cleanup and preservation of the execution images are
+also verified. This commit records input admission only:
+`polkit-kde-agent-1` remains in `preflight` mode with Attempt 0, so candidate
+Attempt 1 is not authorized here.
+
 KDE CLI Tools `4:6.7.5-0supralinux1` input preflight 41 on
 `8c19d35bc2e8ca47a7bd24bf3763153d579e7410`,
 [run 38100001974](https://github.com/SupraLINUX/SupraLINUX/actions/runs/38100001974),
