@@ -67,9 +67,11 @@ for token in required_workflow:
 
 expected_request = {
     "schema": 1,
-    "mode": "diagnose",
+    "mode": "preflight",
     "gate": "plasma-package-build",
     "runner_group_id": 3,
+    "cancel_run_id": 39106846518,
+    "cancel_run_head_sha": "faf9e633db4218c88a7b7df0bdc737c6079ca216",
 }
 if request != expected_request:
     raise SystemExit(f"unexpected initial authoritative host request: {request!r}")
