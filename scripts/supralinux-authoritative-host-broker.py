@@ -547,6 +547,41 @@ try:
 
     if request["mode"] == "rebuild-golden":
         write_result("host-preflight.log", "".join(preflight_log))
+        network_preflight_log = result_dir / "golden-network-preflight.log"
+        network_preflight_rc = stream_as_operator(
+            ["scripts/check-golden-build-network-preflight.sh"],
+            network_preflight_log,
+            cwd=checkout,
+            extra_groups=privileged_groups,
+        )
+        if network_preflight_rc != 0:
+            write_result(
+                "golden-network-preflight-result.txt",
+                "\n".join(
+                    [
+                        "state=INFRA_INVALID",
+                        f"exit_code={network_preflight_rc}",
+                        f"source_commit={source_commit}",
+                        "golden_rebuild_started=no",
+                        "package_attempt_effect=none",
+                        "",
+                    ]
+                ),
+            )
+            raise SystemExit(network_preflight_rc)
+        write_result(
+            "golden-network-preflight-result.txt",
+            "\n".join(
+                [
+                    "state=PASS",
+                    "exit_code=0",
+                    f"source_commit={source_commit}",
+                    "golden_rebuild_authorized=yes",
+                    "package_attempt_effect=none",
+                    "",
+                ]
+            ),
+        )
         rebuild_log = result_dir / "golden-rebuild.log"
         rebuild_rc = stream_as_operator(
             ["scripts/build-authoritative-runner-image.sh"],

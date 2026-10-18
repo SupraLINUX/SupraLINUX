@@ -8,7 +8,10 @@ SOURCE_IMAGE="${SUPRALINUX_SOURCE_IMAGE:-/var/lib/supralinux/images/source/resol
 SOURCE_PROVENANCE="${SOURCE_IMAGE}.provenance.txt"
 TARGET_IMAGE="${SUPRALINUX_GOLDEN_IMAGE:-/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2}"
 LIBVIRT_URI="${SUPRALINUX_LIBVIRT_URI:-qemu:///system}"
-LIBVIRT_NETWORK="${SUPRALINUX_LIBVIRT_NETWORK:-default}"
+if [[ -n "${SUPRALINUX_LIBVIRT_NETWORK:-}" ]]; then
+    printf 'Authoritative golden builder refuses libvirt network overrides; use controlled QEMU SLIRP.\n' >&2
+    exit 2
+fi
 LIBVIRT_QEMU_USER="${SUPRALINUX_LIBVIRT_QEMU_USER:-libvirt-qemu}"
 RUNNER_USER="${SUPRALINUX_RUNNER_USER:-ubuntu}"
 VM_MEMORY_MIB="${SUPRALINUX_GOLDEN_BUILD_MEMORY_MIB:-12288}"
@@ -29,6 +32,7 @@ if [[ ! "${RUNNER_USER}" =~ ^[a-z_][a-z0-9_-]*[$]?$ ]]; then
 fi
 
 required=(
+    base64
     chgrp
     chmod
     git
@@ -83,6 +87,7 @@ EVIDENCE_DIR="${EVIDENCE_ROOT}/${BUILD_ID}"
 WORK_DISK="${BUILD_DIR}/golden-work.qcow2"
 USER_DATA="${BUILD_DIR}/user-data"
 META_DATA="${BUILD_DIR}/meta-data"
+NETWORK_CONFIG="${BUILD_DIR}/network-config"
 TARGET_TMP="${TARGET_IMAGE}.tmp-${BUILD_ID}"
 SUCCESS=0
 VM_DEFINED=0
@@ -145,6 +150,21 @@ instance-id: ${VM_NAME}
 local-hostname: ${VM_NAME}
 EOF_META
 
+cat > "${NETWORK_CONFIG}" <<'EOF_NETWORK'
+version: 2
+ethernets:
+  supranet0:
+    match:
+      macaddress: "52:54:00:53:55:01"
+    set-name: supranet0
+    dhcp4: true
+    dhcp6: false
+    accept-ra: false
+    activation-mode: manual
+EOF_NETWORK
+
+NETWORK_HELPER_B64="$(base64 -w0 "${ROOT}/scripts/configure-kvm-guest-network.py")"
+
 cat > "${USER_DATA}" <<EOF_USER
 #cloud-config
 package_update: true
@@ -152,6 +172,11 @@ packages:
   - ca-certificates
   - git
 write_files:
+  - path: /usr/local/sbin/supralinux-configure-kvm-guest-network.py
+    owner: root:root
+    permissions: '0755'
+    encoding: b64
+    content: ${NETWORK_HELPER_B64}
   - path: /usr/local/sbin/supralinux-golden-build
     owner: root:root
     permissions: '0755'
@@ -185,7 +210,10 @@ write_files:
           printf 'runner_user=%s\\n' '${RUNNER_USER}'
           printf 'source_checkout_removed=yes\\n'
       } > /var/lib/supralinux/evidence/golden-build-complete.txt
+bootcmd:
+  - [ python3, /usr/local/sbin/supralinux-configure-kvm-guest-network.py, --bootstrap, --activate-link ]
 runcmd:
+  - [ bash, -lc, 'python3 /usr/local/sbin/supralinux-configure-kvm-guest-network.py --bootstrap --verify-network > /var/lib/supralinux/evidence/golden-network-verification.json' ]
   - [ /usr/local/sbin/supralinux-golden-build ]
 power_state:
   delay: now
@@ -213,6 +241,8 @@ EOF_USER
     printf 'disk_size_gib=%s\n' "${VM_DISK_SIZE_GIB}"
     printf 'user_data_sha256='; sha256sum "${USER_DATA}" | awk '{print $1}'
     printf 'meta_data_sha256='; sha256sum "${META_DATA}" | awk '{print $1}'
+    printf 'network_config_sha256='; sha256sum "${NETWORK_CONFIG}" | awk '{print $1}'
+    printf 'network_helper_sha256='; sha256sum "${ROOT}/scripts/configure-kvm-guest-network.py" | awk '{print $1}'
     printf '\nsource_image_provenance:\n'
     cat "${SOURCE_PROVENANCE}"
 } > "${EVIDENCE_DIR}/build-inputs.txt"
@@ -227,11 +257,11 @@ if ! timeout --foreground "${BUILD_TIMEOUT_SECONDS}" virt-install \
     --cpu host-passthrough \
     --import \
     --disk "path=${WORK_DISK},format=qcow2,bus=virtio,cache=none" \
-    --network "network=${LIBVIRT_NETWORK},model=virtio" \
+    --network 'user,model=virtio,mac=52:54:00:53:55:01,xpath1.set=./ip/@family=ipv4,xpath2.set=./ip/@address=10.203.0.1,xpath3.set=./ip/@prefix=24' \
     --graphics none \
     --noautoconsole \
     --osinfo detect=on,require=off \
-    --cloud-init "user-data=${USER_DATA},meta-data=${META_DATA},disable=on" \
+    --cloud-init "user-data=${USER_DATA},meta-data=${META_DATA},network-config=${NETWORK_CONFIG},disable=on" \
     --noreboot \
     --wait=-1; then
     printf 'Preparation VM did not complete successfully within the configured timeout.\n' >&2
