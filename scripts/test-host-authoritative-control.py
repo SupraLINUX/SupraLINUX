@@ -17,7 +17,7 @@ required_broker = [
     '"cancel_run_head_sha"',
     'request.get("mode") not in {"preflight", "execute"}',
     'request.get("gate") != "plasma-package-build"',
-    '"execute" and cancel_run_id is not None',
+    'request["mode"] == "execute" and (cancel_run_id is not None or cancel_run_head_sha is not None)',
     'run.get("status") == "queued"',
     'job.get("status") != "queued"',
     'make_demote(extra_groups=())',
