@@ -73,7 +73,7 @@ sudo visudo -cf "${SUDOERS}"
 rm -f "${SUDOERS_TMP}"
 trap - EXIT
 
-if [[ ! -f "${RUNNER_DIR}/.runner" ]]; then
+if ! sudo test -f "${RUNNER_DIR}/.runner"; then
     SUPRALINUX_RUNNER_USER="${RUNNER_USER}" \
     SUPRALINUX_ACTIONS_RUNNER_DIR="${RUNNER_DIR}" \
     SUPRALINUX_EVIDENCE_DIR="${EVIDENCE_ROOT}" \
@@ -104,17 +104,19 @@ if [[ ! -f "${RUNNER_DIR}/.runner" ]]; then
     unset REGISTRATION_TOKEN
 fi
 
-if [[ ! -f "${RUNNER_DIR}/.service" ]]; then
-    (
-        cd "${RUNNER_DIR}"
-        sudo ./svc.sh install "${RUNNER_USER}"
-    )
+if ! sudo test -f "${RUNNER_DIR}/.service"; then
+    sudo bash -c '
+        set -euo pipefail
+        cd "$1"
+        exec ./svc.sh install "$2"
+    ' bash "${RUNNER_DIR}" "${RUNNER_USER}"
 fi
 
-(
-    cd "${RUNNER_DIR}"
-    sudo ./svc.sh start
-)
+sudo bash -c '
+    set -euo pipefail
+    cd "$1"
+    exec ./svc.sh start
+' bash "${RUNNER_DIR}"
 
 sudo install -d -o root -g root -m 0755 "${EVIDENCE_ROOT}"
 sudo install -d -o "${RUNNER_USER}" -g "$(id -gn "${RUNNER_USER}")" -m 0700 \

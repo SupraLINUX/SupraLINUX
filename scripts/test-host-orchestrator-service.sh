@@ -11,12 +11,12 @@ import sys
 text = Path(sys.argv[1]).read_text()
 
 required = [
+    'if ! sudo test -f "${RUNNER_DIR}/.runner"; then',
     'cd "$1"',
     'exec ./config.sh "$@"',
-    'if [[ ! -f "${RUNNER_DIR}/.service" ]]; then',
-    'cd "${RUNNER_DIR}"',
-    'sudo ./svc.sh install "${RUNNER_USER}"',
-    'sudo ./svc.sh start',
+    'if ! sudo test -f "${RUNNER_DIR}/.service"; then',
+    'exec ./svc.sh install "$2"',
+    'exec ./svc.sh start',
     'sudo -u "${RUNNER_USER}" -H sudo -n -l',
     'NOPASSWD: ${BROKER}',
 ]
@@ -24,10 +24,22 @@ for token in required:
     if token not in text:
         raise SystemExit(f"missing host-orchestrator service contract: {token}")
 
-if 'sudo "${RUNNER_DIR}/svc.sh" install' in text:
-    raise SystemExit("svc.sh install must not run outside the runner root")
-if 'sudo "${RUNNER_DIR}/svc.sh" start' in text:
-    raise SystemExit("svc.sh start must not run outside the runner root")
+for forbidden in (
+    '[[ ! -f "${RUNNER_DIR}/.runner" ]]',
+    '[[ ! -f "${RUNNER_DIR}/.service" ]]',
+    '(\n        cd "${RUNNER_DIR}"',
+    '(\n    cd "${RUNNER_DIR}"',
+    'sudo "${RUNNER_DIR}/svc.sh" install',
+    'sudo "${RUNNER_DIR}/svc.sh" start',
+):
+    if forbidden in text:
+        raise SystemExit(
+            "runner-private directory must never require caller traversal: "
+            + repr(forbidden)
+        )
 
-print("Host orchestrator service/root and passwordless broker contract: PASS")
+if "NOPASSWD: ALL" in text:
+    raise SystemExit("host orchestrator must not receive unrestricted passwordless sudo")
+
+print("Host orchestrator private-root/service and passwordless broker contract: PASS")
 PY
