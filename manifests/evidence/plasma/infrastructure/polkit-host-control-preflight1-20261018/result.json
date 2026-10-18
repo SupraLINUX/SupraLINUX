@@ -12,5 +12,6 @@
   "package_execution_started": false,
   "consumes_package_attempt": false,
   "cause": "The broker's preliminary external `test -r /dev/kvm` proxy returned exit 1 after demotion to the certified host operator, before GitHub mutation, JIT runner creation, VM creation, or sbuild.",
-  "repair": "Replace the access-bit proxy with an actual O_RDWR open plus KVM_GET_API_VERSION ioctl under the exact demoted operator supplementary-group set, retain that admission result, and repeat the host preflight before execute mode."
+  "repair": "Replace the access-bit proxy with an actual O_RDWR open plus KVM_GET_API_VERSION ioctl under the exact demoted operator supplementary-group set, retain that admission result, and repeat the host preflight before execute mode.",
+  "exit_code": 1
 }

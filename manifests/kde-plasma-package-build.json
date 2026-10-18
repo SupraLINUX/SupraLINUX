@@ -10353,7 +10353,7 @@
       "package_execution_started": false,
       "consumes_package_attempt": false,
       "result_path": "manifests/evidence/plasma/infrastructure/polkit-host-control-preflight1-20261018/result.json",
-      "result_sha256": "79b4eddef169345cfebbc7c0ee7c69f84f7f2b60f77671541451f392e0879dc7",
+      "result_sha256": "eaa546d57d61a5f0364356c68cdc61d12434fec3a64ce71211f6be85e1e37df1",
       "diagnosis_path": "manifests/evidence/plasma/infrastructure/polkit-host-control-preflight1-20261018/diagnosis.json",
       "diagnosis_sha256": "f9cff4195e6315fd98d5225f61e80375f105fd98bf7e3ffc8f566bfae009eb95",
       "cause": "The broker's preliminary external `test -r /dev/kvm` proxy returned exit 1 after demotion to the certified host operator, before GitHub mutation, JIT runner creation, VM creation, or sbuild.",
