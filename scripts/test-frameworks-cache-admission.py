@@ -40,6 +40,7 @@ class CacheAdmission(unittest.TestCase):
         self.pool.mkdir(parents=True)
         source = self.root / "fixture"
         (source / "DEBIAN").mkdir(parents=True)
+        (source / "DEBIAN").chmod(0o755)
         (source / "DEBIAN/control").write_text(
             "Package: extra-cmake-modules\nSource: kf6-extra-cmake-modules\nVersion: 6.30.0-0supralinux3\n"
             "Architecture: all\nMaintainer: Test <test@example.invalid>\nDescription: Cache admission fixture\n")
@@ -68,6 +69,7 @@ class CacheAdmission(unittest.TestCase):
     def repair(self, source_package='kf6-extra-cmake-modules'):
         source = self.root/'repair'
         (source/'DEBIAN').mkdir(parents=True)
+        (source/'DEBIAN').chmod(0o755)
         version = '6.30.0-0supralinux4'
         (source/'DEBIAN/control').write_text(
             f'Package: extra-cmake-modules\nSource: {source_package}\nVersion: {version}\nArchitecture: all\n'
@@ -82,6 +84,26 @@ class CacheAdmission(unittest.TestCase):
         return {'node': 'extra-cmake-modules', 'path': str(deb), 'version': version,
                 'source_package': 'kf6-extra-cmake-modules', 'revalidation': reference,
                 'artifact_sha256': '1'*64, **predecessor['binaries'][0]}
+
+    def test_transitive_dag_requires_complete_reviewed_sources(self):
+        record = copy.deepcopy(self.record)
+        record['frameworks_predecessors']['knotifications'] = {'version': '6.30.0-1', 'binaries': []}
+        nodes = {
+            'extra-cmake-modules': {'depends_on': []},
+            'knotifications': {'depends_on': ['extra-cmake-modules', 'kconfig']},
+            'kconfig': {'depends_on': ['extra-cmake-modules']},
+        }
+        with self.assertRaisesRegex(AssertionError, 'Incomplete reviewed Frameworks closure: kconfig'):
+            cache.require_frameworks_closure(record, nodes)
+        record['frameworks_predecessors']['kconfig'] = {'version': '6.30.0-2', 'binaries': []}
+        cache.require_frameworks_closure(record, nodes)
+
+    def test_transitive_dag_detects_unknown_nodes(self):
+        record = copy.deepcopy(self.record)
+        with self.assertRaisesRegex(AssertionError, 'Unknown Frameworks predecessor'):
+            cache.require_frameworks_closure(record, {})
+        with self.assertRaisesRegex(AssertionError, 'Unknown Frameworks DAG dependency'):
+            cache.require_frameworks_closure(record, {'extra-cmake-modules': {'depends_on': ['missing']}})
 
     def test_exact_input_admitted(self):
         self.assertEqual([item["path"] for item in self.admit()], [str(self.deb)])

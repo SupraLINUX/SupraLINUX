@@ -18,6 +18,33 @@ def digest(path):
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
+def require_frameworks_closure(record, nodes):
+    """Reject incomplete source-DAG input closures before any KVM/sbuild work.
+
+    The selected binary set remains explicit and hash-reviewed; this guard
+    checks the transitive source nodes, not unreviewed binary alternatives.
+    A separate real APT probe certifies binary Depends/Pre-Depends.
+    """
+    reviewed = set(record.get('frameworks_predecessors', {}))
+    if not reviewed:
+        return
+    traversed = set()
+    pending = list(reviewed)
+    missing = set()
+    while pending:
+        current = pending.pop()
+        if current in traversed:
+            continue
+        traversed.add(current)
+        assert current in nodes, f'Unknown Frameworks predecessor: {current}'
+        for dependency in nodes[current].get('depends_on', []):
+            assert dependency in nodes, f'Unknown Frameworks DAG dependency: {current} -> {dependency}'
+            if dependency not in reviewed:
+                missing.add(dependency)
+            pending.append(dependency)
+    assert not missing, 'Incomplete reviewed Frameworks closure: ' + ', '.join(sorted(missing))
+
+
 def admit(payload, record, dag, current_plan, revalidated=()):
     provenance = dict(line.split("=", 1) for line in
                       (payload / "checkpoint-manifest.txt").read_text().splitlines() if "=" in line)
@@ -88,6 +115,7 @@ def main():
     assert campaign["execution_checkpoint"] == "frameworks-6.30-pass"
     record = campaign['nodes'][args.node]
     current = repairs.effective.effective_nodes(json.loads((ROOT/'manifests/kde-dag.json').read_text()))
+    require_frameworks_closure(record, current)
     restored = repairs.materialize(record, args.output.parent/'revalidated-predecessors', args.repair_archive_root,
                                   os.environ.get('GITHUB_TOKEN'))
     selected = admit(args.payload, record, {'nodes': current},

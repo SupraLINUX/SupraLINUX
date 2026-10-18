@@ -24,6 +24,9 @@ testing_spec.loader.exec_module(testing)
 supplementary_spec = importlib.util.spec_from_file_location('supplementary_inputs', ROOT/'scripts/supplementary-package-inputs.py')
 supplementary = importlib.util.module_from_spec(supplementary_spec)
 supplementary_spec.loader.exec_module(supplementary)
+cache_spec = importlib.util.spec_from_file_location('frameworks_cache_admission', ROOT/'scripts/admit-frameworks-cache.py')
+cache_admission = importlib.util.module_from_spec(cache_spec)
+cache_spec.loader.exec_module(cache_admission)
 
 
 def validate():
@@ -44,6 +47,8 @@ def validate():
     assert campaign.get('execution_mode', 'build') in {'preflight', 'build'}
     effective = repairs.effective_nodes(json.loads((ROOT/'manifests/kde-dag.json').read_text()))
     historical = repairs.effective_nodes(json.loads((ROOT/'manifests/kde-dag.json').read_text()), historical=True)
+    if scope:
+        cache_admission.require_frameworks_closure(campaign['nodes'][scope[0]], effective)
     input_certified = set()
     for link in campaign.get('package_input_certifications', []):
         proof, result, frozen, directory = input_evidence.verified_evidence(link)
