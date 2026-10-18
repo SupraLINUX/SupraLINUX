@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "kind": "retired-libvirt-network-in-golden-builder",
+  "node": "polkit-kde-agent-1",
+  "source_commit": "10c304ce2fe87da79efcf0524fcb5015e6f2b7e0",
+  "workflow_run_id": 39109601718,
+  "workflow_job_id": 117622697197,
+  "artifact_id": 12129778196,
+  "artifact_digest": "sha256:fc422154d32394fd8361436f409b5b0573288d48d51eb6f8012d37e7c1b999af",
+  "stage": "authoritative-golden-rebuild-vm-creation",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "cause": "The host and signed Ubuntu source-image preflights passed, but the legacy full golden builder still requested the retired libvirt network named `default`. That network was intentionally removed by the certified bridge-free safety migration, so virt-install failed before the preparation VM started.",
+  "repair": "Replace the retired libvirt NAT dependency with a controlled QEMU SLIRP preparation path. Keep the guest interface manually inactive until the existing guest-private-address nftables guard is loaded, activate it only from inside the guest, certify that mechanism with a small source-image network preflight, and only then run the full golden rebuild."
+}

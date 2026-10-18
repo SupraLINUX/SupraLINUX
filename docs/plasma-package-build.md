@@ -1,5 +1,17 @@
 # Authoritative Plasma package builds
 
+PolicyKit golden rebuild on `10c304ce2fe87da79efcf0524fcb5015e6f2b7e0`, run 39109601718, job
+117622697197, is retained as `INFRA_INVALID`. Host KVM admission and signed
+Ubuntu source-image verification passed, but the historical full golden builder
+still requested the retired libvirt `default` NAT network. That network was
+intentionally removed by the bridge-free safety migration; recreating it would
+violate the current host-network contract. The repair migrates golden
+preparation to controlled QEMU SLIRP, keeps the guest interface manually
+inactive until the guest-local private-address guard is loaded, and requires a
+small source-image network preflight to PASS before the full golden rebuild.
+No preparation VM, JIT runner or `sbuild` started, so PolicyKit remains at
+Attempt 0.
+
 PolicyKit host-control preflight on `abefc4d6db96b463e3b6d3156fdafa7c37da2298`,
 run 39109048299, job 117621044652, is retained as `INFRA_INVALID`.
 Actual operator KVM admission passed (`O_RDWR` plus
