@@ -18,18 +18,25 @@ import sys
 text = Path(sys.argv[1]).read_text()
 required = [
     'TARGET_GROUP="$(id -gn "${TARGET_USER}")"',
-    'sudo chown "${TARGET_USER}:${TARGET_GROUP}" "${TMP_DIR}"',
+    'curl --fail --show-error --location --output "${ARCHIVE}" "${DOWNLOAD_URL}"',
+    'sha256sum --check --strict',
+    'sudo chown "${TARGET_USER}:${TARGET_GROUP}" "${TMP_DIR}" "${ARCHIVE}"',
     'sudo chmod 0700 "${TMP_DIR}"',
+    'sudo chmod 0600 "${ARCHIVE}"',
     'sudo -u "${TARGET_USER}" tar -xzf "${ARCHIVE}" -C "${INSTALL_DIR}"',
 ]
 for token in required:
     if token not in text:
         raise SystemExit(f"missing installer staging contract: {token}")
 
-chown_pos = text.index('sudo chown "${TARGET_USER}:${TARGET_GROUP}" "${TMP_DIR}"')
+download_pos = text.index('curl --fail --show-error --location --output "${ARCHIVE}"')
+verify_pos = text.index('sha256sum --check --strict')
+chown_pos = text.index('sudo chown "${TARGET_USER}:${TARGET_GROUP}" "${TMP_DIR}" "${ARCHIVE}"')
 tar_pos = text.index('sudo -u "${TARGET_USER}" tar -xzf')
-if chown_pos >= tar_pos:
-    raise SystemExit("staging ownership must precede non-root extraction")
+if not (download_pos < verify_pos < chown_pos < tar_pos):
+    raise SystemExit("runner staging must download+verify as caller before ownership transfer and non-root extraction")
+if "trap 'sudo rm -rf --" not in text:
+    raise SystemExit("runner staging cleanup must remain valid after ownership transfer")
 PY
 
 TEST_USER="sl-stage-$$"

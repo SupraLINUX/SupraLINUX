@@ -19,10 +19,8 @@ if ! id "${TARGET_USER}" >/dev/null 2>&1; then
 fi
 
 TMP_DIR="$(mktemp -d)"
-trap 'rm -rf "${TMP_DIR}"' EXIT
+trap 'sudo rm -rf -- "${TMP_DIR}" >/dev/null 2>&1 || true' EXIT
 TARGET_GROUP="$(id -gn "${TARGET_USER}")"
-sudo chown "${TARGET_USER}:${TARGET_GROUP}" "${TMP_DIR}"
-sudo chmod 0700 "${TMP_DIR}"
 
 printf 'Resolving latest stable GitHub Actions runner release...\n'
 RELEASE_JSON="$(curl --fail --silent --show-error --location \
@@ -56,6 +54,13 @@ ARCHIVE="${TMP_DIR}/${ASSET_NAME}"
 printf 'Downloading %s...\n' "${ASSET_NAME}"
 curl --fail --show-error --location --output "${ARCHIVE}" "${DOWNLOAD_URL}"
 printf '%s  %s\n' "${EXPECTED_SHA256}" "${ARCHIVE}" | sha256sum --check --strict
+
+# Keep the download private to the invoking host user until its GitHub-published
+# digest has been verified. Only then hand the immutable staging payload to the
+# unprivileged runner account for extraction.
+sudo chown "${TARGET_USER}:${TARGET_GROUP}" "${TMP_DIR}" "${ARCHIVE}"
+sudo chmod 0700 "${TMP_DIR}"
+sudo chmod 0600 "${ARCHIVE}"
 
 sudo install -d -o "${TARGET_USER}" -g "${TARGET_GROUP}" -m 0755 "${INSTALL_DIR}"
 sudo find "${INSTALL_DIR}" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
