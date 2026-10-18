@@ -86,16 +86,18 @@ req("  pull_request:" not in host_workspace,
 req("uses: ./.github/workflows/host-workspace.yml" in router_text,
     "PR router must own the host workspace entrypoint")
 req("github.event.label.name == 'ci:host-workspace'" in router_text,
-    "PR router must require the exact host workspace opt-in label")
+    "PR router must require the exact host-control opt-in label")
 req("host-workspace-admission:" in router_text,
-    "PR router must expose a cheap hosted admission gate for host workspace")
+    "PR router must expose a cheap hosted admission gate for host control")
 req("runs-on: ubuntu-26.04" in router_text,
-    "host workspace admission must run on explicit hosted Ubuntu 26.04")
+    "host control admission must run on explicit hosted Ubuntu 26.04")
 req("scripts/test-host-orchestrator-service.sh" in router_text and
     "scripts/test-host-workspace-libvirt-permissions.sh" in router_text,
-    "host workspace admission must validate orchestrator and libvirt contracts")
+    "workspace target must validate orchestrator and libvirt contracts")
 req("needs: [host-workspace-admission]" in router_text,
     "host workspace must depend on successful hosted admission")
+req("needs.host-workspace-admission.outputs.target == 'workspace'" in router_text,
+    "host workspace must require the workspace selector")
 
 host_authoritative = blocks.get("host-authoritative-control.yml", "")
 req("  workflow_call:" in host_authoritative,
@@ -104,14 +106,12 @@ req("  pull_request:" not in host_authoritative,
     "Host authoritative control must not listen to PR directly")
 req("uses: ./.github/workflows/host-authoritative-control.yml" in router_text,
     "PR router must own the authoritative host control entrypoint")
-req("github.event.label.name == 'ci:host-authoritative'" in router_text,
-    "PR router must require the exact authoritative host opt-in label")
-req("host-authoritative-admission:" in router_text,
-    "PR router must expose a cheap hosted admission gate for authoritative host control")
 req("python3 scripts/test-host-authoritative-control.py" in router_text,
-    "authoritative host admission must validate its fixed-control contract")
-req("needs: [host-authoritative-admission]" in router_text,
-    "authoritative host control must depend on successful hosted admission")
+    "authoritative target must validate its fixed-control contract")
+req("needs.host-workspace-admission.outputs.target == 'authoritative'" in router_text,
+    "authoritative host control must require the authoritative selector")
+req('request.get("target", "workspace")' in router_text,
+    "host admission must select workspace versus authoritative control from versioned input")
 
 historical = [
     p.name for p in files

@@ -71,35 +71,57 @@ jobs:
     uses: ./.github/workflows/qt-provider-preflight.yml
 
   host-workspace-admission:
-    name: Host workspace admission
+    name: Host control admission
     if: >-
       ${{ github.event.action == 'labeled' &&
           github.event.label.name == 'ci:host-workspace' &&
           github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-26.04
     timeout-minutes: 10
+    outputs:
+      target: ${{ steps.target.outputs.target }}
     steps:
       - name: Checkout exact PR head
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 1
-      - name: Validate host workspace admission
+      - name: Select host control target
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          request = json.loads(Path("ops/host-workspace/request.json").read_text())
+          target = request.get("target", "workspace")
+          if target not in {"workspace", "authoritative"}:
+              raise SystemExit(f"unsupported host control target: {target!r}")
+          print(target)
+          PY
+          )"
+          echo "target=$target" >> "$GITHUB_OUTPUT"
+          echo "host_control_target=$target"
+      - name: Validate host control admission
         shell: bash
         env:
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HOST_CONTROL_TARGET: ${{ steps.target.outputs.target }}
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "${PR_HEAD_SHA}"
+          test "$(git rev-parse HEAD)" = "$PR_HEAD_SHA"
           python3 scripts/check-source-syntax.py
           python3 scripts/validate_pr_workflow_entrypoints.py
-          scripts/test-host-orchestrator-service.sh
-          scripts/test-host-workspace-libvirt-permissions.sh
-          python3 - <<'PY'
+          if [[ "$HOST_CONTROL_TARGET" == "workspace" ]]; then
+            scripts/test-host-orchestrator-service.sh
+            scripts/test-host-workspace-libvirt-permissions.sh
+            python3 - <<'PY'
           import json, re
           from pathlib import Path
           request = json.loads(Path("ops/host-workspace/request.json").read_text())
           assert request.get("schema") == 1
+          assert request.get("target", "workspace") == "workspace"
           task = request.get("task_id")
           script = request.get("script")
           assert isinstance(task, str) and re.fullmatch(r"[A-Za-z0-9._-]{1,64}", task)
@@ -107,48 +129,40 @@ jobs:
           assert "\x00" not in script
           print("Host workspace admission: PASS")
           PY
+          else
+            python3 scripts/test-host-authoritative-control.py
+            python3 - <<'PY'
+          import json
+          from pathlib import Path
+          selector = json.loads(Path("ops/host-workspace/request.json").read_text())
+          request = json.loads(Path("ops/host-authoritative/request.json").read_text())
+          assert selector.get("schema") == 1
+          assert selector.get("target") == "authoritative"
+          assert request.get("schema") == 1
+          assert request.get("mode") in {"preflight", "execute"}
+          assert request.get("gate") == "plasma-package-build"
+          print("Host authoritative admission: PASS")
+          PY
+          fi
 
   host-workspace:
     name: Disposable host workspace
     needs: [host-workspace-admission]
     if: >-
       ${{ needs.host-workspace-admission.result == 'success' &&
+          needs.host-workspace-admission.outputs.target == 'workspace' &&
           github.event.action == 'labeled' &&
           github.event.label.name == 'ci:host-workspace' &&
           github.event.pull_request.head.repo.full_name == github.repository }}
     uses: ./.github/workflows/host-workspace.yml
 
-  host-authoritative-admission:
-    name: Host authoritative admission
-    if: >-
-      ${{ github.event.action == 'labeled' &&
-          github.event.label.name == 'ci:host-authoritative' &&
-          github.event.pull_request.head.repo.full_name == github.repository }}
-    runs-on: ubuntu-26.04
-    timeout-minutes: 10
-    steps:
-      - name: Checkout exact PR head
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-      - name: Validate authoritative host admission
-        shell: bash
-        env:
-          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$PR_HEAD_SHA"
-          python3 scripts/check-source-syntax.py
-          python3 scripts/validate_pr_workflow_entrypoints.py
-          python3 scripts/test-host-authoritative-control.py
-
   host-authoritative:
     name: Persistent host authoritative control
-    needs: [host-authoritative-admission]
+    needs: [host-workspace-admission]
     if: >-
-      ${{ needs.host-authoritative-admission.result == 'success' &&
+      ${{ needs.host-workspace-admission.result == 'success' &&
+          needs.host-workspace-admission.outputs.target == 'authoritative' &&
           github.event.action == 'labeled' &&
-          github.event.label.name == 'ci:host-authoritative' &&
+          github.event.label.name == 'ci:host-workspace' &&
           github.event.pull_request.head.repo.full_name == github.repository }}
     uses: ./.github/workflows/host-authoritative-control.yml
