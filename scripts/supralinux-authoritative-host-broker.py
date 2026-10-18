@@ -39,7 +39,7 @@ if unknown:
     raise SystemExit(f"Unknown authoritative request keys: {sorted(unknown)}")
 if request.get("schema") != 1:
     raise SystemExit("Unsupported request schema.")
-if request.get("mode") not in {"preflight", "execute"}:
+if request.get("mode") not in {"diagnose", "preflight", "execute"}:
     raise SystemExit("Unsupported control mode.")
 if request.get("gate") != "plasma-package-build":
     raise SystemExit("Unsupported authoritative gate.")
@@ -67,8 +67,10 @@ else:
         or any(c not in "0123456789abcdef" for c in cancel_run_head_sha)
     ):
         raise SystemExit("Invalid cancellation head SHA.")
-if request["mode"] == "execute" and (cancel_run_id is not None or cancel_run_head_sha is not None):
-    raise SystemExit("execute mode refuses cancellation; stale-run cleanup belongs to preflight.")
+if request["mode"] in {"diagnose", "execute"} and (
+    cancel_run_id is not None or cancel_run_head_sha is not None
+):
+    raise SystemExit(f"{request['mode']} mode refuses stale-run cancellation.")
 
 for command in ("curl", "git", "gh", "jq", "python3"):
     if shutil.which(command) is None:
@@ -176,6 +178,206 @@ write_result(
         ]
     ),
 )
+
+if request["mode"] == "diagnose":
+    def capture(label, args, *, as_operator=False, extra_groups=()):
+        try:
+            if as_operator:
+                proc = run_as_operator(
+                    args,
+                    extra_groups=extra_groups,
+                    check=False,
+                    capture_output=True,
+                )
+            else:
+                proc = subprocess.run(
+                    args,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+            return "\n".join(
+                [
+                    f"=== {label} ===",
+                    f"argv={json.dumps(args)}",
+                    f"rc={proc.returncode}",
+                    "--- stdout ---",
+                    proc.stdout.rstrip(),
+                    "--- stderr ---",
+                    proc.stderr.rstrip(),
+                    "",
+                ]
+            )
+        except Exception as exc:
+            return "\n".join(
+                [
+                    f"=== {label} ===",
+                    f"exception={type(exc).__name__}: {exc}",
+                    "",
+                ]
+            )
+
+    kvm_probe = r"""
+import fcntl
+import json
+import os
+import sys
+
+path = "/dev/kvm"
+report = {
+    "uid": os.getuid(),
+    "euid": os.geteuid(),
+    "gid": os.getgid(),
+    "egid": os.getegid(),
+    "groups": os.getgroups(),
+    "access_real_rw": os.access(path, os.R_OK | os.W_OK),
+}
+try:
+    report["access_effective_rw"] = os.access(
+        path, os.R_OK | os.W_OK, effective_ids=True
+    )
+except (NotImplementedError, TypeError):
+    report["access_effective_rw"] = "unsupported"
+try:
+    fd = os.open(path, os.O_RDWR | os.O_CLOEXEC)
+except OSError as exc:
+    report["open_ok"] = False
+    report["open_errno"] = exc.errno
+    report["open_error"] = exc.strerror
+else:
+    report["open_ok"] = True
+    try:
+        report["kvm_api_version"] = fcntl.ioctl(fd, 0xAE00, 0)
+    except OSError as exc:
+        report["ioctl_errno"] = exc.errno
+        report["ioctl_error"] = exc.strerror
+    finally:
+        os.close(fd)
+print(json.dumps(report, sort_keys=True))
+"""
+
+    sections = []
+    sections.append(capture("root-id", ["id", "-a"]))
+    sections.append(capture("operator-id-normal", ["id", "-a"], as_operator=True))
+    sections.append(
+        capture(
+            "operator-id-scoped-groups",
+            ["id", "-a"],
+            as_operator=True,
+            extra_groups=privileged_groups,
+        )
+    )
+    sections.append(
+        capture(
+            "dev-kvm-stat",
+            ["stat", "-Lc", "%A %a %U %G %u %g %t:%T %n", "/dev/kvm"],
+        )
+    )
+    if shutil.which("getfacl"):
+        sections.append(capture("dev-kvm-acl", ["getfacl", "-p", "/dev/kvm"]))
+    sections.append(capture("root-kvm-open", ["python3", "-c", kvm_probe]))
+    sections.append(
+        capture(
+            "operator-kvm-open-normal",
+            ["python3", "-c", kvm_probe],
+            as_operator=True,
+        )
+    )
+    sections.append(
+        capture(
+            "operator-kvm-open-scoped-groups",
+            ["python3", "-c", kvm_probe],
+            as_operator=True,
+            extra_groups=privileged_groups,
+        )
+    )
+    sections.append(capture("root-cgroup", ["cat", "/proc/self/cgroup"]))
+    sections.append(
+        capture(
+            "operator-cgroup",
+            ["cat", "/proc/self/cgroup"],
+            as_operator=True,
+            extra_groups=privileged_groups,
+        )
+    )
+    sections.append(capture("root-lsm", ["cat", "/proc/self/attr/current"]))
+    sections.append(
+        capture(
+            "operator-lsm",
+            ["cat", "/proc/self/attr/current"],
+            as_operator=True,
+            extra_groups=privileged_groups,
+        )
+    )
+    sections.append(
+        capture(
+            "runner-service-units",
+            [
+                "systemctl",
+                "--no-legend",
+                "--plain",
+                "list-units",
+                "actions.runner.SupraLINUX-SupraLINUX.*.service",
+            ],
+        )
+    )
+    units = subprocess.run(
+        [
+            "systemctl",
+            "--no-legend",
+            "--plain",
+            "list-units",
+            "actions.runner.SupraLINUX-SupraLINUX.*.service",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    if units:
+        unit = units[0].split()[0]
+        sections.append(
+            capture(
+                "runner-service-security",
+                [
+                    "systemctl",
+                    "show",
+                    unit,
+                    "--property=User",
+                    "--property=Group",
+                    "--property=SupplementaryGroups",
+                    "--property=PrivateDevices",
+                    "--property=DevicePolicy",
+                    "--property=DeviceAllow",
+                    "--property=NoNewPrivileges",
+                    "--property=ProtectSystem",
+                    "--property=ProtectHome",
+                    "--property=RestrictAddressFamilies",
+                    "--property=CapabilityBoundingSet",
+                    "--property=AmbientCapabilities",
+                ],
+            )
+        )
+
+    write_result("kvm-access-diagnostic.txt", "\n".join(sections))
+    write_result(
+        "diagnose-result.txt",
+        "\n".join(
+            [
+                "state=PASS",
+                "scope=host-authoritative-control-diagnostic-collection",
+                f"source_commit={source_commit}",
+                f"operator_user={operator.pw_name}",
+                "github_token_requested=no",
+                "github_api_mutation=no",
+                "jit_invoked=no",
+                "vm_created=no",
+                "package_attempt_effect=none",
+                "",
+            ]
+        ),
+    )
+    print("HOST_AUTHORITATIVE_DIAGNOSTIC_COLLECTION=PASS")
+    raise SystemExit(0)
 run_as_operator(["test", "-r", "/dev/kvm"], extra_groups=privileged_groups)
 run_as_operator(["test", "-w", "/dev/kvm"], extra_groups=privileged_groups)
 run_as_operator(["gh", "auth", "status", "--hostname", "github.com"])

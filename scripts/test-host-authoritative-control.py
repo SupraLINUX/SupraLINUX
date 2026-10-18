@@ -15,15 +15,23 @@ required_broker = [
     'os.environ.get("SUDO_USER") != RUNNER_USER',
     '"mode", "gate", "runner_group_id", "cancel_run_id"',
     '"cancel_run_head_sha"',
-    'request.get("mode") not in {"preflight", "execute"}',
+    'request.get("mode") not in {"diagnose", "preflight", "execute"}',
     'request.get("gate") != "plasma-package-build"',
-    'request["mode"] == "execute" and (cancel_run_id is not None or cancel_run_head_sha is not None)',
+    'request["mode"] in {"diagnose", "execute"} and (',
     'run.get("status") == "queued"',
     'job.get("status") != "queued"',
     'make_demote(extra_groups=())',
     'privileged_groups = tuple(sorted({libvirt_group, kvm_group}))',
     '"persistent_group_membership_changed=no"',
     '"privilege_scope=child-process-only"',
+    'if request["mode"] == "diagnose":',
+    '"root-kvm-open"',
+    '"operator-kvm-open-normal"',
+    '"operator-kvm-open-scoped-groups"',
+    '"runner-service-security"',
+    '"github_token_requested=no"',
+    '"jit_invoked=no"',
+    '"package_attempt_effect=none"',
     '/actions/runs/{cancel_run_id}/cancel',
     '/labels/ci%3Aplasma-package-build',
     'refs/pull/{PR_NUMBER}/head',
@@ -59,11 +67,9 @@ for token in required_workflow:
 
 expected_request = {
     "schema": 1,
-    "mode": "preflight",
+    "mode": "diagnose",
     "gate": "plasma-package-build",
     "runner_group_id": 3,
-    "cancel_run_id": 39106846518,
-    "cancel_run_head_sha": "faf9e633db4218c88a7b7df0bdc737c6079ca216",
 }
 if request != expected_request:
     raise SystemExit(f"unexpected initial authoritative host request: {request!r}")
