@@ -103,6 +103,9 @@ install -d -m 0700 "${RESULT_DIR}"
 
 RUN_DIR="${STATE_ROOT}/${RUN_ID}"
 install -d -m 0700 "${RUN_DIR}"
+LIBVIRT_QEMU_GROUP="$(id -gn "${LIBVIRT_QEMU_USER}")"
+chgrp "${LIBVIRT_QEMU_GROUP}" "${RUN_DIR}"
+chmod 0710 "${RUN_DIR}"
 OVERLAY="${RUN_DIR}/disk.qcow2"
 VM_NAME="supralinux-workspace-${RUN_ID}"
 VM_CREATED=0
@@ -188,7 +191,6 @@ if virsh --connect "${LIBVIRT_URI}" dominfo "${VM_NAME}" >/dev/null 2>&1; then
     exit 1
 fi
 
-LIBVIRT_QEMU_GROUP="$(id -gn "${LIBVIRT_QEMU_USER}")"
 BACKING_FORMAT="$(qemu-img info --output=json "${GOLDEN_IMAGE}" | jq -r '.format')"
 qemu-img create -f qcow2 -F "${BACKING_FORMAT}" -b "${GOLDEN_IMAGE}" "${OVERLAY}" >/dev/null
 qemu-img resize "${OVERLAY}" "${VM_DISK_SIZE_GIB}G" >/dev/null

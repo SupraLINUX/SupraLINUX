@@ -161,6 +161,10 @@ jobs:
         shell: bash
         run: scripts/test-host-orchestrator-service.sh
 
+      - name: Test host workspace libvirt traversal contract
+        shell: bash
+        run: scripts/test-host-workspace-libvirt-permissions.sh
+
       - name: Test autopkgtest persistent workspace contract
         shell: bash
         run: scripts/test-autopkgtest-workspace-contract.sh
