@@ -157,6 +157,10 @@ jobs:
         shell: bash
         run: scripts/test-install-actions-runner-staging.sh
 
+      - name: Test host orchestrator service contract
+        shell: bash
+        run: scripts/test-host-orchestrator-service.sh
+
       - name: Test autopkgtest persistent workspace contract
         shell: bash
         run: scripts/test-autopkgtest-workspace-contract.sh

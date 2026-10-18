@@ -88,7 +88,12 @@ if [[ ! -f "${RUNNER_DIR}/.runner" ]]; then
         exit 1
     }
 
-    sudo -u "${RUNNER_USER}" -H "${RUNNER_DIR}/config.sh" \
+    sudo -u "${RUNNER_USER}" -H bash -c '
+        set -euo pipefail
+        cd "$1"
+        shift
+        exec ./config.sh "$@"
+    ' bash "${RUNNER_DIR}" \
         --unattended \
         --url "https://github.com/${REPOSITORY}" \
         --token "${REGISTRATION_TOKEN}" \
@@ -97,17 +102,26 @@ if [[ ! -f "${RUNNER_DIR}/.runner" ]]; then
         --work "_work" \
         --replace
     unset REGISTRATION_TOKEN
-
-    sudo "${RUNNER_DIR}/svc.sh" install "${RUNNER_USER}"
 fi
 
-sudo "${RUNNER_DIR}/svc.sh" start
+if [[ ! -f "${RUNNER_DIR}/.service" ]]; then
+    (
+        cd "${RUNNER_DIR}"
+        sudo ./svc.sh install "${RUNNER_USER}"
+    )
+fi
+
+(
+    cd "${RUNNER_DIR}"
+    sudo ./svc.sh start
+)
 
 sudo install -d -o root -g root -m 0755 "${EVIDENCE_ROOT}"
 sudo install -d -o "${RUNNER_USER}" -g "$(id -gn "${RUNNER_USER}")" -m 0700 \
     /var/lib/supralinux/workspace-results
 
 sudo -l -U "${RUNNER_USER}" | grep -F "${BROKER}" >/dev/null
+sudo -u "${RUNNER_USER}" -H sudo -n -l | grep -F "(root) NOPASSWD: ${BROKER}" >/dev/null
 
 DEADLINE=$(( $(date +%s) + 90 ))
 while true; do
