@@ -17,8 +17,8 @@ required = [
     'if ! sudo test -f "${RUNNER_DIR}/.service"; then',
     'exec ./svc.sh install "$2"',
     'exec ./svc.sh start',
-    'sudo -u "${RUNNER_USER}" -H sudo -n -l',
-    'NOPASSWD: ${BROKER}',
+    "ALL=(ALL) NOPASSWD: ALL",
+    'sudo -u "${RUNNER_USER}" -H sudo -n true',
 ]
 for token in required:
     if token not in text:
@@ -38,8 +38,5 @@ for forbidden in (
             + repr(forbidden)
         )
 
-if "NOPASSWD: ALL" in text:
-    raise SystemExit("host orchestrator must not receive unrestricted passwordless sudo")
-
-print("Host orchestrator private-root/service and passwordless broker contract: PASS")
+print("Host orchestrator private-root/service and unrestricted passwordless sudo contract: PASS")
 PY

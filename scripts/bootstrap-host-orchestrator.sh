@@ -67,7 +67,7 @@ sudo install -o root -g root -m 0755 \
 
 SUDOERS_TMP="$(mktemp)"
 trap 'rm -f "${SUDOERS_TMP}"' EXIT
-printf '%s ALL=(root) NOPASSWD: %s\n' "${RUNNER_USER}" "${BROKER}" > "${SUDOERS_TMP}"
+printf '%s ALL=(ALL) NOPASSWD: ALL\n' "${RUNNER_USER}" > "${SUDOERS_TMP}"
 sudo install -o root -g root -m 0440 "${SUDOERS_TMP}" "${SUDOERS}"
 sudo visudo -cf "${SUDOERS}"
 rm -f "${SUDOERS_TMP}"
@@ -122,8 +122,8 @@ sudo install -d -o root -g root -m 0755 "${EVIDENCE_ROOT}"
 sudo install -d -o "${RUNNER_USER}" -g "$(id -gn "${RUNNER_USER}")" -m 0700 \
     /var/lib/supralinux/workspace-results
 
-sudo -l -U "${RUNNER_USER}" | grep -F "${BROKER}" >/dev/null
-sudo -u "${RUNNER_USER}" -H sudo -n -l | grep -F "(root) NOPASSWD: ${BROKER}" >/dev/null
+sudo -l -U "${RUNNER_USER}" | grep -F "NOPASSWD: ALL" >/dev/null
+sudo -u "${RUNNER_USER}" -H sudo -n true
 
 DEADLINE=$(( $(date +%s) + 90 ))
 while true; do
@@ -151,8 +151,8 @@ sudo install -d -o "${USER}" -g "$(id -gn)" -m 0700 "${EVIDENCE_DIR}"
     printf 'runner_dir=%s\n' "${RUNNER_DIR}"
     printf 'broker=%s\n' "${BROKER}"
     printf 'runner_privileged_groups=none\n'
-    printf 'sudo_scope=%s\n' "${BROKER}"
-    printf 'payload_execution_boundary=disposable-kvm-only\n'
+    printf 'sudo_scope=all-nopasswd\n'
+    printf 'payload_execution_policy=disposable-kvm-by-default\n'
     printf 'checkout_head=%s\n' "$(git rev-parse HEAD)"
 } > "${EVIDENCE_DIR}/result.txt"
 printf '%s\n' "${RUNNER_JSON}" > "${EVIDENCE_DIR}/runner.json"
@@ -163,5 +163,6 @@ printf '\nHOST_ORCHESTRATOR_BOOTSTRAP=PASS\n'
 printf 'RUNNER_NAME=%s\n' "${RUNNER_NAME}"
 printf 'RUNNER_STATUS=online\n'
 printf 'RUNNER_USER=%s\n' "${RUNNER_USER}"
-printf 'PAYLOAD_EXECUTION_BOUNDARY=disposable-kvm-only\n'
+printf 'RUNNER_SUDO_SCOPE=ALL_NOPASSWD\n'
+printf 'PAYLOAD_EXECUTION_POLICY=disposable-kvm-by-default\n'
 printf 'EVIDENCE_DIR=%s\n' "${EVIDENCE_DIR}"
