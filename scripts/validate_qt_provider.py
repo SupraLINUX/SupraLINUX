@@ -93,7 +93,8 @@ require(f"actions/upload-artifact@{UPLOAD_SHA}" in workflow, "Qt provider workfl
 require("workflow_call:" in workflow, "Qt provider workflow must be reusable from the PR CI router")
 require("workflow_dispatch:" in workflow, "Qt provider workflow must remain manually dispatchable")
 require("\n  pull_request:\n" not in workflow, "Qt provider workflow must not create an independent ordinary PR run")
-require("types: [opened, synchronize, reopened]" in router, "PR CI router must own explicit ordinary PR lifecycle events")
+require("types: [opened, synchronize, reopened, labeled]" in router,
+        "PR CI router must own explicit ordinary PR lifecycle events plus controlled labeled gates")
 require("uses: ./.github/workflows/qt-provider-preflight.yml" in router, "PR CI router must invoke the Qt provider preflight")
 require("fetch-depth: 0" in workflow, "Qt provider workflow must fetch comparison history")
 require("scripts/qt-provider-preflight-needed.sh" in workflow, "Qt provider workflow must use event-delta scope detection")
