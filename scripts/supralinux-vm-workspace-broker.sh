@@ -340,8 +340,11 @@ exit "$rc"
 TASK
 )"
 
-TASK_PAYLOAD="$(jq -nc --arg cmd "${TASK_COMMAND}" \
-    '{execute:"guest-exec",arguments:{path:"/bin/bash",arg:["-lc",$cmd],"capture-output":false}}')"
+TASK_PAYLOAD="$(jq -nc \
+    --arg cmd "${TASK_COMMAND}" \
+    --arg task "${TASK_ID}" \
+    --arg source "${SOURCE_COMMIT}" \
+    '{execute:"guest-exec",arguments:{path:"/bin/bash",arg:["-lc",$cmd,"supralinux-workspace",$task,$source],"capture-output":false}}')"
 TASK_STARTED=1
 set +e
 TASK_STATUS="$(qga_exec_status "${TASK_PAYLOAD}" "${TASK_TIMEOUT_SECONDS}")"
