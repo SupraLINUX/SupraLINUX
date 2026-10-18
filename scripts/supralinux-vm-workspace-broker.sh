@@ -43,8 +43,7 @@ done
 
 REQUEST_FILE="$(mktemp)"
 SCRIPT_FILE="$(mktemp)"
-early_cleanup() { rm -f "${REQUEST_FILE}" "${SCRIPT_FILE}"; }
-trap early_cleanup EXIT INT TERM
+trap 'rm -f "${REQUEST_FILE}" "${SCRIPT_FILE}"' EXIT INT TERM
 
 head -c $((MAX_REQUEST_BYTES + 1)) > "${REQUEST_FILE}"
 REQUEST_BYTES="$(wc -c < "${REQUEST_FILE}")"
@@ -110,6 +109,7 @@ VM_CREATED=0
 TASK_STARTED=0
 TASK_EXIT_CODE=125
 
+# shellcheck disable=SC2329
 cleanup() {
     local rc="$?"
     trap - EXIT INT TERM
@@ -327,15 +327,18 @@ CHMOD_STATUS="$(qga_exec_status "$(jq -nc --arg path "${GUEST_SCRIPT}" \
     '{execute:"guest-exec",arguments:{path:"/usr/bin/chmod",arg:["0700",$path],"capture-output":true}}')" 30)"
 [[ "$(jq -r '.return.exitcode // 1' <<<"${CHMOD_STATUS}")" == "0" ]] || exit 1
 
-TASK_COMMAND="set +e
+TASK_COMMAND="$(cat <<'TASK'
+set +e
 export SUPRALINUX_WORKSPACE_ROOT=/var/lib/supralinux/workspace
-export SUPRALINUX_SOURCE_COMMIT='${SOURCE_COMMIT}'
-export SUPRALINUX_TASK_ID='${TASK_ID}'
+export SUPRALINUX_SOURCE_COMMIT="$2"
+export SUPRALINUX_TASK_ID="$1"
 cd /var/lib/supralinux/workspace
 /bin/bash /run/supralinux-workspace/task.sh >stdout.log 2>stderr.log
 rc=$?
-printf '{\"schema\":1,\"task_id\":\"%s\",\"source_commit\":\"%s\",\"exit_code\":%d}\n' '${TASK_ID}' '${SOURCE_COMMIT}' \"$rc\" > task-result.json
-exit \"$rc\""
+printf '{"schema":1,"task_id":"%s","source_commit":"%s","exit_code":%d}\n' "$1" "$2" "$rc" > task-result.json
+exit "$rc"
+TASK
+)"
 
 TASK_PAYLOAD="$(jq -nc --arg cmd "${TASK_COMMAND}" \
     '{execute:"guest-exec",arguments:{path:"/bin/bash",arg:["-lc",$cmd],"capture-output":false}}')"
