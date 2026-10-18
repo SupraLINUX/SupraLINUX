@@ -18,6 +18,20 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
+      - name: Refresh versioned host orchestration helpers
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo -n install -o root -g root -m 0755 \
+            scripts/supralinux-vm-workspace-broker.sh \
+            /usr/local/libexec/supralinux-vm-workspace-broker
+          sudo -n install -o root -g root -m 0644 \
+            scripts/configure-kvm-guest-network.py \
+            /usr/local/libexec/supralinux-configure-kvm-guest-network.py
+          sudo -n install -o root -g root -m 0755 \
+            scripts/with-libguestfs-runtime.sh \
+            /usr/local/libexec/supralinux-with-libguestfs-runtime
+
       - name: Validate workspace request
         shell: bash
         env:

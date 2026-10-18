@@ -38,5 +38,15 @@ for forbidden in (
             + repr(forbidden)
         )
 
+workflow = (Path(sys.argv[1]).parents[1] / ".github/workflows/host-workspace.yml").read_text()
+for token in (
+    "Refresh versioned host orchestration helpers",
+    "sudo -n install -o root -g root -m 0755",
+    "scripts/supralinux-vm-workspace-broker.sh",
+    "/usr/local/libexec/supralinux-vm-workspace-broker",
+):
+    if token not in workflow:
+        raise SystemExit(f"missing self-refresh workspace contract: {token}")
+
 print("Host orchestrator private-root/service and unrestricted passwordless sudo contract: PASS")
 PY
