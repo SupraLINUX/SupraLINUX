@@ -2,7 +2,7 @@ name: PR CI router
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, labeled]
 
 permissions:
   contents: read
@@ -36,6 +36,13 @@ jobs:
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
+          if [[ "${EVENT_ACTION}" == "labeled" ]]; then
+            {
+              echo "run_plasma_lane=false"
+              echo "run_qt_provider=false"
+            } >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
           if [[ "${EVENT_ACTION}" == "synchronize" ]]; then
             before="${EVENT_BEFORE}"
             after="${EVENT_AFTER}"
@@ -60,3 +67,12 @@ jobs:
     needs: [plan, repository-policy]
     if: needs.plan.outputs.run_qt_provider == 'true'
     uses: ./.github/workflows/qt-provider-preflight.yml
+
+  host-workspace:
+    name: Disposable host workspace
+    needs: [repository-policy]
+    if: >-
+      ${{ github.event.action == 'labeled' &&
+          github.event.label.name == 'ci:host-workspace' &&
+          github.event.pull_request.head.repo.full_name == github.repository }}
+    uses: ./.github/workflows/host-workspace.yml
