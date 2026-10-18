@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "state": "DIAGNOSED",
+  "incident_run_id": 39108649602,
+  "prior_diagnostic_run_id": 39108276186,
+  "prior_diagnostic_job_id": 117618766345,
+  "prior_diagnostic_artifact_id": 12128913290,
+  "prior_diagnostic_artifact_digest": "sha256:2d56ff31f3c1fc31406dab70375edd59f6c9c6f79faba7da873a67e14a2cf4e8",
+  "operator": "chmodmasx",
+  "observations": [
+    "The prior non-mutating diagnostic ran in the same persistent Actions service cgroup and reported the service unconfined with PrivateDevices=no and DevicePolicy=auto.",
+    "The operator's normal supplementary groups included kvm (gid 991) and libvirt-qemu (gid 64055).",
+    "/dev/kvm was character device mode 0660 root:kvm and also carried an explicit rw ACL for the operator.",
+    "Both normal and explicitly scoped operator probes opened /dev/kvm O_RDWR successfully and KVM_GET_API_VERSION returned 12.",
+    "The failed preflight stopped at the external `test -r /dev/kvm` proxy before cancellation of the stale workflow and before any package execution."
+  ],
+  "classification": "INFRA_INVALID",
+  "package_attempt_effect": "none"
+}

@@ -42,12 +42,23 @@ required_broker = [
     '["scripts/run-kvm-jit-gate.sh", request["gate"]]',
     '"SUPRALINUX_GITHUB_TOKEN": token',
     '"package_attempt_effect=none-before-execute"',
+    'KVM_RUNTIME_PROBE = r"""',
+    '"kvm-runtime-admission.json"',
+    'kvm_runtime_result.get("open_ok") is True',
+    'kvm_runtime_result.get("kvm_api_version") == 12',
 ]
 for token in required_broker:
     if token not in broker:
         raise SystemExit(f"missing authoritative host broker contract: {token}")
 
-for forbidden in ("eval(", "shell=True", 'request["script"]', "chmod 0777"):
+for forbidden in (
+    "eval(",
+    "shell=True",
+    'request["script"]',
+    "chmod 0777",
+    'run_as_operator(["test", "-r", "/dev/kvm"]',
+    'run_as_operator(["test", "-w", "/dev/kvm"]',
+):
     if forbidden in broker:
         raise SystemExit(f"forbidden authoritative host broker construct: {forbidden}")
 

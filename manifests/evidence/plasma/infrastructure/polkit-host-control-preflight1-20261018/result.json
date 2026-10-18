@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "kind": "host-authoritative-kvm-access-proxy",
+  "node": "polkit-kde-agent-1",
+  "source_commit": "f7c0456f3790adf0baf4bdfd356d15dbe900d919",
+  "workflow_run_id": 39108649602,
+  "workflow_job_id": 117619865713,
+  "artifact_id": 12129372607,
+  "artifact_digest": "sha256:cd914e209185028fa6592d86971d6744f940f656bbe42044f1becfcf1c88bcb7",
+  "stage": "host-authoritative-control-preflight",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "cause": "The broker's preliminary external `test -r /dev/kvm` proxy returned exit 1 after demotion to the certified host operator, before GitHub mutation, JIT runner creation, VM creation, or sbuild.",
+  "repair": "Replace the access-bit proxy with an actual O_RDWR open plus KVM_GET_API_VERSION ioctl under the exact demoted operator supplementary-group set, retain that admission result, and repeat the host preflight before execute mode."
+}

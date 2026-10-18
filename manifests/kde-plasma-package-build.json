@@ -10341,6 +10341,23 @@
       "host_evidence_manifest_sha256": "d8453f681c568d71daa13a82daef3f31176c906f0d9926c497e0c668f6658d5b",
       "cause": "Correct the new test-license selector before candidate source or build execution; inherited Ubuntu acc and control.disabled must keep their original attribution/license.",
       "repair": "Restrict CC0 to the newly authored baseline, installed client/consumer, control and client files; preserve inherited Ubuntu tests under their original packaging stanza. Repeat input preflight for the changed packaging contract."
+    },
+    {
+      "state": "INFRA_INVALID",
+      "node": "polkit-kde-agent-1",
+      "source_commit": "f7c0456f3790adf0baf4bdfd356d15dbe900d919",
+      "workflow_run_id": 39108649602,
+      "workflow_job_id": 117619865713,
+      "kind": "host-authoritative-kvm-access-proxy",
+      "stage": "host-authoritative-control-preflight",
+      "package_execution_started": false,
+      "consumes_package_attempt": false,
+      "result_path": "manifests/evidence/plasma/infrastructure/polkit-host-control-preflight1-20261018/result.json",
+      "result_sha256": "79b4eddef169345cfebbc7c0ee7c69f84f7f2b60f77671541451f392e0879dc7",
+      "diagnosis_path": "manifests/evidence/plasma/infrastructure/polkit-host-control-preflight1-20261018/diagnosis.json",
+      "diagnosis_sha256": "f9cff4195e6315fd98d5225f61e80375f105fd98bf7e3ffc8f566bfae009eb95",
+      "cause": "The broker's preliminary external `test -r /dev/kvm` proxy returned exit 1 after demotion to the certified host operator, before GitHub mutation, JIT runner creation, VM creation, or sbuild.",
+      "repair": "Replace the access-bit proxy with an actual O_RDWR open plus KVM_GET_API_VERSION ioctl under the exact demoted operator supplementary-group set, retain that admission result, and repeat the host preflight before execute mode."
     }
   ],
   "infrastructure_certifications": [

@@ -91,6 +91,44 @@ def write_result(name: str, content: str) -> None:
     os.chmod(path, 0o600)
     os.chown(path, runner_pw.pw_uid, runner_pw.pw_gid)
 
+KVM_RUNTIME_PROBE = r"""
+import fcntl
+import json
+import os
+
+path = "/dev/kvm"
+report = {
+    "uid": os.getuid(),
+    "euid": os.geteuid(),
+    "gid": os.getgid(),
+    "egid": os.getegid(),
+    "groups": os.getgroups(),
+    "access_real_rw": os.access(path, os.R_OK | os.W_OK),
+}
+try:
+    report["access_effective_rw"] = os.access(
+        path, os.R_OK | os.W_OK, effective_ids=True
+    )
+except (NotImplementedError, TypeError):
+    report["access_effective_rw"] = "unsupported"
+try:
+    fd = os.open(path, os.O_RDWR | os.O_CLOEXEC)
+except OSError as exc:
+    report["open_ok"] = False
+    report["open_errno"] = exc.errno
+    report["open_error"] = exc.strerror
+else:
+    report["open_ok"] = True
+    try:
+        report["kvm_api_version"] = fcntl.ioctl(fd, 0xAE00, 0)
+    except OSError as exc:
+        report["ioctl_errno"] = exc.errno
+        report["ioctl_error"] = exc.strerror
+    finally:
+        os.close(fd)
+print(json.dumps(report, sort_keys=True))
+"""
+
 def resolve_operator() -> pwd.struct_passwd:
     records = []
     if BOOTSTRAP_EVIDENCE.is_dir():
@@ -217,44 +255,6 @@ if request["mode"] == "diagnose":
                 ]
             )
 
-    kvm_probe = r"""
-import fcntl
-import json
-import os
-import sys
-
-path = "/dev/kvm"
-report = {
-    "uid": os.getuid(),
-    "euid": os.geteuid(),
-    "gid": os.getgid(),
-    "egid": os.getegid(),
-    "groups": os.getgroups(),
-    "access_real_rw": os.access(path, os.R_OK | os.W_OK),
-}
-try:
-    report["access_effective_rw"] = os.access(
-        path, os.R_OK | os.W_OK, effective_ids=True
-    )
-except (NotImplementedError, TypeError):
-    report["access_effective_rw"] = "unsupported"
-try:
-    fd = os.open(path, os.O_RDWR | os.O_CLOEXEC)
-except OSError as exc:
-    report["open_ok"] = False
-    report["open_errno"] = exc.errno
-    report["open_error"] = exc.strerror
-else:
-    report["open_ok"] = True
-    try:
-        report["kvm_api_version"] = fcntl.ioctl(fd, 0xAE00, 0)
-    except OSError as exc:
-        report["ioctl_errno"] = exc.errno
-        report["ioctl_error"] = exc.strerror
-    finally:
-        os.close(fd)
-print(json.dumps(report, sort_keys=True))
-"""
 
     sections = []
     sections.append(capture("root-id", ["id", "-a"]))
@@ -275,18 +275,18 @@ print(json.dumps(report, sort_keys=True))
     )
     if shutil.which("getfacl"):
         sections.append(capture("dev-kvm-acl", ["getfacl", "-p", "/dev/kvm"]))
-    sections.append(capture("root-kvm-open", ["python3", "-c", kvm_probe]))
+    sections.append(capture("root-kvm-open", ["python3", "-c", KVM_RUNTIME_PROBE]))
     sections.append(
         capture(
             "operator-kvm-open-normal",
-            ["python3", "-c", kvm_probe],
+            ["python3", "-c", KVM_RUNTIME_PROBE],
             as_operator=True,
         )
     )
     sections.append(
         capture(
             "operator-kvm-open-scoped-groups",
-            ["python3", "-c", kvm_probe],
+            ["python3", "-c", KVM_RUNTIME_PROBE],
             as_operator=True,
             extra_groups=privileged_groups,
         )
@@ -378,8 +378,25 @@ print(json.dumps(report, sort_keys=True))
     )
     print("HOST_AUTHORITATIVE_DIAGNOSTIC_COLLECTION=PASS")
     raise SystemExit(0)
-run_as_operator(["test", "-r", "/dev/kvm"], extra_groups=privileged_groups)
-run_as_operator(["test", "-w", "/dev/kvm"], extra_groups=privileged_groups)
+kvm_runtime = run_as_operator(
+    ["python3", "-c", KVM_RUNTIME_PROBE],
+    extra_groups=privileged_groups,
+)
+try:
+    kvm_runtime_result = json.loads(kvm_runtime.stdout)
+except json.JSONDecodeError as exc:
+    raise SystemExit(f"Invalid KVM runtime probe output: {exc}")
+if not (
+    kvm_runtime_result.get("open_ok") is True
+    and kvm_runtime_result.get("kvm_api_version") == 12
+):
+    raise SystemExit(
+        "Certified host operator cannot open /dev/kvm O_RDWR and query KVM API version."
+    )
+write_result(
+    "kvm-runtime-admission.json",
+    json.dumps(kvm_runtime_result, indent=2, sort_keys=True) + "\n",
+)
 run_as_operator(["gh", "auth", "status", "--hostname", "github.com"])
 token_result = run_as_operator(["gh", "auth", "token"])
 token = token_result.stdout.strip()

@@ -1,5 +1,15 @@
 # Authoritative Plasma package builds
 
+PolicyKit host-control preflight on `f7c0456f3790adf0baf4bdfd356d15dbe900d919`,
+run 39108649602, job 117619865713, is retained as `INFRA_INVALID`.
+The fixed controller stopped before GitHub mutation, JIT creation, VM creation
+or `sbuild`: its preliminary external `test -r /dev/kvm` proxy returned 1.
+The immediately preceding non-mutating diagnostic had already proven actual
+operator `O_RDWR` open of `/dev/kvm` plus `KVM_GET_API_VERSION=12` in the
+same Actions service cgroup. The repair replaces the access-bit proxy with that
+actual KVM open/ioctl admission. No Package Attempt was consumed; PolicyKit
+remains build-pending at Attempt 0 pending a fresh host preflight.
+
 PolicyKit KDE Agent 1 `4:6.7.5-0supralinux1` input preflight 45 on
 `a0806b32d333ed762b76bcfd9d36e231d9c74d9f`, run 39098276395, job
 117589122221, closes authoritative input PASS. The clean bare Frameworks
