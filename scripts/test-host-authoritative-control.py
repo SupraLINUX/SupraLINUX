@@ -15,9 +15,9 @@ required_broker = [
     'os.environ.get("SUDO_USER") != RUNNER_USER',
     '"mode", "gate", "runner_group_id", "cancel_run_id"',
     '"cancel_run_head_sha"',
-    'request.get("mode") not in {"diagnose", "preflight", "execute"}',
+    'request.get("mode") not in {"diagnose", "preflight", "rebuild-golden", "execute"}',
     'request.get("gate") != "plasma-package-build"',
-    'request["mode"] in {"diagnose", "execute"} and (',
+    'request["mode"] in {"diagnose", "rebuild-golden", "execute"} and (',
     'run.get("status") == "queued"',
     'job.get("status") != "queued"',
     'make_demote(extra_groups=())',
@@ -42,6 +42,12 @@ required_broker = [
     '["scripts/run-kvm-jit-gate.sh", request["gate"]]',
     '"SUPRALINUX_GITHUB_TOKEN": token',
     '"package_attempt_effect=none-before-execute"',
+    'if request["mode"] == "rebuild-golden":',
+    '"SUPRALINUX_REPLACE_GOLDEN_IMAGE": "1"',
+    '["scripts/build-authoritative-runner-image.sh"]',
+    '"HOST_AUTHORITATIVE_GOLDEN_REBUILD=PASS"',
+    '"golden-rebuild-admission.txt"',
+    '"package_attempt_effect=none"',
     'KVM_RUNTIME_PROBE = r"""',
     '"kvm-runtime-admission.json"',
     'kvm_runtime_result.get("open_ok") is True',
@@ -78,11 +84,9 @@ for token in required_workflow:
 
 expected_request = {
     "schema": 1,
-    "mode": "preflight",
+    "mode": "rebuild-golden",
     "gate": "plasma-package-build",
     "runner_group_id": 3,
-    "cancel_run_id": 39106846518,
-    "cancel_run_head_sha": "faf9e633db4218c88a7b7df0bdc737c6079ca216",
 }
 if request != expected_request:
     raise SystemExit(f"unexpected initial authoritative host request: {request!r}")

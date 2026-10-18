@@ -39,7 +39,7 @@ if unknown:
     raise SystemExit(f"Unknown authoritative request keys: {sorted(unknown)}")
 if request.get("schema") != 1:
     raise SystemExit("Unsupported request schema.")
-if request.get("mode") not in {"diagnose", "preflight", "execute"}:
+if request.get("mode") not in {"diagnose", "preflight", "rebuild-golden", "execute"}:
     raise SystemExit("Unsupported control mode.")
 if request.get("gate") != "plasma-package-build":
     raise SystemExit("Unsupported authoritative gate.")
@@ -67,7 +67,7 @@ else:
         or any(c not in "0123456789abcdef" for c in cancel_run_head_sha)
     ):
         raise SystemExit("Invalid cancellation head SHA.")
-if request["mode"] in {"diagnose", "execute"} and (
+if request["mode"] in {"diagnose", "rebuild-golden", "execute"} and (
     cancel_run_id is not None or cancel_run_head_sha is not None
 ):
     raise SystemExit(f"{request['mode']} mode refuses stale-run cancellation.")
@@ -169,9 +169,7 @@ def make_demote(extra_groups=()):
         os.setuid(operator.pw_uid)
     return demote
 
-def run_as_operator(
-    args, *, cwd=None, extra_env=None, extra_groups=(), check=True, capture_output=True
-):
+def operator_environment(extra_env=None):
     env = os.environ.copy()
     env.update({
         "HOME": operator.pw_dir,
@@ -180,15 +178,41 @@ def run_as_operator(
     })
     if extra_env:
         env.update(extra_env)
+    return env
+
+def run_as_operator(
+    args, *, cwd=None, extra_env=None, extra_groups=(), check=True, capture_output=True
+):
     return subprocess.run(
         args,
         cwd=cwd,
-        env=env,
+        env=operator_environment(extra_env),
         check=check,
         capture_output=capture_output,
         text=True,
         preexec_fn=make_demote(extra_groups),
     )
+
+def stream_as_operator(args, log_path, *, cwd=None, extra_env=None, extra_groups=()):
+    with log_path.open("w") as log:
+        process = subprocess.Popen(
+            args,
+            cwd=cwd,
+            env=operator_environment(extra_env),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            preexec_fn=make_demote(extra_groups),
+        )
+        assert process.stdout is not None
+        for line in process.stdout:
+            log.write(line)
+            log.flush()
+            print(line, end="", flush=True)
+        rc = process.wait()
+    os.chmod(log_path, 0o600)
+    os.chown(log_path, runner_pw.pw_uid, runner_pw.pw_gid)
+    return rc
 
 libvirt_group = pwd.getpwnam("libvirt-qemu").pw_gid
 group_names = set(run_as_operator(["id", "-nG"]).stdout.split())
@@ -521,6 +545,67 @@ try:
         preflight_log.append(proc.stdout)
         preflight_log.append(proc.stderr)
 
+    if request["mode"] == "rebuild-golden":
+        write_result("host-preflight.log", "".join(preflight_log))
+        rebuild_log = result_dir / "golden-rebuild.log"
+        rebuild_rc = stream_as_operator(
+            ["scripts/build-authoritative-runner-image.sh"],
+            rebuild_log,
+            cwd=checkout,
+            extra_env={
+                "SUPRALINUX_SOURCE_COMMIT": source_commit,
+                "SUPRALINUX_GOLDEN_IMAGE": str(GOLDEN_IMAGE),
+                "SUPRALINUX_REPLACE_GOLDEN_IMAGE": "1",
+            },
+            extra_groups=privileged_groups,
+        )
+        if rebuild_rc != 0:
+            write_result(
+                "golden-rebuild-result.txt",
+                "\n".join(
+                    [
+                        "state=INFRA_INVALID",
+                        f"exit_code={rebuild_rc}",
+                        f"source_commit={source_commit}",
+                        "package_attempt_effect=none",
+                        "jit_invoked=no",
+                        "",
+                    ]
+                ),
+            )
+            raise SystemExit(rebuild_rc)
+
+        rebuild_admission = control_dir / "golden-rebuild-admission.txt"
+        proc = run_as_operator(
+            [
+                "scripts/check-golden-image-provenance.sh",
+                str(GOLDEN_IMAGE),
+                str(rebuild_admission),
+            ],
+            cwd=checkout,
+            extra_env={"SUPRALINUX_GOLDEN_COMPAT_COMMIT": source_commit},
+            extra_groups=privileged_groups,
+        )
+        write_result("golden-rebuild-admission.txt", rebuild_admission.read_text())
+        provenance = Path(str(GOLDEN_IMAGE) + ".provenance.txt")
+        write_result("golden-rebuild-provenance.txt", provenance.read_text())
+        write_result(
+            "golden-rebuild-result.txt",
+            "\n".join(
+                [
+                    "state=PASS",
+                    "exit_code=0",
+                    f"source_commit={source_commit}",
+                    "golden_input_compatibility=PASS",
+                    "package_attempt_effect=none",
+                    "jit_invoked=no",
+                    "",
+                ]
+            ),
+        )
+        print("HOST_AUTHORITATIVE_GOLDEN_REBUILD=PASS")
+        raise SystemExit(0)
+
     golden_tmp = control_dir / "golden-admission.txt"
     proc = run_as_operator(
         [
@@ -562,35 +647,19 @@ try:
         print("HOST_AUTHORITATIVE_PREFLIGHT=PASS")
         raise SystemExit(0)
 
-    env = os.environ.copy()
-    env.update({
-        "HOME": operator.pw_dir,
-        "USER": operator.pw_name,
-        "LOGNAME": operator.pw_name,
-        "SUPRALINUX_GITHUB_TOKEN": token,
-        "SUPRALINUX_RUNNER_GROUP_ID": str(runner_group_id),
-        "SUPRALINUX_REPOSITORY": REPOSITORY,
-        "SUPRALINUX_PR_NUMBER": str(PR_NUMBER),
-    })
     log_path = result_dir / "jit-gate.log"
-    with log_path.open("w") as log:
-        process = subprocess.Popen(
-            ["scripts/run-kvm-jit-gate.sh", request["gate"]],
-            cwd=checkout,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            preexec_fn=make_demote(privileged_groups),
-        )
-        assert process.stdout is not None
-        for line in process.stdout:
-            log.write(line)
-            log.flush()
-            print(line, end="", flush=True)
-        gate_rc = process.wait()
-    os.chmod(log_path, 0o600)
-    os.chown(log_path, runner_pw.pw_uid, runner_pw.pw_gid)
+    gate_rc = stream_as_operator(
+        ["scripts/run-kvm-jit-gate.sh", request["gate"]],
+        log_path,
+        cwd=checkout,
+        extra_env={
+            "SUPRALINUX_GITHUB_TOKEN": token,
+            "SUPRALINUX_RUNNER_GROUP_ID": str(runner_group_id),
+            "SUPRALINUX_REPOSITORY": REPOSITORY,
+            "SUPRALINUX_PR_NUMBER": str(PR_NUMBER),
+        },
+        extra_groups=privileged_groups,
+    )
     write_result(
         "execute-result.txt",
         "\n".join(

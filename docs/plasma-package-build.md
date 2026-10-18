@@ -1,5 +1,18 @@
 # Authoritative Plasma package builds
 
+PolicyKit host-control preflight on `abefc4d6db96b463e3b6d3156fdafa7c37da2298`,
+run 39109048299, job 117621044652, is retained as `INFRA_INVALID`.
+Actual operator KVM admission passed (`O_RDWR` plus
+`KVM_GET_API_VERSION=12`) and the stale queued package workflow was safely
+cancelled, but golden provenance then rejected current-input compatibility.
+The only declared golden input changed since the retained image was built is
+`scripts/install-actions-runner.sh`, updated by `75e4cf469ef44f2ad1c7527ee5b88c2cb63262a0`
+to verify the downloaded runner archive before transferring it to the
+unprivileged runner account. The provenance rejection is therefore valid.
+Rebuild the golden through the existing certified builder before repeating
+host preflight. No JIT package runner, candidate VM or `sbuild` started, so
+PolicyKit remains at Attempt 0.
+
 PolicyKit host-control preflight on `f7c0456f3790adf0baf4bdfd356d15dbe900d919`,
 run 39108649602, job 117619865713, is retained as `INFRA_INVALID`.
 The fixed controller stopped before GitHub mutation, JIT creation, VM creation

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "kind": "golden-input-compatibility-drift",
+  "node": "polkit-kde-agent-1",
+  "source_commit": "abefc4d6db96b463e3b6d3156fdafa7c37da2298",
+  "workflow_run_id": 39109048299,
+  "workflow_job_id": 117621044652,
+  "artifact_id": 12128769802,
+  "artifact_digest": "sha256:484e4869af72471783661c2ed54bddc40469a287fc7ca60f756b26098883cc73",
+  "stage": "golden-image-provenance-admission",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "exit_code": 1,
+  "cause": "Authoritative host KVM admission passed and the stale queued workflow was cancelled, but the retained golden image failed current-input compatibility: scripts/install-actions-runner.sh changed after the golden was built, so the recorded golden-input digest no longer matches the current checkout.",
+  "repair": "Rebuild the authoritative golden image from the exact current PR head with the existing certified builder and explicit replacement authorization, verify the new provenance/input digest, then repeat host preflight before any JIT runner or package execution."
+}
