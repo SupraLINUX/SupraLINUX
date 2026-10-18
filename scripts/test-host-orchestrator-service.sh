@@ -48,5 +48,15 @@ for token in (
     if token not in workflow:
         raise SystemExit(f"missing self-refresh workspace contract: {token}")
 
+for token in (
+    "Verify disposable VM cleanup",
+    "virsh --connect qemu:///system dominfo",
+    'test ! -e "${run_dir}/disk.qcow2"',
+    'test ! -d "${run_dir}"',
+    "cleanup-verification.txt",
+):
+    if token not in workflow:
+        raise SystemExit(f"missing disposable cleanup verification contract: {token}")
+
 print("Host orchestrator private-root/service and unrestricted passwordless sudo contract: PASS")
 PY

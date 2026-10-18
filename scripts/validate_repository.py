@@ -186,6 +186,15 @@ require("cancel-in-progress: false" in pr_ci_router, "PR router must preserve va
 require("pr-ci-router-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}" in pr_ci_router, "PR router must isolate distinct heads")
 require("uses: ./.github/workflows/kde-plasma-lane.yml" in pr_ci_router, "PR router must expose the current Plasma lane")
 require("uses: ./.github/workflows/host-workspace.yml" in pr_ci_router, "PR router must own the disposable host workspace entrypoint")
+require(pr_ci_router.count("if: github.event.action != 'labeled'") >= 2,
+        "host workspace labeled events must bypass full plan/repository-policy jobs")
+require("host-workspace-admission:" in pr_ci_router and "runs-on: ubuntu-26.04" in pr_ci_router,
+        "host workspace must use a cheap hosted Ubuntu 26.04 admission gate")
+require("scripts/test-host-orchestrator-service.sh" in pr_ci_router and
+        "scripts/test-host-workspace-libvirt-permissions.sh" in pr_ci_router,
+        "host workspace admission must validate current orchestrator contracts")
+require("needs: [host-workspace-admission]" in pr_ci_router,
+        "host workspace execution must depend on hosted admission")
 require("github.event.action == 'labeled'" in pr_ci_router and "github.event.label.name == 'ci:host-workspace'" in pr_ci_router,
         "PR router must require the exact host workspace label")
 require(bool(host_workspace_workflow), "missing host workspace reusable workflow")
@@ -194,6 +203,10 @@ require("\n  pull_request:\n" not in host_workspace_workflow, "host workspace mu
 require("supralinux-host-orchestrator" in host_workspace_workflow, "host workspace must target only the host orchestrator runner")
 require("sudo -n /usr/local/libexec/supralinux-vm-workspace-broker" in host_workspace_workflow,
         "host workspace must invoke only the installed VM workspace broker")
+require("Verify disposable VM cleanup" in host_workspace_workflow and
+        "virsh --connect qemu:///system dominfo" in host_workspace_workflow and
+        'test ! -e "${run_dir}/disk.qcow2"' in host_workspace_workflow,
+        "host workspace must fail closed if its disposable VM or overlay remains")
 require("kde-tier3-kio-round" not in pr_ci_router, "closed KIO diagnostics must remain outside live PR routing")
 
 for filename in routed_pr_workflows:

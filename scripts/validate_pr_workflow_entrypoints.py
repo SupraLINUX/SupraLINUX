@@ -74,7 +74,9 @@ req("  push:" in policy, "Repository Policy must retain main push validation")
 
 router_text = (WF / "pr-ci-router.yml").read_text()
 req("uses: ./.github/workflows/repository-policy.yml" in router_text,
-    "PR router must invoke Repository Policy on every normal PR")
+    "PR router must invoke Repository Policy on ordinary PR lifecycle events")
+req(router_text.count("if: github.event.action != 'labeled'") >= 2,
+    "labeled host workspace events must skip the full plan/repository-policy path")
 
 host_workspace = blocks.get("host-workspace.yml", "")
 req("  workflow_call:" in host_workspace,
@@ -85,6 +87,15 @@ req("uses: ./.github/workflows/host-workspace.yml" in router_text,
     "PR router must own the host workspace entrypoint")
 req("github.event.label.name == 'ci:host-workspace'" in router_text,
     "PR router must require the exact host workspace opt-in label")
+req("host-workspace-admission:" in router_text,
+    "PR router must expose a cheap hosted admission gate for host workspace")
+req("runs-on: ubuntu-26.04" in router_text,
+    "host workspace admission must run on explicit hosted Ubuntu 26.04")
+req("scripts/test-host-orchestrator-service.sh" in router_text and
+    "scripts/test-host-workspace-libvirt-permissions.sh" in router_text,
+    "host workspace admission must validate orchestrator and libvirt contracts")
+req("needs: [host-workspace-admission]" in router_text,
+    "host workspace must depend on successful hosted admission")
 
 historical = [
     p.name for p in files

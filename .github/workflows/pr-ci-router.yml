@@ -15,6 +15,7 @@ concurrency:
 jobs:
   plan:
     name: Plan active PR work
+    if: github.event.action != 'labeled'
     runs-on: ubuntu-26.04
     timeout-minutes: 10
     outputs:
@@ -54,6 +55,7 @@ jobs:
 
   repository-policy:
     name: Repository policy
+    if: github.event.action != 'labeled'
     uses: ./.github/workflows/repository-policy.yml
 
   kde-plasma-lane:
@@ -68,11 +70,50 @@ jobs:
     if: needs.plan.outputs.run_qt_provider == 'true'
     uses: ./.github/workflows/qt-provider-preflight.yml
 
-  host-workspace:
-    name: Disposable host workspace
-    needs: [repository-policy]
+  host-workspace-admission:
+    name: Host workspace admission
     if: >-
       ${{ github.event.action == 'labeled' &&
+          github.event.label.name == 'ci:host-workspace' &&
+          github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - name: Validate host workspace admission
+        shell: bash
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${PR_HEAD_SHA}"
+          python3 scripts/check-source-syntax.py
+          python3 scripts/validate_pr_workflow_entrypoints.py
+          scripts/test-host-orchestrator-service.sh
+          scripts/test-host-workspace-libvirt-permissions.sh
+          python3 - <<'PY'
+          import json, re
+          from pathlib import Path
+          request = json.loads(Path("ops/host-workspace/request.json").read_text())
+          assert request.get("schema") == 1
+          task = request.get("task_id")
+          script = request.get("script")
+          assert isinstance(task, str) and re.fullmatch(r"[A-Za-z0-9._-]{1,64}", task)
+          assert isinstance(script, str) and 0 < len(script.encode()) <= 500_000
+          assert "\x00" not in script
+          print("Host workspace admission: PASS")
+          PY
+
+  host-workspace:
+    name: Disposable host workspace
+    needs: [host-workspace-admission]
+    if: >-
+      ${{ needs.host-workspace-admission.result == 'success' &&
+          github.event.action == 'labeled' &&
           github.event.label.name == 'ci:host-workspace' &&
           github.event.pull_request.head.repo.full_name == github.repository }}
     uses: ./.github/workflows/host-workspace.yml

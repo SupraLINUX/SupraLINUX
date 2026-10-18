@@ -69,6 +69,32 @@ jobs:
             ops/host-workspace/request.json \
             | sudo -n /usr/local/libexec/supralinux-vm-workspace-broker
 
+      - name: Verify disposable VM cleanup
+        if: always()
+        shell: bash
+        env:
+          GITHUB_RUN_ID_VALUE: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          vm_name="supralinux-workspace-${GITHUB_RUN_ID_VALUE}"
+          run_dir="/var/lib/supralinux/workspace-vms/${GITHUB_RUN_ID_VALUE}"
+          if sudo -n virsh --connect qemu:///system dominfo "${vm_name}" >/dev/null 2>&1; then
+            echo "VM still exists after workspace cleanup: ${vm_name}" >&2
+            exit 1
+          fi
+          sudo -n test ! -e "${run_dir}/disk.qcow2"
+          sudo -n test ! -d "${run_dir}"
+          result_dir="/var/lib/supralinux/workspace-results/${GITHUB_RUN_ID_VALUE}"
+          if [[ -d "${result_dir}" ]]; then
+            {
+              echo "state=PASS"
+              echo "vm_absent=yes"
+              echo "overlay_absent=yes"
+              echo "run_dir_absent=yes"
+            } > "${result_dir}/cleanup-verification.txt"
+          fi
+          echo "Disposable VM cleanup: PASS"
+
       - name: Upload workspace result
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
