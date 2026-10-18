@@ -97,6 +97,22 @@ req("scripts/test-host-orchestrator-service.sh" in router_text and
 req("needs: [host-workspace-admission]" in router_text,
     "host workspace must depend on successful hosted admission")
 
+host_authoritative = blocks.get("host-authoritative-control.yml", "")
+req("  workflow_call:" in host_authoritative,
+    "Host authoritative control must be reusable from the PR router")
+req("  pull_request:" not in host_authoritative,
+    "Host authoritative control must not listen to PR directly")
+req("uses: ./.github/workflows/host-authoritative-control.yml" in router_text,
+    "PR router must own the authoritative host control entrypoint")
+req("github.event.label.name == 'ci:host-authoritative'" in router_text,
+    "PR router must require the exact authoritative host opt-in label")
+req("host-authoritative-admission:" in router_text,
+    "PR router must expose a cheap hosted admission gate for authoritative host control")
+req("python3 scripts/test-host-authoritative-control.py" in router_text,
+    "authoritative host admission must validate its fixed-control contract")
+req("needs: [host-authoritative-admission]" in router_text,
+    "authoritative host control must depend on successful hosted admission")
+
 historical = [
     p.name for p in files
     if re.match(r"kde-tier3-kio-round(?:1[1-9]|2[0-6])-(?:diagnostic|provider-contract|remediation)\.yml$", p.name)

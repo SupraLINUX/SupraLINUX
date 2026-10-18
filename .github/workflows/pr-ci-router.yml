@@ -117,3 +117,38 @@ jobs:
           github.event.label.name == 'ci:host-workspace' &&
           github.event.pull_request.head.repo.full_name == github.repository }}
     uses: ./.github/workflows/host-workspace.yml
+
+  host-authoritative-admission:
+    name: Host authoritative admission
+    if: >-
+      ${{ github.event.action == 'labeled' &&
+          github.event.label.name == 'ci:host-authoritative' &&
+          github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - name: Validate authoritative host admission
+        shell: bash
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$PR_HEAD_SHA"
+          python3 scripts/check-source-syntax.py
+          python3 scripts/validate_pr_workflow_entrypoints.py
+          python3 scripts/test-host-authoritative-control.py
+
+  host-authoritative:
+    name: Persistent host authoritative control
+    needs: [host-authoritative-admission]
+    if: >-
+      ${{ needs.host-authoritative-admission.result == 'success' &&
+          github.event.action == 'labeled' &&
+          github.event.label.name == 'ci:host-authoritative' &&
+          github.event.pull_request.head.repo.full_name == github.repository }}
+    uses: ./.github/workflows/host-authoritative-control.yml
