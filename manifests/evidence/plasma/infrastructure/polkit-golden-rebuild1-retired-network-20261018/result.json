@@ -12,5 +12,6 @@
   "package_execution_started": false,
   "consumes_package_attempt": false,
   "cause": "The host and signed Ubuntu source-image preflights passed, but the legacy full golden builder still requested the retired libvirt network named `default`. That network was intentionally removed by the certified bridge-free safety migration, so virt-install failed before the preparation VM started.",
-  "repair": "Replace the retired libvirt NAT dependency with a controlled QEMU SLIRP preparation path. Keep the guest interface manually inactive until the existing guest-private-address nftables guard is loaded, activate it only from inside the guest, certify that mechanism with a small source-image network preflight, and only then run the full golden rebuild."
+  "repair": "Replace the retired libvirt NAT dependency with a controlled QEMU SLIRP preparation path. Keep the guest interface manually inactive until the existing guest-private-address nftables guard is loaded, activate it only from inside the guest, certify that mechanism with a small source-image network preflight, and only then run the full golden rebuild.",
+  "exit_code": 1
 }
