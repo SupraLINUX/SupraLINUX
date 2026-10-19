@@ -10445,7 +10445,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -10641,7 +10641,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/polkit-kde-agent-1-preflight45/verification.json",
-      "sha256": "56244634575e3d861979ee534914d9b8bf4e199f1dd0a400f4dc9b2a5d2ef097"
+      "sha256": "56244634575e3d861979ee534914d9b8bf4e199f1dd0a400f4dc9b2a5d2ef097",
+      "applicable": false,
+      "inapplicability_reason": "The authoritative host/golden runtime repair changed scripts/check-kvm-host.sh after preflight45. Preserve the original PASS for its frozen inputs; certify the current host/package execution inputs again before PolicyKit Attempt 1."
     }
   ],
   "package_input_incidents": [
