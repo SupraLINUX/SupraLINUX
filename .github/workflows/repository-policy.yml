@@ -124,6 +124,9 @@ jobs:
           python3 scripts/test-kvm-network.py
           python3 scripts/check-kvm-network.py --evidence
 
+      - name: Test scoped e1000e host repair contract
+        run: python3 scripts/test-restore-kvm-host-network-safety.py
+
       - name: Test golden builder controlled network bootstrap
         run: python3 scripts/test-golden-builder-network-safety.py
 

@@ -39,7 +39,7 @@ if unknown:
     raise SystemExit(f"Unknown authoritative request keys: {sorted(unknown)}")
 if request.get("schema") != 1:
     raise SystemExit("Unsupported request schema.")
-if request.get("mode") not in {"diagnose", "preflight", "rebuild-golden", "execute"}:
+if request.get("mode") not in {"diagnose", "repair-host", "preflight", "rebuild-golden", "execute"}:
     raise SystemExit("Unsupported control mode.")
 if request.get("gate") != "plasma-package-build":
     raise SystemExit("Unsupported authoritative gate.")
@@ -67,7 +67,7 @@ else:
         or any(c not in "0123456789abcdef" for c in cancel_run_head_sha)
     ):
         raise SystemExit("Invalid cancellation head SHA.")
-if request["mode"] in {"diagnose", "rebuild-golden", "execute"} and (
+if request["mode"] in {"diagnose", "repair-host", "rebuild-golden", "execute"} and (
     cancel_run_id is not None or cancel_run_head_sha is not None
 ):
     raise SystemExit(f"{request['mode']} mode refuses stale-run cancellation.")
@@ -473,6 +473,47 @@ write_result(
     "kvm-runtime-admission.json",
     json.dumps(kvm_runtime_result, indent=2, sort_keys=True) + "\n",
 )
+if request["mode"] == "repair-host":
+    repair = subprocess.run(
+        ["/usr/local/libexec/supralinux-restore-kvm-host-network-safety"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    write_result("host-network-repair.stdout", repair.stdout)
+    write_result("host-network-repair.stderr", repair.stderr)
+    state = "PASS" if repair.returncode == 0 else "INFRA_INVALID"
+    if repair.returncode == 0:
+        payload = json.loads(repair.stdout)
+        if not (
+            payload.get("state") == "PASS"
+            and payload.get("package_attempt_effect") == "none"
+            and payload.get("persistent_change") is False
+            and payload.get("vm_created") is False
+            and payload.get("jit_invoked") is False
+        ):
+            raise SystemExit("Host network repair returned an invalid PASS receipt.")
+    write_result(
+        "repair-host-result.txt",
+        "\n".join(
+            [
+                f"state={state}",
+                f"exit_code={repair.returncode}",
+                f"source_commit={source_commit}",
+                "scope=e1000e-runtime-offload-safety-restore",
+                "github_token_requested=no",
+                "github_api_mutation=no",
+                "vm_created=no",
+                "jit_invoked=no",
+                "package_attempt_effect=none",
+                "",
+            ]
+        ),
+    )
+    if repair.returncode != 0:
+        raise SystemExit(repair.returncode)
+    print("HOST_NETWORK_SAFETY_REPAIR=PASS")
+    raise SystemExit(0)
 run_as_operator(["gh", "auth", "status", "--hostname", "github.com"])
 token_result = run_as_operator(["gh", "auth", "token"])
 token = token_result.stdout.strip()

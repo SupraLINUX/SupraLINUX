@@ -25,6 +25,12 @@ jobs:
           sudo -n install -o root -g root -m 0755 \
             scripts/supralinux-authoritative-host-broker.py \
             /usr/local/libexec/supralinux-authoritative-host-broker
+          sudo -n install -o root -g root -m 0755 \
+            scripts/restore-kvm-host-network-safety.py \
+            /usr/local/libexec/supralinux-restore-kvm-host-network-safety
+          sudo -n install -o root -g root -m 0755 \
+            scripts/check-kvm-network.py \
+            /usr/local/libexec/supralinux-check-kvm-network.py
 
       - name: Validate authoritative control request
         shell: bash
@@ -38,7 +44,7 @@ jobs:
           from pathlib import Path
           request = json.loads(Path("ops/host-authoritative/request.json").read_text())
           assert request.get("schema") == 1
-          assert request.get("mode") in {"diagnose", "preflight", "rebuild-golden", "execute"}
+          assert request.get("mode") in {"diagnose", "repair-host", "preflight", "rebuild-golden", "execute"}
           assert request.get("gate") == "plasma-package-build"
           assert isinstance(request.get("runner_group_id"), int) and request["runner_group_id"] > 0
           cancel = request.get("cancel_run_id")
@@ -48,7 +54,7 @@ jobs:
               assert cancel_head is None
           else:
               assert isinstance(cancel_head, str) and re.fullmatch(r"[0-9a-f]{40}", cancel_head)
-          if request["mode"] in {"diagnose", "rebuild-golden", "execute"}:
+          if request["mode"] in {"diagnose", "repair-host", "rebuild-golden", "execute"}:
               assert cancel is None and cancel_head is None
           assert re.fullmatch(r"[0-9a-f]{40}", os.environ["PR_HEAD_SHA"])
           assert re.fullmatch(r"[0-9]+", os.environ["CONTROL_RUN_ID"])

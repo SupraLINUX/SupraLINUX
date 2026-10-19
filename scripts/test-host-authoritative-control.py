@@ -15,9 +15,9 @@ required_broker = [
     'os.environ.get("SUDO_USER") != RUNNER_USER',
     '"mode", "gate", "runner_group_id", "cancel_run_id"',
     '"cancel_run_head_sha"',
-    'request.get("mode") not in {"diagnose", "preflight", "rebuild-golden", "execute"}',
+    'request.get("mode") not in {"diagnose", "repair-host", "preflight", "rebuild-golden", "execute"}',
     'request.get("gate") != "plasma-package-build"',
-    'request["mode"] in {"diagnose", "rebuild-golden", "execute"} and (',
+    'request["mode"] in {"diagnose", "repair-host", "rebuild-golden", "execute"} and (',
     'run.get("status") == "queued"',
     'job.get("status") != "queued"',
     'make_demote(extra_groups=())',
@@ -63,6 +63,11 @@ required_broker = [
     '"kvm-runtime-admission.json"',
     'kvm_runtime_result.get("open_ok") is True',
     'kvm_runtime_result.get("kvm_api_version") == 12',
+    'if request["mode"] == "repair-host":',
+    '"/usr/local/libexec/supralinux-restore-kvm-host-network-safety"',
+    '"HOST_NETWORK_SAFETY_REPAIR=PASS"',
+    '"github_token_requested=no"',
+    '"github_api_mutation=no"',
 ]
 for token in required_broker:
     if token not in broker:
@@ -95,7 +100,7 @@ for token in required_workflow:
 
 expected_request = {
     "schema": 1,
-    "mode": "diagnose",
+    "mode": "repair-host",
     "gate": "plasma-package-build",
     "runner_group_id": 3,
 }

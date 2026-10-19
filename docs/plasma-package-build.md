@@ -1,5 +1,18 @@
 # Authoritative Plasma package builds
 
+PolicyKit authoritative host control on `b1b30ca5313474c038ca3142b924cfd9877cce18`,
+run 39258785236/job 118080793802, is retained as `INFRA_INVALID`.
+The host had rebooted at 2026-10-19 00:40:20 and the documented non-persistent
+e1000e mitigation had reset: `eno1` again reported TSO and GSO enabled.
+Independent read-only diagnosis on `f264efeb29afeabb4c37323d7dc1d300d0d8f5da`
+confirmed carrier and KVM are healthy and the private libguestfs runtime still
+matches kernel `7.0.0-38-generic`. The fixed repair lane may only disable TSO/GSO
+on the single e1000e default-route interface and must prove carrier, addresses,
+default route and bridge-free userspace admission remain unchanged. It may not
+persist settings or alter firewall, packages, routes, bridges, Docker or another
+interface. The failed control stopped before golden-network preflight, VM/JIT
+creation or `sbuild`; PolicyKit remains at Attempt 0.
+
 PolicyKit golden rebuild on `10c304ce2fe87da79efcf0524fcb5015e6f2b7e0`, run 39109601718, job
 117622697197, is retained as `INFRA_INVALID`. Host KVM admission and signed
 Ubuntu source-image verification passed, but the historical full golden builder

@@ -10392,6 +10392,23 @@
       "diagnosis_sha256": "2d062e6ee497767b1d5ec2c219d108f82fb059be6e4df67eb1bfeddc83989526",
       "cause": "The host and signed Ubuntu source-image preflights passed, but the legacy full golden builder still requested the retired libvirt network named `default`. That network was intentionally removed by the certified bridge-free safety migration, so virt-install failed before the preparation VM started.",
       "repair": "Replace the retired libvirt NAT dependency with a controlled QEMU SLIRP preparation path. Keep the guest interface manually inactive until the existing guest-private-address nftables guard is loaded, activate it only from inside the guest, certify that mechanism with a small source-image network preflight, and only then run the full golden rebuild."
+    },
+    {
+      "state": "INFRA_INVALID",
+      "node": "polkit-kde-agent-1",
+      "source_commit": "b1b30ca5313474c038ca3142b924cfd9877cce18",
+      "workflow_run_id": 39258785236,
+      "workflow_job_id": 118080793802,
+      "kind": "host-network-offload-reset-after-reboot",
+      "stage": "host-authoritative-kvm-preflight",
+      "package_execution_started": false,
+      "consumes_package_attempt": false,
+      "result_path": "manifests/evidence/plasma/infrastructure/polkit-host-network-offload-reset-20261019/result.json",
+      "result_sha256": "28e213eea1fcfcd665f530eb7b28027c5c8492e6b51ab649e2fb63fd0c8c90f0",
+      "diagnosis_path": "manifests/evidence/plasma/infrastructure/polkit-host-network-offload-reset-20261019/diagnosis.json",
+      "diagnosis_sha256": "d77aa197b0230d85a99483a9c29d3b7e92eaa4e768788dff6fd69608c1fa211a",
+      "cause": "The host rebooted at 2026-10-19 00:40:20 and the documented non-persistent e1000e safety mitigation reset: eno1 again exposed tcp-segmentation-offload=on and generic-segmentation-offload=on. The authoritative host preflight failed before the golden-network preflight, VM creation, JIT registration, or sbuild.",
+      "repair": "Reapply the already documented reversible runtime mitigation only to the single e1000e default-route interface by setting TSO and GSO off. Verify carrier, normalized addresses and the default route remain unchanged, then require the bridge-free userspace network admission to pass. Do not persist the setting or modify firewall, packages, routes, bridges, Docker, or unrelated interfaces."
     }
   ],
   "infrastructure_certifications": [
