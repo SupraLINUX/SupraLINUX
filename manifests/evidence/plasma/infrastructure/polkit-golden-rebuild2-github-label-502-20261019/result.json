@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "kind": "transient-github-label-delete-before-golden-rebuild",
+  "node": "polkit-kde-agent-1",
+  "source_commit": "a23b8a7cafdf1589060e46eac46911311ee0d2b4",
+  "workflow_run_id": 39262000775,
+  "workflow_job_id": 118091851907,
+  "artifact_id": 12190882655,
+  "artifact_digest": "sha256:2c42f02c72e5c1fc338be3bd838e9b9c98f626f377fc0c231332cb691e628816",
+  "stage": "host-authoritative-control-github-label-hygiene",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "exit_code": 1,
+  "cause": "After KVM runtime admission, the broker issued an unconditional GitHub API DELETE for the package-build trigger label and received HTTP 502. The label was not present on PR #1, so this was an unnecessary remote mutation before the golden-network preflight.",
+  "repair": "Derive package-build label presence from the already fetched PR payload and issue DELETE only when the exact label is present. Preserve fail-closed behavior when a real stale package-build trigger exists; when absent, proceed without a GitHub mutation."
+}

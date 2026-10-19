@@ -10409,6 +10409,23 @@
       "diagnosis_sha256": "d77aa197b0230d85a99483a9c29d3b7e92eaa4e768788dff6fd69608c1fa211a",
       "cause": "The host rebooted at 2026-10-19 00:40:20 and the documented non-persistent e1000e safety mitigation reset: eno1 again exposed tcp-segmentation-offload=on and generic-segmentation-offload=on. The authoritative host preflight failed before the golden-network preflight, VM creation, JIT registration, or sbuild.",
       "repair": "Reapply the already documented reversible runtime mitigation only to the single e1000e default-route interface by setting TSO and GSO off. Verify carrier, normalized addresses and the default route remain unchanged, then require the bridge-free userspace network admission to pass. Do not persist the setting or modify firewall, packages, routes, bridges, Docker, or unrelated interfaces."
+    },
+    {
+      "state": "INFRA_INVALID",
+      "node": "polkit-kde-agent-1",
+      "source_commit": "a23b8a7cafdf1589060e46eac46911311ee0d2b4",
+      "workflow_run_id": 39262000775,
+      "workflow_job_id": 118091851907,
+      "kind": "transient-github-label-delete-before-golden-rebuild",
+      "stage": "host-authoritative-control-github-label-hygiene",
+      "package_execution_started": false,
+      "consumes_package_attempt": false,
+      "result_path": "manifests/evidence/plasma/infrastructure/polkit-golden-rebuild2-github-label-502-20261019/result.json",
+      "result_sha256": "84303de3392da80c35a9af06d4d19be8ef954772c43cbf002c5dc4e8cce1222d",
+      "diagnosis_path": "manifests/evidence/plasma/infrastructure/polkit-golden-rebuild2-github-label-502-20261019/diagnosis.json",
+      "diagnosis_sha256": "8a472a6da5e815956f425591ec2453eca2564ea2b93d5f042c480dc185bdce4c",
+      "cause": "After KVM runtime admission, the broker issued an unconditional GitHub API DELETE for the package-build trigger label and received HTTP 502. The label was not present on PR #1, so this was an unnecessary remote mutation before the golden-network preflight.",
+      "repair": "Derive package-build label presence from the already fetched PR payload and issue DELETE only when the exact label is present. Preserve fail-closed behavior when a real stale package-build trigger exists; when absent, proceed without a GitHub mutation."
     }
   ],
   "infrastructure_certifications": [

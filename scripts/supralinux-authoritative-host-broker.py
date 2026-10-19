@@ -599,11 +599,17 @@ if cancel_run_id is not None:
             time.sleep(2)
     write_result("stale-run.txt", f"stale_run_cancelled={cancel_run_id}\n")
 
-api(
-    "DELETE",
-    f"/repos/{REPOSITORY}/issues/{PR_NUMBER}/labels/ci%3Aplasma-package-build",
-    allowed=(200, 204, 404),
+package_build_label_present = any(
+    label.get("name") == "ci:plasma-package-build"
+    for label in pr.get("labels", [])
+    if isinstance(label, dict)
 )
+if package_build_label_present:
+    api(
+        "DELETE",
+        f"/repos/{REPOSITORY}/issues/{PR_NUMBER}/labels/ci%3Aplasma-package-build",
+        allowed=(200, 204, 404),
+    )
 
 control_dir = WORK_ROOT / control_run_id
 checkout = control_dir / "repo"

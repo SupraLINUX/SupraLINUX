@@ -1,5 +1,14 @@
 # Authoritative Plasma package builds
 
+PolicyKit golden rebuild control on `a23b8a7cafdf1589060e46eac46911311ee0d2b4`, run 39262000775/job
+118091851907, is retained as `INFRA_INVALID`. KVM admission completed, but the
+broker then issued an unconditional DELETE for the package-build trigger label
+and GitHub returned HTTP 502. The label was not present on PR #1, so no
+golden-network preflight, VM, full rebuild, JIT runner or `sbuild` started.
+The broker now derives label presence from the already fetched PR payload and
+performs that cleanup only when the exact label exists. PolicyKit remains at
+Attempt 0.
+
 The scoped host repair on `5ce2689db84b257d43692f692aca831668d3b957`, run 39261460375/job
 118090018558, closed PASS. It changed only the live e1000e offload state on
 `eno1` from TSO/GSO on to off. Carrier stayed up, normalized interface

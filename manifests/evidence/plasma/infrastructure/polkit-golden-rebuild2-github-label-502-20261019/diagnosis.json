@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "state": "DIAGNOSED",
+  "incident_run_id": 39262000775,
+  "incident_job_id": 118091851907,
+  "artifact_id": 12190882655,
+  "artifact_digest": "sha256:2c42f02c72e5c1fc338be3bd838e9b9c98f626f377fc0c231332cb691e628816",
+  "package_attempt_effect": "none",
+  "observations": {
+    "kvm_runtime_admission_written": true,
+    "github_operation": "DELETE /repos/SupraLINUX/SupraLINUX/issues/1/labels/ci%3Aplasma-package-build",
+    "github_http_status": 502,
+    "package_build_label_present_after_failure": false,
+    "golden_network_preflight_started": false,
+    "golden_rebuild_started": false,
+    "vm_created": false,
+    "jit_invoked": false,
+    "sbuild_started": false
+  },
+  "diagnosis": "The failure is a transient GitHub API error on an unnecessary idempotent label-cleanup call. The authoritative rebuild did not reach the small KVM network mechanism or the full golden builder."
+}
