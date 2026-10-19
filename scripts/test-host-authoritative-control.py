@@ -100,7 +100,7 @@ for token in required_workflow:
 
 expected_request = {
     "schema": 1,
-    "mode": "repair-host",
+    "mode": "rebuild-golden",
     "gate": "plasma-package-build",
     "runner_group_id": 3,
 }

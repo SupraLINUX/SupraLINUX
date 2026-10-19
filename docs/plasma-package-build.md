@@ -1,5 +1,15 @@
 # Authoritative Plasma package builds
 
+The scoped host repair on `5ce2689db84b257d43692f692aca831668d3b957`, run 39261460375/job
+118090018558, closed PASS. It changed only the live e1000e offload state on
+`eno1` from TSO/GSO on to off. Carrier stayed up, normalized interface
+addresses and the default route were preserved, the bridge-free userspace
+network admission passed, and KVM API version 12 remained available. The
+receipt records no persistent configuration, firewall/package/route/bridge/
+Docker mutation, VM, JIT runner or package execution. The next gate is the
+small controlled golden-network preflight followed, only on PASS, by the full
+authoritative golden rebuild.
+
 PolicyKit authoritative host control on `b1b30ca5313474c038ca3142b924cfd9877cce18`,
 run 39258785236/job 118080793802, is retained as `INFRA_INVALID`.
 The host had rebooted at 2026-10-19 00:40:20 and the documented non-persistent
