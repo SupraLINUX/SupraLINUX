@@ -32,7 +32,6 @@ if [[ ! "${RUNNER_USER}" =~ ^[a-z_][a-z0-9_-]*[$]?$ ]]; then
 fi
 
 required=(
-    base64
     chgrp
     chmod
     git
@@ -160,10 +159,7 @@ ethernets:
     dhcp4: true
     dhcp6: false
     accept-ra: false
-    activation-mode: manual
 EOF_NETWORK
-
-NETWORK_HELPER_B64="$(base64 -w0 "${ROOT}/scripts/configure-golden-bootstrap-network.py")"
 
 cat > "${USER_DATA}" <<EOF_USER
 #cloud-config
@@ -172,11 +168,6 @@ packages:
   - ca-certificates
   - git
 write_files:
-  - path: /usr/local/sbin/supralinux-configure-golden-bootstrap-network.py
-    owner: root:root
-    permissions: '0755'
-    encoding: b64
-    content: ${NETWORK_HELPER_B64}
   - path: /usr/local/sbin/supralinux-golden-build
     owner: root:root
     permissions: '0755'
@@ -210,10 +201,7 @@ write_files:
           printf 'runner_user=%s\\n' '${RUNNER_USER}'
           printf 'source_checkout_removed=yes\\n'
       } > /var/lib/supralinux/evidence/golden-build-complete.txt
-bootcmd:
-  - [ python3, /usr/local/sbin/supralinux-configure-golden-bootstrap-network.py, --bootstrap, --activate-link ]
 runcmd:
-  - [ bash, -lc, 'python3 /usr/local/sbin/supralinux-configure-golden-bootstrap-network.py --bootstrap --verify-network > /var/lib/supralinux/evidence/golden-network-verification.json' ]
   - [ /usr/local/sbin/supralinux-golden-build ]
 power_state:
   delay: now
@@ -243,13 +231,14 @@ EOF_USER
     printf 'meta_data_sha256='; sha256sum "${META_DATA}" | awk '{print $1}'
     printf 'network_config_sha256='; sha256sum "${NETWORK_CONFIG}" | awk '{print $1}'
     printf 'network_helper_sha256='; sha256sum "${ROOT}/scripts/configure-golden-bootstrap-network.py" | awk '{print $1}'
+    printf 'network_activation_sha256='; sha256sum "${ROOT}/scripts/activate-golden-bootstrap-network.py" | awk '{print $1}'
     printf '\nsource_image_provenance:\n'
     cat "${SOURCE_PROVENANCE}"
 } > "${EVIDENCE_DIR}/build-inputs.txt"
 
-printf 'Booting Ubuntu 26.04 preparation VM with cloud-init...\n'
+printf 'Booting Ubuntu 26.04 preparation VM with its SLIRP link held down...\n'
 VM_DEFINED=1
-if ! timeout --foreground "${BUILD_TIMEOUT_SECONDS}" virt-install \
+virt-install \
     --connect "${LIBVIRT_URI}" \
     --name "${VM_NAME}" \
     --memory "${VM_MEMORY_MIB}" \
@@ -257,21 +246,102 @@ if ! timeout --foreground "${BUILD_TIMEOUT_SECONDS}" virt-install \
     --cpu host-passthrough \
     --import \
     --disk "path=${WORK_DISK},format=qcow2,bus=virtio,cache=none" \
-    --network 'user,model=virtio,mac=52:54:00:53:55:01,xpath1.set=./ip/@family=ipv4,xpath2.set=./ip/@address=10.203.0.1,xpath3.set=./ip/@prefix=24' \
+    --network 'user,model=virtio,mac=52:54:00:53:55:01,link.state=down,xpath1.set=./ip/@family=ipv4,xpath2.set=./ip/@address=10.203.0.1,xpath3.set=./ip/@prefix=24' \
+    --channel unix,target.type=virtio,target.name=org.qemu.guest_agent.0 \
     --graphics none \
     --noautoconsole \
     --osinfo detect=on,require=off \
-    --cloud-init "user-data=${USER_DATA},meta-data=${META_DATA},network-config=${NETWORK_CONFIG},disable=on" \
-    --noreboot \
-    --wait=-1; then
-    printf 'Preparation VM did not complete successfully within the configured timeout.\n' >&2
+    --cloud-init "user-data=${USER_DATA},meta-data=${META_DATA},network-config=${NETWORK_CONFIG},disable=on"
+
+python3 "${ROOT}/scripts/activate-golden-bootstrap-network.py" \
+    --vm-name "${VM_NAME}" \
+    --evidence-dir "${EVIDENCE_DIR}" \
+    --libvirt-uri "${LIBVIRT_URI}" \
+    --timeout 180 \
+    | tee "${EVIDENCE_DIR}/network-activation-result.json"
+
+printf 'Waiting for golden preparation to finish after controlled network activation...\n'
+DEADLINE=$(( $(date +%s) + BUILD_TIMEOUT_SECONDS ))
+while LC_ALL=C virsh --connect "${LIBVIRT_URI}" domstate "${VM_NAME}" 2>/dev/null | grep -Eq '^(running|paused|in shutdown)
+printf 'Extracting guest preparation evidence...\n'
+"${ROOT}/scripts/with-libguestfs-runtime.sh" --describe > "${EVIDENCE_DIR}/libguestfs-runtime.txt"
+mkdir -p "${EVIDENCE_DIR}/guest"
+"${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-out -a "${WORK_DISK}" /var/lib/supralinux/evidence "${EVIDENCE_DIR}/guest"
+"${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-out -a "${WORK_DISK}" /var/log/supralinux-golden-build.log "${EVIDENCE_DIR}/guest" 2>/dev/null || true
+
+RESULT_TEXT="$("${ROOT}/scripts/with-libguestfs-runtime.sh" virt-cat -a "${WORK_DISK}" /var/lib/supralinux/evidence/golden-build-result.txt 2>/dev/null || true)"
+COMPLETE_TEXT="$("${ROOT}/scripts/with-libguestfs-runtime.sh" virt-cat -a "${WORK_DISK}" /var/lib/supralinux/evidence/golden-build-complete.txt 2>/dev/null || true)"
+printf '%s\n' "${RESULT_TEXT}" > "${EVIDENCE_DIR}/golden-build-result.txt"
+printf '%s\n' "${COMPLETE_TEXT}" > "${EVIDENCE_DIR}/golden-build-complete.txt"
+
+if ! grep -qx 'exit_code=0' <<<"${RESULT_TEXT}"; then
+    printf 'Guest provisioning did not record exit_code=0.\n' >&2
+    exit 1
+fi
+if ! grep -qx "source_commit=${SOURCE_COMMIT}" <<<"${COMPLETE_TEXT}"; then
+    printf 'Guest completion evidence does not match requested source commit.\n' >&2
+    exit 1
+fi
+if ! grep -qx 'source_checkout_removed=yes' <<<"${COMPLETE_TEXT}"; then
+    printf 'Guest completion evidence does not confirm removal of the build checkout.\n' >&2
     exit 1
 fi
 
-if virsh domstate "${VM_NAME}" 2>/dev/null | grep -Eq 'running|paused|in shutdown'; then
-    printf 'Preparation VM is unexpectedly still running after virt-install returned.\n' >&2
-    exit 1
+printf 'Applying explicit offline clone-safety operations...\n'
+SUPPORTED_OPS="$("${ROOT}/scripts/with-libguestfs-runtime.sh" virt-sysprep --list-operations | awk '{print $1}')"
+SYSPREP_OPS=(machine-id ssh-hostkeys dhcp-client-state logfiles tmp-files)
+for op in "${SYSPREP_OPS[@]}"; do
+    grep -qx "${op}" <<<"${SUPPORTED_OPS}" || {
+        printf 'Host virt-sysprep does not support required operation: %s\n' "${op}" >&2
+        exit 1
+    }
+done
+OPS_CSV="$(IFS=,; echo "${SYSPREP_OPS[*]}")"
+"${ROOT}/scripts/with-libguestfs-runtime.sh" virt-sysprep -a "${WORK_DISK}" --operations "${OPS_CSV}" |& tee "${EVIDENCE_DIR}/virt-sysprep.log"
+
+printf 'Flattening the prepared overlay into a standalone golden qcow2...\n'
+qemu-img convert -p -O qcow2 "${WORK_DISK}" "${TARGET_TMP}" |& tee "${EVIDENCE_DIR}/qemu-img-convert.log"
+qemu-img check "${TARGET_TMP}" |& tee "${EVIDENCE_DIR}/qemu-img-check.log"
+qemu-img info --output=json "${TARGET_TMP}" > "${EVIDENCE_DIR}/golden-image-info.json"
+GOLDEN_SHA256="$(sha256sum "${TARGET_TMP}" | awk '{print $1}')"
+printf '%s  %s\n' "${GOLDEN_SHA256}" "$(basename "${TARGET_IMAGE}")" > "${EVIDENCE_DIR}/golden-image-sha256.txt"
+
+if [[ -e "${TARGET_IMAGE}" && "${REPLACE}" == "1" ]]; then
+    mv "${TARGET_IMAGE}" "${TARGET_IMAGE}.previous-${BUILD_ID}"
 fi
+mv "${TARGET_TMP}" "${TARGET_IMAGE}"
+chmod 0644 "${TARGET_IMAGE}"
+
+PROVENANCE_TMP="$(mktemp)"
+{
+    printf 'created_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    printf 'source_commit=%s\n' "${SOURCE_COMMIT}"
+    printf 'golden_input_fingerprint_schema=%s\n' "${GOLDEN_INPUT_FINGERPRINT_SCHEMA}"
+    printf 'golden_input_digest=%s\n' "${GOLDEN_INPUT_DIGEST}"
+    printf 'repository_url=%s\n' "${REPOSITORY_URL}"
+    printf 'source_image=%s\n' "${SOURCE_IMAGE}"
+    printf 'source_image_sha256='; sha256sum "${SOURCE_IMAGE}" | awk '{print $1}'
+    printf 'source_image_provenance_verified=yes\n'
+    printf 'golden_image=%s\n' "${TARGET_IMAGE}"
+    printf 'golden_image_sha256=%s\n' "${GOLDEN_SHA256}"
+    printf 'virt_sysprep_operations=%s\n' "${OPS_CSV}"
+    printf 'source_checkout_removed=yes\n'
+    printf '\nqemu_image_info:\n'
+    qemu-img info "${TARGET_IMAGE}"
+} > "${PROVENANCE_TMP}"
+mv "${PROVENANCE_TMP}" "${TARGET_IMAGE}.provenance.txt"
+
+SUCCESS=1
+printf 'Prepared standalone golden runner image: %s\n' "${TARGET_IMAGE}"
+printf 'SHA-256: %s\n' "${GOLDEN_SHA256}"
+printf 'Evidence: %s\n' "${EVIDENCE_DIR}"
+; do
+    (( $(date +%s) < DEADLINE )) || {
+        printf 'Preparation VM did not complete successfully within the configured timeout.\n' >&2
+        exit 1
+    }
+    sleep 5
+done
 
 printf 'Extracting guest preparation evidence...\n'
 "${ROOT}/scripts/with-libguestfs-runtime.sh" --describe > "${EVIDENCE_DIR}/libguestfs-runtime.txt"

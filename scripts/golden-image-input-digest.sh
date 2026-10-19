@@ -11,6 +11,7 @@ INPUTS=(
     scripts/build-authoritative-runner-image.sh
     scripts/with-libguestfs-runtime.sh
     scripts/configure-golden-bootstrap-network.py
+    scripts/activate-golden-bootstrap-network.py
     scripts/provision-authoritative-runner-guest.sh
     scripts/install-actions-runner.sh
     scripts/check-autopkgtest-workspace.sh

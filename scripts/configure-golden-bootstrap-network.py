@@ -158,10 +158,7 @@ def main():
     p.add_argument('--verify-network', action='store_true', help='bounded connectivity check after enabling the controlled guest link')
     p.add_argument('--bootstrap', action='store_true',
                    help='allow the pre-runner golden preparation guest only')
-    p.add_argument('--activate-link', action='store_true',
-                   help='activate the manually held golden-preparation interface after guards load')
     a = p.parse_args()
-    assert not (a.verify_network and a.activate_link), 'Verification never mutates link state'
     down, up = rates(a.download_kib, a.upload_kib)
     assert os.geteuid() == 0, 'Only the guest agent may configure its own VM'
     virtual = subprocess.check_output(['systemd-detect-virt', '--vm'], text=True).strip()
@@ -193,14 +190,12 @@ def main():
     verify_traffic_policy(qdisc, filters, ingress_text, down, up)
     actual_rules = subprocess.check_output(['nft', '--json', 'list', 'table', 'inet', 'supralinux_guest'], text=True)
     assert len([x for x in json.loads(actual_rules)['nftables'] if 'rule' in x]) == 7
-    if a.activate_link:
-        subprocess.run(['networkctl', 'up', device], check=True, capture_output=True, text=True)
     print(json.dumps({'state': 'PASS', 'scope': 'guest-only SLIRP private-address firewall and traffic controls',
                       'interface': device, 'guest_mac': MAC, 'host_network_modified': False,
                       'private_ipv4_and_external_ipv6_blocked': True, 'guest_loopback_preserved': True,
                       'download_kib_per_second': a.download_kib, 'upload_kib_per_second': a.upload_kib,
                       'traffic_limits_enabled': down > 0,
-                      'bootstrap_mode': a.bootstrap, 'link_activation_requested': a.activate_link,
+                      'bootstrap_mode': a.bootstrap,
                       'traffic_limit_mode': 'historical-bounded' if down else 'unlimited',
                       'download_burst_bytes': INGRESS_BURST if down else None,
                       'download_packet_limit_requested_bytes': 65535 if down else None,

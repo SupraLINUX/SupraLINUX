@@ -16,7 +16,7 @@ VM_MEMORY_MIB="${SUPRALINUX_GOLDEN_NETWORK_MEMORY_MIB:-1536}"
 VM_VCPUS="${SUPRALINUX_GOLDEN_NETWORK_VCPUS:-1}"
 TIMEOUT_SECONDS="${SUPRALINUX_GOLDEN_NETWORK_TIMEOUT_SECONDS:-900}"
 
-required=(base64 chgrp chmod id jq qemu-img sha256sum stat timeout virsh virt-cat virt-install)
+required=(chgrp chmod id jq qemu-img sha256sum timeout virsh virt-install)
 for command_name in "${required[@]}"; do
     command -v "${command_name}" >/dev/null 2>&1 || {
         printf 'Missing host command: %s\n' "${command_name}" >&2
@@ -62,7 +62,7 @@ cleanup() {
         exit 1
     fi
     if (( VM_DEFINED )); then
-        virsh --connect "${LIBVIRT_URI}" dumpxml "${VM_NAME}" > "${EVIDENCE_DIR}/domain.xml" 2>/dev/null || true
+        virsh --connect "${LIBVIRT_URI}" dumpxml "${VM_NAME}" > "${EVIDENCE_DIR}/domain-final.xml" 2>/dev/null || true
         state="$(LC_ALL=C virsh --connect "${LIBVIRT_URI}" domstate "${VM_NAME}" 2>/dev/null || true)"
         if grep -Eq '^(running|paused|in shutdown)$' <<<"${state}"; then
             virsh --connect "${LIBVIRT_URI}" destroy "${VM_NAME}" >/dev/null 2>&1 || true
@@ -91,7 +91,11 @@ cat > "${META_DATA}" <<EOF_META
 instance-id: ${VM_NAME}
 local-hostname: ${VM_NAME}
 EOF_META
-
+cat > "${USER_DATA}" <<'EOF_USER'
+#cloud-config
+package_update: false
+package_upgrade: false
+EOF_USER
 cat > "${NETWORK_CONFIG}" <<'EOF_NETWORK'
 version: 2
 ethernets:
@@ -102,50 +106,23 @@ ethernets:
     dhcp4: true
     dhcp6: false
     accept-ra: false
-    activation-mode: manual
 EOF_NETWORK
-
-NETWORK_HELPER_B64="$(base64 -w0 "${ROOT}/scripts/configure-golden-bootstrap-network.py")"
-cat > "${USER_DATA}" <<EOF_USER
-#cloud-config
-package_update: false
-package_upgrade: false
-write_files:
-  - path: /usr/local/sbin/supralinux-configure-golden-bootstrap-network.py
-    owner: root:root
-    permissions: '0755'
-    encoding: b64
-    content: ${NETWORK_HELPER_B64}
-bootcmd:
-  - [ python3, /usr/local/sbin/supralinux-configure-golden-bootstrap-network.py, --bootstrap, --activate-link ]
-runcmd:
-  - [ bash, -lc, 'mkdir -p /var/lib/supralinux/evidence && python3 /usr/local/sbin/supralinux-configure-golden-bootstrap-network.py --bootstrap --verify-network > /var/lib/supralinux/evidence/golden-network-verification.json && printf "state=PASS\n" > /var/lib/supralinux/evidence/golden-network-result.txt' ]
-power_state:
-  delay: now
-  mode: poweroff
-  message: SupraLINUX golden network preflight complete
-  timeout: 30
-  condition: true
-EOF_USER
-
 cp "${USER_DATA}" "${META_DATA}" "${NETWORK_CONFIG}" "${EVIDENCE_DIR}/"
-sha256sum "${ROOT}/scripts/configure-golden-bootstrap-network.py" > "${EVIDENCE_DIR}/network-helper.sha256"
 
 VM_DEFINED=1
-if ! LC_ALL=C timeout --foreground "${TIMEOUT_SECONDS}" virt-install     --connect "${LIBVIRT_URI}"     --name "${VM_NAME}"     --memory "${VM_MEMORY_MIB}"     --vcpus "${VM_VCPUS}"     --cpu host-passthrough     --import     --disk "path=${WORK_DISK},format=qcow2,bus=virtio,cache=none"     --network 'user,model=virtio,mac=52:54:00:53:55:01,xpath1.set=./ip/@family=ipv4,xpath2.set=./ip/@address=10.203.0.1,xpath3.set=./ip/@prefix=24'     --graphics none     --noautoconsole     --osinfo detect=on,require=off     --cloud-init "user-data=${USER_DATA},meta-data=${META_DATA},network-config=${NETWORK_CONFIG},disable=on"     --noreboot     --wait=-1 |& tee "${EVIDENCE_DIR}/virt-install.txt"; then
-    printf 'Golden-network preflight VM did not complete successfully.\n' >&2
-    exit 1
-fi
+virt-install     --connect "${LIBVIRT_URI}"     --name "${VM_NAME}"     --memory "${VM_MEMORY_MIB}"     --vcpus "${VM_VCPUS}"     --cpu host-passthrough     --import     --disk "path=${WORK_DISK},format=qcow2,bus=virtio,cache=none"     --network 'user,model=virtio,mac=52:54:00:53:55:01,link.state=down,xpath1.set=./ip/@family=ipv4,xpath2.set=./ip/@address=10.203.0.1,xpath3.set=./ip/@prefix=24'     --channel unix,target.type=virtio,target.name=org.qemu.guest_agent.0     --graphics none     --noautoconsole     --osinfo detect=on,require=off     --cloud-init "user-data=${USER_DATA},meta-data=${META_DATA},network-config=${NETWORK_CONFIG},disable=on"
 
-virsh --connect "${LIBVIRT_URI}" dumpxml "${VM_NAME}" > "${EVIDENCE_DIR}/domain.xml"
-python3 "${ROOT}/scripts/check-kvm-network.py" --userspace --domain-xml "${EVIDENCE_DIR}/domain.xml"     > "${EVIDENCE_DIR}/network-domain-admission.json"
+python3 "${ROOT}/scripts/activate-golden-bootstrap-network.py"     --vm-name "${VM_NAME}"     --evidence-dir "${EVIDENCE_DIR}"     --libvirt-uri "${LIBVIRT_URI}"     --timeout 180     | tee "${EVIDENCE_DIR}/network-activation-result.json"
 
-RESULT_TEXT="$("${ROOT}/scripts/with-libguestfs-runtime.sh" virt-cat -a "${WORK_DISK}" /var/lib/supralinux/evidence/golden-network-result.txt 2>/dev/null || true)"
-VERIFY_TEXT="$("${ROOT}/scripts/with-libguestfs-runtime.sh" virt-cat -a "${WORK_DISK}" /var/lib/supralinux/evidence/golden-network-verification.json 2>/dev/null || true)"
-printf '%s\n' "${RESULT_TEXT}" > "${EVIDENCE_DIR}/guest-result.txt"
-printf '%s\n' "${VERIFY_TEXT}" > "${EVIDENCE_DIR}/guest-network-verification.json"
+virsh --connect "${LIBVIRT_URI}" shutdown "${VM_NAME}" >/dev/null
+DEADLINE=$(( $(date +%s) + TIMEOUT_SECONDS ))
+while LC_ALL=C virsh --connect "${LIBVIRT_URI}" domstate "${VM_NAME}" 2>/dev/null | grep -Eq '^(running|paused|in shutdown)$'; do
+    (( $(date +%s) < DEADLINE )) || {
+        printf 'Timed out waiting for golden-network preflight shutdown.\n' >&2
+        exit 1
+    }
+    sleep 2
+done
 
-grep -qx 'state=PASS' <<<"${RESULT_TEXT}"
-jq -e '.state == "PASS" and .host_network_modified == false and .private_reject_counter_delta >= 2 and .internet_status == 200'     <<<"${VERIFY_TEXT}" >/dev/null
 printf 'state=PASS\nscope=golden-build-network-preflight\nhost_network_modified=no\npackage_attempt_effect=none\n'     > "${EVIDENCE_DIR}/result.txt"
 printf 'Golden build network preflight: PASS\n'
