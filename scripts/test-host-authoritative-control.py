@@ -29,6 +29,11 @@ required_broker = [
     '"operator-kvm-open-normal"',
     '"operator-kvm-open-scoped-groups"',
     '"runner-service-security"',
+    '"operator-check-kvm-host"',
+    '"operator-check-kvm-network-userspace"',
+    '"host-default-routes"',
+    '"host-{device}-features"',
+    '"host-uptime-since"',
     '"github_token_requested=no"',
     '"jit_invoked=no"',
     '"package_attempt_effect=none"',
@@ -84,7 +89,7 @@ for token in required_workflow:
 
 expected_request = {
     "schema": 1,
-    "mode": "rebuild-golden",
+    "mode": "diagnose",
     "gate": "plasma-package-build",
     "runner_group_id": 3,
 }

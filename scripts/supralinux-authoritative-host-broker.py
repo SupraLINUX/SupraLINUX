@@ -335,6 +335,47 @@ if request["mode"] == "diagnose":
     )
     sections.append(
         capture(
+            "operator-check-kvm-host",
+            ["scripts/check-kvm-host.sh"],
+            as_operator=True,
+            extra_groups=privileged_groups,
+        )
+    )
+    sections.append(
+        capture(
+            "operator-check-kvm-network-userspace",
+            ["python3", "scripts/check-kvm-network.py", "--userspace"],
+            as_operator=True,
+            extra_groups=privileged_groups,
+        )
+    )
+    sections.append(capture("host-default-routes", ["ip", "-json", "route", "show", "default"]))
+    default_routes = subprocess.run(
+        ["ip", "-json", "route", "show", "default"],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    try:
+        default_devices = sorted(
+            {
+                route.get("dev")
+                for route in json.loads(default_routes.stdout or "[]")
+                if route.get("dev")
+            }
+        )
+    except json.JSONDecodeError:
+        default_devices = []
+    for device in default_devices:
+        sections.append(capture(f"host-{device}-driver", ["ethtool", "-i", device]))
+        sections.append(capture(f"host-{device}-features", ["ethtool", "-k", device]))
+        sections.append(capture(f"host-{device}-address", ["ip", "-json", "address", "show", "dev", device]))
+        carrier = Path("/sys/class/net") / device / "carrier"
+        if carrier.is_file():
+            sections.append(capture(f"host-{device}-carrier", ["cat", str(carrier)]))
+    sections.append(capture("host-uptime-since", ["uptime", "-s"]))
+    sections.append(
+        capture(
             "runner-service-units",
             [
                 "systemctl",

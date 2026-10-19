@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "mode": "rebuild-golden",
+  "mode": "diagnose",
   "gate": "plasma-package-build",
   "runner_group_id": 3
 }
