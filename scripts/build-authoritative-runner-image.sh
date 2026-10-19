@@ -251,7 +251,8 @@ virt-install \
     --graphics none \
     --noautoconsole \
     --osinfo detect=on,require=off \
-    --cloud-init "user-data=${USER_DATA},meta-data=${META_DATA},network-config=${NETWORK_CONFIG},disable=on"
+    --cloud-init "user-data=${USER_DATA},meta-data=${META_DATA},network-config=${NETWORK_CONFIG},disable=on" \
+    --noreboot
 
 python3 "${ROOT}/scripts/activate-golden-bootstrap-network.py" \
     --vm-name "${VM_NAME}" \
