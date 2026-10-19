@@ -87,6 +87,7 @@ WORK_DISK="${BUILD_DIR}/golden-work.qcow2"
 USER_DATA="${BUILD_DIR}/user-data"
 META_DATA="${BUILD_DIR}/meta-data"
 NETWORK_CONFIG="${BUILD_DIR}/network-config"
+CHANNEL_SOCKET="${BUILD_DIR}/bootstrap-channel.sock"
 TARGET_TMP="${TARGET_IMAGE}.tmp-${BUILD_ID}"
 SUCCESS=0
 VM_DEFINED=0
@@ -136,6 +137,7 @@ qemu-img create -f qcow2 -F "${SOURCE_FORMAT}" -b "${SOURCE_IMAGE}" "${WORK_DISK
 qemu-img resize "${WORK_DISK}" "${VM_DISK_SIZE_GIB}G"
 chgrp "${LIBVIRT_QEMU_GROUP}" "${WORK_DISK}"
 chmod 0660 "${WORK_DISK}"
+"${ROOT}/scripts/inject-golden-bootstrap-network.sh" "${WORK_DISK}" "${EVIDENCE_DIR}"
 qemu-img info --output=json "${WORK_DISK}" > "${EVIDENCE_DIR}/work-disk-before.json"
 {
     printf 'libvirt_qemu_user=%s\n' "${LIBVIRT_QEMU_USER}"
@@ -247,7 +249,7 @@ virt-install \
     --import \
     --disk "path=${WORK_DISK},format=qcow2,bus=virtio,cache=none" \
     --network 'user,model=virtio,mac=52:54:00:53:55:01,link.state=down,xpath1.set=./ip/@family=ipv4,xpath2.set=./ip/@address=10.203.0.1,xpath3.set=./ip/@prefix=24' \
-    --channel unix,target.type=virtio,target.name=org.qemu.guest_agent.0 \
+    --channel "unix,path=${CHANNEL_SOCKET},mode=bind,target.type=virtio,target.name=org.supralinux.bootstrap.0" \
     --graphics none \
     --noautoconsole \
     --osinfo detect=on,require=off \
@@ -257,6 +259,7 @@ virt-install \
 python3 "${ROOT}/scripts/activate-golden-bootstrap-network.py" \
     --vm-name "${VM_NAME}" \
     --evidence-dir "${EVIDENCE_DIR}" \
+    --channel-socket "${CHANNEL_SOCKET}" \
     --libvirt-uri "${LIBVIRT_URI}" \
     --timeout 180 \
     | tee "${EVIDENCE_DIR}/network-activation-result.json"

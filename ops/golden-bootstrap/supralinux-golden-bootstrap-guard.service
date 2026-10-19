@@ -1,0 +1,16 @@
+[Unit]
+Description=SupraLINUX golden bootstrap network guard
+DefaultDependencies=no
+After=systemd-udev-trigger.service
+Before=network-pre.target shutdown.target
+Conflicts=shutdown.target
+ConditionPathExists=/usr/local/libexec/supralinux-golden-bootstrap-channel.py
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/libexec/supralinux-golden-bootstrap-channel.py --phase guard
+TimeoutStartSec=120
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target

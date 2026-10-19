@@ -82,6 +82,7 @@ required=(
     virt-install
     virt-cat
     virt-copy-out
+    virt-customize
     virt-sysprep
     qemu-img
     qemu-system-x86_64

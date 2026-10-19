@@ -11,7 +11,11 @@ INPUTS=(
     scripts/build-authoritative-runner-image.sh
     scripts/with-libguestfs-runtime.sh
     scripts/configure-golden-bootstrap-network.py
+    scripts/golden-bootstrap-channel.py
     scripts/activate-golden-bootstrap-network.py
+    scripts/inject-golden-bootstrap-network.sh
+    ops/golden-bootstrap/supralinux-golden-bootstrap-guard.service
+    ops/golden-bootstrap/supralinux-golden-bootstrap-verify.service
     scripts/provision-authoritative-runner-guest.sh
     scripts/install-actions-runner.sh
     scripts/check-autopkgtest-workspace.sh
