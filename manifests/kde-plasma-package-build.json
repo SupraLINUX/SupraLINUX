@@ -10387,7 +10387,7 @@
       "package_execution_started": false,
       "consumes_package_attempt": false,
       "result_path": "manifests/evidence/plasma/infrastructure/polkit-golden-rebuild1-retired-network-20261018/result.json",
-      "result_sha256": "dd8e74587d41bdb91263f52ba18714d9a55b5d7ea8a03c4af52ca9a5d0d83ff5",
+      "result_sha256": "c30f48ebcce26e0b23d8644f7fdb601cba20ae68b7d1ce4e898a7b86b6ba693a",
       "diagnosis_path": "manifests/evidence/plasma/infrastructure/polkit-golden-rebuild1-retired-network-20261018/diagnosis.json",
       "diagnosis_sha256": "2d062e6ee497767b1d5ec2c219d108f82fb059be6e4df67eb1bfeddc83989526",
       "cause": "The host and signed Ubuntu source-image preflights passed, but the legacy full golden builder still requested the retired libvirt network named `default`. That network was intentionally removed by the certified bridge-free safety migration, so virt-install failed before the preparation VM started.",
