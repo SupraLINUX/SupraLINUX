@@ -4,7 +4,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 builder = (ROOT / "scripts/build-authoritative-runner-image.sh").read_text()
 preflight = (ROOT / "scripts/check-golden-build-network-preflight.sh").read_text()
-guest = (ROOT / "scripts/configure-kvm-guest-network.py").read_text()
+guest = (ROOT / "scripts/configure-golden-bootstrap-network.py").read_text()
 digest = (ROOT / "scripts/golden-image-input-digest.sh").read_text()
 broker = (ROOT / "scripts/supralinux-authoritative-host-broker.py").read_text()
 
@@ -24,7 +24,7 @@ for name, source in (("builder", builder), ("preflight", preflight)):
 
 if "SUPRALINUX_LIBVIRT_NETWORK" not in builder or "refuses libvirt network overrides" not in builder:
     raise SystemExit("builder must fail closed on libvirt network overrides")
-if "scripts/configure-kvm-guest-network.py" not in digest:
+if "scripts/configure-golden-bootstrap-network.py" not in digest:
     raise SystemExit("golden fingerprint must include the guest network guard")
 for token in ("--bootstrap", "--activate-link",
               "Golden bootstrap mode is valid only before runner installation",

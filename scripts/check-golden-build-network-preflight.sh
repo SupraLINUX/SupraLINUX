@@ -105,21 +105,21 @@ ethernets:
     activation-mode: manual
 EOF_NETWORK
 
-NETWORK_HELPER_B64="$(base64 -w0 "${ROOT}/scripts/configure-kvm-guest-network.py")"
+NETWORK_HELPER_B64="$(base64 -w0 "${ROOT}/scripts/configure-golden-bootstrap-network.py")"
 cat > "${USER_DATA}" <<EOF_USER
 #cloud-config
 package_update: false
 package_upgrade: false
 write_files:
-  - path: /usr/local/sbin/supralinux-configure-kvm-guest-network.py
+  - path: /usr/local/sbin/supralinux-configure-golden-bootstrap-network.py
     owner: root:root
     permissions: '0755'
     encoding: b64
     content: ${NETWORK_HELPER_B64}
 bootcmd:
-  - [ python3, /usr/local/sbin/supralinux-configure-kvm-guest-network.py, --bootstrap, --activate-link ]
+  - [ python3, /usr/local/sbin/supralinux-configure-golden-bootstrap-network.py, --bootstrap, --activate-link ]
 runcmd:
-  - [ bash, -lc, 'mkdir -p /var/lib/supralinux/evidence && python3 /usr/local/sbin/supralinux-configure-kvm-guest-network.py --bootstrap --verify-network > /var/lib/supralinux/evidence/golden-network-verification.json && printf "state=PASS\n" > /var/lib/supralinux/evidence/golden-network-result.txt' ]
+  - [ bash, -lc, 'mkdir -p /var/lib/supralinux/evidence && python3 /usr/local/sbin/supralinux-configure-golden-bootstrap-network.py --bootstrap --verify-network > /var/lib/supralinux/evidence/golden-network-verification.json && printf "state=PASS\n" > /var/lib/supralinux/evidence/golden-network-result.txt' ]
 power_state:
   delay: now
   mode: poweroff
@@ -129,7 +129,7 @@ power_state:
 EOF_USER
 
 cp "${USER_DATA}" "${META_DATA}" "${NETWORK_CONFIG}" "${EVIDENCE_DIR}/"
-sha256sum "${ROOT}/scripts/configure-kvm-guest-network.py" > "${EVIDENCE_DIR}/network-helper.sha256"
+sha256sum "${ROOT}/scripts/configure-golden-bootstrap-network.py" > "${EVIDENCE_DIR}/network-helper.sha256"
 
 VM_DEFINED=1
 if ! LC_ALL=C timeout --foreground "${TIMEOUT_SECONDS}" virt-install     --connect "${LIBVIRT_URI}"     --name "${VM_NAME}"     --memory "${VM_MEMORY_MIB}"     --vcpus "${VM_VCPUS}"     --cpu host-passthrough     --import     --disk "path=${WORK_DISK},format=qcow2,bus=virtio,cache=none"     --network 'user,model=virtio,mac=52:54:00:53:55:01,xpath1.set=./ip/@family=ipv4,xpath2.set=./ip/@address=10.203.0.1,xpath3.set=./ip/@prefix=24'     --graphics none     --noautoconsole     --osinfo detect=on,require=off     --cloud-init "user-data=${USER_DATA},meta-data=${META_DATA},network-config=${NETWORK_CONFIG},disable=on"     --noreboot     --wait=-1 |& tee "${EVIDENCE_DIR}/virt-install.txt"; then

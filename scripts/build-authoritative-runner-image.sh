@@ -163,7 +163,7 @@ ethernets:
     activation-mode: manual
 EOF_NETWORK
 
-NETWORK_HELPER_B64="$(base64 -w0 "${ROOT}/scripts/configure-kvm-guest-network.py")"
+NETWORK_HELPER_B64="$(base64 -w0 "${ROOT}/scripts/configure-golden-bootstrap-network.py")"
 
 cat > "${USER_DATA}" <<EOF_USER
 #cloud-config
@@ -172,7 +172,7 @@ packages:
   - ca-certificates
   - git
 write_files:
-  - path: /usr/local/sbin/supralinux-configure-kvm-guest-network.py
+  - path: /usr/local/sbin/supralinux-configure-golden-bootstrap-network.py
     owner: root:root
     permissions: '0755'
     encoding: b64
@@ -211,9 +211,9 @@ write_files:
           printf 'source_checkout_removed=yes\\n'
       } > /var/lib/supralinux/evidence/golden-build-complete.txt
 bootcmd:
-  - [ python3, /usr/local/sbin/supralinux-configure-kvm-guest-network.py, --bootstrap, --activate-link ]
+  - [ python3, /usr/local/sbin/supralinux-configure-golden-bootstrap-network.py, --bootstrap, --activate-link ]
 runcmd:
-  - [ bash, -lc, 'python3 /usr/local/sbin/supralinux-configure-kvm-guest-network.py --bootstrap --verify-network > /var/lib/supralinux/evidence/golden-network-verification.json' ]
+  - [ bash, -lc, 'python3 /usr/local/sbin/supralinux-configure-golden-bootstrap-network.py --bootstrap --verify-network > /var/lib/supralinux/evidence/golden-network-verification.json' ]
   - [ /usr/local/sbin/supralinux-golden-build ]
 power_state:
   delay: now
@@ -242,7 +242,7 @@ EOF_USER
     printf 'user_data_sha256='; sha256sum "${USER_DATA}" | awk '{print $1}'
     printf 'meta_data_sha256='; sha256sum "${META_DATA}" | awk '{print $1}'
     printf 'network_config_sha256='; sha256sum "${NETWORK_CONFIG}" | awk '{print $1}'
-    printf 'network_helper_sha256='; sha256sum "${ROOT}/scripts/configure-kvm-guest-network.py" | awk '{print $1}'
+    printf 'network_helper_sha256='; sha256sum "${ROOT}/scripts/configure-golden-bootstrap-network.py" | awk '{print $1}'
     printf '\nsource_image_provenance:\n'
     cat "${SOURCE_PROVENANCE}"
 } > "${EVIDENCE_DIR}/build-inputs.txt"
