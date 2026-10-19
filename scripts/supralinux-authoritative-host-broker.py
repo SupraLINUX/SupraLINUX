@@ -374,6 +374,17 @@ if request["mode"] == "diagnose":
         if carrier.is_file():
             sections.append(capture(f"host-{device}-carrier", ["cat", str(carrier)]))
     sections.append(capture("host-uptime-since", ["uptime", "-s"]))
+    kernel_release = os.uname().release
+    runtime_dir = Path("/var/lib/supralinux/images/libguestfs-runtime") / kernel_release
+    runtime_provenance = runtime_dir / "provenance.txt"
+    source_kernel = Path("/boot") / f"vmlinuz-{kernel_release}"
+    modules_dep = Path("/lib/modules") / kernel_release / "modules.dep"
+    sections.append(capture("libguestfs-runtime-dir", ["stat", "-Lc", "%A %a %U %G %u %g %n", str(runtime_dir)]))
+    sections.append(capture("libguestfs-runtime-cache", ["stat", "-Lc", "%A %a %U %G %u %g %n", str(runtime_dir / "cache")]))
+    sections.append(capture("libguestfs-runtime-provenance", ["cat", str(runtime_provenance)]))
+    sections.append(capture("libguestfs-source-kernel-stat", ["stat", "-c", "%s:%Y:%Z:%i", str(source_kernel)]))
+    sections.append(capture("libguestfs-runtime-kernel-sha256", ["sha256sum", str(runtime_dir / "vmlinuz")]))
+    sections.append(capture("libguestfs-modules-dep-sha256", ["sha256sum", str(modules_dep)]))
     sections.append(
         capture(
             "runner-service-units",
