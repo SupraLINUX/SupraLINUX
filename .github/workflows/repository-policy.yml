@@ -171,6 +171,9 @@ jobs:
         shell: bash
         run: scripts/test-host-workspace-libvirt-permissions.sh
 
+      - name: Test authoritative host control contract
+        run: python3 scripts/test-host-authoritative-control.py
+
       - name: Test autopkgtest persistent workspace contract
         shell: bash
         run: scripts/test-autopkgtest-workspace-contract.sh

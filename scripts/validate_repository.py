@@ -107,6 +107,10 @@ for path in sorted(WORKFLOWS.glob("*.y*ml")):
     require("pull_request_target" not in text, f"{path.relative_to(ROOT)} must not use pull_request_target")
 
 repository_policy = workflow_texts.get("repository-policy.yml", "")
+require(
+    "python3 scripts/test-host-authoritative-control.py" in repository_policy,
+    "Repository Policy must validate the authoritative host-control contract cheaply",
+)
 runner_contract = workflow_texts.get("runner-contract.yml", "")
 authoritative_workflow = workflow_texts.get("authoritative-package-proof.yml", "")
 frameworks_sample_workflow = workflow_texts.get("authoritative-frameworks-sample-proof.yml", "")

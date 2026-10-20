@@ -31,6 +31,9 @@ jobs:
           sudo -n install -o root -g root -m 0755 \
             scripts/check-kvm-network.py \
             /usr/local/libexec/supralinux-check-kvm-network.py
+          sudo -n install -o root -g root -m 0755 \
+            scripts/host-close-package-evidence.py \
+            /usr/local/libexec/supralinux-host-close-package-evidence
 
       - name: Validate authoritative control request
         shell: bash
@@ -43,8 +46,21 @@ jobs:
           import json, os, re
           from pathlib import Path
           request = json.loads(Path("ops/host-authoritative/request.json").read_text())
+          base_keys = {
+              "schema", "mode", "gate", "runner_group_id",
+              "cancel_run_id", "cancel_run_head_sha",
+          }
+          evidence_keys = {
+              "evidence_node", "evidence_package_run_id", "evidence_package_job_id",
+              "evidence_package_artifact_id", "evidence_package_artifact_sha256",
+              "evidence_host_manifest_sha256",
+          }
+          assert not (set(request) - base_keys - evidence_keys)
           assert request.get("schema") == 1
-          assert request.get("mode") in {"diagnose", "repair-host", "preflight", "rebuild-golden", "execute"}
+          assert request.get("mode") in {
+              "diagnose", "repair-host", "preflight", "rebuild-golden", "execute",
+              "close-evidence-check", "close-evidence",
+          }
           assert request.get("gate") == "plasma-package-build"
           assert isinstance(request.get("runner_group_id"), int) and request["runner_group_id"] > 0
           cancel = request.get("cancel_run_id")
@@ -54,8 +70,17 @@ jobs:
               assert cancel_head is None
           else:
               assert isinstance(cancel_head, str) and re.fullmatch(r"[0-9a-f]{40}", cancel_head)
-          if request["mode"] in {"diagnose", "repair-host", "rebuild-golden", "execute"}:
+          if request["mode"] in {"diagnose", "repair-host", "rebuild-golden", "execute", "close-evidence-check", "close-evidence"}:
               assert cancel is None and cancel_head is None
+          if request["mode"] in {"close-evidence-check", "close-evidence"}:
+              assert isinstance(request.get("evidence_node"), str)
+              assert re.fullmatch(r"[a-z0-9][a-z0-9+.-]{0,63}", request["evidence_node"])
+              for key in ["evidence_package_run_id", "evidence_package_job_id", "evidence_package_artifact_id"]:
+                  assert isinstance(request.get(key), int) and request[key] > 0
+              for key in ["evidence_package_artifact_sha256", "evidence_host_manifest_sha256"]:
+                  assert isinstance(request.get(key), str) and re.fullmatch(r"[0-9a-f]{64}", request[key])
+          else:
+              assert all(request.get(key) is None for key in evidence_keys)
           assert re.fullmatch(r"[0-9a-f]{40}", os.environ["PR_HEAD_SHA"])
           assert re.fullmatch(r"[0-9]+", os.environ["CONTROL_RUN_ID"])
           print("Authoritative host control request: PASS")
