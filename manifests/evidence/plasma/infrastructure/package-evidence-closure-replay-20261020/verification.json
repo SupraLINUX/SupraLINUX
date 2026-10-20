@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "host-authoritative-package-evidence-closure-mechanism-certification",
+  "source_commit": "5d314b73fdba9c841f82bdd6731cef15c46b6e98",
+  "control": {
+    "router_run_id": 39415739579,
+    "host_job_id": 118604240393,
+    "artifact_id": 12261746476,
+    "artifact_digest": "sha256:79d84852bd2c64ca890d22820d3a116eab8d4bdaea8aec18b7f570cae99eea7b",
+    "mode": "close-evidence-check"
+  },
+  "replayed_package_evidence": {
+    "node": "polkit-kde-agent-1",
+    "package_source_commit": "20236104277b379233933d89a19eb7655093a69c",
+    "workflow_run_id": 39371778130,
+    "workflow_job_id": 118461032897,
+    "artifact_id": 12242385704,
+    "artifact_sha256": "35d74226bf614b873d3d6c172fcb1fd7c64ce9ffcca46e82ce60471cef3b33ff",
+    "host_evidence_manifest_sha256": "2e08f4e87b8449293d25ce476d492cd71647f06c5c21fd91caf062b81f3fe042"
+  },
+  "result": {
+    "close_evidence_control_result_sha256": "7b106fe8a61dac736b1ccfd9ab3228da1c0fd215114a277ad44e200c34e0a3c3",
+    "close_evidence_result_sha256": "bd6db2ecdc6fcf98cce6c07eeab8856d3cc569c423f07678ef984c67d039a2f1",
+    "canonical_update_manifest_sha256": "88bd7ad68c5359cad4c1839ed090e6dc487c70672094e300f9a41a4820b8b2d9",
+    "replayed_canonical_file_count": 16,
+    "replay_matches_current_canonical_bytes": true,
+    "canonical_update_created": false,
+    "offline_restore_verified": true,
+    "requires_github_for_restore": false,
+    "vm_created": false,
+    "jit_invoked": false,
+    "package_attempt_effect": "none"
+  },
+  "mechanism_inputs": {
+    "scripts/host-close-package-evidence.py": "05092b8579112c1fc9135acd4178846915c6d0e1",
+    "scripts/supralinux-authoritative-host-broker.py": "46e329620a04d1a0ba17f3eca2da0b9eae54cfab",
+    ".github/workflows/host-authoritative-control.yml": "f4746d0311f519d17274262720ff83da9de433cf",
+    ".github/workflows/pr-ci-router.yml": "f27cd53a2ace649263b2a436c7bb5a641b4db945",
+    "scripts/test-host-authoritative-control.py": "badd68f3450bd08613491f748d3c151a6ca8c6ac"
+  },
+  "conclusion": "The fixed host-side evidence-closure path reproduced the already-closed PolicyKit preflight46 canonical files byte-for-byte from the original Actions artifact plus sealed host evidence, while creating no VM, JIT runner, or package Attempt. The mechanism is certified for its recorded inputs; changes to those inputs require affected revalidation."
+}
