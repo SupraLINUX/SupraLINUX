@@ -7,6 +7,7 @@ import shutil
 import stat
 import subprocess
 import sys
+import time
 import zipfile
 from pathlib import Path
 
@@ -45,12 +46,32 @@ def run(args, *, cwd=None, check=True):
 
 
 def gh_bytes(path: str) -> bytes:
-    proc = subprocess.run(
-        ["gh", "api", path],
-        check=True,
-        stdout=subprocess.PIPE,
-    )
-    return proc.stdout
+    transient_codes = ("HTTP 429", "HTTP 502", "HTTP 503", "HTTP 504")
+    proc = None
+    for attempt in range(4):
+        proc = subprocess.run(
+            ["gh", "api", path],
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        if proc.returncode == 0:
+            return proc.stdout
+        stderr = proc.stderr.decode(errors="replace")
+        transient = any(code in stderr for code in transient_codes)
+        if not transient or attempt == 3:
+            if stderr:
+                sys.stderr.write(stderr)
+                if not stderr.endswith("\n"):
+                    sys.stderr.write("\n")
+            raise subprocess.CalledProcessError(
+                proc.returncode,
+                proc.args,
+                output=proc.stdout,
+                stderr=proc.stderr,
+            )
+        time.sleep(2 ** attempt)
+    raise SystemExit("unreachable GitHub API retry state")
 
 
 def exact_checkout(path: Path, commit: str) -> None:

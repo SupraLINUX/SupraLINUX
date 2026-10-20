@@ -103,6 +103,8 @@ required_helper = [
     '"--force-with-lease=refs/heads/{branch}:{args.source_commit}"',
     '"--dry-run"',
     '"published": published',
+    '"HTTP 429", "HTTP 502", "HTTP 503", "HTTP 504"',
+    "time.sleep(2 ** attempt)",
     '"Closure replay differs from current canonical file: "',
 ]
 for token in required_helper:
