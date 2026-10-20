@@ -101,13 +101,24 @@ for token in required_workflow:
     if token not in workflow:
         raise SystemExit(f"missing authoritative host workflow contract: {token}")
 
-expected_request = {
-    "schema": 1,
-    "mode": "rebuild-golden",
-    "gate": "plasma-package-build",
-    "runner_group_id": 3,
+allowed_request_keys = {
+    "schema",
+    "mode",
+    "gate",
+    "runner_group_id",
+    "cancel_run_id",
+    "cancel_run_head_sha",
 }
-if request != expected_request:
-    raise SystemExit(f"unexpected initial authoritative host request: {request!r}")
+unknown_request_keys = set(request) - allowed_request_keys
+if unknown_request_keys:
+    raise SystemExit(f"unexpected authoritative host request keys: {sorted(unknown_request_keys)!r}")
+if request.get("schema") != 1:
+    raise SystemExit(f"unexpected authoritative host request schema: {request!r}")
+if request.get("mode") not in {"diagnose", "repair-host", "preflight", "rebuild-golden", "execute"}:
+    raise SystemExit(f"unexpected authoritative host request mode: {request!r}")
+if request.get("gate") != "plasma-package-build":
+    raise SystemExit(f"unexpected authoritative host request gate: {request!r}")
+if request.get("runner_group_id") != 3:
+    raise SystemExit(f"unexpected authoritative host runner group: {request!r}")
 
 print("Host authoritative control contract: PASS")
