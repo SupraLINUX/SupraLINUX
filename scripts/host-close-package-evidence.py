@@ -6,6 +6,7 @@ import re
 import shutil
 import stat
 import subprocess
+import sys
 import zipfile
 from pathlib import Path
 
@@ -23,13 +24,24 @@ def sha256(path: Path) -> str:
 
 
 def run(args, *, cwd=None, check=True):
-    return subprocess.run(
-        args,
-        cwd=cwd,
-        check=check,
-        text=True,
-        capture_output=True,
-    )
+    try:
+        return subprocess.run(
+            args,
+            cwd=cwd,
+            check=check,
+            text=True,
+            capture_output=True,
+        )
+    except subprocess.CalledProcessError as exc:
+        if exc.stdout:
+            sys.stderr.write(exc.stdout)
+            if not exc.stdout.endswith("\n"):
+                sys.stderr.write("\n")
+        if exc.stderr:
+            sys.stderr.write(exc.stderr)
+            if not exc.stderr.endswith("\n"):
+                sys.stderr.write("\n")
+        raise
 
 
 def gh_bytes(path: str) -> bytes:
@@ -363,6 +375,8 @@ def main():
                 str(artifact_zip),
                 "--artifact-meta",
                 str(artifact_meta),
+                "--workflow-job-meta",
+                str(job_json),
                 "--host-dir",
                 str(host_dir),
                 "--job-id",
