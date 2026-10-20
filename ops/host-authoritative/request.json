@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "mode": "close-evidence",
+  "mode": "publish-evidence-check",
   "gate": "plasma-package-build",
   "runner_group_id": 3,
   "evidence_node": "polkit-kde-agent-1",
