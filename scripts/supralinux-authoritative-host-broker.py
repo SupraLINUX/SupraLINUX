@@ -48,6 +48,7 @@ if request.get("schema") != 1:
 if request.get("mode") not in {
     "diagnose", "repair-host", "preflight", "rebuild-golden", "execute",
     "close-evidence-check", "close-evidence",
+    "publish-evidence-check", "publish-evidence",
 }:
     raise SystemExit("Unsupported control mode.")
 if request.get("gate") != "plasma-package-build":
@@ -82,7 +83,7 @@ else:
         or any(c not in "0123456789abcdef" for c in cancel_run_head_sha)
     ):
         raise SystemExit("Invalid cancellation head SHA.")
-close_modes = {"close-evidence-check", "close-evidence"}
+close_modes = {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}
 close_values = (
     evidence_node,
     evidence_package_run_id,
@@ -121,7 +122,7 @@ else:
 
 if request["mode"] in {
     "diagnose", "repair-host", "rebuild-golden", "execute",
-    "close-evidence-check", "close-evidence",
+    "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence",
 } and (
     cancel_run_id is not None or cancel_run_head_sha is not None
 ):
@@ -269,7 +270,7 @@ def stream_as_operator(args, log_path, *, cwd=None, extra_env=None, extra_groups
     os.chown(log_path, runner_pw.pw_uid, runner_pw.pw_gid)
     return rc
 
-if request["mode"] in {"close-evidence-check", "close-evidence"}:
+if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
     if not CLOSE_EVIDENCE_HELPER.is_file() or not os.access(CLOSE_EVIDENCE_HELPER, os.X_OK):
         raise SystemExit("Installed authoritative evidence closure helper is missing.")
 
@@ -284,11 +285,16 @@ if request["mode"] in {"close-evidence-check", "close-evidence"}:
     os.chown(close_output, operator.pw_uid, operator.pw_gid)
     close_work = close_root / "work"
 
-    if request["mode"] == "close-evidence-check":
+    helper_mode = {
+        "close-evidence-check": "check",
+        "close-evidence": "close",
+        "publish-evidence-check": "publish-check",
+        "publish-evidence": "publish",
+    }[request["mode"]]
+    if request["mode"] in {"close-evidence-check", "publish-evidence-check"}:
         artifact_root = close_root / "artifact-replay"
         artifact_root.mkdir(mode=0o700)
         os.chown(artifact_root, operator.pw_uid, operator.pw_gid)
-        helper_mode = "check"
     else:
         if not PERSISTENT_ARTIFACT_ROOT.exists():
             PERSISTENT_ARTIFACT_ROOT.mkdir(parents=True, mode=0o700)
@@ -296,7 +302,6 @@ if request["mode"] in {"close-evidence-check", "close-evidence"}:
         run_as_operator(["test", "-d", str(PERSISTENT_ARTIFACT_ROOT)])
         run_as_operator(["test", "-w", str(PERSISTENT_ARTIFACT_ROOT)])
         artifact_root = PERSISTENT_ARTIFACT_ROOT
-        helper_mode = "close"
 
     close_log = result_dir / "close-evidence.log"
     close_rc = 125

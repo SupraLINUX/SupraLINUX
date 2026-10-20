@@ -184,7 +184,7 @@ def main():
             "host shell payloads."
         )
     )
-    parser.add_argument("--mode", choices=["check", "close"], required=True)
+    parser.add_argument("--mode", choices=["check", "close", "publish-check", "publish"], required=True)
     parser.add_argument("--source-commit", required=True)
     parser.add_argument("--control-run-id", required=True)
     parser.add_argument("--node", required=True)
@@ -482,6 +482,140 @@ def main():
             )
         canonical_update_created = True
 
+    canonical_commit = None
+    published = False
+    publish_dry_run = False
+    if args.mode in {"publish-check", "publish"}:
+        publish_checkout = args.work_root / "publish"
+        exact_checkout(publish_checkout, args.source_commit)
+        for entry in entries:
+            source = export_dir / entry["path"]
+            target = publish_checkout / entry["path"]
+            if (
+                not source.is_file()
+                or source.is_symlink()
+                or sha256(source) != entry["sha256"]
+            ):
+                raise SystemExit(
+                    "Canonical publish source failed hash admission: "
+                    f"{entry['path']}"
+                )
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, target)
+            if sha256(target) != entry["sha256"]:
+                raise SystemExit(
+                    "Canonical publish copy changed bytes: "
+                    f"{entry['path']}"
+                )
+
+        paths = [entry["path"] for entry in entries]
+        actual_changes = changed_files(publish_checkout)
+        if actual_changes != sorted(paths):
+            raise SystemExit(
+                "Canonical publish change set differs from closure manifest: "
+                f"{actual_changes!r}"
+            )
+
+        for command in [
+            ["python3", "scripts/check-source-syntax.py"],
+            ["python3", "scripts/validate_plasma_package_build.py"],
+            ["python3", "scripts/render-project-status.py", "--check"],
+            ["python3", "scripts/validate_repository.py"],
+        ]:
+            run(command, cwd=publish_checkout)
+
+        run(["git", "-C", str(publish_checkout), "add", "--", *paths])
+        staged = run(
+            ["git", "-C", str(publish_checkout), "diff", "--cached", "--name-only"]
+        ).stdout.splitlines()
+        if sorted(staged) != sorted(paths):
+            raise SystemExit(
+                "Canonical publish staged set differs from closure manifest."
+            )
+        run(["git", "-C", str(publish_checkout), "diff", "--cached", "--check"])
+
+        author = pr.get("user", {})
+        author_login = author.get("login")
+        author_id = author.get("id")
+        if (
+            not isinstance(author_login, str)
+            or not re.fullmatch(r"[A-Za-z0-9-]+", author_login)
+            or not isinstance(author_id, int)
+            or author_id <= 0
+        ):
+            raise SystemExit("Could not resolve a safe PR author identity.")
+        run(
+            [
+                "git", "-C", str(publish_checkout), "config",
+                "user.name", author_login,
+            ]
+        )
+        run(
+            [
+                "git", "-C", str(publish_checkout), "config",
+                "user.email",
+                f"{author_id}+{author_login}@users.noreply.github.com",
+            ]
+        )
+        closed_campaign = json.loads(
+            (publish_checkout / CAMPAIGN).read_text()
+        )
+        attempts = closed_campaign["nodes"][args.node]["attempts"]
+        if not attempts or attempts[-1].get("state") != "PASS":
+            raise SystemExit("Canonical publish lacks a final PASS Attempt.")
+        attempt_number = attempts[-1]["attempt"]
+        run(
+            [
+                "git", "-C", str(publish_checkout), "commit", "-q",
+                "-m", f"evidence: close {args.node} Attempt {attempt_number}",
+            ]
+        )
+        canonical_commit = run(
+            ["git", "-C", str(publish_checkout), "rev-parse", "HEAD"]
+        ).stdout.strip()
+        parent = run(
+            ["git", "-C", str(publish_checkout), "rev-parse", "HEAD^"]
+        ).stdout.strip()
+        if parent != args.source_commit:
+            raise SystemExit("Canonical publish commit parent changed unexpectedly.")
+
+        branch = pr.get("head", {}).get("ref")
+        if (
+            not isinstance(branch, str)
+            or not re.fullmatch(r"[A-Za-z0-9._/-]{1,200}", branch)
+            or branch.startswith("/")
+            or ".." in branch.split("/")
+        ):
+            raise SystemExit("Unsafe PR head branch for canonical publication.")
+
+        current_pr = json.loads(
+            gh_bytes(f"repos/{REPOSITORY}/pulls/{PR_NUMBER}")
+        )
+        if current_pr.get("head", {}).get("sha") != args.source_commit:
+            raise SystemExit("PR head changed before canonical publication.")
+
+        push = [
+            "git", "-C", str(publish_checkout),
+            "-c", "credential.helper=!gh auth git-credential",
+            "push",
+            f"--force-with-lease=refs/heads/{branch}:{args.source_commit}",
+        ]
+        if args.mode == "publish-check":
+            push.append("--dry-run")
+            publish_dry_run = True
+        push.extend(["origin", f"HEAD:refs/heads/{branch}"])
+        run(push)
+
+        if args.mode == "publish":
+            final_pr = json.loads(
+                gh_bytes(f"repos/{REPOSITORY}/pulls/{PR_NUMBER}")
+            )
+            if final_pr.get("head", {}).get("sha") != canonical_commit:
+                raise SystemExit(
+                    "Published canonical commit is not the current PR head."
+                )
+            published = True
+
     receipt = {
         "schema": 1,
         "state": "PASS",
@@ -506,6 +640,9 @@ def main():
         "canonical_update_manifest_sha256": sha256(
             update_manifest
         ),
+        "canonical_commit": canonical_commit,
+        "publish_dry_run": publish_dry_run,
+        "published": published,
         "offline_retained_artifact": str(retained[0]),
         "offline_restore_verified": True,
         "requires_github_for_restore": False,

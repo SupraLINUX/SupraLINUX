@@ -19,10 +19,10 @@ required_broker = [
     '"mode", "gate", "runner_group_id", "cancel_run_id"',
     '"evidence_node"',
     '"evidence_package_artifact_sha256"',
-    '"close-evidence-check", "close-evidence"',
+    '"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"',
     'PERSISTENT_ARTIFACT_ROOT = Path("/var/lib/supralinux/artifacts")',
     'CLOSE_EVIDENCE_HELPER = Path("/usr/local/libexec/supralinux-host-close-package-evidence")',
-    'if request["mode"] in {"close-evidence-check", "close-evidence"}:',
+    'if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:',
     '"package_attempt_effect=none"',
     'request.get("gate") != "plasma-package-build"',
     'run.get("status") == "queued"',
@@ -81,7 +81,7 @@ for token in required_broker:
         raise SystemExit(f"missing authoritative host broker contract: {token}")
 
 required_helper = [
-    'choices=["check", "close"]',
+    'choices=["check", "close", "publish-check", "publish"]',
     '"scripts/close-package-revalidation-evidence.py"',
     '"scripts/close-plasma-package-evidence.py"',
     '"--workflow-job-meta"',
@@ -96,6 +96,11 @@ required_helper = [
     'logical_artifacts.symlink_to(',
     'args.artifact_root.rglob(',
     '"Canonical paths changed after package execution: "',
+    '"publish-check", "publish"',
+    '"credential.helper=!gh auth git-credential"',
+    '"--force-with-lease=refs/heads/{branch}:{args.source_commit}"',
+    '"--dry-run"',
+    '"published": published',
     '"Closure replay differs from current canonical file: "',
 ]
 for token in required_helper:
@@ -159,6 +164,8 @@ if request.get("mode") not in {
     "execute",
     "close-evidence-check",
     "close-evidence",
+    "publish-evidence-check",
+    "publish-evidence",
 }:
     raise SystemExit(f"unexpected authoritative host request mode: {request!r}")
 if request.get("gate") != "plasma-package-build":
@@ -166,7 +173,7 @@ if request.get("gate") != "plasma-package-build":
 if request.get("runner_group_id") != 3:
     raise SystemExit(f"unexpected authoritative host runner group: {request!r}")
 
-if request["mode"] in {"close-evidence-check", "close-evidence"}:
+if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
     if not re.fullmatch(
         r"[a-z0-9][a-z0-9+.-]{0,63}",
         request.get("evidence_node", ""),

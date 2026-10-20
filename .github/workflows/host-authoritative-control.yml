@@ -60,6 +60,7 @@ jobs:
           assert request.get("mode") in {
               "diagnose", "repair-host", "preflight", "rebuild-golden", "execute",
               "close-evidence-check", "close-evidence",
+              "publish-evidence-check", "publish-evidence",
           }
           assert request.get("gate") == "plasma-package-build"
           assert isinstance(request.get("runner_group_id"), int) and request["runner_group_id"] > 0
@@ -70,9 +71,9 @@ jobs:
               assert cancel_head is None
           else:
               assert isinstance(cancel_head, str) and re.fullmatch(r"[0-9a-f]{40}", cancel_head)
-          if request["mode"] in {"diagnose", "repair-host", "rebuild-golden", "execute", "close-evidence-check", "close-evidence"}:
+          if request["mode"] in {"diagnose", "repair-host", "rebuild-golden", "execute", "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
               assert cancel is None and cancel_head is None
-          if request["mode"] in {"close-evidence-check", "close-evidence"}:
+          if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
               assert isinstance(request.get("evidence_node"), str)
               assert re.fullmatch(r"[a-z0-9][a-z0-9+.-]{0,63}", request["evidence_node"])
               for key in ["evidence_package_run_id", "evidence_package_job_id", "evidence_package_artifact_id"]:
