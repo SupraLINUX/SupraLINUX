@@ -1,0 +1,314 @@
+[
+  {
+    "package": "extra-cmake-modules",
+    "source_package": "kf6-extra-cmake-modules",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6config-bin",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6config-data",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6config-dev-bin",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6config-dev",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6configcore6",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6configgui6",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6configqml6",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-config",
+    "source_package": "kf6-kconfig",
+    "version": "6.30.0-0supralinux5",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6coreaddons-data",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6coreaddons-dev",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6coreaddons6",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-coreaddons",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6crash-dev",
+    "source_package": "kf6-kcrash",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6crash6",
+    "source_package": "kf6-kcrash",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6dbusaddons-bin",
+    "source_package": "kf6-kdbusaddons",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6dbusaddons-data",
+    "source_package": "kf6-kdbusaddons",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6dbusaddons-dev",
+    "source_package": "kf6-kdbusaddons",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6dbusaddons6",
+    "source_package": "kf6-kdbusaddons",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6i18n-data",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6i18n-dev",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6i18n6",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6i18nlocaledata6",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6i18nqml6",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-i18n-localedata",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-ki18n",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6notifications-data",
+    "source_package": "kf6-knotifications",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6notifications-dev",
+    "source_package": "kf6-knotifications",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6notifications6",
+    "source_package": "kf6-knotifications",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-notifications",
+    "source_package": "kf6-knotifications",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6windowsystem-data",
+    "source_package": "kf6-kwindowsystem",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6windowsystem-dev",
+    "source_package": "kf6-kwindowsystem",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6windowsystem6",
+    "source_package": "kf6-kwindowsystem",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-kwindowsystem",
+    "source_package": "kf6-kwindowsystem",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigami-data",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "all"
+  },
+  {
+    "package": "libkirigami-dev",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigami6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamicontrols6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamidelegates6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamidialogs6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamiforms6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamiformsprivatecards6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamiformsprivateflat6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamiformsprivatetemplates6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamilayouts6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamilayoutsprivate6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamiplatform6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamipolyfill6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamiprimitives6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamiprivate6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkirigamitemplates6",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-kirigami",
+    "source_package": "kf6-kirigami",
+    "version": "6.30.0-0supralinux2",
+    "architecture": "amd64"
+  }
+]
