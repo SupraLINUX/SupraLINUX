@@ -1,11 +1,9 @@
 {
   "schema": 1,
   "role": "reviewed-plasma-package-build",
-  "state": "execution-authorized",
-  "authorized_nodes": [
-    "polkit-kde-agent-1"
-  ],
-  "package_execution_authorized": true,
+  "state": "partial-PASS",
+  "authorized_nodes": [],
+  "package_execution_authorized": false,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "scope": "Per-node clean builds, upstream tests, package/Ubuntu upgrade and ABI client checks on KVM; graphical desktop and final distro integration remain later gates",
   "nodes": {
@@ -9623,7 +9621,7 @@
       }
     },
     "polkit-kde-agent-1": {
-      "state": "build-pending",
+      "state": "PASS",
       "source_package": "polkit-kde-agent-1",
       "version": "4:6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -9964,7 +9962,33 @@
           ]
         }
       },
-      "attempts": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 39416478708,
+          "workflow_job_id": 118606632416,
+          "source_commit": "a8bfddd4a39c719016476a0e7425aaf461d9d9c5",
+          "artifact_id": 12261299420,
+          "artifact_sha256": "b3403e7a820ae901faeedecc46b9cd8fdc555e104537e010be0a40bdca7d3422",
+          "result_path": "manifests/evidence/plasma/polkit-kde-agent-1-attempt1/result.json",
+          "result_sha256": "483a1fbfd628b0d4da595c84f1428a38305633f92fccaa85686f686dc81019ac",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261020t113721z-3619121",
+          "host_evidence_manifest_sha256": "15ee76f5930a2d82665898a11750206c1145c179902580d76d687ac2034ab242",
+          "rootfs_admission_path": "manifests/evidence/plasma/polkit-kde-agent-1-attempt1/rootfs-admission.json",
+          "rootfs_admission_sha256": "19389c6b9a44d354b8a41efacb892fb025fe3d589af22413de6cf546bdb05d7a",
+          "baseline_preflight_path": "manifests/evidence/plasma/polkit-kde-agent-1-attempt1/ubuntu-baseline-preflight.json",
+          "baseline_preflight_sha256": "777b6eeaac9362f69daeb7d29edff80fe74245c39ac9b6f03ab5dde94a292e28",
+          "workflow_job_path": "manifests/evidence/plasma/polkit-kde-agent-1-attempt1/workflow-job.json",
+          "workflow_job_sha256": "013404f3d2540fa46258c90a875619e44da94c5df388d3e078b4ee3224dd7332",
+          "host_result_path": "manifests/evidence/plasma/polkit-kde-agent-1-attempt1/host-result.json",
+          "host_result_sha256": "f90fa49bc73c48d25b01dd4cdd1faf47904804c604cee21ab1e11dfb61e3a99e"
+        }
+      ],
       "review": {
         "source": "Unchanged upstream signed KDE Plasma 6.7.5; original October 2026 retained materialization artifact SHA verified.",
         "version": "Candidate 4:6.7.5-0supralinux1 retains Ubuntu epoch 4; original Ubuntu changelog preserved.",
@@ -9998,6 +10022,44 @@
           "resolute-updates",
           "resolute-security"
         ]
+      },
+      "evidence": {
+        "workflow_run_id": 39416478708,
+        "workflow_job_id": 118606632416,
+        "source_commit": "a8bfddd4a39c719016476a0e7425aaf461d9d9c5",
+        "artifact_id": 12261299420,
+        "artifact_sha256": "b3403e7a820ae901faeedecc46b9cd8fdc555e104537e010be0a40bdca7d3422",
+        "result_path": "manifests/evidence/plasma/polkit-kde-agent-1-attempt1/result.json",
+        "result_sha256": "483a1fbfd628b0d4da595c84f1428a38305633f92fccaa85686f686dc81019ac",
+        "contract_path": "manifests/evidence/plasma/polkit-kde-agent-1-attempt1/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261020t113721z-3619121",
+        "host_evidence_manifest_sha256": "15ee76f5930a2d82665898a11750206c1145c179902580d76d687ac2034ab242",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/polkit-kde-agent-1-attempt1",
+          "archive_index_sha256": "264c905c085b277841550f034122670a99e6b9a941d54b2ead87ea16e03c7e77",
+          "plan_path": "manifests/evidence/plasma/polkit-kde-agent-1-artifact-plan.json",
+          "plan_sha256": "23f2337844a1fbd18a42b786d51abe55b5fc4da8bac8d89b38b51ca3f877c3e8",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 2,
+          "binary_payload_file_count": 2,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/polkit-kde-agent-1-attempt1/cache-probe-result.json",
+        "cache_probe_result_sha256": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+        "rootfs_admission_path": "manifests/evidence/plasma/polkit-kde-agent-1-attempt1/rootfs-admission.json",
+        "rootfs_admission_sha256": "19389c6b9a44d354b8a41efacb892fb025fe3d589af22413de6cf546bdb05d7a",
+        "baseline_preflight_path": "manifests/evidence/plasma/polkit-kde-agent-1-attempt1/ubuntu-baseline-preflight.json",
+        "baseline_preflight_sha256": "777b6eeaac9362f69daeb7d29edff80fe74245c39ac9b6f03ab5dde94a292e28",
+        "workflow_job_path": "manifests/evidence/plasma/polkit-kde-agent-1-attempt1/workflow-job.json",
+        "workflow_job_sha256": "013404f3d2540fa46258c90a875619e44da94c5df388d3e078b4ee3224dd7332",
+        "host_result_path": "manifests/evidence/plasma/polkit-kde-agent-1-attempt1/host-result.json",
+        "host_result_sha256": "f90fa49bc73c48d25b01dd4cdd1faf47904804c604cee21ab1e11dfb61e3a99e"
       }
     }
   },
@@ -10280,6 +10342,12 @@
       "attempt": 4,
       "archive_root": ".artifacts/plasma-6.7.5/kde-cli-tools-attempt4",
       "archive_index_sha256": "10664273b15b6154181c841e1c259e2c28b016f9c4bba821ab215489bb5e51bb"
+    },
+    {
+      "node": "polkit-kde-agent-1",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/polkit-kde-agent-1-attempt1",
+      "archive_index_sha256": "264c905c085b277841550f034122670a99e6b9a941d54b2ead87ea16e03c7e77"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
