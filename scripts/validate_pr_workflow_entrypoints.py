@@ -112,8 +112,22 @@ req("needs.host-workspace-admission.outputs.target == 'authoritative'" in router
     "authoritative host control must require the authoritative selector")
 req('request.get("target", "workspace")' in router_text,
     "host admission must select workspace versus authoritative control from versioned input")
-req('request.get("mode") in {"diagnose", "repair-host", "preflight", "rebuild-golden", "execute"}' in router_text,
-    "host authoritative admission must accept diagnostic, host repair, golden rebuild, preflight and execute modes")
+mode_match = re.search(r'request\.get\("mode"\) in \{([^}]*)\}', router_text)
+expected_authoritative_modes = {
+    "diagnose",
+    "repair-host",
+    "preflight",
+    "rebuild-golden",
+    "execute",
+    "close-evidence-check",
+    "close-evidence",
+}
+admitted_authoritative_modes = (
+    set(re.findall(r'"([^"]+)"', mode_match.group(1)))
+    if mode_match is not None else set()
+)
+req(admitted_authoritative_modes == expected_authoritative_modes,
+    "host authoritative admission must expose exactly the reviewed fixed-control modes")
 
 historical = [
     p.name for p in files
