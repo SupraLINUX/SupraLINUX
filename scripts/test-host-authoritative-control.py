@@ -7,11 +7,13 @@ ROOT = Path(__file__).resolve().parents[1]
 BROKER = ROOT / "scripts/supralinux-authoritative-host-broker.py"
 CLOSE_HELPER = ROOT / "scripts/host-close-package-evidence.py"
 WORKFLOW = ROOT / ".github/workflows/host-authoritative-control.yml"
+ROUTER = ROOT / ".github/workflows/pr-ci-router.yml"
 REQUEST = ROOT / "ops/host-authoritative/request.json"
 
 broker = BROKER.read_text()
 close_helper = CLOSE_HELPER.read_text()
 workflow = WORKFLOW.read_text()
+router = ROUTER.read_text()
 request = json.loads(REQUEST.read_text())
 
 required_broker = [
@@ -132,6 +134,15 @@ required_workflow = [
 for token in required_workflow:
     if token not in workflow:
         raise SystemExit(f"missing authoritative host workflow contract: {token}")
+
+required_router = [
+    "Host control admission",
+    "python3 scripts/test-host-authoritative-control.py",
+    '"publish-evidence-check", "publish-evidence"',
+]
+for token in required_router:
+    if token not in router:
+        raise SystemExit(f"missing authoritative host router contract: {token}")
 
 base_request_keys = {
     "schema",
