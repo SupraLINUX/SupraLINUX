@@ -102,6 +102,8 @@ required_helper = [
     '"credential.helper=!gh auth git-credential"',
     '"--force-with-lease=refs/heads/{branch}:{args.source_commit}"',
     '"--dry-run"',
+    '"ls-remote", "--heads", "origin", remote_ref',
+    '"Published canonical commit is not the exact remote branch ref."',
     '"published": published',
     '"HTTP 429", "HTTP 502", "HTTP 503", "HTTP 504"',
     "time.sleep(2 ** attempt)",

@@ -628,12 +628,36 @@ def main():
         run(push)
 
         if args.mode == "publish":
-            final_pr = json.loads(
-                gh_bytes(f"repos/{REPOSITORY}/pulls/{PR_NUMBER}")
-            )
-            if final_pr.get("head", {}).get("sha") != canonical_commit:
+            remote_ref = f"refs/heads/{branch}"
+            observed_remote = None
+            for attempt in range(4):
+                remote = run(
+                    [
+                        "git", "-C", str(publish_checkout),
+                        "-c", "credential.helper=!gh auth git-credential",
+                        "ls-remote", "--heads", "origin", remote_ref,
+                    ],
+                    check=False,
+                )
+                lines = [
+                    line.split()
+                    for line in remote.stdout.splitlines()
+                    if line.strip()
+                ]
+                if (
+                    remote.returncode == 0
+                    and len(lines) == 1
+                    and len(lines[0]) == 2
+                    and lines[0][1] == remote_ref
+                ):
+                    observed_remote = lines[0][0]
+                    if observed_remote == canonical_commit:
+                        break
+                if attempt != 3:
+                    time.sleep(2 ** attempt)
+            if observed_remote != canonical_commit:
                 raise SystemExit(
-                    "Published canonical commit is not the current PR head."
+                    "Published canonical commit is not the exact remote branch ref."
                 )
             published = True
 
