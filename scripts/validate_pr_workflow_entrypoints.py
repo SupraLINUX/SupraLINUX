@@ -121,6 +121,8 @@ expected_authoritative_modes = {
     "execute",
     "close-evidence-check",
     "close-evidence",
+    "publish-evidence-check",
+    "publish-evidence",
 }
 admitted_authoritative_modes = (
     set(re.findall(r'"([^"]+)"', mode_match.group(1)))
