@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "host-authoritative-control-preflight",
+  "source_commit": "bf837766a575ec2e7b5e3c15c8729f9ec7c65ee7",
+  "workflow_run_id": 39370862351,
+  "execution_job_id": 118458479283,
+  "execution_run_attempt": 1,
+  "artifact_id": 12241124356,
+  "artifact_digest": "sha256:cc12dd4c8ffa8ed186480bcc899c7c509629de2696628b854770e02c7e69a3aa",
+  "artifact_delivery": {
+    "initial_finalize_state": "INFRA_INVALID",
+    "initial_finalize_error": "ECONNRESET",
+    "initial_uploaded_sha256": "cc12dd4c8ffa8ed186480bcc899c7c509629de2696628b854770e02c7e69a3aa",
+    "recovery_run_attempt": 2,
+    "recovery_job_id": 118459487792,
+    "recovered_artifact_sha256": "cc12dd4c8ffa8ed186480bcc899c7c509629de2696628b854770e02c7e69a3aa",
+    "recovered_unchanged_bytes": true
+  },
+  "host": {
+    "kernel": "7.0.0-38-generic",
+    "kvm_api_version": 12,
+    "kvm_open_ok": true,
+    "nested_kvm": true,
+    "libguestfs_runtime": "PASS",
+    "userspace_network_admission": "PASS",
+    "host_network_modified": false,
+    "e1000e_runtime_mitigation_checked": true
+  },
+  "golden_image": {
+    "path": "/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2",
+    "sha256": "57cc59d767e2be8fe9e872d32b231293389abf8bb230e8da4a0f449d4119948f",
+    "source_commit": "17203e5479f119c98e2172c4617335aefddd7d64",
+    "source_image_sha256": "8800651811af9a85465ad1d552add729947bb16488dddb4a9b5305a3d97332b2",
+    "golden_input_digest": "dd6393dfa2452ca1c30ca451b597ae230107ac9736f32b58097f71513944969c",
+    "compatibility_commit": "bf837766a575ec2e7b5e3c15c8729f9ec7c65ee7",
+    "input_compatibility": "PASS",
+    "provenance_verification": "PASS"
+  },
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "package_attempt_effect": "none",
+  "next_gate": "authoritative-plasma-package-input-preflight:polkit-kde-agent-1"
+}
