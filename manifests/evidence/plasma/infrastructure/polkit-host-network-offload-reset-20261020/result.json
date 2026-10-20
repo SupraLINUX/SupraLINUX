@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "kind": "host-network-offload-reset-after-reboot",
+  "node": "polkit-kde-agent-1",
+  "source_commit": "8fc823ce7df915a40874e2e5743032cee3cf40f4",
+  "workflow_run_id": 39367652578,
+  "workflow_job_id": 118448401725,
+  "artifact_id": 12239779806,
+  "artifact_digest": "sha256:5db9c12fa33ee585c65e67b2f74301fb99b4eef280a378c8e551bae5d570e34a",
+  "stage": "host-authoritative-kvm-preflight",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "exit_code": 1,
+  "cause": "After the host rebooted at 2026-10-19 21:31:52, the documented non-persistent e1000e safety mitigation had reset again: eno1 exposed tcp-segmentation-offload=on and generic-segmentation-offload=on. The authoritative PolicyKit input preflight failed before JIT registration, VM creation, candidate source preparation, sbuild, or any package Attempt.",
+  "repair": "Reapply the already certified reversible runtime mitigation only to the single e1000e default-route interface by setting TSO and GSO off. Verify carrier, normalized addresses and the default route remain unchanged, then require bridge-free userspace network admission to pass. Keep the change non-persistent and do not modify firewall, packages, routes, bridges, Docker, or unrelated interfaces."
+}
