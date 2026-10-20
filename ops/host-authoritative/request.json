@@ -1,6 +1,12 @@
 {
   "schema": 1,
-  "mode": "execute",
+  "mode": "close-evidence",
   "gate": "plasma-package-build",
-  "runner_group_id": 3
+  "runner_group_id": 3,
+  "evidence_node": "polkit-kde-agent-1",
+  "evidence_package_run_id": 39416478708,
+  "evidence_package_job_id": 118606632416,
+  "evidence_package_artifact_id": 12261299420,
+  "evidence_package_artifact_sha256": "b3403e7a820ae901faeedecc46b9cd8fdc555e104537e010be0a40bdca7d3422",
+  "evidence_host_manifest_sha256": "15ee76f5930a2d82665898a11750206c1145c179902580d76d687ac2034ab242"
 }
