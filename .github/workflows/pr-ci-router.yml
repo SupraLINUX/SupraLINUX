@@ -139,7 +139,7 @@ jobs:
           assert selector.get("schema") == 1
           assert selector.get("target") == "authoritative"
           assert request.get("schema") == 1
-          assert request.get("mode") in {"diagnose", "repair-host", "preflight", "rebuild-golden", "execute"}
+          assert request.get("mode") in {"diagnose", "repair-host", "preflight", "rebuild-golden", "execute", "close-evidence-check", "close-evidence"}
           assert request.get("gate") == "plasma-package-build"
           print("Host authoritative admission: PASS")
           PY
