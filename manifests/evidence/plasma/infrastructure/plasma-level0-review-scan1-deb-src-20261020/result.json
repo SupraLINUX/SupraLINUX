@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "scope": "plasma-level0-remaining-packaging-review-scan",
+  "source_commit": "63644219f82ad93c4146d1b9be99fe915b066de5",
+  "workflow_run_id": 39448797020,
+  "workflow_job_id": 118717842403,
+  "artifact_id": 12276769119,
+  "artifact_digest": "sha256:f788dc79e9ec8dfa7805ac1e64cd1f6fdbc37c13f7282019324bddf29c9ea01b",
+  "task_id": "plasma-level0-review-scan",
+  "task_exit_code": 100,
+  "stage": "ubuntu-packaging-reference-source-download",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "package_attempt_effect": "none",
+  "canonical_package_state_effect": "none",
+  "cause": "The disposable Ubuntu 26.04 workspace had binary APT repositories but no deb-src entries. The first exact Ubuntu packaging reference fetch, apt-get source plasma-discover=6.6.6-0ubuntu0.1, failed closed with 'You must put some deb-src URIs in your sources.list'.",
+  "repair": "Derive deb-src entries inside the disposable workspace from its existing configured binary Ubuntu APT sources before apt-get update. Keep the change guest-only and retry the planning scan; no package build or package Attempt was started."
+}
