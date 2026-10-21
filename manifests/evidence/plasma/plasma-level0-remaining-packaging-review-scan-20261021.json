@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "plasma-level0-remaining-packaging-review-scan",
+  "source_commit": "8a956fe0c4d4360cfb2dccb3161d6dc43a200486",
+  "workflow_run_id": 39549904045,
+  "workflow_job_id": 119056979692,
+  "artifact_id": 12323515646,
+  "artifact_digest": "sha256:c3ea954de9e9a845df77f25d2bc836fa5ac5accef6744256210bdcf774830f0f",
+  "result_json_sha256": "1e17e9368bfaa6e838faf841d446a501014883e38d63c96d59a2603e8eb50c0f",
+  "node_count": 12,
+  "nodes": {
+    "discover": {
+      "state": "PASS",
+      "ubuntu_debian_tree_sha256": "75a422d0dee3c84c4dcd45d8d572f3c88efd278eccf325db506d9af73fee2c34",
+      "upstream_build_test_files_sha256": "585dd4eb9c4b8e0c33e70acc3755b96d219fcccd3f6f57f867be478c3fc445ae",
+      "summary_json_sha256": "0afb76d8ac0a8368324901ee6b3a220d807ecf733e0fd07ea32b7d54f975253b"
+    },
+    "drkonqi": {
+      "state": "PASS",
+      "ubuntu_debian_tree_sha256": "dfe61a92247a56eec529e756d828ece2909b614f409c52a0fff1eb84db615401",
+      "upstream_build_test_files_sha256": "c5d476c26f4577d05a03ade1caf5e2801232efa719a9f4f2d3882363fb28cc99",
+      "summary_json_sha256": "6c680205bfe7ade808e94122c7fed5d3c5b93b13f5fee97dcdedeab706890cf5"
+    },
+    "flatpak-kcm": {
+      "state": "PASS",
+      "ubuntu_debian_tree_sha256": "6873e1859d605df45d7aa14e9e03847b1f8d8f75a3bcd07cd72542feac0cbe68",
+      "upstream_build_test_files_sha256": "3b221ab7c5e5fec5834fe2f0ac8d1791b9f23721a47f9c0f4dafcb5c953fc9f7",
+      "summary_json_sha256": "046124ed30da4eda45d2f52609c3ed2d0542a4f3934bf682354ec1c3561b537e"
+    },
+    "kgamma": {
+      "state": "PASS",
+      "ubuntu_debian_tree_sha256": "c7c5c966c45180441389599d09efaba8f68bdbb6dda9a83fade3cdccd8f51bda",
+      "upstream_build_test_files_sha256": "fa15a9d8f2085cc1e9a476cdeb438fcfeff5ad800231c9886b43fdd7c9aa9935",
+      "summary_json_sha256": "9fb641281cae9168a665aacf1f851492c6a11d8d2736fa97087444e7accf8b35"
+    },
+    "kwayland-integration": {
+      "state": "PASS",
+      "ubuntu_debian_tree_sha256": "b2ca2a2ad360ed8c3bd5437b023fdd7427be913476c22237ed6401602ad58858",
+      "upstream_build_test_files_sha256": "4f56ec13f991b7649be8bc37c40dd19c8e823b2e0742986ddd4a0e7b016485bc",
+      "summary_json_sha256": "4e5fc54d75bb650599e078912310e8c882af12fbb56f4037420325d869d8d62a"
+    },
+    "plasma-dialer": {
+      "state": "PASS",
+      "ubuntu_debian_tree_sha256": "808f50cac787a311134389d7c817eb8392e0198aec2829a7ab2d4df7a2452112",
+      "upstream_build_test_files_sha256": "16889d8374c341d3f3586dea51de6b4ab85012d5df9715ad5cf248dfe7d17d00",
+      "summary_json_sha256": "415a560efee65af6ddbdb2fefc5e570a014c52cd4d4173223a0afd4969bf7d03"
+    },
+    "plasma-disks": {
+      "state": "PASS",
+      "ubuntu_debian_tree_sha256": "2693720e0498b9e035748d19f27b1fa3a16db3f62080a506806f5094e3d9e40b",
+      "upstream_build_test_files_sha256": "662f81573c2dd89dce75cda9e8cbe0f7dd7714dc37aff14de7e1c0e9b4eae971",
+      "summary_json_sha256": "b9a39e2388b86fe2ba333248643e648c90a28b584961ed92d84fff4373a94d2a"
+    },
+    "plasma-firewall": {
+      "state": "PASS",
+      "ubuntu_debian_tree_sha256": "fa734ec46432e20a5fe864e769bd2f0ff0af5e2cbd824c64f57cffd1bef1b9de",
+      "upstream_build_test_files_sha256": "720af6c3eb3c4f22923c99f20044a917928849dfdd13e274bfacf77830a11507",
+      "summary_json_sha256": "7844b54b91e707c905d4e82f917dcd6068d5a40e28ce66450b8ce4e6b1bd6d07"
+    },
+    "plymouth-kcm": {
+      "state": "PASS",
+      "ubuntu_debian_tree_sha256": "39c6089327fa296f38dc6837d1a736483e1560cf72b41131b7a9318ef1577783",
+      "upstream_build_test_files_sha256": "704d7ddd5d9478475e7dc370926ab2f3e4c3d9a7ac8650c86e65fd579b890395",
+      "summary_json_sha256": "a7e6be072c664f1f11fe686b68f74a7143c2985cfbd1cf420192c0d9bbe6db2b"
+    },
+    "qqc2-breeze-style": {
+      "state": "PASS",
+      "ubuntu_debian_tree_sha256": "1d627acdf07113823950f1d62ef938241608e6de346fad01ad1863ebe4eca644",
+      "upstream_build_test_files_sha256": "9681b529fd374facfe1bcdb107574e59816d582c3c67337db8f9fdd68de48a39",
+      "summary_json_sha256": "9eecaeef7b86c242f18403def1ded8e2a090b4191d52c8532728309009af44cf"
+    },
+    "sddm-kcm": {
+      "state": "PASS",
+      "ubuntu_debian_tree_sha256": "6e3a7352d1a5b9f7d44e3555cf9418991eff50f52c8d28b14629e5514d32b017",
+      "upstream_build_test_files_sha256": "cdf11209f987aa364ab4c798bbedb31634eb5d4815374fa2e0ee2151fefcdf74",
+      "summary_json_sha256": "58189a75d06093ebb8c8553a3e73fdc53b39dd91f0d5645c3ec73042d86ee6a2"
+    },
+    "spacebar": {
+      "state": "PASS",
+      "ubuntu_debian_tree_sha256": "8c6fd39cc6d63af4ad03211d754212cd1c0b255019d2a8837be2b9538a8ff258",
+      "upstream_build_test_files_sha256": "0245b91a5a2c06571624af9a5d26c88d233c5e47c2dfc4835b69f79d83d5ef0a",
+      "summary_json_sha256": "39d6bd9cd66fd7c3aa3e7d34fc9c0b24549e3d1036045d67b8ba372a26f46b3b"
+    }
+  },
+  "findings": {
+    "explicit_product_exclusion": {
+      "node": "kgamma",
+      "source": "manifests/desktop-stack.json product_profile.excluded_plasma_sources",
+      "effect": "Do not admit this Level 0 source into the desktop-wayland product package build; exclusion must remain explicit."
+    },
+    "scan_role": "Planning/review input only. Each non-excluded package still requires an individual packaging review, reviewed tests and explicit admission before package execution."
+  },
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none"
+}

@@ -180,7 +180,21 @@
       "consumes_package_attempt": false
     },
     "authorized_package_nodes": [],
-    "package_build_manifest": "manifests/kde-plasma-package-build.json"
+    "package_build_manifest": "manifests/kde-plasma-package-build.json",
+    "remaining_packaging_review_scan_evidence": {
+      "state": "PASS",
+      "workflow_run_id": 39549904045,
+      "workflow_job_id": 119056979692,
+      "workflow_head_sha": "8a956fe0c4d4360cfb2dccb3161d6dc43a200486",
+      "artifact_id": 12323515646,
+      "artifact_digest": "sha256:c3ea954de9e9a845df77f25d2bc836fa5ac5accef6744256210bdcf774830f0f",
+      "result_path": "manifests/evidence/plasma/plasma-level0-remaining-packaging-review-scan-20261021.json",
+      "result_sha256": "1e17e9368bfaa6e838faf841d446a501014883e38d63c96d59a2603e8eb50c0f",
+      "node_count": 12,
+      "package_execution_started": false,
+      "consumes_package_attempt": false,
+      "canonical_package_state_effect": "none"
+    }
   },
   "sources": [
     {
