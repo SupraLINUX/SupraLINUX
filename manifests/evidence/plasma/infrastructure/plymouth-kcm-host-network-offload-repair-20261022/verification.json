@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "e1000e-runtime-offload-safety-restore",
+  "source_commit": "820557cadfa823eee5d461c21abd0e7c985b8892",
+  "workflow_run_id": 39783240429,
+  "workflow_job_id": 119839658413,
+  "artifact_id": 12427965538,
+  "artifact_digest": "sha256:31b35b83c269f0353bbe0c453e3ef82ce95769817fb726303d413148c624928f",
+  "interface": "eno1",
+  "driver": "e1000e",
+  "changed": true,
+  "features_before": {
+    "gso": "on",
+    "tso": "on"
+  },
+  "features_after": {
+    "gso": "off",
+    "tso": "off"
+  },
+  "carrier_before": "1",
+  "carrier_after": "1",
+  "addresses_preserved": true,
+  "default_route_preserved": true,
+  "userspace_network_admission": "PASS",
+  "kvm_open_ok": true,
+  "kvm_api_version": 12,
+  "persistent_change": false,
+  "host_firewall_modified": false,
+  "host_packages_installed": false,
+  "host_routes_modified": false,
+  "host_bridges_modified": false,
+  "docker_modified": false,
+  "vm_created": false,
+  "jit_invoked": false,
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "package_attempt_effect": "none",
+  "next_gate": "authoritative-plasma-package-input-preflight:plymouth-kcm"
+}
