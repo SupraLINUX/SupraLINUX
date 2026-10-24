@@ -1,0 +1,5 @@
+etc/xdg/autostart/org.kde.discover.notifier.desktop
+usr/lib/*/libexec/DiscoverNotifier
+usr/lib/*/qt6/plugins/discover-notifier/DiscoverPackageKitNotifier.so
+usr/share/applications/org.kde.discover.notifier.desktop
+usr/share/knotifications6/discoverabstractnotifier.notifyrc

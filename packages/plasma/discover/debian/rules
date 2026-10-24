@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DBUILD_TESTING=ON
+
+# flatpaktest talks to public Flathub and installs/removes Flatpak content.
+# Keep the clean package build deterministic and execute the hermetic upstream
+# category/translation test here; backend integration remains a later gate.
+override_dh_auto_test:
+	QT_QPA_PLATFORM=offscreen dh_auto_test -- ARGS="--output-on-failure --verbose -R ^CategoriesTest$$"
