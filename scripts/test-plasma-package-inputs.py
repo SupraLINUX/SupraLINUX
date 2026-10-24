@@ -425,12 +425,12 @@ class InputAdmission(unittest.TestCase):
 
     def test_discover_categories_test_stages_upstream_translations(self):
         rules = (ROOT / "packages/plasma/discover/debian/rules").read_text()
-        self.assertIn('builddir="obj-$(dpkg-architecture -qDEB_HOST_GNU_TYPE)"', rules)
-        self.assertIn('DESTDIR="$test_root" cmake --install "$builddir" --prefix /usr', rules)
-        self.assertIn('XDG_DATA_DIRS="$test_root/usr/share:/usr/local/share:/usr/share"', rules)
+        self.assertIn('builddir="obj-$$(dpkg-architecture -qDEB_HOST_GNU_TYPE)"', rules)
+        self.assertIn('DESTDIR="$$test_root" cmake --install "$$builddir" --prefix /usr', rules)
+        self.assertIn('XDG_DATA_DIRS="$$test_root/usr/share:/usr/local/share:/usr/share"', rules)
         self.assertIn('QT_QPA_PLATFORM=offscreen', rules)
-        self.assertIn('-R ^CategoriesTest$', rules)
-        self.assertIn("trap 'rm -rf \"$test_root\"' EXIT INT TERM", rules)
+        self.assertIn('-R ^CategoriesTest$$', rules)
+        self.assertIn("trap 'rm -rf \"$$test_root\"' EXIT INT TERM", rules)
         self.assertNotIn('-R ^flatpaktest', rules)
 
     def test_changed_packaging_rejected(self):
