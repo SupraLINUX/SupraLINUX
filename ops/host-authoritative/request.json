@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "mode": "publish-evidence-check",
+  "mode": "publish-evidence",
   "gate": "plasma-package-build",
   "runner_group_id": 3,
   "evidence_node": "plymouth-kcm",
