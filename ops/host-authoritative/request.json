@@ -1,6 +1,12 @@
 {
   "schema": 1,
-  "mode": "execute",
+  "mode": "publish-evidence-check",
   "gate": "plasma-package-build",
-  "runner_group_id": 3
+  "runner_group_id": 3,
+  "evidence_node": "plymouth-kcm",
+  "evidence_package_run_id": 40087662878,
+  "evidence_package_job_id": 120853779635,
+  "evidence_package_artifact_id": 12557933576,
+  "evidence_package_artifact_sha256": "4e8e9308c98c9f4dc28bb0a4b6cd42f41d024c13fdaa00c3de5902e98a89ac5b",
+  "evidence_host_manifest_sha256": "67cd069d54743bae3bbf535febfc594a1cefd247db4385c3f3165db24209298d"
 }
