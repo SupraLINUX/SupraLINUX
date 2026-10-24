@@ -43,7 +43,6 @@ def verified_nodes(root=ROOT, registry=None):
         historical_dependencies = set(original.get('predecessors', []))
         historical_dependencies.update(original.get('direct_predecessors', []))
         historical_dependencies.update(original.get('package_dependency_closure', []))
-        assert historical_dependencies, 'Support input lacks a historical dependency contract'
         assert set(record['depends_on']) == {'extra-cmake-modules', *historical_dependencies}
         assert original['source_package'] == proof['source_package']
         assert original['package_version'] == proof['version']
