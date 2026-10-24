@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "discover-attempt1-packaging-test-environment-repair",
+  "repair_base_commit": "6ed11e57c54acb19a2aaa5d40d7c6c988c72981e",
+  "node": "discover",
+  "old_version": "6.7.5-0supralinux1",
+  "new_version": "6.7.5-0supralinux2",
+  "attempt1": {
+    "state": "FAIL",
+    "workflow_run_id": 40095668250,
+    "workflow_job_id": 120877288408,
+    "artifact_id": 12560898154,
+    "artifact_sha256": "7d729eb3a94fe380ca2f1fdbc84705af12048006658739334dd38b109daa5308",
+    "result_sha256": "cc06a2e93ea8df64092c6db0032213417330e20fccf0f7e541a10baf3e9ff8b3",
+    "offline_retained_artifact": "/var/lib/supralinux/artifacts/raw/discover/40095668250/7d729eb3a94fe380ca2f1fdbc84705af12048006658739334dd38b109daa5308.zip"
+  },
+  "diagnosis": {
+    "test": "CategoriesTest::testTranslations()",
+    "assertion": "languages.size() > 1",
+    "cause": "The unchanged test queries installed libdiscover locale catalogs before normal package installation; upstream ki18n_install(po) materializes those catalogs through the CMake install step."
+  },
+  "adaptation": {
+    "upstream_source_changed": false,
+    "upstream_test_changed": false,
+    "qt_changed": false,
+    "frameworks_changed": false,
+    "packaging_only": true,
+    "old_rules_sha256": "08e68155ffa75f0d55939194a71dc2ae0060f4b859b33a87ad3b617f17c1d1c9",
+    "new_rules_sha256": "0aa8eae9ad6c07a457ececb9630434a9cc9a96988ce1724d3346ec40d6c7fb46",
+    "old_changelog_sha256": "8b645716f54f05cbd5865c825abcb8e4a22c2163d66865bcdbb83aab84bacf45",
+    "new_changelog_sha256": "931f8e313f541e8d9477f807be9c17f72ebfe197b958dc24bee77a29c68edbad",
+    "mechanism": "Run cmake --install for the completed build tree into a disposable DESTDIR, then prepend its usr/share to XDG_DATA_DIRS for unchanged CategoriesTest; remove the temporary tree on exit."
+  },
+  "regression": {
+    "path": "scripts/test-plasma-package-inputs.py",
+    "checks": [
+      "host build directory derived via dpkg-architecture",
+      "temporary DESTDIR install",
+      "staged usr/share in XDG_DATA_DIRS",
+      "offscreen Qt",
+      "CategoriesTest remains selected",
+      "temporary tree cleanup",
+      "flatpaktest remains excluded"
+    ]
+  },
+  "input_certification": {
+    "previous_path": "manifests/evidence/package-revalidation/discover-preflight48/verification.json",
+    "previous_applicable": false,
+    "next_gate": "authoritative-plasma-package-input-preflight:discover",
+    "attempt2_authorized": false
+  },
+  "package_execution_started": false,
+  "consumes_package_attempt": false
+}
