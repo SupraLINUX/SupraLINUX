@@ -2,6 +2,7 @@
 import importlib.util
 import json
 import re
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,6 +23,14 @@ close_spec = importlib.util.spec_from_file_location(
 )
 close_module = importlib.util.module_from_spec(close_spec)
 close_spec.loader.exec_module(close_module)
+
+with tempfile.TemporaryDirectory() as directory:
+    output = Path(directory) / "output"
+    output.mkdir()
+    close_module.ensure_output_dir(output)
+    if not output.is_dir():
+        raise SystemExit("existing evidence output directory was not accepted")
+
 
 
 required_broker = [
@@ -116,6 +125,7 @@ required_helper = [
     '"HTTP 429", "HTTP 502", "HTTP 503", "HTTP 504"',
     "time.sleep(2 ** attempt)",
     '"Closure replay differs from current canonical file: "',
+    "def ensure_output_dir(path: Path)",
     'def publication_commit_message(',
     '"evidence: close {node} input preflight"',
 ]

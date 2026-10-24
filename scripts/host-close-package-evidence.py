@@ -151,6 +151,10 @@ def allowed_change(path: str, node: str) -> bool:
     )
 
 
+def ensure_output_dir(path: Path) -> None:
+    path.mkdir(parents=True, exist_ok=True)
+
+
 def export_update(
     checkout: Path,
     node: str,
@@ -174,7 +178,7 @@ def export_update(
             "Evidence closure is missing expected canonical changes: "
             f"{sorted(required - set(files))!r}"
         )
-    output_dir.mkdir(parents=True)
+    ensure_output_dir(output_dir)
     entries = []
     for relative in files:
         source = checkout / relative
@@ -344,7 +348,7 @@ def main():
             raise SystemExit("Conflicting retained raw package artifact.")
         if not retained.exists():
             shutil.copyfile(artifact_zip, retained)
-        args.output_dir.mkdir(parents=True)
+        ensure_output_dir(args.output_dir)
         receipt = {
             "schema": 1,
             "state": "DIAGNOSIS_REQUIRED",
