@@ -11079,6 +11079,17 @@
               "sha256": "32752efd9e5c27fc56f3c32b7107eae5bea971671261826c5e04ec6634a3c174"
             }
           ]
+        },
+        "kdoctools": {
+          "source_package": "kf6-kdoctools",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "libkf6doctools6",
+              "architecture": "amd64",
+              "sha256": "db37d679c86ac997a8731062e3fa4bc13a87958321569d98bb10014ad37f45fe"
+            }
+          ]
         }
       },
       "attempts": [],

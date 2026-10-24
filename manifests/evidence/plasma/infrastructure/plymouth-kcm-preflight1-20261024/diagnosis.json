@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "state": "DIAGNOSED",
+  "scope": "plymouth-kcm-frameworks-support-binary-closure",
+  "source_commit": "851fd992b8938f7193495763cbb8e9ee05c006c7",
+  "classification": "INFRA_INVALID",
+  "observations": {
+    "failing_probe": "Frameworks retained build input transport probe",
+    "selected_predecessor_count": 157,
+    "unsatisfied_package": "kio6",
+    "unsatisfied_package_version": "6.30.0-0supralinux10",
+    "missing_relation": "libkf6doctools6 (>= 6.30.0~)",
+    "resolver_observation": "dose-distcheck reported kio6 selected by the infrastructure probe with no installable choice for libkf6doctools6.",
+    "candidate_source_prepared": true,
+    "candidate_sbuild_started": false
+  },
+  "dependency_evidence": {
+    "kio": {
+      "source_package": "kf6-kio",
+      "version": "6.30.0-0supralinux10",
+      "artifact_id": 10972557457,
+      "artifact_sha256": "700a7abebfaca99ae76e36cfb8f54798694732f248b0002224025cfc80d94056",
+      "binary": "kio6",
+      "relation": "Depends: libkf6doctools6 (>= 6.30.0~)"
+    },
+    "kdoctools": {
+      "source_package": "kf6-kdoctools",
+      "version": "6.30.0-0supralinux1",
+      "binary": "libkf6doctools6",
+      "architecture": "amd64",
+      "sha256": "db37d679c86ac997a8731062e3fa4bc13a87958321569d98bb10014ad37f45fe",
+      "evidence_path": "manifests/evidence/frameworks-support/kdoctools-retained/verification.json",
+      "evidence_sha256": "fc022280d576b0e3f2bcb14ba24dc708ee8de74154b3144c7c9970fc38029da5",
+      "artifact_id": 10682066198,
+      "artifact_sha256": "6daeb6beed63ba7b7e441dba4dfd356be3ad48a9f3ae75acddae0945c36a683d",
+      "offline_restore_verified": true,
+      "only_custom_frameworks_runtime_dependency": "libkf6archive6 (>= 6.30.0~)"
+    }
+  },
+  "repair": "Extend only the reviewed Plymouth predecessor input set with the exact retained libkf6doctools6 binary. Existing effective Frameworks support-input validation restores and hash-verifies it; its custom Frameworks runtime dependency karchive is already in the reviewed Plymouth closure.",
+  "candidate_source_changed": false,
+  "packaging_changed": false,
+  "execution_mode": "preflight",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "package_attempt_effect": "none",
+  "next_gate": "authoritative-plasma-package-input-preflight:plymouth-kcm"
+}
