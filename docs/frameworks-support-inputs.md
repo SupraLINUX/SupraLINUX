@@ -24,6 +24,16 @@ the matched Breeze library, so new consumers include this separately retained
 input instead of relying on the older Ubuntu provider. The old Frameworks DAG
 and milestone remain unchanged; this admission preserves the hosted scope.
 
+KDED 6.30.0-0supralinux1 is retained through the same support-input mechanism for
+runtime consumers such as KIO. Its original Level 1 PASS (run 35721085911, job
+106724304390) built the exact `kded6`/`kded6-dev` pair, passed its native test,
+Lintian, APT, executable, CMake consumer and payload checks, and retained source,
+binaries, debug package, buildinfo, changes and logs. The complete archive digest
+is `ff8756cf6efb4746568fa032cfb17cdf5c6b47bc31f532130936536aecb7c5c9`.
+The retained-input verifier accepts both Level 0 support dependency records and
+Level 1 direct/runtime-closure records without changing the historical manifests.
+Only explicitly requested binaries are restored into a new consumer preflight.
+
 The materializer verifies the complete original archive before extracting only
 the explicitly reviewed binaries. Cache admission still checks the entire old
 milestone pool, then admits separately restored inputs by source, version,

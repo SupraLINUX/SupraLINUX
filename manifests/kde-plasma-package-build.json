@@ -11090,6 +11090,28 @@
               "sha256": "db37d679c86ac997a8731062e3fa4bc13a87958321569d98bb10014ad37f45fe"
             }
           ]
+        },
+        "breeze-icons": {
+          "source_package": "kf6-breeze-icons",
+          "version": "4:6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "libkf6breezeicons6",
+              "architecture": "amd64",
+              "sha256": "39843417452315f82dda133b09d1b588a5d23d44095ff821e63ee7943075b232"
+            }
+          ]
+        },
+        "kded": {
+          "source_package": "kf6-kded",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "kded6",
+              "architecture": "amd64",
+              "sha256": "bb93a73c8f3056405cad73b56b618e7dac58d446104d3178eba91fd51ec4de1a"
+            }
+          ]
         }
       },
       "attempts": [],

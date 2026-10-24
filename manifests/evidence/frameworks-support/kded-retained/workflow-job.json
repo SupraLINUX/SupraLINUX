@@ -1,0 +1,64 @@
+{
+  "id": 106724304390,
+  "name": "Build kded",
+  "run_id": 35721085911,
+  "head_sha": "0d2a345af7be591b84807ae27b2d3b604f357d1a",
+  "status": "completed",
+  "conclusion": "success",
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Checkout",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Download materialized KDED source",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3
+    },
+    {
+      "name": "Download retained inputs",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Download shared rootfs",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Build and validate KDED",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6
+    },
+    {
+      "name": "Upload package evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7
+    },
+    {
+      "name": "Post Checkout",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 14
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 15
+    }
+  ]
+}

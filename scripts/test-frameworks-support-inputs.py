@@ -118,5 +118,12 @@ class BreezeIconsSupportInputs(SupportInputs):
     development_package = 'libkf6breezeicons-dev'
 
 
+class KdedSupportInputs(SupportInputs):
+    node = 'kded'
+    expected_binary_count = 3
+    expected_version = '6.30.0-0supralinux1'
+    development_package = 'kded6-dev'
+
+
 if __name__ == '__main__':
     unittest.main()

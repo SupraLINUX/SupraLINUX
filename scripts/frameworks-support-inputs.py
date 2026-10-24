@@ -40,7 +40,11 @@ def verified_nodes(root=ROOT, registry=None):
         assert digest(historical) == proof['historical_manifest_sha256'], 'Historical support inputs changed'
         original = json.loads(historical.read_text())['nodes'][node]
         assert original['state'] == 'PASS' and original['downstream_eligible'] is True
-        assert set(record['depends_on']) == {'extra-cmake-modules', *original['predecessors']}
+        historical_dependencies = set(original.get('predecessors', []))
+        historical_dependencies.update(original.get('direct_predecessors', []))
+        historical_dependencies.update(original.get('package_dependency_closure', []))
+        assert historical_dependencies, 'Support input lacks a historical dependency contract'
+        assert set(record['depends_on']) == {'extra-cmake-modules', *historical_dependencies}
         assert original['source_package'] == proof['source_package']
         assert original['package_version'] == proof['version']
         assert original['materialization']['orig_tar_sha256'] == proof['upstream_sha256']
@@ -57,7 +61,9 @@ def verified_nodes(root=ROOT, registry=None):
         assert raw['claim'] == proof['claim'] and raw['authoritative'] is False
         assert raw['node'] == node and raw['package_version'] == proof['version']
         assert raw['downstream_eligible'] is True and raw['package_attempted'] is True
-        for key in ['tests', 'lintian', 'apt_check', 'consumer_smoke', 'payload_contract']:
+        result_contract = record.get('result_contract', ['tests', 'lintian', 'apt_check', 'consumer_smoke', 'payload_contract'])
+        assert result_contract and len(result_contract) == len(set(result_contract))
+        for key in result_contract:
             assert raw[key] == old[key], 'Original support result differs from closed evidence'
         meta = json.loads((path.parent / 'artifact-meta.json').read_text())
         job = json.loads((path.parent / 'workflow-job.json').read_text())
@@ -65,7 +71,9 @@ def verified_nodes(root=ROOT, registry=None):
         assert meta['workflow_run']['id'] == job['run_id'] == proof['workflow_run_id']
         assert meta['workflow_run']['head_sha'] == job['head_sha'] == proof['source_commit']
         assert job['id'] == proof['workflow_job_id'] and job['status'] == 'completed' and job['conclusion'] == 'success'
-        assert any(step['name'] == 'Build and validate support node' and step['conclusion'] == 'success'
+        successful_step = record.get('successful_step', 'Build and validate support node')
+        assert isinstance(successful_step, str) and successful_step
+        assert any(step['name'] == successful_step and step['conclusion'] == 'success'
                    for step in job['steps'])
         url = meta['archive_download_url']
         assert re.fullmatch(r'https://api\.github\.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/[0-9]+/zip', url)
