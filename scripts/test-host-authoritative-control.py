@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import importlib.util
 import json
 import re
 from pathlib import Path
@@ -15,6 +16,13 @@ close_helper = CLOSE_HELPER.read_text()
 workflow = WORKFLOW.read_text()
 router = ROUTER.read_text()
 request = json.loads(REQUEST.read_text())
+
+close_spec = importlib.util.spec_from_file_location(
+    "host_close_package_evidence_test", CLOSE_HELPER
+)
+close_module = importlib.util.module_from_spec(close_spec)
+close_spec.loader.exec_module(close_module)
+
 
 required_broker = [
     'os.environ.get("SUDO_USER") != RUNNER_USER',
@@ -108,10 +116,43 @@ required_helper = [
     '"HTTP 429", "HTTP 502", "HTTP 503", "HTTP 504"',
     "time.sleep(2 ** attempt)",
     '"Closure replay differs from current canonical file: "',
+    'def publication_commit_message(',
+    '"evidence: close {node} input preflight"',
 ]
 for token in required_helper:
     if token not in close_helper:
         raise SystemExit(f"missing authoritative evidence closure contract: {token}")
+
+preflight_campaign = {
+    "execution_mode": "build",
+    "package_input_certifications": [{"path": "proof.json", "sha256": "a" * 64}],
+    "nodes": {"example": {"state": "build-pending", "attempts": []}},
+}
+if close_module.publication_commit_message(
+    preflight_campaign, "example", "preflight"
+) != "evidence: close example input preflight":
+    raise SystemExit("preflight publication commit message regression")
+
+attempt_campaign = {
+    "execution_mode": "complete",
+    "nodes": {"example": {"state": "PASS", "attempts": [{"attempt": 3, "state": "PASS"}]}},
+}
+if close_module.publication_commit_message(
+    attempt_campaign, "example", "package-attempt-pass"
+) != "evidence: close example Attempt 3":
+    raise SystemExit("package publication commit message regression")
+
+invalid_preflight = {
+    "execution_mode": "preflight",
+    "package_input_certifications": [],
+    "nodes": {"example": {"state": "build-pending", "attempts": []}},
+}
+try:
+    close_module.publication_commit_message(invalid_preflight, "example", "preflight")
+except SystemExit:
+    pass
+else:
+    raise SystemExit("invalid preflight publication was accepted")
 
 for content, name in ((broker, "broker"), (close_helper, "closure helper")):
     for forbidden in (

@@ -198,6 +198,28 @@ def export_update(
     return entries
 
 
+
+def publication_commit_message(closed_campaign, node, closure_kind):
+    record = closed_campaign["nodes"][node]
+    if closure_kind == "preflight":
+        if closed_campaign.get("execution_mode") != "build":
+            raise SystemExit("Canonical preflight publish did not authorize package build.")
+        if record.get("state") != "build-pending":
+            raise SystemExit("Canonical preflight publish changed package state unexpectedly.")
+        certifications = closed_campaign.get("package_input_certifications", [])
+        if not certifications or not isinstance(certifications[-1], dict):
+            raise SystemExit("Canonical preflight publish lacks an input certification.")
+        if certifications[-1].get("applicable") is False:
+            raise SystemExit("Canonical preflight publish certification is not applicable.")
+        return f"evidence: close {node} input preflight"
+    if closure_kind == "package-attempt-pass":
+        attempts = record.get("attempts", [])
+        if not attempts or attempts[-1].get("state") != "PASS":
+            raise SystemExit("Canonical publish lacks a final PASS Attempt.")
+        return f"evidence: close {node} Attempt {attempts[-1]['attempt']}"
+    raise SystemExit(f"Unsupported canonical publication closure kind: {closure_kind}")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description=(
@@ -581,14 +603,13 @@ def main():
         closed_campaign = json.loads(
             (publish_checkout / CAMPAIGN).read_text()
         )
-        attempts = closed_campaign["nodes"][args.node]["attempts"]
-        if not attempts or attempts[-1].get("state") != "PASS":
-            raise SystemExit("Canonical publish lacks a final PASS Attempt.")
-        attempt_number = attempts[-1]["attempt"]
+        commit_message = publication_commit_message(
+            closed_campaign, args.node, closure_kind
+        )
         run(
             [
                 "git", "-C", str(publish_checkout), "commit", "-q",
-                "-m", f"evidence: close {args.node} Attempt {attempt_number}",
+                "-m", commit_message,
             ]
         )
         canonical_commit = run(
