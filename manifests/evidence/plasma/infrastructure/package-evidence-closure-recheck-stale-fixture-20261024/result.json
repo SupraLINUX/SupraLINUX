@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "kind": "package-evidence-closure-recheck-stale-historical-fixture",
+  "source_commit": "5f6d84c1c9755c6860d5a2566ca6ae2cfbeb1a84",
+  "control": {
+    "router_run_id": 40086565239,
+    "host_job_id": 120850676914,
+    "artifact_id": 12557546115,
+    "artifact_digest": "sha256:f4f520f4f17dcfce1205e6b6565709062747edd260339181794302e5c4d16034",
+    "mode": "close-evidence-check",
+    "exit_code": 1
+  },
+  "replayed_evidence": {
+    "node": "polkit-kde-agent-1",
+    "workflow_run_id": 39416478708,
+    "workflow_job_id": 118606632416,
+    "artifact_id": 12261299420,
+    "artifact_sha256": "b3403e7a820ae901faeedecc46b9cd8fdc555e104537e010be0a40bdca7d3422",
+    "host_evidence_manifest_sha256": "15ee76f5930a2d82665898a11750206c1145c179902580d76d687ac2034ab242"
+  },
+  "observation": {
+    "failure": "Closure replay differs from current canonical file: docs/status/current.md",
+    "vm_created": false,
+    "jit_invoked": false,
+    "package_execution_started": false,
+    "consumes_package_attempt": false,
+    "package_attempt_effect": "none"
+  },
+  "classification": "The old PolicyKit replay fixture no longer represents the current campaign status after later Plasma progress. The fail-closed byte comparison behaved correctly; this is not a package failure and does not establish a defect in Plymouth or the closure helper.",
+  "repair": "Do not retry the stale replay fixture. Use publish-evidence-check against the current Plymouth preflight PASS; it replays the exact current package evidence, validates the canonical update and performs only a force-with-lease dry run before any publication."
+}
