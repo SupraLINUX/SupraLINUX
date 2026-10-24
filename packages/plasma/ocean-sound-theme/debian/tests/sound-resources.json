@@ -1,0 +1,108 @@
+{
+  "index.theme": "4f85c5ad8a462904a11f676aa9e393f615a38d203d18b91456475c44c19a46d1",
+  "index.theme.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/alarm-clock-elapsed.oga": "9b5a81a2149c2d8b93a6c57249f25eecb6d980ce824eb5cd00155c64fa909be8",
+  "stereo/alarm-clock-elapsed.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/audio-volume-change.oga": "e4694324dbf00d407a0475ff166b284cc2919a5c940bfafea5765d14a0923710",
+  "stereo/audio-volume-change.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/battery-caution.oga": "f3decbb298b2687b2545baa30af7f7eb4cde1b1d7d02aa2fd56e211057b38a84",
+  "stereo/battery-caution.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/battery-full.oga": {
+    "symlink": "outcome-success.oga"
+  },
+  "stereo/battery-low.oga": "09e0575f9a746a039237e6f91ce0dcb064ecc7479de8ed989e644736949c9fa3",
+  "stereo/battery-low.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/bell-window-system.oga": "7df7fad26c262256ecf2d92522e06c1c1fdda51e5c006ab48ea1c4437ea6b88b",
+  "stereo/bell-window-system.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/bell.oga": {
+    "symlink": "bell-window-system.oga"
+  },
+  "stereo/button-pressed-modifier.oga": "8309f13aaff8f2e16c038f6d78b3dd25984ddd04d2e1d66ea64a8201c8bf888b",
+  "stereo/button-pressed-modifier.oga.license": "cfae28972817cb1e792d56ab73d360b0873c3e4a34c14376393ae2cdbea1ad1e",
+  "stereo/button-pressed.oga": "fe17a740df9115cf956a3fab9cd1e4cdcadaed557168e7ab46500869b82ada42",
+  "stereo/button-pressed.oga.license": "cfae28972817cb1e792d56ab73d360b0873c3e4a34c14376393ae2cdbea1ad1e",
+  "stereo/complete-media-burn.oga": {
+    "symlink": "outcome-success.oga"
+  },
+  "stereo/complete-media-error.oga": {
+    "symlink": "completion-partial.oga"
+  },
+  "stereo/completion-fail.oga": "d096f522bdbfc9f2bb132b042b43f2fadc4e2747165f0ccdefae272ab1ef60e3",
+  "stereo/completion-fail.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/completion-partial.oga": "f9a80fa89a2aa2e1baada56b91ab86fe10e1f308f9c43c9426a7a8ff38766252",
+  "stereo/completion-partial.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/completion-rotation.oga": "b5cce78092f622e3d730f863f5d6ca200988ce5120b7cb639d7465758fb59cf1",
+  "stereo/completion-rotation.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/completion-success.oga": "0e283f3de90a2cc52a4239430bd5cdd82c6e7df4d69af00abae6d07c6e4f0933",
+  "stereo/completion-success.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/desktop-login.oga": "20424746e7c3edf634566ed9d971a4d7c3f1698c7c4ec5b4f6c0e1bbc8aad089",
+  "stereo/desktop-login.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/desktop-logout.oga": "8028e83f40400870569cdb838a408d0b5a8978fe38f7580c7cc3f51376c47317",
+  "stereo/desktop-logout.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/device-added.oga": "c72acf3bfcbe6f46bd2a91376ee561ef8ed2dfa41b9fecbdf51b78b58a868b40",
+  "stereo/device-added.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/device-removed.oga": "ab6e7cd7bdb622e670ae9f2a44be1e50f3894e4973783e6bb3f0c6256f872653",
+  "stereo/device-removed.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/dialog-error-critical.oga": {
+    "symlink": "dialog-error-serious.oga"
+  },
+  "stereo/dialog-error-serious.oga": "0efa94ae032b708fba529eb53db774668070930664af420bff9047e6eaacec1c",
+  "stereo/dialog-error-serious.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/dialog-error.oga": "3fdb7df92a46b75d90c2df426d77f419d5e0afa71709b95964ef541553073f64",
+  "stereo/dialog-error.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/dialog-information.oga": "113094308abc743f8e525d346c9c33c61ffe91c7f494d4a1a522b5d05168038f",
+  "stereo/dialog-information.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/dialog-question.oga": "3e3a6c188d9d3a845e180447eae7c33fed5befd076e746b235a6a071315f7c98",
+  "stereo/dialog-question.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/dialog-warning-auth.oga": "22e273cae7cb3a22e46e8c2ff6398b69ec45e9816c15642ec8d7c3bb07183387",
+  "stereo/dialog-warning-auth.oga.license": "030af704fbec4b43d5576cef8e9b522c146883e42634ee739726322c1cc9ca03",
+  "stereo/dialog-warning.oga": "4281d248295e9afb13e606f41a1ba9eddfc85a35359edc094ac4d06568424340",
+  "stereo/dialog-warning.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/game-over-loser.oga": {
+    "symlink": "outcome-failure.oga"
+  },
+  "stereo/game-over-winner.oga": {
+    "symlink": "service-login.oga"
+  },
+  "stereo/media-insert-request.oga": {
+    "symlink": "completion-rotation.oga"
+  },
+  "stereo/message-attention.oga": {
+    "symlink": "outcome-success.oga"
+  },
+  "stereo/message-contact-in.oga": {
+    "symlink": "completion-success.oga"
+  },
+  "stereo/message-contact-out.oga": {
+    "symlink": "completion-fail.oga"
+  },
+  "stereo/message-highlight.oga": {
+    "symlink": "completion-partial.oga"
+  },
+  "stereo/message-new-email.oga": "97f5477244c3912a1ee9cb9200ec8daa9701aa01d6a658e118d7a80c49e593c6",
+  "stereo/message-new-email.oga.license": "42cde857923a45fb4e10bd2906f7b0e7810fe98d669ad48c03e299709738680f",
+  "stereo/message-new-instant.oga": "36258b0046399c721eefa535c13a78d08b54ff1cec98a10db87d89d098760dd0",
+  "stereo/message-new-instant.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/message-sent-instant.oga": {
+    "symlink": "service-login.oga"
+  },
+  "stereo/outcome-failure.oga": "96aedb8912cbf522ba0e50a176fa6b96e3b5b3bac7c8add1c4e3ec5d290725ee",
+  "stereo/outcome-failure.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/outcome-success.oga": "16a4b5c49d9d01bcf2e46ad6c789f6849802447103776d8b1fe58cf1348ca024",
+  "stereo/outcome-success.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/phone-incoming-call.oga": "385de687d4cba93dd2d64cf41c81ffb0f8608e97bb09b9e274ed95f5e7aea7e9",
+  "stereo/phone-incoming-call.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/power-plug.oga": "4a75ec07365aee8dded5a65125b8540d5913ff659083e7f02360ba78b6680b20",
+  "stereo/power-plug.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/power-unplug.oga": "bede228bf57b3d2e6e7e8410270b9b8434d8c69f403779d3f72f4aa7feaba692",
+  "stereo/power-unplug.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/service-login.oga": "d434cf3ad9c565605c2aa4b72b4cb51d4b6662a34526ec88f6b1551d08cd1e6a",
+  "stereo/service-login.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/service-logout.oga": "9a26cc3e24499ce30f0f046f1c3acd88e777dbff73c7e3216c5b1bfdd4078133",
+  "stereo/service-logout.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8",
+  "stereo/theme-demo.oga": {
+    "symlink": "desktop-login.oga"
+  },
+  "stereo/trash-empty.oga": "4d11501afbbda1a9ba383d13d8d4e9025d1d1cca7d1f426e8f658750160e2ab3",
+  "stereo/trash-empty.oga.license": "16b78217eb4e8c8b5fffbec522d0053a20e82c9125fc28c45bf51de99e0dcca8"
+}

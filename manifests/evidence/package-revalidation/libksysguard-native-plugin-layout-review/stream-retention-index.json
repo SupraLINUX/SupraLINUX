@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Native input hash JSON stdout retention follow-up using unchanged original functional runtime projection; byte restore only, no candidate certification",
+  "archive_path": ".artifacts/plasma-frontier/libksysguard-native-staging-stream-20261009/inputs.zip",
+  "archive_sha256": "de03d0492ef580c99b5118bb2ec8b792dc0bb2eabb811417c15003d90e94c160",
+  "files": {
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/original-runtime-positive/actual-interface.txt": {
+      "sha256": "c925569475582ac73bf2d62374b2fd438a5e13f3ee3dca6ead52e1631db52d48",
+      "size": 1772
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/original-runtime-positive/bus-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/original-runtime-positive/client-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/original-runtime-positive/client-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/original-runtime-positive/native-inputs.json": {
+      "sha256": "d600343989dd58ae283efc2c3dae35414cd31865e987f9a85163992482374855",
+      "size": 1253
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/original-runtime-positive/provider-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/original-runtime-positive/provider-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/original-runtime-positive/sensor-face.png": {
+      "sha256": "2d449314bc1b826eb66a754965585e781ec344969d3d4c051c8a461c576eb0c4",
+      "size": 5321
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/prior-run-private.py": {
+      "sha256": "ef74fee88af49e2a0b6c144d7d62d7707faade0265785f1c6288f8966c222538",
+      "size": 8209
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/review.json": {
+      "sha256": "9ca0752e5098919711fe6ecf310c2e6e852c75abccad17bffb36d23b8744495f",
+      "size": 2125
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/run-private.py": {
+      "sha256": "c22f3c011f16da7b05982bb88019cd8ef458fb0119f3600776f0762fbc76469e",
+      "size": 8188
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/stderr": {
+      "sha256": "c61a1ddd8e716dcda2d5aaa17753b8d7b102776ecd39804de3bbead279ab3a97",
+      "size": 132
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-stream-review/stdout": {
+      "sha256": "8bdc111e709a77deafe73eb945420936e79086da35a9d7b509f3c8f256aed3a4",
+      "size": 1332
+    }
+  },
+  "empty_offline_byte_restore_verified": true,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

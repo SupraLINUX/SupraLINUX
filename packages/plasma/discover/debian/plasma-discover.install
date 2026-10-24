@@ -1,0 +1,9 @@
+usr/bin/plasma-discover
+usr/lib/*/plasma-discover/
+usr/lib/*/qt6/plugins/discover/kns-backend.so
+usr/lib/*/qt6/plugins/discover/packagekit-backend.so
+usr/share/applications/org.kde.discover.apt.urlhandler.desktop
+usr/share/applications/org.kde.discover.desktop
+usr/share/applications/org.kde.discover.urlhandler.desktop
+usr/share/metainfo/org.kde.discover.appdata.xml
+usr/share/metainfo/org.kde.discover.packagekit.appdata.xml

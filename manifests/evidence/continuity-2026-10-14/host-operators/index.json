@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "scope": "Exact generic certified operators for CLI revision2 Attempt3 after preflight43; no experimental cache or host change",
+  "source_commit": "6bfe9d442a6e78cd2d6ee49b81566041b94d438c",
+  "files_sha256": {
+    "run-watched-kvm-gate.py": "59f17027400e735d033f49ac77e85d22dfcba7aa64646cb6f70d751a53649ecb",
+    "observe-owned-physical-gateway.py": "96b2c750787cdadf92d5fc8a4caa67bfb9158c03eef99ae121ccb86aa438cc59",
+    "read-owned-kvm-progress.py": "18792dd56c655df5a8bff3a5457f0b0f6765488ee9afa3e88825649c0571d585",
+    "verify-owned-kvm-cleanup.py": "e56d4bdbc8c51e1c27ba93876278a8952919a03f528f7309a6cbf991c30eeec5",
+    "download-github-artifact.py": "80d9e26c85a8e5964081a94c171128c1b201320f07f53d90380686425ff8c59b",
+    "retain-local-review-inputs.py": "3203ad78d10b3de0d5f909cd3cd44ae9e6b125dbf3952a77e37915d860c426a3",
+    "enrich-new-input-proof.py": "dcc6f9e7676488711f595a0a38770cac9ad7498a35e02dbfaa7b7dde15d00b77"
+  },
+  "host_installs": false,
+  "host_network_changes": false,
+  "experimental_download_cache_admitted": false,
+  "reuses_byte_identical_operators_from": ".work/kde-cli-tools-preflight43-operator-sources/index.json",
+  "progress_observer_change": "Read-only parsing only; never infer package PASS from observed counters"
+}

@@ -1,0 +1,35 @@
+kf6-kcoreaddons (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Record KAboutData setUrl()/url() ABI additions with upstream 6.29.0 minimum.
+  * Apply the two-symbol overlay before normal dh_makeshlibs processing.
+  * Keep KDE 6.30.0 source, bindings and tests unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 13:30:00 -0300
+
+kf6-kcoreaddons (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Add explicit python3-setuptools build dependency so ECM's
+    python3 -m build --wheel --no-isolation can import setuptools.build_meta.
+  * Keep the validated Clang/LLVM binding toolchain and KDE 6.30.0 source,
+    Python bindings and upstream test defaults unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 11:10:16 -0300
+
+kf6-kcoreaddons (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Add explicit clang, libclang-dev and llvm-dev build dependencies so
+    Shiboken/ApiExtractor can locate Clang's built-in headers in clean sbuild.
+  * Keep KDE 6.30.0 source, Python bindings and upstream test defaults unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 10:35:00 -0300
+
+kf6-kcoreaddons (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * SupraLINUX KDE Frameworks 6.30.0 Batch 7 clean package preflight.
+  * Preserve upstream Python bindings and test defaults; do not inherit
+    downstream BUILD_PYTHON_BINDINGS=OFF or BUILD_TESTING=OFF shortcuts.
+  * Install Python extension modules using Debian's deb_system sysconfig layout.
+  * Retain Debian 6.28 public symbols/copyright only as technical compatibility
+    baselines; KDE upstream 6.30.0 remains source and feature authority.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Wed, 16 Sep 2026 09:45:00 -0300

@@ -1,0 +1,22 @@
+# SupraLINUX kholidays packaging
+
+KDE Frameworks 6.30.0 is the source/build authority. Ubuntu Resolute and Debian sid
+packaging trees are compatibility references only.
+
+The full symbols file is intentionally not duplicated in Git. The Batch 2 hosted
+runner verifies and injects the exact Debian 6.28 baseline from workflow run
+34708030450 / artifact 10301938362 before dpkg-source -b. Debian is selected for
+the symbols baseline because it is closer to KDE 6.30; Ubuntu remains the direct
+binary-compatibility target.
+
+A real KDE 6.30 build exposed 36 new public KHolidays symbols from the upstream
+Hebrew-calendar support added in KDE 6.30. Revision -0supralinux3 applies a
+hash-pinned deterministic transform immediately before dh_makeshlibs. It accepts
+only baseline SHA-256 b0be25ddbc4c7abeb121bb0d3c3ca053d33e2a9fa88695bea210c50d56c256cd
+and emits SHA-256 fac03d2f96ccec7b6cbcfd30d59cee86496d3a0f6b5ad02d3392496b61e7c135.
+All 36 reviewed additions use upstream minimum 6.30.0; no symbol check is disabled.
+
+QDoc targets generated through ECMGenerateQDoc are not part of the default build.
+The established documentation binary package name is retained as a compatibility
+stub until SupraLINUX defines a common Frameworks QDoc policy. Upstream autotests
+remain enabled.

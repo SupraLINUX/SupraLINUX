@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "${1:-}" == "--self-test" ]]; then
+    test -f /usr/share/supralinux/build-proof.txt
+    grep -Fxq 'SupraLINUX package build proof' /usr/share/supralinux/build-proof.txt
+    printf '%s\n' 'SUPRALINUX_BUILD_PROOF_OK'
+    exit 0
+fi
+
+printf '%s\n' 'SupraLINUX package build proof'

@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Original infrastructure/configuration diagnosis and locally verified repair proposal; no candidate or fresh KVM certification",
+  "original_result": "INFRA_INVALID",
+  "original_stage": "predecessor-transport-probe",
+  "source_commit": "94cbf04f18e3a89cf1a0d3a25e4ae574b2c2db2e",
+  "workflow_run_id": 38082884077,
+  "workflow_job_id": 114303261695,
+  "package_attempt_consumed": false,
+  "build_contract_omitted_rootfs_policy": true,
+  "selected_original_path": "fresh-buildd; Ubuntu buildd mmdebstrap completed, then HTTPS APT updates failed certificate validation for all three suites",
+  "original_rootfs_sha256": "dad78e0cf2194cef5f38f00f36b98879af9e40f64620ed07905bea95244d3184",
+  "original_fresh_rootfs_inventory": "Not retained; do not claim a direct CA-package inventory. The missing policy/path and certificate rejection are preserved in original contract/rootfs/sbuild logs.",
+  "repair": "Select exact previously certified immutable bare Frameworks milestone and existing recorded authoritative runner CA bootstrap with all-index APT failure detection; retain TLS verification and Ubuntu archive signatures",
+  "policy": {
+    "kind": "immutable-bare-milestone",
+    "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+    "suites": [
+      "resolute",
+      "resolute-updates",
+      "resolute-security"
+    ]
+  },
+  "local_derivation": {
+    "state": "PASS",
+    "scope": "Local derivation from exact retained bare milestone and original authoritative Ubuntu CA bytes; fresh KVM transport certification remains mandatory",
+    "base_sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+    "derived_sha256": "099afb4d940579baa8bb5c761033f741e90f684d7863215524768ef277b26194",
+    "installed_base_packages": 123,
+    "frameworks_and_qt_sdk_preinstalled": false,
+    "tls_bootstrap_sha256": "7975117e54f05f0ed1e1e767efd1f6827d662d720282ad4a360eecc636958de8",
+    "certificate_verification_disabled": false
+  },
+  "regressions": "23 tests PASS; original omitted policy rejected before source materialization or admission; accepted reviewed policy; rejects kind/digest/suite/checkpoint drift; historical optional policy scope preserved",
+  "unchanged": "source, signature, packaging, candidate4:6.7.5-0supralinux1,34 exact Frameworks nodes/152 binaries, both original native tests",
+  "current_execution_mode": "preflight",
+  "next_gate": "Fresh authoritative KDE CLI Tools input preflight after exact atomic publication and hosted Repository Policy PASS",
+  "host_changes": {
+    "installations": false,
+    "network_configuration": false,
+    "firewall": false
+  }
+}

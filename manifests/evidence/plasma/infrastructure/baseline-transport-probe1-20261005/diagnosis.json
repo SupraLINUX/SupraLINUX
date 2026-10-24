@@ -1,0 +1,15 @@
+{
+  "state": "INFRA_INVALID",
+  "scope": "transport-probe-harness",
+  "consumes_package_attempt": false,
+  "package_execution_started": false,
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-runner-contract-20261005t094323z-2686172",
+  "host_evidence_seal_sha256": "ed22fe9dc5a2c23517591cceb0dba4efe19355c9dab951c4ef2f9d77abef6fa3",
+  "local_archive_path": ".artifacts/infrastructure/baseline-transport-probe1.zip",
+  "local_archive_sha256": "ebbe7e84c384b2715187944517a32c1fbc5b344e0e16ee1795ad1e3eedcbe0c1",
+  "workflow_run_id": 37292037424,
+  "workflow_job_id": 111704449131,
+  "source_commit": "db8b00505c5cab77c52f463d5cfc16ff129b0bd7",
+  "cause": "Large setup decoded and its SHA-256 matched, but the probe supplied Debian/control without a changelog. autopkgtest classified it as an unbuilt package source and failed extraction before running the test.",
+  "repair": "Use the supported tests-only built-tree fixture; validate classification with the actual Ubuntu autopkgtest parser before another small KVM certification."
+}

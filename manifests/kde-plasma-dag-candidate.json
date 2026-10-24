@@ -1,0 +1,599 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-02",
+  "plasma_version": "6.7.5",
+  "authority": "kde-upstream-source-metadata",
+  "state": "candidate-review-required",
+  "candidate_only": true,
+  "source_discovery": {
+    "workflow_run_id": 36951077374,
+    "workflow_job_id": 110664287780,
+    "workflow_head_sha": "488d96f4d23d3b08be5f317f2cd65dc9889a3a8c",
+    "artifact_id": 11204675088,
+    "artifact_name": "kde-plasma-dependency-discovery-488d96f4d23d3b08be5f317f2cd65dc9889a3a8c",
+    "artifact_digest": "sha256:9b6192b1145474cca5bd255d4cb517be2ea8ea4fcd87679f05dfa5aa039a39fd",
+    "dependencies_json_sha256": "a6b2d066ced63231dd3de6adb6248dbbd7eba01cf0d776d49c6d2b091c0f82ef",
+    "result_json_sha256": "71aea7c5ba1481cd41915fd7d645aed6cb4ac8f2da8cce0e13e7440a8df03493",
+    "parser_revision": 4,
+    "source_count": 75,
+    "source_sha256_verified": 75,
+    "kf6_component_references": 535,
+    "internal_candidate_edge_count": 109,
+    "ambiguous_provider_references": 0
+  },
+  "topology": {
+    "acyclic": true,
+    "level_count": 6,
+    "level_sizes": [
+      34,
+      11,
+      20,
+      1,
+      2,
+      7
+    ],
+    "levels": [
+      {
+        "level": 0,
+        "nodes": [
+          "breeze-grub",
+          "breeze-plymouth",
+          "discover",
+          "drkonqi",
+          "flatpak-kcm",
+          "kactivitymanagerd",
+          "kde-cli-tools",
+          "kdecoration",
+          "kgamma",
+          "kglobalacceld",
+          "kmenuedit",
+          "knighttime",
+          "kpipewire",
+          "ksshaskpass",
+          "kwallet-pam",
+          "kwayland",
+          "kwayland-integration",
+          "kwrited",
+          "layer-shell-qt",
+          "libkscreen",
+          "libksysguard",
+          "ocean-sound-theme",
+          "oxygen-sounds",
+          "plasma-activities",
+          "plasma-dialer",
+          "plasma-disks",
+          "plasma-firewall",
+          "plasma-thunderbolt",
+          "plasma-workspace-wallpapers",
+          "plymouth-kcm",
+          "polkit-kde-agent-1",
+          "qqc2-breeze-style",
+          "sddm-kcm",
+          "spacebar"
+        ]
+      },
+      {
+        "level": 1,
+        "nodes": [
+          "aurorae",
+          "breeze",
+          "kde-gtk-config",
+          "krdp",
+          "ksystemstats",
+          "libplasma",
+          "plasma-activities-stats",
+          "plasma5support",
+          "spectacle",
+          "systemsettings",
+          "xdg-desktop-portal-kde"
+        ]
+      },
+      {
+        "level": 2,
+        "nodes": [
+          "bluedevil",
+          "breeze-gtk",
+          "kdeplasma-addons",
+          "kinfocenter",
+          "kscreen",
+          "kscreenlocker",
+          "milou",
+          "oxygen",
+          "plasma-integration",
+          "plasma-keyboard",
+          "plasma-nano",
+          "plasma-nm",
+          "plasma-pa",
+          "plasma-sdk",
+          "plasma-systemmonitor",
+          "plasma-vault",
+          "plasma-welcome",
+          "print-manager",
+          "union",
+          "wacomtablet"
+        ]
+      },
+      {
+        "level": 3,
+        "nodes": [
+          "kwin"
+        ]
+      },
+      {
+        "level": 4,
+        "nodes": [
+          "kwin-x11",
+          "plasma-workspace"
+        ]
+      },
+      {
+        "level": 5,
+        "nodes": [
+          "plasma-bigscreen",
+          "plasma-browser-integration",
+          "plasma-desktop",
+          "plasma-login-manager",
+          "plasma-mobile",
+          "plasma-setup",
+          "powerdevil"
+        ]
+      }
+    ]
+  },
+  "nodes": {
+    "aurorae": {
+      "level": 1,
+      "depends_on": [
+        "kdecoration"
+      ]
+    },
+    "bluedevil": {
+      "level": 2,
+      "depends_on": [
+        "libplasma"
+      ]
+    },
+    "breeze": {
+      "level": 1,
+      "depends_on": [
+        "kdecoration"
+      ]
+    },
+    "breeze-grub": {
+      "level": 0,
+      "depends_on": []
+    },
+    "breeze-gtk": {
+      "level": 2,
+      "depends_on": [
+        "breeze"
+      ]
+    },
+    "breeze-plymouth": {
+      "level": 0,
+      "depends_on": []
+    },
+    "discover": {
+      "level": 0,
+      "depends_on": []
+    },
+    "drkonqi": {
+      "level": 0,
+      "depends_on": []
+    },
+    "flatpak-kcm": {
+      "level": 0,
+      "depends_on": []
+    },
+    "kactivitymanagerd": {
+      "level": 0,
+      "depends_on": []
+    },
+    "kde-cli-tools": {
+      "level": 0,
+      "depends_on": []
+    },
+    "kde-gtk-config": {
+      "level": 1,
+      "depends_on": [
+        "kdecoration"
+      ]
+    },
+    "kdecoration": {
+      "level": 0,
+      "depends_on": []
+    },
+    "kdeplasma-addons": {
+      "level": 2,
+      "depends_on": [
+        "libplasma"
+      ]
+    },
+    "kgamma": {
+      "level": 0,
+      "depends_on": []
+    },
+    "kglobalacceld": {
+      "level": 0,
+      "depends_on": []
+    },
+    "kinfocenter": {
+      "level": 2,
+      "depends_on": [
+        "systemsettings"
+      ]
+    },
+    "kmenuedit": {
+      "level": 0,
+      "depends_on": []
+    },
+    "knighttime": {
+      "level": 0,
+      "depends_on": []
+    },
+    "kpipewire": {
+      "level": 0,
+      "depends_on": []
+    },
+    "krdp": {
+      "level": 1,
+      "depends_on": [
+        "kpipewire"
+      ]
+    },
+    "kscreen": {
+      "level": 2,
+      "depends_on": [
+        "layer-shell-qt",
+        "libkscreen",
+        "libplasma"
+      ]
+    },
+    "kscreenlocker": {
+      "level": 2,
+      "depends_on": [
+        "layer-shell-qt",
+        "libkscreen",
+        "libplasma"
+      ]
+    },
+    "ksshaskpass": {
+      "level": 0,
+      "depends_on": []
+    },
+    "ksystemstats": {
+      "level": 1,
+      "depends_on": [
+        "libksysguard"
+      ]
+    },
+    "kwallet-pam": {
+      "level": 0,
+      "depends_on": []
+    },
+    "kwayland": {
+      "level": 0,
+      "depends_on": []
+    },
+    "kwayland-integration": {
+      "level": 0,
+      "depends_on": []
+    },
+    "kwin": {
+      "level": 3,
+      "depends_on": [
+        "aurorae",
+        "breeze",
+        "kdecoration",
+        "kglobalacceld",
+        "knighttime",
+        "kpipewire",
+        "kscreenlocker",
+        "kwayland",
+        "libplasma",
+        "plasma-activities"
+      ]
+    },
+    "kwin-x11": {
+      "level": 4,
+      "depends_on": [
+        "aurorae",
+        "breeze",
+        "kdecoration",
+        "kglobalacceld",
+        "knighttime",
+        "kscreenlocker",
+        "kwayland",
+        "kwin",
+        "libplasma",
+        "plasma-activities"
+      ]
+    },
+    "kwrited": {
+      "level": 0,
+      "depends_on": []
+    },
+    "layer-shell-qt": {
+      "level": 0,
+      "depends_on": []
+    },
+    "libkscreen": {
+      "level": 0,
+      "depends_on": []
+    },
+    "libksysguard": {
+      "level": 0,
+      "depends_on": []
+    },
+    "libplasma": {
+      "level": 1,
+      "depends_on": [
+        "plasma-activities"
+      ]
+    },
+    "milou": {
+      "level": 2,
+      "depends_on": [
+        "libplasma"
+      ]
+    },
+    "ocean-sound-theme": {
+      "level": 0,
+      "depends_on": []
+    },
+    "oxygen": {
+      "level": 2,
+      "depends_on": [
+        "kdecoration",
+        "libplasma"
+      ]
+    },
+    "oxygen-sounds": {
+      "level": 0,
+      "depends_on": []
+    },
+    "plasma-activities": {
+      "level": 0,
+      "depends_on": []
+    },
+    "plasma-activities-stats": {
+      "level": 1,
+      "depends_on": [
+        "plasma-activities"
+      ]
+    },
+    "plasma-bigscreen": {
+      "level": 5,
+      "depends_on": [
+        "libkscreen",
+        "libplasma",
+        "plasma-activities",
+        "plasma-activities-stats",
+        "plasma-workspace"
+      ]
+    },
+    "plasma-browser-integration": {
+      "level": 5,
+      "depends_on": [
+        "plasma-activities",
+        "plasma-workspace"
+      ]
+    },
+    "plasma-desktop": {
+      "level": 5,
+      "depends_on": [
+        "kscreenlocker",
+        "kwin",
+        "libksysguard",
+        "libplasma",
+        "plasma-activities",
+        "plasma-activities-stats",
+        "plasma-workspace",
+        "plasma5support"
+      ]
+    },
+    "plasma-dialer": {
+      "level": 0,
+      "depends_on": []
+    },
+    "plasma-disks": {
+      "level": 0,
+      "depends_on": []
+    },
+    "plasma-firewall": {
+      "level": 0,
+      "depends_on": []
+    },
+    "plasma-integration": {
+      "level": 2,
+      "depends_on": [
+        "xdg-desktop-portal-kde"
+      ]
+    },
+    "plasma-keyboard": {
+      "level": 2,
+      "depends_on": [
+        "libplasma"
+      ]
+    },
+    "plasma-login-manager": {
+      "level": 5,
+      "depends_on": [
+        "layer-shell-qt",
+        "libkscreen",
+        "libplasma",
+        "plasma-workspace"
+      ]
+    },
+    "plasma-mobile": {
+      "level": 5,
+      "depends_on": [
+        "kpipewire",
+        "kwayland",
+        "kwin",
+        "layer-shell-qt",
+        "libkscreen",
+        "libplasma",
+        "plasma-activities",
+        "plasma-workspace"
+      ]
+    },
+    "plasma-nano": {
+      "level": 2,
+      "depends_on": [
+        "kwayland",
+        "libplasma"
+      ]
+    },
+    "plasma-nm": {
+      "level": 2,
+      "depends_on": [
+        "libplasma"
+      ]
+    },
+    "plasma-pa": {
+      "level": 2,
+      "depends_on": [
+        "libplasma"
+      ]
+    },
+    "plasma-sdk": {
+      "level": 2,
+      "depends_on": [
+        "libplasma",
+        "plasma5support"
+      ]
+    },
+    "plasma-setup": {
+      "level": 5,
+      "depends_on": [
+        "libkscreen",
+        "plasma-workspace"
+      ]
+    },
+    "plasma-systemmonitor": {
+      "level": 2,
+      "depends_on": [
+        "ksystemstats",
+        "libksysguard"
+      ]
+    },
+    "plasma-thunderbolt": {
+      "level": 0,
+      "depends_on": []
+    },
+    "plasma-vault": {
+      "level": 2,
+      "depends_on": [
+        "libksysguard",
+        "libplasma",
+        "plasma-activities"
+      ]
+    },
+    "plasma-welcome": {
+      "level": 2,
+      "depends_on": [
+        "libplasma"
+      ]
+    },
+    "plasma-workspace": {
+      "level": 4,
+      "depends_on": [
+        "breeze",
+        "knighttime",
+        "kscreenlocker",
+        "kwayland",
+        "kwin",
+        "layer-shell-qt",
+        "libkscreen",
+        "libksysguard",
+        "libplasma",
+        "plasma-activities",
+        "plasma-activities-stats"
+      ]
+    },
+    "plasma-workspace-wallpapers": {
+      "level": 0,
+      "depends_on": []
+    },
+    "plasma5support": {
+      "level": 1,
+      "depends_on": [
+        "libksysguard",
+        "plasma-activities"
+      ]
+    },
+    "plymouth-kcm": {
+      "level": 0,
+      "depends_on": []
+    },
+    "polkit-kde-agent-1": {
+      "level": 0,
+      "depends_on": []
+    },
+    "powerdevil": {
+      "level": 5,
+      "depends_on": [
+        "libkscreen",
+        "libplasma",
+        "plasma-activities",
+        "plasma-workspace"
+      ]
+    },
+    "print-manager": {
+      "level": 2,
+      "depends_on": [
+        "libplasma"
+      ]
+    },
+    "qqc2-breeze-style": {
+      "level": 0,
+      "depends_on": []
+    },
+    "sddm-kcm": {
+      "level": 0,
+      "depends_on": []
+    },
+    "spacebar": {
+      "level": 0,
+      "depends_on": []
+    },
+    "spectacle": {
+      "level": 1,
+      "depends_on": [
+        "kpipewire",
+        "layer-shell-qt"
+      ]
+    },
+    "systemsettings": {
+      "level": 1,
+      "depends_on": [
+        "plasma-activities"
+      ]
+    },
+    "union": {
+      "level": 2,
+      "depends_on": [
+        "breeze",
+        "libplasma"
+      ]
+    },
+    "wacomtablet": {
+      "level": 2,
+      "depends_on": [
+        "libplasma",
+        "plasma5support"
+      ]
+    },
+    "xdg-desktop-portal-kde": {
+      "level": 1,
+      "depends_on": [
+        "kwayland"
+      ]
+    }
+  },
+  "package_execution_authorized": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "next_gate": "plasma-provider-audit-definition"
+}

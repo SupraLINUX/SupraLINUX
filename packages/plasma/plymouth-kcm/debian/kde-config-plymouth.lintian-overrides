@@ -1,0 +1,3 @@
+kde-config-plymouth: no-manual-page [usr/bin/kplymouththemeinstaller]
+# systemsettings5 executable required for the KCM is provided by the systemsettings dependency
+kde-config-plymouth: desktop-command-not-in-package systemsettings [usr/share/applications/kcm_plymouth.desktop]

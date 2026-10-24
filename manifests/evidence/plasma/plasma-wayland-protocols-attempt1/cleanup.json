@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "scope": "post-gate resource cleanup observation",
+  "observed_at": "2026-10-07T12:00:14.269548+00:00",
+  "vm": "supralinux-plasma-package-build-20261007t105647z-1028821",
+  "runner_id": 232,
+  "vm_removed": true,
+  "runner_removed": true,
+  "writable_overlay_removed": true,
+  "overlay_path": "/var/lib/supralinux/ephemeral-runners/supralinux-plasma-package-build-20261007t105647z-1028821",
+  "libvirt_inventory_query_succeeded": true,
+  "retained_golden_and_milestone_images": {
+    "golden_image": "/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2",
+    "execution_backing_image": "/var/lib/supralinux/images/milestones/frameworks-6.30-pass.qcow2"
+  },
+  "host_evidence_manifest_sha256": "d397b16710063a797683b8668bb22645b046255a63794a7c4f4a205e497b23a5",
+  "original_workflow_identity_checked": {
+    "id": 37610942395,
+    "head_sha": "b03456b87e728878cca2d10b3a86703f211d328a",
+    "conclusion": "success"
+  }
+}

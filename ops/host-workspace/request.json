@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "task_id": "bootstrap-smoke",
+  "script": "set -Eeuo pipefail\n. /etc/os-release\ntest \"$ID\" = \"ubuntu\"\ntest \"$VERSION_ID\" = \"26.04\"\ntest \"$(systemd-detect-virt --vm)\" = \"kvm\"\ntest \"$(id -u)\" = \"0\"\ntest -c /dev/kvm\nmkdir -p \"$SUPRALINUX_WORKSPACE_ROOT/artifacts\"\n{\n  echo \"state=PASS\"\n  echo \"scope=non-authoritative-disposable-workspace\"\n  echo \"source_commit=$SUPRALINUX_SOURCE_COMMIT\"\n  echo \"task_id=$SUPRALINUX_TASK_ID\"\n  echo \"virtualization=$(systemd-detect-virt --vm)\"\n  echo \"os=$PRETTY_NAME\"\n  echo \"payload_execution_host=no\"\n} > \"$SUPRALINUX_WORKSPACE_ROOT/artifacts/smoke-result.txt\"\necho \"SupraLINUX disposable workspace smoke: PASS\"\n",
+  "target": "authoritative"
+}

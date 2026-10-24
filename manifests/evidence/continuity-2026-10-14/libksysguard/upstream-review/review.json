@@ -1,0 +1,399 @@
+{
+  "schema": 1,
+  "state": "HOLD; NO NEW CORRECTION IN REVIEWED STABLE MODEL/MR SCOPE",
+  "checked_at": "2026-10-11T20:58:46.036864+00:00",
+  "scope": "Stable Plasma/6.7 SensorTreeModel bytes/path commit history and scoped model/reset MR queries; no selected release replacement or candidate certification",
+  "results": [
+    {
+      "name": "stable-model.cpp",
+      "url": "https://invent.kde.org/api/v4/projects/plasma%2Flibksysguard/repository/files/sensors%2FSensorTreeModel.cpp/raw?ref=Plasma%2F6.7",
+      "state": "READ PASS",
+      "sha256": "85bfbdb0e8624af1f901de3d8e726f85201c848047b8fa1df077fd03bfce3d9d",
+      "bytes": 13107,
+      "next_page": null,
+      "matches_frozen_candidate": true
+    },
+    {
+      "name": "stable-model-commits.json",
+      "url": "https://invent.kde.org/api/v4/projects/plasma%2Flibksysguard/repository/commits?ref_name=Plasma%2F6.7&path=sensors%2FSensorTreeModel.cpp&per_page=20",
+      "state": "READ PASS",
+      "sha256": "561b8de7da14817ee9c43df71fc117d5cd9ee4728418f9806c08d3a20332e4de",
+      "bytes": 16508,
+      "next_page": "2",
+      "items": 20,
+      "identities": [
+        {
+          "id": "9461bd61028b16b8de14da94e227ba9b19d62486",
+          "iid": null,
+          "title": "sensors: Use full path matching for sensor group names",
+          "state": null,
+          "created_at": "2025-03-17T15:26:30.000+00:00"
+        },
+        {
+          "id": "64f624da6188eb9800cc5258c16ed1e7d6bb76d8",
+          "iid": null,
+          "title": "sensors: Show [group] entry if we have one or more entries, not two or more",
+          "state": null,
+          "created_at": "2025-03-17T15:26:30.000+00:00"
+        },
+        {
+          "id": "0a7efca4b331eb9619a2a88fe9093cbbbd351b6e",
+          "iid": null,
+          "title": "sensors: Correctly handle the return value of QCollator::compare",
+          "state": null,
+          "created_at": "2023-08-13T15:09:29.000+02:00"
+        },
+        {
+          "id": "35d7f0d113369c43021855980401d78e726f68ca",
+          "iid": null,
+          "title": "Refactor SensorTreeItem::{indexOf,itemAt}",
+          "state": null,
+          "created_at": "2022-06-13T14:49:52.000+00:00"
+        },
+        {
+          "id": "147565260f99627f5c9f3527796a1cba950c204e",
+          "iid": null,
+          "title": "Use std::unique_ptr for storing SensorTreeItem",
+          "state": null,
+          "created_at": "2022-06-13T14:49:52.000+00:00"
+        },
+        {
+          "id": "debcb7ce19068fb5798c343d3bd572eaef4de0a7",
+          "iid": null,
+          "title": "Sensors: Port SensorTreeModel to std::map so we can use a custom compare",
+          "state": null,
+          "created_at": "2022-06-13T14:49:52.000+00:00"
+        },
+        {
+          "id": "28e2ce2e43b7cce852f3723b7b48ad183a750545",
+          "iid": null,
+          "title": "Use std::as_const",
+          "state": null,
+          "created_at": "2022-02-27T15:35:38.000+01:00"
+        },
+        {
+          "id": "a651ea9ac77bf191958e26004da6369a14defb96",
+          "iid": null,
+          "title": "Run clang-format",
+          "state": null,
+          "created_at": "2021-09-05T13:29:27.000+02:00"
+        },
+        {
+          "id": "9e4d70d555e340845265958e0fd040a1fddc2b2e",
+          "iid": null,
+          "title": "Convert license headers to SPDX",
+          "state": null,
+          "created_at": "2021-06-29T05:02:32.000+02:00"
+        },
+        {
+          "id": "27f142700eebead779597bcc8ddb40f0e282ca3e",
+          "iid": null,
+          "title": "Link Sensors lib to SystemStats lib and use the interface from systemstats",
+          "state": null,
+          "created_at": "2021-04-20T11:13:01.000+00:00"
+        },
+        {
+          "id": "419f5a552b48d4300848cf1e0bc4db3eb8bd0826",
+          "iid": null,
+          "title": "Use a single copy of SensorInfo.h for both sensors and systemstats libs",
+          "state": null,
+          "created_at": "2021-04-20T11:13:01.000+00:00"
+        },
+        {
+          "id": "b57efc23a1d5db42a96480905db5d73cfe322106",
+          "iid": null,
+          "title": "put group names in a giant hash",
+          "state": null,
+          "created_at": "2020-07-09T10:47:56.000+00:00"
+        },
+        {
+          "id": "27197f5db922116d057304e29e45c4a4fbd1f33b",
+          "iid": null,
+          "title": "store client side the regular expressions",
+          "state": null,
+          "created_at": "2020-07-09T10:47:56.000+00:00"
+        },
+        {
+          "id": "69ecec2890b4e377d124efc85ebba370b6a7b6e6",
+          "iid": null,
+          "title": "first sensor groups: match those with numbers",
+          "state": null,
+          "created_at": "2020-07-09T10:47:56.000+00:00"
+        },
+        {
+          "id": "6bccf33120ac85b2a74bebdb34f6cc6711d65438",
+          "iid": null,
+          "title": "Fix searching in FacesConfig",
+          "state": null,
+          "created_at": "2020-06-19T16:11:11.000+00:00"
+        },
+        {
+          "id": "056b66af5d7ae853af92b0b343607d551abcdb43",
+          "iid": null,
+          "title": "Compute new index as distance between begin and upper bound",
+          "state": null,
+          "created_at": "2020-05-26T09:33:31.000+00:00"
+        },
+        {
+          "id": "b02f58117043d22e8d7e7859167935436f4cf413",
+          "iid": null,
+          "title": "Remove \"name\" from SensorTreeItem",
+          "state": null,
+          "created_at": "2020-05-26T09:33:31.000+00:00"
+        },
+        {
+          "id": "4b389806b21c5e9486dba32ebac3c9427702d839",
+          "iid": null,
+          "title": "Replace TreeItem QVector children with QMap",
+          "state": null,
+          "created_at": "2020-05-26T09:33:31.000+00:00"
+        },
+        {
+          "id": "53149ebd08c6cd5189969341d1eceed200d17fb1",
+          "iid": null,
+          "title": "[sensors] Avoid breaking IDs of nodes within SensorTreeModel",
+          "state": null,
+          "created_at": "2020-05-22T10:02:19.000+00:00"
+        },
+        {
+          "id": "5cfc09fd44631cbe14a376f2a6e7e0239ab10c17",
+          "iid": null,
+          "title": "Add KSysGuard::Sensors library",
+          "state": null,
+          "created_at": "2020-05-07T11:33:38.000+02:00"
+        }
+      ]
+    },
+    {
+      "name": "sensor-merge-requests.json",
+      "url": "https://invent.kde.org/api/v4/projects/plasma%2Flibksysguard/merge_requests?scope=all&state=all&search=SensorTreeModel&per_page=100",
+      "state": "READ PASS",
+      "sha256": "60d7b9b90f1e4784c40b6f37d896d2de12c88731782ae63d4d53423c5077dd43",
+      "bytes": 5704,
+      "next_page": "",
+      "items": 2,
+      "identities": [
+        {
+          "id": 35027,
+          "iid": 230,
+          "title": "Sensors: Port SensorTreeModel to std::map so we can use a custom compare",
+          "state": "merged",
+          "created_at": "2022-05-06T13:48:55.042Z"
+        },
+        {
+          "id": 3662,
+          "iid": 1,
+          "title": "Sort sensors in sensor browser and sensor display",
+          "state": "merged",
+          "created_at": "2020-05-18T13:16:35.410Z"
+        }
+      ],
+      "previous_review_mr_id_set_unchanged": true
+    },
+    {
+      "name": "reset-merge-requests.json",
+      "url": "https://invent.kde.org/api/v4/projects/plasma%2Flibksysguard/merge_requests?scope=all&state=all&search=reset&per_page=100",
+      "state": "READ PASS",
+      "sha256": "d7ce95d3c1fa4c2a6a9dcf2e0ae2367dfaafc42dc7b1e0f6a1782aa71aa1a480",
+      "bytes": 76969,
+      "next_page": "",
+      "items": 27,
+      "identities": [
+        {
+          "id": 111860,
+          "iid": 443,
+          "title": "Fix crash when saving preset",
+          "state": "merged",
+          "created_at": "2025-09-26T10:30:03.081Z"
+        },
+        {
+          "id": 111859,
+          "iid": 442,
+          "title": "Fix crash when saving preset",
+          "state": "merged",
+          "created_at": "2025-09-26T10:26:16.185Z"
+        },
+        {
+          "id": 111849,
+          "iid": 441,
+          "title": "Fix crash when saving preset",
+          "state": "merged",
+          "created_at": "2025-09-26T08:14:20.561Z"
+        },
+        {
+          "id": 94252,
+          "iid": 389,
+          "title": "\ud83c\udf52faces/Choices: fix resetting tree model on close",
+          "state": "merged",
+          "created_at": "2025-02-05T10:40:17.663Z"
+        },
+        {
+          "id": 94245,
+          "iid": 386,
+          "title": "faces/Choices: fix resetting tree model on close",
+          "state": "merged",
+          "created_at": "2025-02-05T08:22:33.007Z"
+        },
+        {
+          "id": 88773,
+          "iid": 381,
+          "title": ":cherries: faces: Ensure the temporary dir for a preset remains until installed",
+          "state": "merged",
+          "created_at": "2024-11-15T15:52:54.708Z"
+        },
+        {
+          "id": 88135,
+          "iid": 380,
+          "title": "Fix preset saving",
+          "state": "merged",
+          "created_at": "2024-11-07T10:59:22.304Z"
+        },
+        {
+          "id": 83937,
+          "iid": 364,
+          "title": "faces: Port Load Preset dialog in ConfigAppearance to Kirigami.Dialog",
+          "state": "merged",
+          "created_at": "2024-08-27T12:47:08.852Z"
+        },
+        {
+          "id": 65779,
+          "iid": 308,
+          "title": "Random bug fixes",
+          "state": "merged",
+          "created_at": "2023-11-10T15:34:31.561Z"
+        },
+        {
+          "id": 50394,
+          "iid": 258,
+          "title": "PresetsModel: Use KPluginMetaData::fileName instead of KPluginMetaData::metaDataFileName",
+          "state": "merged",
+          "created_at": "2023-02-24T15:13:24.699Z"
+        },
+        {
+          "id": 35183,
+          "iid": 231,
+          "title": "Fix presets to work correctly",
+          "state": "merged",
+          "created_at": "2022-05-09T17:09:39.006Z"
+        },
+        {
+          "id": 30537,
+          "iid": 210,
+          "title": "Check initial value is valid before resetting in SensorProperty::unsubscribe",
+          "state": "merged",
+          "created_at": "2022-01-27T16:47:43.760Z"
+        },
+        {
+          "id": 30518,
+          "iid": 207,
+          "title": "Port SensorFaceController to support JSON plugin metadata",
+          "state": "merged",
+          "created_at": "2022-01-27T13:45:44.865Z"
+        },
+        {
+          "id": 23962,
+          "iid": 188,
+          "title": "Allow selecting a custom background color for pie, bar and horizontal bar charts",
+          "state": "opened",
+          "created_at": "2021-09-09T13:52:58.330Z"
+        },
+        {
+          "id": 21479,
+          "iid": 174,
+          "title": "Allow renaming of sensors",
+          "state": "merged",
+          "created_at": "2021-07-08T10:14:37.227Z"
+        },
+        {
+          "id": 17766,
+          "iid": 146,
+          "title": "Flush process cache after fetching a CGroup's PIDs",
+          "state": "merged",
+          "created_at": "2021-04-14T12:22:07.245Z"
+        },
+        {
+          "id": 16882,
+          "iid": 141,
+          "title": "Fix keyboard handling of preset selection",
+          "state": "merged",
+          "created_at": "2021-03-24T18:20:47.338Z"
+        },
+        {
+          "id": 14494,
+          "iid": 113,
+          "title": "Do the sensor setters in two stages",
+          "state": "merged",
+          "created_at": "2021-01-29T10:38:44.269Z"
+        },
+        {
+          "id": 14437,
+          "iid": 112,
+          "title": "Always reset minimum and maximum, not only when inserting",
+          "state": "merged",
+          "created_at": "2021-01-28T10:13:06.438Z"
+        },
+        {
+          "id": 11666,
+          "iid": 102,
+          "title": "Make ExtendedLegend work without having a chart",
+          "state": "merged",
+          "created_at": "2020-11-25T11:43:38.088Z"
+        },
+        {
+          "id": 6529,
+          "iid": 54,
+          "title": "Support converting \"old\" sensor ids to \"new\" sensor ids on face load",
+          "state": "merged",
+          "created_at": "2020-07-31T11:41:38.281Z"
+        },
+        {
+          "id": 5771,
+          "iid": 42,
+          "title": "fix presets loading",
+          "state": "merged",
+          "created_at": "2020-07-09T13:56:58.757Z"
+        },
+        {
+          "id": 4855,
+          "iid": 26,
+          "title": "Reset the page when reloaded",
+          "state": "merged",
+          "created_at": "2020-06-15T16:45:51.570Z"
+        },
+        {
+          "id": 4854,
+          "iid": 25,
+          "title": "reset the page when reloaded",
+          "state": "closed",
+          "created_at": "2020-06-15T16:38:39.710Z"
+        },
+        {
+          "id": 4611,
+          "iid": 23,
+          "title": "save regexps in config",
+          "state": "merged",
+          "created_at": "2020-06-09T13:00:02.558Z"
+        },
+        {
+          "id": 4205,
+          "iid": 18,
+          "title": "Fix ordering of sensors in SensorDataModel",
+          "state": "merged",
+          "created_at": "2020-05-29T16:46:24.744Z"
+        },
+        {
+          "id": 3662,
+          "iid": 1,
+          "title": "Sort sensors in sensor browser and sensor display",
+          "state": "merged",
+          "created_at": "2020-05-18T13:16:35.410Z"
+        }
+      ],
+      "previous_review_mr_id_set_unchanged": true
+    }
+  ],
+  "canonical_effect": "none",
+  "source_changed": false,
+  "tests_waived": false,
+  "limits": "Stable model bytes are unchanged; both complete scoped MR queries have same IDs as preceding review. Commit history is first20 entries with older pagination remaining, not an exhaustive issue or whole-repository search. No source selection change or transition is admitted."
+}

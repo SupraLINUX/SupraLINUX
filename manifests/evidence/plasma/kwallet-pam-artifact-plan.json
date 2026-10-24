@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "kwallet-pam",
+      "package_version": "4:6.7.5-0supralinux4",
+      "artifact_id": 11371998028,
+      "workflow_run_id": 37376890051,
+      "artifact_sha256": "5692be0414a98b1804ad71360e9889147278e4e08f2e5e7d8fa54d02897fc028",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

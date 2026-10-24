@@ -1,0 +1,17 @@
+SupraLINUX Thunderbolt integration
+
+Keep official sources unchanged, all three upstream tests, the KDED module,
+the private libkbolt implementation, the KCM QML UI and Ubuntu runtime Bolt.
+Do not expose a new public SDK or silently remove the configuration module.
+Tests load the actual installed modules. Unmodified upstream fake Bolt providers
+serve only org.kde.fakebolt on a dedicated session bus using KBOLT_FAKE=1;
+the real system bus and hardware are never used by this package fixture.
+Check actual notifications, both authorization actions, flags, enrollment,
+authorized-device suppression, real KCM QML rendering, enabled device labels and
+dynamic device removal. Ubuntu may emit transient QML diagnostics during removal;
+keep the original stdout/stderr for comparison with the candidate and desktop QA.
+Compile the baseline client against Ubuntu Qt/Frameworks, preserve its bytes
+across the candidate upgrade, then compile and run a new consumer. Private HOME,
+XDG state, offscreen Qt, software rendering and bounded sessions are required.
+These checks certify package integration with the simulated Bolt protocol;
+physical Thunderbolt hardware and a complete Wayland desktop remain later QA.

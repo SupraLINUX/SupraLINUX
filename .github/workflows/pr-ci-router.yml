@@ -1,0 +1,168 @@
+name: PR CI router
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: pr-ci-router-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: Plan active PR work
+    if: github.event.action != 'labeled'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    outputs:
+      run_plasma_lane: ${{ steps.scope.outputs.run_plasma_lane }}
+      run_qt_provider: ${{ steps.scope.outputs.run_qt_provider }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - name: Select active lanes
+        id: scope
+        shell: bash
+        env:
+          EVENT_ACTION: ${{ github.event.action }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          EVENT_AFTER: ${{ github.event.after }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "${EVENT_ACTION}" == "labeled" ]]; then
+            {
+              echo "run_plasma_lane=false"
+              echo "run_qt_provider=false"
+            } >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+          if [[ "${EVENT_ACTION}" == "synchronize" ]]; then
+            before="${EVENT_BEFORE}"
+            after="${EVENT_AFTER}"
+          else
+            before="${PR_BASE_SHA}"
+            after="${PR_HEAD_SHA}"
+          fi
+          python3 scripts/plan-pr-ci.py "${before}" "${after}" --github-output "${GITHUB_OUTPUT}"
+
+  repository-policy:
+    name: Repository policy
+    if: github.event.action != 'labeled'
+    uses: ./.github/workflows/repository-policy.yml
+
+  kde-plasma-lane:
+    name: Active Plasma lane
+    needs: [plan, repository-policy]
+    if: needs.plan.outputs.run_plasma_lane == 'true'
+    uses: ./.github/workflows/kde-plasma-lane.yml
+
+  qt-provider-preflight:
+    name: Qt provider preflight
+    needs: [plan, repository-policy]
+    if: needs.plan.outputs.run_qt_provider == 'true'
+    uses: ./.github/workflows/qt-provider-preflight.yml
+
+  host-workspace-admission:
+    name: Host control admission
+    if: >-
+      ${{ github.event.action == 'labeled' &&
+          github.event.label.name == 'ci:host-workspace' &&
+          github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    outputs:
+      target: ${{ steps.target.outputs.target }}
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - name: Select host control target
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          request = json.loads(Path("ops/host-workspace/request.json").read_text())
+          target = request.get("target", "workspace")
+          if target not in {"workspace", "authoritative"}:
+              raise SystemExit(f"unsupported host control target: {target!r}")
+          print(target)
+          PY
+          )"
+          echo "target=$target" >> "$GITHUB_OUTPUT"
+          echo "host_control_target=$target"
+      - name: Validate host control admission
+        shell: bash
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HOST_CONTROL_TARGET: ${{ steps.target.outputs.target }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$PR_HEAD_SHA"
+          python3 scripts/check-source-syntax.py
+          python3 scripts/validate_pr_workflow_entrypoints.py
+          if [[ "$HOST_CONTROL_TARGET" == "workspace" ]]; then
+            scripts/test-host-orchestrator-service.sh
+            scripts/test-host-workspace-libvirt-permissions.sh
+            python3 - <<'PY'
+          import json, re
+          from pathlib import Path
+          request = json.loads(Path("ops/host-workspace/request.json").read_text())
+          assert request.get("schema") == 1
+          assert request.get("target", "workspace") == "workspace"
+          task = request.get("task_id")
+          script = request.get("script")
+          assert isinstance(task, str) and re.fullmatch(r"[A-Za-z0-9._-]{1,64}", task)
+          assert isinstance(script, str) and 0 < len(script.encode()) <= 500_000
+          assert "\x00" not in script
+          print("Host workspace admission: PASS")
+          PY
+          else
+            python3 scripts/test-host-authoritative-control.py
+            python3 - <<'PY'
+          import json
+          from pathlib import Path
+          selector = json.loads(Path("ops/host-workspace/request.json").read_text())
+          request = json.loads(Path("ops/host-authoritative/request.json").read_text())
+          assert selector.get("schema") == 1
+          assert selector.get("target") == "authoritative"
+          assert request.get("schema") == 1
+          assert request.get("mode") in {"diagnose", "repair-host", "preflight", "rebuild-golden", "execute", "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}
+          assert request.get("gate") == "plasma-package-build"
+          print("Host authoritative admission: PASS")
+          PY
+          fi
+
+  host-workspace:
+    name: Disposable host workspace
+    needs: [host-workspace-admission]
+    if: >-
+      ${{ needs.host-workspace-admission.result == 'success' &&
+          needs.host-workspace-admission.outputs.target == 'workspace' &&
+          github.event.action == 'labeled' &&
+          github.event.label.name == 'ci:host-workspace' &&
+          github.event.pull_request.head.repo.full_name == github.repository }}
+    uses: ./.github/workflows/host-workspace.yml
+
+  host-authoritative:
+    name: Persistent host authoritative control
+    needs: [host-workspace-admission]
+    if: >-
+      ${{ needs.host-workspace-admission.result == 'success' &&
+          needs.host-workspace-admission.outputs.target == 'authoritative' &&
+          github.event.action == 'labeled' &&
+          github.event.label.name == 'ci:host-workspace' &&
+          github.event.pull_request.head.repo.full_name == github.repository }}
+    uses: ./.github/workflows/host-authoritative-control.yml

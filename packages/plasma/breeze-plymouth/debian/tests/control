@@ -1,0 +1,11 @@
+Tests: theme-resources
+Depends: @, python3, ffmpeg, fontconfig, pkgconf, libplymouth-dev
+Restrictions: needs-root
+
+Tests: ubuntu-abi-client
+Depends: @, python3, binutils, apt, pkgconf, libplymouth-dev
+Restrictions: needs-root
+
+Tests: consumer
+Depends: @, build-essential, pkgconf, libplymouth-dev, libevdev-dev, libxkbcommon-dev, libudev-dev
+Restrictions: needs-root

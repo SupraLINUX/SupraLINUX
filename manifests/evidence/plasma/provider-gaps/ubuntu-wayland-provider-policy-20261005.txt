@@ -1,0 +1,14 @@
+plasma-wayland-protocols:
+  Installed: (none)
+  Candidate: 1.20.0-2
+  Version table:
+     1.20.0-2 500
+        500 http://archive.ubuntu.com/ubuntu resolute/universe amd64 Packages
+        500 http://archive.ubuntu.com/ubuntu resolute/universe i386 Packages
+libwayland-dev:
+  Installed: 1.24.0-2
+  Candidate: 1.24.0-2
+  Version table:
+ *** 1.24.0-2 500
+        500 http://archive.ubuntu.com/ubuntu resolute/main amd64 Packages
+        100 /var/lib/dpkg/status

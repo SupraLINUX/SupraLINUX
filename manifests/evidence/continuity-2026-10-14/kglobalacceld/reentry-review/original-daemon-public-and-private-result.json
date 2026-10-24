@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "state": "SCOPED_DIAGNOSTIC_PASS",
+  "scope": "Private zero-NIC Ubuntu26.04 KVM runtime of frozen original daemon/XCB plugin/public client before and after library-provider change, plus unchanged official native and same-source SDK controls. Not fresh package build, installed upgrade, full KWin/Ubuntu compatibility or transition admission. Frameworks6.30 and Qt6.10.2 frozen in all phases.",
+  "package_attempt_consumed": false,
+  "canonical_effect": "none",
+  "compatibility_transition_admitted": false,
+  "checks": {
+    "frozen_critical_inputs": "PASS",
+    "guest_loader_prerequisites": "PASS",
+    "frozen_inputs_after_execution": "PASS"
+  },
+  "phases": {
+    "original-private": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "original",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-original-private"
+    },
+    "original-public": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "original",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-original-public"
+    },
+    "candidate-native": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "candidate-native",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-candidate-native"
+    },
+    "candidate-private": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "candidate-native",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-candidate-private"
+    },
+    "candidate-public": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "candidate-original-plugin",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-candidate-public"
+    },
+    "negative-original-private": {
+      "state": "EXPECTED_ABI_INCOMPATIBILITY",
+      "wrapper_exit_code": 1,
+      "phase": "candidate-native",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-negative-original-private"
+    }
+  }
+}

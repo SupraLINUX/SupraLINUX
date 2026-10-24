@@ -1,0 +1,370 @@
+{
+  "schema": 1,
+  "role": "reviewed-package-revalidation",
+  "state": "PASS",
+  "package_execution_authorized": false,
+  "authorized_nodes": [],
+  "execution_mode": "complete",
+  "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
+  "execution_checkpoint": "frameworks-6.30-pass",
+  "nodes": {
+    "kconfig": {
+      "state": "PASS",
+      "source_package": "kf6-kconfig",
+      "version": "6.30.0-0supralinux5",
+      "upstream_version": "6.30.0",
+      "upstream_url": "https://download.kde.org/stable/frameworks/6.30/kconfig-6.30.0.tar.xz",
+      "upstream_sha256": "0e98bac324cd716849202d4b246a948e363d6792a8eb09c78417cdde9559f56e",
+      "signature_sha256": "5c5385eb6711607d0a0ecf89c72c4bb62a6d07f88da9588174f5ed05bf3aee08",
+      "signing_key_path": "packages/revalidation/kconfig/debian/upstream/signing-key.asc",
+      "signing_fingerprint": "90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1",
+      "packaging_path": "packages/revalidation/kconfig/debian",
+      "packaging_review": "PASS",
+      "binary_packages": {
+        "libkf6config-bin": "amd64",
+        "libkf6config-data": "all",
+        "libkf6config-dev": "amd64",
+        "libkf6config-dev-bin": "amd64",
+        "libkf6config-doc": "all",
+        "libkf6configcore6": "amd64",
+        "libkf6configgui6": "amd64",
+        "libkf6configqml6": "amd64",
+        "qml6-module-org-kde-config": "amd64"
+      },
+      "ubuntu_baseline_package": "libkf6config-dev",
+      "baseline_setup_script": "tests/baseline-setup",
+      "baseline_preflight_required": true,
+      "required_executable_files": [
+        "rules",
+        "tests/baseline-setup",
+        "tests/consumer",
+        "tests/ubuntu-abi-client"
+      ],
+      "upstream_tests": [
+        "appstreamtest",
+        "kconfigcore-kentrymaptest",
+        "kconfigcore-ksharedconfigtest",
+        "kconfigcore-fallbackconfigresourcestest",
+        "kconfigcore-kconfignokdehometest",
+        "kconfigcore-kconfigtest",
+        "kconfigcore-kdesktopfiletest",
+        "kconfigcore-test_kconf_update",
+        "kconfigcore-ksharedconfig_in_global_object",
+        "kconfigcore-dbussanitizertest",
+        "kconfigcore-qiodevicetest",
+        "kconfigcore-parsetest",
+        "kconfiggui-kconfigguitest",
+        "kconfiggui-kconfigloadertest",
+        "kconfiggui-kconfigskeletontest",
+        "kconfiggui-kstandardshortcuttest",
+        "kconfiggui-kstandardshortcutwatchertest",
+        "kconfiggui-kwindowstatesavertest",
+        "kconfigcompiler-Test1",
+        "kconfigcompiler-Test1_cmake",
+        "kconfigcompiler-Test2",
+        "kconfigcompiler-Test2_cmake",
+        "kconfigcompiler-Test3",
+        "kconfigcompiler-Test3_cmake",
+        "kconfigcompiler-Test3a",
+        "kconfigcompiler-Test3a_cmake",
+        "kconfigcompiler-Test4",
+        "kconfigcompiler-Test4_cmake",
+        "kconfigcompiler-Test5",
+        "kconfigcompiler-Test5_cmake",
+        "kconfigcompiler-Test6",
+        "kconfigcompiler-Test6_cmake",
+        "kconfigcompiler-Test7",
+        "kconfigcompiler-Test7_cmake",
+        "kconfigcompiler-Test8",
+        "kconfigcompiler-Test8_cmake",
+        "kconfigcompiler-Test9",
+        "kconfigcompiler-Test9_cmake",
+        "kconfigcompiler-Test10",
+        "kconfigcompiler-Test10_cmake",
+        "kconfigcompiler-Test11",
+        "kconfigcompiler-Test11_cmake",
+        "kconfigcompiler-Test12",
+        "kconfigcompiler-Test12_cmake",
+        "kconfigcompiler-Test13",
+        "kconfigcompiler-Test13_cmake",
+        "kconfigcompiler-Test14",
+        "kconfigcompiler-Test14_cmake",
+        "kconfigcompiler-Test15",
+        "kconfigcompiler-Test15_cmake",
+        "kconfigcompiler-Test16",
+        "kconfigcompiler-Test16_cmake",
+        "kconfigcompiler-Test17",
+        "kconfigcompiler-Test17_cmake",
+        "kconfigcompiler-Test19",
+        "kconfigcompiler-Test19_cmake",
+        "kconfigcompiler-test_state_config",
+        "kconfigcompiler-test_state_config_cmake",
+        "kconfigcompiler-test_state_config_nameless",
+        "kconfigcompiler-test_state_config_nameless_cmake",
+        "kconfigcompiler-test_emptyentries",
+        "kconfigcompiler-test_emptyentries_cmake",
+        "kconfigcompiler-test_subgroups",
+        "kconfigcompiler-test_subgroups_cmake",
+        "kconfigcompiler-test_dpointer",
+        "kconfigcompiler-test_dpointer_cmake",
+        "kconfigcompiler-test_signal",
+        "kconfigcompiler-test_signal_cmake",
+        "kconfigcompiler-test_notifiers",
+        "kconfigcompiler-test_notifiers_cmake",
+        "kconfigcompiler-test_time",
+        "kconfigcompiler-test_time_cmake",
+        "kconfigcompiler-test_kconfigconstructor",
+        "kconfigcompiler-test_kconfigconstructor_cmake",
+        "kconfigcompiler-Test18",
+        "kconfigcompiler-Test18_cmake",
+        "kconfigcompiler-signals-test",
+        "kconfigcompiler-test_properties_minmax",
+        "kconfigcompiler-test_param_minmax",
+        "kconfigcompiler-basic-test",
+        "kconfigcompiler-test_qdebugcategory",
+        "kconfigcompiler-test_translation_qt",
+        "kconfigcompiler-test_translation_kde",
+        "kconfigcompiler-test_translation_kde_domain",
+        "kconfigcompiler-test_fileextensions",
+        "kconfigcompiler-test_enums_and_properties",
+        "kconfigcompiler-test14qml",
+        "kconfigcompiler-test15qml",
+        "kconfigcompiler-test16qml",
+        "kconfigcompiler-test17qml"
+      ],
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        }
+      },
+      "sbuild_rootfs_policy": {
+        "kind": "immutable-bare-milestone",
+        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+        "suites": [
+          "resolute",
+          "resolute-updates",
+          "resolute-security"
+        ]
+      },
+      "symbols_baselines": {
+        "libkf6configgui6.symbols": {
+          "path": "packages/revalidation/kconfig/symbols/libkf6configgui6.symbols",
+          "sha256": "c131c44659cce576fbc0754a2a55fd470aa9c065f3efc7d92b49c0042dc758ea"
+        },
+        "libkf6configcore6.symbols": {
+          "path": "packages/revalidation/kconfig/symbols/libkf6configcore6.symbols",
+          "sha256": "678bb37f4d3a2ea0910c41b4af0c7aeb4861495167a3749f91bb549f26821f15"
+        },
+        "libkf6configqml6.symbols": {
+          "path": "packages/revalidation/kconfig/symbols/libkf6configqml6.symbols",
+          "sha256": "edf6527a6fffb6a852a5bde62c02f24ac59a05c198831986e42558dea3ecdeb9"
+        }
+      },
+      "supersedes": {
+        "version": "6.30.0-0supralinux4",
+        "source_commit": "bfb02cdc6f6086ed41092cc900563dfa3be86e64",
+        "artifact_id": 10554715051,
+        "artifact_sha256": "bd36a8288c1c36fa2ae1a83d685a816cc1077fc576b59a23951972ddcbdd835e"
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "PASS",
+          "path": "manifests/evidence/package-revalidation/kconfig-attempt1/verification.json",
+          "sha256": "8acf525ea65694c17881a5267410a98bd50ee866617a0a11d495a7229957558e"
+        }
+      ],
+      "review": {
+        "trigger": "Plasma Activities Attempt 1 original package FAIL retained; no candidate clients executed",
+        "ownership": "Ubuntu file owner restored; previous Supra core ownership covered by versioned Breaks/Replaces",
+        "scope": "Packaging-only revision; Qt, upstream sources, ABI symbols and feature defaults unchanged; authoritative KVM upgrade and consumer gate required"
+      },
+      "retained_upgrade": {
+        "source_package": "kf6-kconfig",
+        "version": "6.30.0-0supralinux4",
+        "binaries": [
+          {
+            "package": "libkf6config-bin",
+            "architecture": "amd64",
+            "sha256": "a5a2bfe058aaffd899a3c704fea9794a4c1e86daa2a75695b9a1847b348f3de9"
+          },
+          {
+            "package": "libkf6config-data",
+            "architecture": "all",
+            "sha256": "fae22d6df5777929f730211047c0fbd47ca5e39ece62398782ddcd32e6e69e60"
+          },
+          {
+            "package": "libkf6config-dev",
+            "architecture": "amd64",
+            "sha256": "71940050496c4baca03102dd1d131dbcd675c7d2e9ee60e887dfc548555422f9"
+          },
+          {
+            "package": "libkf6config-dev-bin",
+            "architecture": "amd64",
+            "sha256": "1bb3c373b3fdd212de33c3fd4a1874e75c86684366c74f6bf7b105454f568286"
+          },
+          {
+            "package": "libkf6configcore6",
+            "architecture": "amd64",
+            "sha256": "998262610e611e8cebe8630dbe3d13de4daa059ead9c9924287b2bfe994c4b33"
+          },
+          {
+            "package": "libkf6configgui6",
+            "architecture": "amd64",
+            "sha256": "2ed506a790a662b0681a040cd10ae39177e5acbe6ada849947adfe387c390729"
+          },
+          {
+            "package": "libkf6configqml6",
+            "architecture": "amd64",
+            "sha256": "5d951cf7b3498f02197c5c539d665439b7f9a5d64813c3faf47325afb6be0b24"
+          },
+          {
+            "package": "qml6-module-org-kde-config",
+            "architecture": "amd64",
+            "sha256": "b514993f60fe1f55ac7803ceab42ba0ef8a89dc58ab5d38463bfb63c9601bfd6"
+          },
+          {
+            "package": "libkf6config-doc",
+            "architecture": "all",
+            "sha256": "207a6075b1151d354316433f934d6952d0d304235373a864e930b09b5305b162"
+          }
+        ]
+      },
+      "packaging_sha256": {
+        "README.source": "f94ed99cc8cd9bdb196c05fb892dfe7f6a07a1ac9ea89808c758d0f6e028b51e",
+        "apply-symbols-delta.py": "484c967032a94254304380964accf9900dac7cfa52ccd82584f9bd1c10c1ffa2",
+        "changelog": "3e5cc2a103919b5f9dfe6b2a2e5c0e25e144bdd107ee80f5d2ef725759bcd71c",
+        "control": "8b47404753b684f9cd8df5bab7fcc3625ebd58ca49a6a8b24b4fb6777093b386",
+        "copyright": "3359da5309a161df471bd15ed8518f595478ead93e99d1d505ae6a9ea83959e6",
+        "copyright.reference": "b4571c32412c4bfbc016de1cacb3bad04f3d3f7f139f553896d8ce210bc71d7d",
+        "libkf6config-bin.install": "eebace7194f0be85cb5ae5ab7ea7ee0178a1dbcb6b81e4850d67c342ccec1210",
+        "libkf6config-bin.lintian-overrides": "93707a1333be4e69d7f4a085de8ddc0b5cc34d78a46bf4de4152dc18ef04367a",
+        "libkf6config-data.install": "a7209ca10638f6d9b0c22aefa16b4a172c25f75ad3e202cde86563d90d0f490d",
+        "libkf6config-dev-bin.install": "4c16b85db62ef6dc66a68d8897d17b8d5ef79a613440b676b4d927f0d7c50083",
+        "libkf6config-dev.install": "3048c6e5ab3ef5ce049ed339137c1e20e72848644709df1114fa794132c14b0c",
+        "libkf6config-doc.install": "406bd7730e6e71f976fe5485e334be2409315e82fd7d6337cea01d74927576e7",
+        "libkf6configcore6.install": "e12cb07c695bf7d0a2aad688e422b84acb0578419914602eed24d5dc9e437cbf",
+        "libkf6configgui6.install": "b1aa13a1a30b6f47cc129aafd8964b0342467d6a88665d8a94b450a124f43ac3",
+        "libkf6configqml6.install": "f2e75c7bc4ebfc2277709430f743b8506a1102a8115dfce1e2523712160055b8",
+        "patches/Allow-packagers-set-kconfig_compiler-install-dir.patch": "8a40048886f1a69efcefad3143c2ef7408e0fb4b9176a20aaf8984a8eb29d066",
+        "patches/series": "1e9be2e30450ddb3fd5dc9e50fc7fa5dbcb86500df6f396b80b0440752c26620",
+        "qml6-module-org-kde-config.install": "269f9e7f4d80d8400d2952785d54a1406a14e657219431cc23e79ccd7b6771d2",
+        "rules": "4493089ea4d92ffbe5b6848f8b70916f561b7486281c0d31fde2c11cf5498ff0",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/baseline-setup": "d2cbd79f0d94c33ebbebf059464cd0cfd70a8bf459c3d7872528628f9abb41e5",
+        "tests/consumer": "1956e2f406f5f4b1e9c0402c1ace1bc7f110cab032950cd6f333a310f848b3ac",
+        "tests/control": "26f36c7d975454ed38ac762d041beb7f4b7196e000d4c55085ef9ed1115262e1",
+        "tests/retained-upgrade": "bf4f384801770f3040030b4095ac30756c24f0580c9e2e3d73d192b3a09c29b0",
+        "tests/ubuntu-abi-client": "ad44c5e40ea175a1a2550f30bb7644f7d44f5080b2e2892db78ecc112ee475b7",
+        "upstream/signing-key.asc": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
+      },
+      "downstream_eligible": true,
+      "evidence": {
+        "path": "manifests/evidence/package-revalidation/kconfig-attempt1/verification.json",
+        "sha256": "8acf525ea65694c17881a5267410a98bd50ee866617a0a11d495a7229957558e"
+      },
+      "binaries": [
+        {
+          "package": "libkf6config-bin",
+          "version": "6.30.0-0supralinux5",
+          "architecture": "amd64",
+          "file": "libkf6config-bin_6.30.0-0supralinux5_amd64.deb",
+          "sha256": "e2ec5c0108ddec37acbe5aef9ba7ad415fcafbfb674a774ad5bc1f8e4460fd8a",
+          "size": 33572
+        },
+        {
+          "package": "libkf6config-data",
+          "version": "6.30.0-0supralinux5",
+          "architecture": "all",
+          "file": "libkf6config-data_6.30.0-0supralinux5_all.deb",
+          "sha256": "11383e2d047ef865e61a01b887b7b1fa72ab8ceca12e45779b99488fd18c1eb7",
+          "size": 175316
+        },
+        {
+          "package": "libkf6config-dev-bin",
+          "version": "6.30.0-0supralinux5",
+          "architecture": "amd64",
+          "file": "libkf6config-dev-bin_6.30.0-0supralinux5_amd64.deb",
+          "sha256": "d7e10cf7629c68a93fa65a320ca868870e4f9f9446b580da70360233aebf8fe5",
+          "size": 80788
+        },
+        {
+          "package": "libkf6config-dev",
+          "version": "6.30.0-0supralinux5",
+          "architecture": "amd64",
+          "file": "libkf6config-dev_6.30.0-0supralinux5_amd64.deb",
+          "sha256": "d92bf4fed918165562d93f2512d36298ef014fa9191f53a51eab3a64286ce3a9",
+          "size": 54064
+        },
+        {
+          "package": "libkf6config-doc",
+          "version": "6.30.0-0supralinux5",
+          "architecture": "all",
+          "file": "libkf6config-doc_6.30.0-0supralinux5_all.deb",
+          "sha256": "e2afd9e730e03931a916d976315ea0d82e76b66a2c696cf46532e489c819bf77",
+          "size": 8304
+        },
+        {
+          "package": "libkf6configcore6",
+          "version": "6.30.0-0supralinux5",
+          "architecture": "amd64",
+          "file": "libkf6configcore6_6.30.0-0supralinux5_amd64.deb",
+          "sha256": "fd21f8ffec2c9a1092f4f1a823fc9ad117c8453a4cbd796d1997cb38bf9577c0",
+          "size": 183168
+        },
+        {
+          "package": "libkf6configgui6",
+          "version": "6.30.0-0supralinux5",
+          "architecture": "amd64",
+          "file": "libkf6configgui6_6.30.0-0supralinux5_amd64.deb",
+          "sha256": "994d74a35f900487bce4b5ffa838fa428fd00fe7a713f6441b6659992c65c711",
+          "size": 76206
+        },
+        {
+          "package": "libkf6configqml6",
+          "version": "6.30.0-0supralinux5",
+          "architecture": "amd64",
+          "file": "libkf6configqml6_6.30.0-0supralinux5_amd64.deb",
+          "sha256": "4a15fb6c5b9a95c49bc8910b81f5e7d14b1d5d125041a1b43e918c978241a949",
+          "size": 22832
+        },
+        {
+          "package": "qml6-module-org-kde-config",
+          "version": "6.30.0-0supralinux5",
+          "architecture": "amd64",
+          "file": "qml6-module-org-kde-config_6.30.0-0supralinux5_amd64.deb",
+          "sha256": "ab1ce3ccf930a368faccdd7c5aca19acea87f355d888169d5f0cefa2524fd069",
+          "size": 13250
+        }
+      ]
+    }
+  },
+  "certifications": [
+    {
+      "path": "manifests/evidence/package-revalidation/kconfig-preflight3/verification.json",
+      "sha256": "720a556a59c4449c036e0dd745866fc8ae2fc29efc897f43549e164d13d13e2c"
+    }
+  ],
+  "infrastructure_incidents": [
+    {
+      "path": "manifests/evidence/package-revalidation/kconfig-preflight1/verification.json",
+      "sha256": "fa1d403a3f8c54d32615f2567af073240866b8e352b8d0886ab0943c4f19d217",
+      "cause": "The Ubuntu SDK baseline lacked qt6-declarative-dev; Ubuntu libkf6config-dev exports a Qt6Qml CMake dependency without installing its SDK. Candidate package execution did not start.",
+      "repair": "Install Qt QML SDK explicitly in the reviewed client fixture, compile it locally without host installation, then repeat the preflight in KVM."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/kconfig-preflight2/verification.json",
+      "sha256": "68a7e4da844cd06dffa614112e6d91804d795e6c0eb569d1e528452438e8e965",
+      "cause": "After the Ubuntu ABI client and real configuration migration passed, the outer guest autopkgtest transport blocked in kvm_async_pf_task_wait_schedule. The host was under memory pressure; that is an observation, not a proven kernel root cause. Reducing the running outer guest from 12 to 8 GiB did not recover it. Only autopkgtest was interrupted; package execution did not start.",
+      "repair": "Repeat the infrastructure preflight with the outer KVM guest limited to 8192 MiB from boot and preserve the same client, source and packaging inputs. A repeated asynchronous page-fault stall requires diagnosis and a small infrastructure certification before another package attempt."
+    }
+  ]
+}

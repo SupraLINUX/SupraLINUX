@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "state": "FAIL",
+  "kind": "discover-categories-translation-test-environment",
+  "node": "discover",
+  "version": "6.7.5-0supralinux1",
+  "attempt": 1,
+  "source_commit": "425daf64c0c49bda74d9c1059831c67ffbc097cb",
+  "workflow_run_id": 40095668250,
+  "workflow_job_id": 120877288408,
+  "artifact_id": 12560898154,
+  "artifact_sha256": "7d729eb3a94fe380ca2f1fdbc84705af12048006658739334dd38b109daa5308",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261024t124937z-1532236",
+  "host_evidence_manifest_sha256": "b913c2ab7e648262181173be18d6add28333e621351d839d1838c7336616d92c",
+  "observation": {
+    "stage": "sbuild",
+    "sbuild_result": "FAIL",
+    "lintian_result": "not-run",
+    "autopkgtest_result": "not-run",
+    "package_attempt_consumed": true,
+    "test": "CategoriesTest::testTranslations()",
+    "assertion": "languages.size() > 1",
+    "native_test_totals": {
+      "passed": 2,
+      "failed": 1
+    },
+    "failure_point": "dh_auto_test"
+  },
+  "root_cause": "The unchanged upstream CategoriesTest asks KLocalizedString for installed libdiscover domain translations. The clean Debian test phase runs before dh_auto_install, while upstream ki18n_install(po) materializes the translation catalogs through the install step. The test therefore saw only the source language even though the signed upstream source contains the translation PO tree.",
+  "repair_scope": "Packaging/test environment only. Revision2 stages the unchanged CMake install tree into a temporary DESTDIR before CategoriesTest and points XDG_DATA_DIRS at that staged usr/share. Upstream source, test assertions, Qt and Frameworks remain unchanged.",
+  "reentry": "Increment Debian revision to 6.7.5-0supralinux2, invalidate preflight48 for the new packaging bytes, run cheap regression checks and obtain a fresh authoritative input preflight before Attempt2."
+}

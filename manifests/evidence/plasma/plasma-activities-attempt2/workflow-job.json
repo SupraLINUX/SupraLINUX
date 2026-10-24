@@ -1,0 +1,82 @@
+{
+  "id": 111874458965,
+  "run_id": 37342986284,
+  "workflow_name": "KDE Plasma authoritative KVM package build",
+  "head_branch": "architecture/bootstrap-v1",
+  "run_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/runs/37342986284",
+  "run_attempt": 1,
+  "node_id": "CR_kwDOUW9fLs8AAAAaDDzFVQ",
+  "head_sha": "d7f569865054ab946fe8fc5bb693801347424f90",
+  "url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/jobs/111874458965",
+  "html_url": "https://github.com/SupraLINUX/SupraLINUX/actions/runs/37342986284/job/111874458965",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-10-05T16:43:18Z",
+  "started_at": "2026-10-05T16:43:21Z",
+  "completed_at": "2026-10-05T16:55:54Z",
+  "name": "Reviewed Plasma package on KVM guest",
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1,
+      "started_at": "2026-10-05T16:43:22Z",
+      "completed_at": "2026-10-05T16:43:24Z"
+    },
+    {
+      "name": "Checkout exact authorized PR head",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2,
+      "started_at": "2026-10-05T16:43:24Z",
+      "completed_at": "2026-10-05T16:43:26Z"
+    },
+    {
+      "name": "Run current reviewed package",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3,
+      "started_at": "2026-10-05T16:43:26Z",
+      "completed_at": "2026-10-05T16:55:43Z"
+    },
+    {
+      "name": "Retain package sources, binaries and evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4,
+      "started_at": "2026-10-05T16:55:43Z",
+      "completed_at": "2026-10-05T16:55:49Z"
+    },
+    {
+      "name": "Post Checkout exact authorized PR head",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8,
+      "started_at": "2026-10-05T16:55:49Z",
+      "completed_at": "2026-10-05T16:55:49Z"
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9,
+      "started_at": "2026-10-05T16:55:49Z",
+      "completed_at": "2026-10-05T16:55:49Z"
+    }
+  ],
+  "check_run_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/check-runs/111874458965",
+  "labels": [
+    "self-hosted",
+    "linux",
+    "x64",
+    "supralinux",
+    "ubuntu-26.04",
+    "kvm",
+    "ephemeral"
+  ],
+  "runner_id": 204,
+  "runner_name": "supralinux-plasma-package-build-20261005t164128z-927538",
+  "runner_group_id": 3,
+  "runner_group_name": "supralinux authoritative jit"
+}

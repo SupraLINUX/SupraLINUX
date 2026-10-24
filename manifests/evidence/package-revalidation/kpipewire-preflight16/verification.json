@@ -1,0 +1,168 @@
+{
+  "schema": 1,
+  "scope": "reviewed-package-input-preflight",
+  "node": "kpipewire",
+  "version": "6.7.5-0supralinux1",
+  "state": "PASS",
+  "source_commit": "e35bd66b05b67599f9d44e4bc03814f396ee71f4",
+  "workflow_run_id": 37539563145,
+  "workflow_job_id": 112528937313,
+  "artifact_id": 11449099213,
+  "artifact_sha256": "a9ec29d90a81d8c23faafe07621ba80ec77d33787899868faeef2304eac99b72",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261006t221502z-776993",
+  "host_evidence_manifest_sha256": "8e4c6a8e0f91758db4be564a230b232d4b195d3b1c1df795a8b429ae60afca52",
+  "package_attempt_consumed": false,
+  "result_path": "manifests/evidence/package-revalidation/kpipewire-preflight16/result.json",
+  "result_sha256": "606f97c03313019b2d0bbfa2ec526189f77f1099e896bcc8cbeb93062cabc7df",
+  "contract_path": "manifests/evidence/package-revalidation/kpipewire-preflight16/build-contract.json",
+  "archive_path": ".artifacts/package-revalidation/kpipewire-preflight16/sha256/a9ec29d90a81d8c23faafe07621ba80ec77d33787899868faeef2304eac99b72.zip",
+  "inspection": {
+    "source_complete": true,
+    "candidate_binaries_built": false
+  },
+  "offline_restore_verified": true,
+  "requires_github_for_restore": false,
+  "files_sha256": {
+    "artifact-meta.json": "40d501be70e7aa622b0dcf01e8ce4b25beb65d37420627462f9a7476a942bc32",
+    "build-contract.json": "0093367ce569dce080902ae124f0c7bd6b2ab6a751b7048bdac39ae2bc7f3147",
+    "build-predecessor-verifier-tests.log": "75ff54e727b57e4bd7b88956ed0c92c4b9a416e6f0976707e8fb54aa385ac0bd",
+    "cache-probe/installed-predecessor-contract.json": "a66587ccbd56269ace6268e3f826f5ddb6874d8e3c561e490d41f0a4fb192168",
+    "cache-probe/result.json": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+    "host-evidence-sha256.txt": "8e4c6a8e0f91758db4be564a230b232d4b195d3b1c1df795a8b429ae60afca52",
+    "host-result.json": "05e5432d13125a2f056c992834e5308b5b0ca93e85d87da1e8ce5764f1d69406",
+    "qemu-cpu-policy.json": "b60213e45f35d74af31f58e6bfa1751c4015da826d17aa86f3088ba3647205b4",
+    "result.json": "606f97c03313019b2d0bbfa2ec526189f77f1099e896bcc8cbeb93062cabc7df",
+    "rootfs-admission.json": "b5659a757bb60c23b3b99484586cd85d20c23484a4dce53bf8b05e470923d0ca",
+    "signature.log": "2b51c3391b983f59158fdba6bd4fbc6505f12daad2589d92f0ef4c4cc61dea81",
+    "ubuntu-baseline-preflight/result.json": "1c9cb20ee5a57f30b03569bfb746cf9effa1b9972ff20cb808b0f650a3caf132",
+    "workflow-job.json": "0535df5cf568f4ba65a0cc96db67bbaa0989953104da568f296d4164fe212706"
+  },
+  "inputs_sha256": {
+    "scripts/run-authoritative-plasma-package.sh": "5d7d993a033410fea62e7775b13c7710af366482c1243e34cf85b3157265fb6c",
+    "scripts/prepare-plasma-package.py": "56afcabd4dbfff92d5bd685ebdde5bf90782bd8b0fb8150c4f3aa8112f7e7d6c",
+    "scripts/plasma-package-testing.py": "3243b06c833cf3c583aeca5552aa577fcc1f0c1c3a868ca7b143c8ca2c71f25e",
+    "scripts/probe-reviewed-ubuntu-baseline.py": "a18a4681da1cdc4f6736f18bbe806a8a44acb2b80a4d56eccda53a33d04de04c",
+    "scripts/admit-frameworks-cache.py": "fe846ef51bddd3e3e2a2b760fe762171914e628c8a8278b73f24c54c4a0b122d",
+    "scripts/prepare-milestone-sbuild-rootfs.py": "8a82a0a05fa913808a545e22a8601511a2f191e73df0963b0d1a913a41b22922",
+    "scripts/prepare-retained-package-inputs.py": "3cbd596da45a422981943afc4a2a5bfe072cbe9a9fe432ab19fc81906499b8e6",
+    "scripts/run-kvm-jit-gate-core.sh": "b1ad009fd0db63c03bdc532032293a9332cc48a7df08d943d846d7ae3bbe054d",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "scripts/verify-reviewed-build-predecessors.py": "87273a25abae36690369a26c17ee651589df7f70b0639e098bfea25fce4ff811",
+    "scripts/test-reviewed-package-contract.py": "3bdcfea8949fbd5e705d01c4db888a7bbe359f50fdc6e5e3514cd665136e60b8",
+    "scripts/frameworks-revalidation-inputs.py": "178601caec0b1b3715a8194df40d98cb69ab76ff3cccf72a0a04c75fa2a68738",
+    "scripts/prepare-frameworks-revalidation-inputs.py": "4d7cf53b3450c8c1bcecc4a4f9914487aba99edfeb1835058237d9b9adf1be5a",
+    "scripts/probe-frameworks-build-inputs.sh": "443f1d35ebd35b72c92ae8dbac55d9330e0414896bbaf67dc171d8ee235b1a93",
+    "scripts/freeze-reviewed-package-contract.py": "55082d69f1653f33bf10d1803330393116b23773f811457660fd573c59d6e67b"
+  },
+  "packaging_sha256": {
+    "README.source": "45c559d14fcbfc0f1866348bb81dc7302445beadd809c3ac5fa318dad09969f0",
+    "changelog": "0a0f6805bb64bd06010709dca912f06ef996c4eb1495f300851c8fa46a17efbc",
+    "control": "e1949731ccf41b24f3585228718aba2c1c875ca3ea257be044f832626278a4d2",
+    "copyright": "d2fe7ba89ad2ac9e38f5c5c33ab25ccaac26c3395ee4aa21dd01eef006bac1ac",
+    "libkpipewire-data.install": "b16087b550332e893f4866034e723c553cfbe28114377316b31c77242ffbc16e",
+    "libkpipewire-dev.install": "7f8f8bb6e4d44de940464523ed535b7d443d2b7414ea475f34a7302898933fb0",
+    "libkpipewire6.install": "e99ad31f147052ec8fbb730de3a028183048b00330b17035eec858446546009d",
+    "libkpipewire6.symbols": "9c34dadeb9fc42a216c471a0fd942a47548356e880c6528cae7d409c6d869c69",
+    "libkpipewiredmabuf6.install": "b5e688b4c088ca2d7a3b0704410070bf4e557b5a8f391070acb6140fca18042c",
+    "libkpipewiredmabuf6.symbols": "e978de3f61818f7a825072f4429dd865bf0c3479ce1da03879dc40aae11114cb",
+    "libkpipewirerecord6.install": "a08848282eb9b16fded0250c2233d3534bb7d3301777408a34f7102c25e348e4",
+    "libkpipewirerecord6.symbols": "ae2423f9b002d21af5259e4129ac746dfd603b6c22a5fd03ee07ab8dd64d0a6f",
+    "qml6-module-org-kde-pipewire.install": "08b1477f85c450d6beaad30dd59c8e5650490a3d86ff4e22b8355f820edaa128",
+    "rules": "b106b200c57873f0e0d5832043006bcfb0fce92675490a3f31316c09ae68c3b6",
+    "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+    "tests/baseline-setup": "b1e58fcf2f406124fe7b22f01c8c1237b42b94dae4f381ae8661e0a8810f5556",
+    "tests/client/CMakeLists.txt": "d101b5389d40130e886f1b35eeb94112a44f640b2e16f85b866844d1f584adb2",
+    "tests/client/client.conf": "64ddc09e4be561b49df18ac6909ca849db40482b801f2521c9227061d4a003e2",
+    "tests/client/main.cpp": "978a172186732bb1a5ad7f1acf7f6c68bafc28a656eb7e312a0e3bd05c2a4b59",
+    "tests/client/private-pipewire.conf": "95e50cd629ca8e4b2bc4f19ccf1189d7ef11bfebaffefa06ae6f8a1061c237ee",
+    "tests/client/run-private-video.py": "fd6b127188f3e6d1dc38612bc197e6400d5797721fc53dc6ec52217319ed4b82",
+    "tests/client/video-source.c": "6b5e5f03a6df35a782f7cc48b045d2dbb2f008462170dd387c90e6f06e55add4",
+    "tests/consumer": "94914848ce4015634d452a12b44fd5024483d5288ab1bacb428827d6365a7d62",
+    "tests/control": "9a1eda445b90b3a9c6a986c79f1dd96502f650aac596b4b56354482b32c70082",
+    "tests/ubuntu-abi-client": "99c9e567363d6f14a90435c67ca662a421dedb1927794890a8b413de1c790257",
+    "tests/upstream-session": "f4e81f2437e3e38f1c420e6f2d67f45c1631c8acb76413fa9d1e977c1c26e4e2",
+    "upstream/metadata": "e15ec1ffe53daf0be073557ac6c1b709ec567a0d6b04b487f892ebd6a9ace894",
+    "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+    "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+  },
+  "frameworks_predecessors": {
+    "extra-cmake-modules": {
+      "source_package": "kf6-extra-cmake-modules",
+      "version": "6.30.0-0supralinux3",
+      "binaries": [
+        {
+          "package": "extra-cmake-modules",
+          "architecture": "all",
+          "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+        }
+      ]
+    },
+    "ki18n": {
+      "source_package": "kf6-ki18n",
+      "version": "6.30.0-0supralinux1",
+      "binaries": [
+        {
+          "package": "libkf6i18n-data",
+          "architecture": "all",
+          "sha256": "3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a"
+        },
+        {
+          "package": "libkf6i18n-dev",
+          "architecture": "amd64",
+          "sha256": "a9485f9fdb874cc6a61064a824d66567306122c39677ccf92f8adb3b0db14870"
+        },
+        {
+          "package": "libkf6i18n6",
+          "architecture": "amd64",
+          "sha256": "fa60bd16ffb35ae90eb1ab324386961d973a9b0dd31a4947351d3afc652b6e58"
+        },
+        {
+          "package": "libkf6i18nlocaledata6",
+          "architecture": "amd64",
+          "sha256": "19a6b680b3f85fe04901d53fa6193dd773d72fc02c9337387776ec779f5c285a"
+        },
+        {
+          "package": "libkf6i18nqml6",
+          "architecture": "amd64",
+          "sha256": "0297393117c5b4b0fd284d32aa9040c5afbe91aa0da73b2f83d1b181a812f91c"
+        },
+        {
+          "package": "qml6-module-org-kde-i18n-localedata",
+          "architecture": "amd64",
+          "sha256": "147a716c4794a50a63160928228afd25c406a02af2b3d00637bed289027f6001"
+        },
+        {
+          "package": "qml6-module-org-kde-ki18n",
+          "architecture": "amd64",
+          "sha256": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
+        }
+      ]
+    },
+    "kcoreaddons": {
+      "source_package": "kf6-kcoreaddons",
+      "version": "6.30.0-0supralinux4",
+      "binaries": [
+        {
+          "package": "libkf6coreaddons-data",
+          "architecture": "all",
+          "sha256": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908"
+        },
+        {
+          "package": "libkf6coreaddons-dev",
+          "architecture": "amd64",
+          "sha256": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636"
+        },
+        {
+          "package": "libkf6coreaddons6",
+          "architecture": "amd64",
+          "sha256": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb"
+        },
+        {
+          "package": "qml6-module-org-kde-coreaddons",
+          "architecture": "amd64",
+          "sha256": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
+        }
+      ]
+    }
+  }
+}

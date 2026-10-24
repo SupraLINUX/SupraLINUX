@@ -1,0 +1,135 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+apt-get install -y --no-install-recommends build-essential cmake knighttime knighttime-dev dbus-daemon
+BASE=/var/tmp/supralinux-knighttime-baseline
+mkdir -p "${BASE}/source"
+cat > "${BASE}/source/CMakeLists.txt" <<'CMAKE'
+cmake_minimum_required(VERSION 3.16)
+project(ubuntu-knighttime-client LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 23)
+find_package(KNightTime 6.6 CONFIG REQUIRED)
+find_package(Qt6 6.10 REQUIRED COMPONENTS Core DBus)
+add_executable(ubuntu-knighttime-client main.cpp)
+target_link_libraries(ubuntu-knighttime-client KNightTime Qt6::Core Qt6::DBus)
+CMAKE
+cat > "${BASE}/source/main.cpp" <<'CLIENT'
+#include <optional>
+#include <KDarkLightSchedule>
+#include <KDarkLightScheduleProvider>
+#include <QCoreApplication>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QElapsedTimer>
+#include <QEventLoop>
+#include <QThread>
+#include <QTimeZone>
+#include <cmath>
+#include <iostream>
+int main(int argc, char **argv) {
+    QCoreApplication app(argc,argv);
+    const auto failed = [](int code, const char *check) {
+        std::cerr << "KNightTime client check failed: " << check << '\n';
+        return code;
+    };
+    if (argc>1 && QString::fromLocal8Bit(argv[1])==QStringLiteral("--wait-service")) {
+        QElapsedTimer timer;timer.start();
+        while (timer.elapsed()<10000) {
+            auto *bus=QDBusConnection::sessionBus().interface();
+            if (bus && bus->isServiceRegistered(QStringLiteral("org.kde.NightTime")).value()) return 0;
+            QThread::msleep(20);
+        }
+        return failed(9,"owned daemon service registration timeout");
+    }
+    using namespace std::chrono_literals;
+    const auto reference = QDateTime(QDate(2026,3,20),QTime(12,0),QTimeZone::UTC);
+    const auto start = QDateTime(reference.date(),QTime(6,0),QTimeZone::UTC);
+    const auto end = start.addSecs(1800);
+    const KDarkLightTransition morning(KDarkLightTransition::Morning,start,end);
+    if (morning.type()!=KDarkLightTransition::Morning || morning.startDateTime()!=start || morning.endDateTime()!=end ||
+        morning.test(start.addSecs(-61))!=KDarkLightTransition::Upcoming ||
+        morning.test(start.addSecs(-60))!=KDarkLightTransition::InProgress ||
+        morning.test(start.addSecs(900))!=KDarkLightTransition::InProgress ||
+        morning.test(end.addSecs(-61))!=KDarkLightTransition::InProgress ||
+        morning.test(end.addSecs(-60))!=KDarkLightTransition::Passed ||
+        morning.test(end.addSecs(1))!=KDarkLightTransition::Passed ||
+        std::abs(morning.progress(start.addSecs(900))-0.5)>1e-9 || morning.progress(start.addSecs(-1))!=0.0 ||
+        morning.progress(end.addSecs(1))!=1.0) return failed(1,"transition identity, 60-second relation tolerance or progress");
+    const auto schedule = KDarkLightSchedule::forecast(reference,QTime(6,0),QTime(18,0),30min,3);
+    const auto cycles = schedule.cycles();
+    if (cycles.size()!=4 || cycles[1].noonDateTime()!=reference || cycles[1].morning()!=morning ||
+        cycles[1].evening().startDateTime().time()!=QTime(18,0) ||
+        schedule.previousTransition(reference)!=morning ||
+        schedule.nextTransition(reference)!=cycles[1].evening() ||
+        cycles[1].previousTransition(reference)!=morning || cycles[1].nextTransition(reference)!=cycles[1].evening()) return failed(2,"timed forecast or cycle/schedule transition lookup");
+    const auto extrapolated = cycles[1].extrapolated(reference.addDays(2));
+    if (extrapolated.noonDateTime()!=reference.addDays(2) || extrapolated.morning().startDateTime()!=start.addDays(2)) return failed(3,"cycle extrapolation");
+    const auto state = schedule.toState();
+    if (state.isEmpty() || KDarkLightSchedule::fromState(state)!=schedule ||
+        KDarkLightSchedule::fromState(QStringLiteral("malformed")) ||
+        !KDarkLightSchedule().cycles().isEmpty() || KDarkLightSchedule().nextTransition(reference)) return failed(4,"state round-trip, malformed state rejection or empty schedule");
+    const auto solar = KDarkLightSchedule::forecast(reference,0.0,0.0,3);
+    const auto polar = KDarkLightSchedule::forecast(QDateTime(QDate(2026,6,21),QTime(12,0),QTimeZone::UTC),90.0,0.0,3);
+    if (!solar || solar->cycles().size()!=4 || polar) return failed(5,"equatorial solar or polar-day forecast");
+    KDarkLightScheduleProvider restored(state);
+    if (restored.schedule()!=schedule || restored.state()!=state) return failed(6,"public provider state restoration");
+    std::cout << "KNightTime transitions, progress, timed/solar/polar schedules, cycle extrapolation and state round-trip: PASS\n";
+    if (argc>1 && QString::fromLocal8Bit(argv[1])==QStringLiteral("--daemon")) {
+        KDarkLightScheduleProvider provider;
+        int changes=0;
+        QObject::connect(&provider,&KDarkLightScheduleProvider::scheduleChanged,[&](){++changes;});
+        QElapsedTimer timer;timer.start();
+        while (timer.elapsed()<10000) {
+            QCoreApplication::processEvents(QEventLoop::AllEvents,100);
+            const auto current = provider.schedule().cycles();
+            if (changes>0 && current.size()>1 && current[1].morning().startDateTime().time()==QTime(7,0) &&
+                current[1].evening().startDateTime().time()==QTime(20,0) &&
+                current[1].morning().startDateTime().secsTo(current[1].morning().endDateTime())==1020) {
+                const auto serialized = KDarkLightSchedule::fromState(provider.state());
+                if (!serialized || *serialized!=provider.schedule()) return failed(7,"daemon provider state round-trip");
+                std::cout << "Real private D-Bus daemon subscription, refresh signal and migrated custom schedule: PASS\n";
+                return 0;
+            }
+            QThread::msleep(20);
+        }
+        std::cerr << "Daemon did not deliver the configured custom schedule and refresh signal\n";return 8;
+    }
+    return 0;
+}
+CLIENT
+cat > "${BASE}/run-session" <<'SESSION'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+CLIENT=$1
+SESSION_ROOT=$(mktemp -d)
+trap 'rm -rf "${SESSION_ROOT}"' EXIT
+export XDG_CONFIG_HOME="${SESSION_ROOT}/config" XDG_STATE_HOME="${SESSION_ROOT}/state" XDG_RUNTIME_DIR="${SESSION_ROOT}/runtime" TZ=UTC
+mkdir -p "${XDG_CONFIG_HOME}" "${XDG_STATE_HOME}" "${XDG_RUNTIME_DIR}"
+chmod 700 "${XDG_RUNTIME_DIR}"
+cat > "${XDG_CONFIG_HOME}/kwinrc" <<'CONFIG'
+[NightColor]
+Mode=Times
+MorningBeginFixed=0700
+EveningBeginFixed=2000
+TransitionTime=17
+CONFIG
+mapfile -t DAEMONS < <(dpkg -L knighttime | sed -n '\|/libexec/knighttimed$|p')
+[[ ${#DAEMONS[@]} == 1 ]]
+dbus-run-session -- bash -Eeuo pipefail -c '
+    "$1" > "$XDG_RUNTIME_DIR/daemon.log" 2>&1 &
+    daemon_pid=$!
+    trap '\''kill "$daemon_pid" 2>/dev/null || true; wait "$daemon_pid" 2>/dev/null || true'\'' EXIT
+    if ! "$2" --wait-service; then cat "$XDG_RUNTIME_DIR/daemon.log"; exit 1; fi
+    kill -0 "$daemon_pid"
+    if ! "$2" --daemon; then cat "$XDG_RUNTIME_DIR/daemon.log"; exit 1; fi
+    kill -0 "$daemon_pid"
+    test -s "$XDG_CONFIG_HOME/knighttimerc"
+' bash "${DAEMONS[0]}" "${CLIENT}"
+SESSION
+chmod +x "${BASE}/run-session"
+cmake -S "${BASE}/source" -B "${BASE}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${BASE}/build"
+"${BASE}/run-session" "${BASE}/build/ubuntu-knighttime-client" | tee "${BASE}/baseline-output.txt"
+dpkg-query -W -f='${Version}' knighttime-dev > "${BASE}/ubuntu-dev-version"
+dpkg-query -W -f='${Version}' libqt6core6t64 > "${BASE}/ubuntu-qt-core-version"
+sha256sum "${BASE}/build/ubuntu-knighttime-client" > "${BASE}/binary-sha256.txt"
+printf 'Ubuntu KNightTime baseline version: '; cat "${BASE}/ubuntu-dev-version"; printf '\n'

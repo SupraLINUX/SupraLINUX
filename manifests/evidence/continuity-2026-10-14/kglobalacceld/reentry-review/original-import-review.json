@@ -1,0 +1,101 @@
+{
+  "state": "CORRECTED CONST-GETTER IMPORT AUDIT PASS",
+  "reviewed_at": "2026-10-11T17:36:59.766874+00:00",
+  "scope": "Actual unchanged authenticated original Ubuntu ELF imports and exact original private diagnostic executable; static import evidence only",
+  "prior_audit_sha256": "e95ca3eef45c79921c2dff548c17ebb83275d167be1b322593692676dfa95bd8",
+  "prior_parser_error": "Prior changed_return_symbols omitted const-method K in _ZNK13KGlobalAccelD...; its unchanged-getter matching was ineffective. Original raw binaries and prior report preserved.",
+  "correct_changed_const_getter_symbols": [
+    "_ZNK13KGlobalAccelD12shortcutKeysERK5QListI7QStringE",
+    "_ZNK13KGlobalAccelD19defaultShortcutKeysERK5QListI7QStringE"
+  ],
+  "authenticated_original_consumers": [
+    {
+      "package": "kglobalacceld",
+      "version": "6.6.5-0ubuntu0.1",
+      "architecture": "amd64",
+      "archive_sha256": "ea186f181a738fa5c5ac03b3d215c6d57bd437d39126c4a3a188e43e3804eccc",
+      "elf": "usr/lib/x86_64-linux-gnu/libexec/kglobalacceld",
+      "elf_sha256": "caaee9ad41f79c4e2b8aa6d9356dcae0beccd6517130ce122821d8eb44c9897a",
+      "removed_private_imports": [],
+      "changed_const_getter_imports": [],
+      "all_KGlobalAccelD_imports": [
+        "_ZN13KGlobalAccelD4initEv",
+        "_ZN13KGlobalAccelDC1EP7QObject",
+        "_ZN13KGlobalAccelDD1Ev"
+      ],
+      "raw_log": ".work/kglobalacceld-private-sdk-transition-proposal-20261011/corrected-original-imports/kglobalacceld/kglobalacceld.txt"
+    },
+    {
+      "package": "kwin-wayland",
+      "version": "4:6.6.6-0ubuntu0.1",
+      "architecture": "amd64",
+      "archive_sha256": "a52e4185f87144a9df121319902ff82b18a5532e0e5a27937dc0449853e48a91",
+      "elf": "usr/bin/kwin_wayland",
+      "elf_sha256": "31858ca3969a93efff4909693db543444bd52286dd5f9eb945bc2df5b6d3dbf3",
+      "removed_private_imports": [],
+      "changed_const_getter_imports": [],
+      "all_KGlobalAccelD_imports": [],
+      "raw_log": ".work/kglobalacceld-private-sdk-transition-proposal-20261011/corrected-original-imports/kwin-wayland/kwin_wayland.txt"
+    },
+    {
+      "package": "kwin-wayland",
+      "version": "4:6.6.6-0ubuntu0.1",
+      "architecture": "amd64",
+      "archive_sha256": "a52e4185f87144a9df121319902ff82b18a5532e0e5a27937dc0449853e48a91",
+      "elf": "usr/bin/kwin_wayland_wrapper",
+      "elf_sha256": "77e1efa55cb1592836b9eabb002c554a4e1e713da02bea29d8e159cd106af5db",
+      "removed_private_imports": [],
+      "changed_const_getter_imports": [],
+      "all_KGlobalAccelD_imports": [],
+      "raw_log": ".work/kglobalacceld-private-sdk-transition-proposal-20261011/corrected-original-imports/kwin-wayland/kwin_wayland_wrapper.txt"
+    },
+    {
+      "package": "libkwin6",
+      "version": "4:6.6.6-0ubuntu0.1",
+      "architecture": "amd64",
+      "archive_sha256": "c2438dfaf46e940a98d201d0a64fc9de705e729b2a70e442111f0f861f83e2f6",
+      "elf": "usr/lib/x86_64-linux-gnu/libkwin.so.6.6.6",
+      "elf_sha256": "fb4f9611686fb9e898fd902c0fa579f9c5183952f30580854935ca4ec060775a",
+      "removed_private_imports": [],
+      "changed_const_getter_imports": [],
+      "all_KGlobalAccelD_imports": [
+        "_ZN13KGlobalAccelD4initEv",
+        "_ZN13KGlobalAccelDC1EP7QObject",
+        "_ZNK13KGlobalAccelD9interfaceEv"
+      ],
+      "raw_log": ".work/kglobalacceld-private-sdk-transition-proposal-20261011/corrected-original-imports/libkwin6/libkwin.so.6.6.6.txt"
+    },
+    {
+      "package": "libkwin-x11-6",
+      "version": "4:6.6.4-0ubuntu1",
+      "architecture": "amd64",
+      "archive_sha256": "3926b9f13476583725e7e8350cd87f4c5c6b54eb5d413d9302ca40b15a0ec190",
+      "elf": "usr/lib/x86_64-linux-gnu/libkwin-x11.so.6.6.4",
+      "elf_sha256": "f83c9e2755264124712fb74414ac131bbecae01898110b140a76bc16ab443f21",
+      "removed_private_imports": [],
+      "changed_const_getter_imports": [],
+      "all_KGlobalAccelD_imports": [
+        "_ZN13KGlobalAccelD4initEv",
+        "_ZN13KGlobalAccelDC1EP7QObject",
+        "_ZNK13KGlobalAccelD9interfaceEv"
+      ],
+      "raw_log": ".work/kglobalacceld-private-sdk-transition-proposal-20261011/corrected-original-imports/libkwin-x11-6/libkwin-x11.so.6.6.4.txt"
+    }
+  ],
+  "preserved_original_private_executable": {
+    "elf_sha256": "16cf8bf5f4a8c2b3cc69cedb160912446ec4e4f0b0f8da40f784035fcdaec8e6",
+    "removed_private_imports": [
+      "_ZN13KGlobalAccelD15setShortcutKeysERK5QListI7QStringERKS0_I12QKeySequenceEj",
+      "_ZN13KGlobalAccelD22setForeignShortcutKeysERK5QListI7QStringERKS0_I12QKeySequenceE"
+    ],
+    "changed_const_getter_imports": [
+      "_ZNK13KGlobalAccelD12shortcutKeysERK5QListI7QStringE",
+      "_ZNK13KGlobalAccelD19defaultShortcutKeysERK5QListI7QStringE"
+    ]
+  },
+  "negative_control_detects_both_changed_getter_imports": true,
+  "conclusion": "Corrected matching still finds no affected imports in the four declared original Ubuntu runtime consumers. The old private executable imports both changed getters and two removed setters, and remains explicitly incompatible. Static absence does not certify runtime or undeclared third-party SDK users.",
+  "canonical_effect": "none",
+  "package_attempt_consumed": false,
+  "transition_admitted": false
+}

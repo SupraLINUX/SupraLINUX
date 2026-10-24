@@ -1,0 +1,181 @@
+{
+  "schema": 1,
+  "scope": "Independent unchanged native test controls; only exact staged launcher admitted as a packaging fixture, never as package PASS",
+  "controls": [
+    {
+      "control_execution": 1,
+      "matrix_state": "NATIVE_CONTROL_MATRIX_COMPLETED",
+      "native_controls": {
+        "immediate": {
+          "state": "NATIVE_FAIL",
+          "exit_code": 2,
+          "passed": 8,
+          "failed": 2,
+          "skipped": 0,
+          "blacklisted": 0,
+          "mime_settle_seconds": 0,
+          "failed_functions": [
+            "testAddService",
+            "testMimeTypePatterns"
+          ],
+          "all_source_assertions_unchanged": true
+        },
+        "mime-settle-5-1-seconds": {
+          "state": "NATIVE_FAIL",
+          "exit_code": 1,
+          "passed": 9,
+          "failed": 1,
+          "skipped": 0,
+          "blacklisted": 0,
+          "mime_settle_seconds": 5.1,
+          "failed_functions": [
+            "testAddService"
+          ],
+          "all_source_assertions_unchanged": true
+        }
+      },
+      "infrastructure_cleanup": "PASS",
+      "canonical_package_effect": "none"
+    },
+    {
+      "control_execution": 2,
+      "matrix_state": "NATIVE_CONTROL_MATRIX_COMPLETED",
+      "native_controls": {
+        "precreated-qttest-directories": {
+          "state": "NATIVE_FAIL",
+          "exit_code": 1,
+          "passed": 9,
+          "failed": 1,
+          "skipped": 0,
+          "blacklisted": 0,
+          "mime_settle_seconds": 5.1,
+          "precreate_qt_test_directories": true,
+          "tool_extra_arguments": {},
+          "failed_functions": [
+            "testAddService"
+          ],
+          "all_source_assertions_unchanged": true
+        },
+        "complete-cache-rebuild": {
+          "state": "NATIVE_FAIL",
+          "exit_code": 1,
+          "passed": 9,
+          "failed": 1,
+          "skipped": 0,
+          "blacklisted": 0,
+          "mime_settle_seconds": 5.1,
+          "precreate_qt_test_directories": false,
+          "tool_extra_arguments": {
+            "kbuildsycoca6": [
+              "--noincremental"
+            ]
+          },
+          "failed_functions": [
+            "testAddService"
+          ],
+          "all_source_assertions_unchanged": true
+        }
+      },
+      "infrastructure_cleanup": "PASS",
+      "canonical_package_effect": "none"
+    },
+    {
+      "control_execution": 3,
+      "matrix_state": "NATIVE_CONTROL_MATRIX_COMPLETED",
+      "native_controls": {
+        "record-helper-file-reads": {
+          "state": "NATIVE_FAIL",
+          "exit_code": 1,
+          "passed": 9,
+          "failed": 1,
+          "skipped": 0,
+          "blacklisted": 0,
+          "mime_settle_seconds": 5.1,
+          "precreate_qt_test_directories": true,
+          "tool_extra_arguments": {},
+          "failed_functions": [
+            "testAddService"
+          ],
+          "all_source_assertions_unchanged": true
+        }
+      },
+      "infrastructure_cleanup": "PASS",
+      "canonical_package_effect": "none"
+    },
+    {
+      "control_execution": 4,
+      "matrix_state": "NATIVE_CONTROL_MATRIX_COMPLETED",
+      "native_controls": {
+        "official-kservice-menu": {
+          "state": "NATIVE_FAIL",
+          "exit_code": 1,
+          "passed": 9,
+          "failed": 1,
+          "skipped": 0,
+          "blacklisted": 0,
+          "mime_settle_seconds": 5.1,
+          "precreate_qt_test_directories": true,
+          "fixture_files": {
+            "home/.qttest/config/menus/applications.menu": "c3cf130af2a17c82476eca07dbf10c3269fe2ce1ae2ea1855c15994ef215d8e5"
+          },
+          "tool_extra_arguments": {},
+          "failed_functions": [
+            "testAddService"
+          ],
+          "all_source_assertions_unchanged": true
+        }
+      },
+      "infrastructure_cleanup": "PASS",
+      "canonical_package_effect": "none"
+    },
+    {
+      "control_execution": 5,
+      "matrix_state": "NATIVE_CONTROL_MATRIX_COMPLETED",
+      "native_controls": {
+        "real-helper-cache-settle-1-6-seconds": {
+          "state": "PASS",
+          "exit_code": 0,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "mime_settle_seconds": 5.1,
+          "precreate_qt_test_directories": true,
+          "fixture_files": {},
+          "tool_extra_arguments": {},
+          "tool_settle_seconds": {
+            "kbuildsycoca6": 1.6
+          },
+          "failed_functions": [],
+          "all_source_assertions_unchanged": true
+        }
+      },
+      "infrastructure_cleanup": "PASS",
+      "canonical_package_effect": "none"
+    },
+    {
+      "control_execution": 6,
+      "matrix_state": "NATIVE_CONTROL_MATRIX_COMPLETED",
+      "native_controls": {
+        "exact-staged-native-launcher": {
+          "state": "PASS",
+          "exit_code": 0,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0,
+          "blacklisted": 0,
+          "mime_settle_seconds": 0,
+          "precreate_qt_test_directories": false,
+          "fixture_files": {},
+          "tool_extra_arguments": {},
+          "tool_settle_seconds": {},
+          "native_launcher": "staged-tests/upstream-session",
+          "failed_functions": [],
+          "all_source_assertions_unchanged": true
+        }
+      },
+      "infrastructure_cleanup": "PASS",
+      "canonical_package_effect": "none"
+    }
+  ]
+}

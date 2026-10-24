@@ -1,0 +1,742 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Actual original Ubuntu runtime byte projection, actual failed candidate link path, six rejection controls and traced private plugin load/function/cleanup; byte restore only, not candidate certification",
+  "archive_path": ".artifacts/plasma-frontier/libksysguard-native-plugin-layout-20261009/inputs.zip",
+  "archive_sha256": "fae325dd96b6cac10180768fffbab6a187a7f02b7f5489e0b3691a0dfb3ecf21",
+  "files": {
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/duplicate-plugin-negative.stderr": {
+      "sha256": "67532d7a1d36cc6414bdfb75f36b07f38f546e61d78576cc12b3e9698cb2abf7",
+      "size": 419
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/duplicate-plugin-negative.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/foreign-plugin-negative.stderr": {
+      "sha256": "5b072f338b9c28a367356d7c74528ed9cef33cc665e872e24e9cf0d118e3dd53",
+      "size": 475
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/foreign-plugin-negative.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/missing-plugin-negative.stderr": {
+      "sha256": "67532d7a1d36cc6414bdfb75f36b07f38f546e61d78576cc12b3e9698cb2abf7",
+      "size": 419
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/missing-plugin-negative.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/non-elf-negative.stderr": {
+      "sha256": "c02d2d8facb9b067877a9c8da86d405312137f9f346936e9d66a3736ca38ce97",
+      "size": 507
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/non-elf-negative.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/observed-layout.json": {
+      "sha256": "2397c6bfab99101ca26829fd67eae326d21d7d21692a90f231e34e9d71f8e5c0",
+      "size": 758
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-layout-negative.stderr": {
+      "sha256": "de79571eb70216a18baba08bb0892e27bafcefabda2b88c3858fccaa1ac6c26d",
+      "size": 430
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-layout-negative.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-run-private.py": {
+      "sha256": "1b81e187c146b4f463972e47f779c31dd51e9402b676f2495d0707b7af80a912",
+      "size": 6580
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-origin-positive/actual-interface.txt": {
+      "sha256": "c925569475582ac73bf2d62374b2fd438a5e13f3ee3dca6ead52e1631db52d48",
+      "size": 1772
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-origin-positive/bus-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-origin-positive/client-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-origin-positive/client-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-origin-positive/native-inputs.json": {
+      "sha256": "bdba2aaae26870917556f36893eb0f15809a97711dd94ba63bcd42e8673ea1a3",
+      "size": 1253
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-origin-positive/provider-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-origin-positive/provider-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-origin-positive/sensor-face.png": {
+      "sha256": "2d449314bc1b826eb66a754965585e781ec344969d3d4c051c8a461c576eb0c4",
+      "size": 5321
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-origin-positive.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size": 2
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-origin-positive.stderr": {
+      "sha256": "73178fd6b322aea9af57dc9542625bcbabde65450aa6cfe0c4bce1f9b688b133",
+      "size": 43677
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-origin-positive.stdout": {
+      "sha256": "1acdb674b6ae7d7c3032010f8ce276595e238d1adc78bf5f55c4adab866f316b",
+      "size": 158
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-positive/actual-interface.txt": {
+      "sha256": "c925569475582ac73bf2d62374b2fd438a5e13f3ee3dca6ead52e1631db52d48",
+      "size": 1772
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-positive/bus-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-positive/client-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-positive/client-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-positive/native-inputs.json": {
+      "sha256": "5fe79bfcc05752b8c59e87e2fe550b717e6df3809228ac86a48aac599145b38e",
+      "size": 1136
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-positive/provider-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-positive/provider-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-positive/sensor-face.png": {
+      "sha256": "2d449314bc1b826eb66a754965585e781ec344969d3d4c051c8a461c576eb0c4",
+      "size": 5321
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-positive.stderr": {
+      "sha256": "c61a1ddd8e716dcda2d5aaa17753b8d7b102776ecd39804de3bbead279ab3a97",
+      "size": 132
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-runtime-positive.stdout": {
+      "sha256": "1acdb674b6ae7d7c3032010f8ce276595e238d1adc78bf5f55c4adab866f316b",
+      "size": 158
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.applicationstable/contents/config/main.xml": {
+      "sha256": "7aacb6842a18b9740b08ff6659e5353af0a4230677c96ea98c6e45af8e1f674a",
+      "size": 1912
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.applicationstable/contents/faceproperties": {
+      "sha256": "0785c1f75339855362f665d17cd9934cb5a49bcb290c35732a18de525d732ed9",
+      "size": 143
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.applicationstable/contents/ui/ApplicationDetails.qml": {
+      "sha256": "09641314affc28afba865943caa1d84e785ee350d22e0cd9fb1de385660975f9",
+      "size": 9389
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.applicationstable/contents/ui/ApplicationInformation.qml": {
+      "sha256": "97c1eef863bfacaadb37ec0dc4cab1db6caf143c23079ea696efbf32d44cd717",
+      "size": 1844
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.applicationstable/contents/ui/ApplicationsTableView.qml": {
+      "sha256": "0390d87de00eb5908a1ab0a6d83ad41d8424f9ff8fc928b16304789b19867bbb",
+      "size": 9783
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.applicationstable/contents/ui/CompactRepresentation.qml": {
+      "sha256": "2935f4c234c673a767d99ec170ac968f71666777ee42d2ae4673bb3eb00e991c",
+      "size": 540
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.applicationstable/contents/ui/Config.qml": {
+      "sha256": "8d1a5724bfd5e33e8441d275f4cdd112ddba395302c64db38d2a03b04eb07829",
+      "size": 800
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.applicationstable/contents/ui/FullRepresentation.qml": {
+      "sha256": "eb93a2c7bb49e57b4c9ee0296dbf500bb6ba6ba9b1b38d14b45b3cff8de011aa",
+      "size": 13884
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.applicationstable/contents/ui/LineChartCard.qml": {
+      "sha256": "63931fae93ae1cebdd2eb24266d20b70bdc232f92b255928fcf12990d0beec39",
+      "size": 3990
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.applicationstable/metadata.json": {
+      "sha256": "e8ba2aa6e8d0200890714431fe7d3ed760a463f9e2170b12854dbfbc8947832b",
+      "size": 4764
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.barchart/contents/config/main.xml": {
+      "sha256": "140e54eaf8a43cba36f2bb46d741ca7336970048d017dc0ba4b62d8117315dca",
+      "size": 1561
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.barchart/contents/faceproperties": {
+      "sha256": "d91d5304a22d23b875fdc97f7255d008332396934aabced66accf3794fd3d4a0",
+      "size": 96
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.barchart/contents/ui/BarChart.qml": {
+      "sha256": "4cfb8d4f9356e9b6a6b29105c02b3314aa5cccbaae4d4a1356760b00e80dfdba",
+      "size": 2605
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.barchart/contents/ui/CompactRepresentation.qml": {
+      "sha256": "d8ded2e8b0ebd7f568afda6462ca620d8f90dcdbed469ba760a4ded4e7e1102b",
+      "size": 2726
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.barchart/contents/ui/Config.qml": {
+      "sha256": "ba7d4181f1f7bbdcdace2f99b1ed1339229a350661647bf043daa662544c97b3",
+      "size": 3203
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.barchart/contents/ui/FullRepresentation.qml": {
+      "sha256": "a94e17e3a23192ca0eebc76badede4c1f4fd108187ac4111e1ecf3df03c5e345",
+      "size": 5130
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.barchart/metadata.json": {
+      "sha256": "8d58e0bcc3907986f992c3394ed8d8bd2e84f5e6f1a91e20da27707bd8a71acc",
+      "size": 3819
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.colorgrid/contents/config/main.xml": {
+      "sha256": "f31b51066ce1f77d2a6500666925aaa3f427dc8e3eba165337512efe4cca9163",
+      "size": 542
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.colorgrid/contents/faceproperties": {
+      "sha256": "41be601462799c90b53dc2235a2cb4962f1b98d17f0fe016452a1b227e834efa",
+      "size": 97
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.colorgrid/contents/ui/CompactRepresentation.qml": {
+      "sha256": "cfd454946d1ddafbeb5874b4f5708e7ff70a4560309abeee76cd4416a90b1f5f",
+      "size": 1595
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.colorgrid/contents/ui/Config.qml": {
+      "sha256": "c70135db0aae5ff85ac5b7a4adc55fa866990b2b9daf8e8b8f5631e769ef8eb2",
+      "size": 1079
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.colorgrid/contents/ui/FaceGrid.qml": {
+      "sha256": "7b688503ddcf7b881ca94f2a4a39e01b2ff2a8591fcf97f2a24b8ae29c86845e",
+      "size": 1902
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.colorgrid/contents/ui/FullRepresentation.qml": {
+      "sha256": "77d66f8b57c33af93ac2f7987c9c9ead9a18566d18c2fe7958174ac559b4e6f5",
+      "size": 1446
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.colorgrid/contents/ui/SensorRect.qml": {
+      "sha256": "628fb85b0fe9ec09b573f64acbb18cac1903f958bd3d5d1a2e9762a6bd92e9e7",
+      "size": 883
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.colorgrid/metadata.json": {
+      "sha256": "5c4bbd7b52f4f3d8de761c9ab8c6cbf70601bb4f81683afa1714f6dc34629572",
+      "size": 3798
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.facegrid/contents/config/main.xml": {
+      "sha256": "d2c3b2ca90d9e0d03b1b1dc0ba0dd02b2c3cba08af5de87516e97ee6536f7378",
+      "size": 559
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.facegrid/contents/faceproperties": {
+      "sha256": "af5bf327cd0b4c21761a2fa77e9c7d2d649aa095407b7cb0759e49e1bec42154",
+      "size": 96
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.facegrid/contents/ui/CompactRepresentation.qml": {
+      "sha256": "3af4a860f095b454c3a1aeca5f7569cbde796fb6ae78b8b351acda730390d0a7",
+      "size": 1599
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.facegrid/contents/ui/Config.qml": {
+      "sha256": "c4ff7a917239362886cdf9c9b1ecd609996459c19203647cf51356d79760668a",
+      "size": 3690
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.facegrid/contents/ui/FaceControl.qml": {
+      "sha256": "c4be9eec1110b707371c2c39d0e990945857b6ac38060e4625441d21499e7634",
+      "size": 2265
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.facegrid/contents/ui/FaceGrid.qml": {
+      "sha256": "81dcf442dc86ab40b35002b6ad69cea165306b3a61589772765eee7f48762222",
+      "size": 1604
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.facegrid/contents/ui/FullRepresentation.qml": {
+      "sha256": "5b5af4e791383cab08748e5508a9d1dfd13a699c6fad94b7b359864cdc379736",
+      "size": 2118
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.facegrid/metadata.json": {
+      "sha256": "f8ad93ed507452bb11f68990f4fa804ae93556fb208cd145e7bc36afc85ea3a0",
+      "size": 3411
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.horizontalbars/contents/config/main.xml": {
+      "sha256": "788f933b2305cc5bd04fb20c9140d8efc26a14dda6d7b7461cd818eb0d0a9a71",
+      "size": 1047
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.horizontalbars/contents/faceproperties": {
+      "sha256": "d91d5304a22d23b875fdc97f7255d008332396934aabced66accf3794fd3d4a0",
+      "size": 96
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.horizontalbars/contents/ui/Bar.qml": {
+      "sha256": "0eb531dfcb226635d4d365a751f4686f840997d0306ec7d365d8e41d2bf14cd0",
+      "size": 1662
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.horizontalbars/contents/ui/CompactRepresentation.qml": {
+      "sha256": "4d0c3665ad1bf0f814e34d224fec6f1d9f0686440dd7817cdaea2415ec7e727f",
+      "size": 1816
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.horizontalbars/contents/ui/Config.qml": {
+      "sha256": "909e23642c082a0a2edb1ca0e46a45ec1d5912bef5458f7e56c753745b587ed9",
+      "size": 1567
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.horizontalbars/contents/ui/FullRepresentation.qml": {
+      "sha256": "e6385dccba851531f213e46409e716ed2f46d65cb23b2038a1010fed59f9a9da",
+      "size": 3493
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.horizontalbars/metadata.json": {
+      "sha256": "26baa9b9e3ca12b6f4e5530dc2677e8cd33df6a5e8325735664285c67f7fbdcd",
+      "size": 4065
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.linechart/contents/config/main.xml": {
+      "sha256": "65e4b3e4873026e8b3a8ad05b5be0575235f72256230e1776428ceb2398d6cf1",
+      "size": 2062
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.linechart/contents/faceproperties": {
+      "sha256": "d91d5304a22d23b875fdc97f7255d008332396934aabced66accf3794fd3d4a0",
+      "size": 96
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.linechart/contents/ui/CompactRepresentation.qml": {
+      "sha256": "387970e1aa2c0075b7654b6170feb4860ab7ccbb2d83e1647f8cbae0062c30df",
+      "size": 1208
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.linechart/contents/ui/Config.qml": {
+      "sha256": "eda0b8a8e89ded97c8291613b805aba7d01f34a0e76fa075694b4545a9bcdede",
+      "size": 3406
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.linechart/contents/ui/FullRepresentation.qml": {
+      "sha256": "72719b39972eb7243d504ce13ac656fc8ae7d4cc78c07e343bfba25481b418b2",
+      "size": 4582
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.linechart/contents/ui/LineChart.qml": {
+      "sha256": "154276df8087771275c7211fee55dea02517ebcbdddf57d584cb80be8ca0a1db",
+      "size": 4663
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.linechart/metadata.json": {
+      "sha256": "a26372cc23612b03a44602bb5a004797bce9ae7faa589aab8b02da40f203cdaa",
+      "size": 3920
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.piechart/contents/config/main.xml": {
+      "sha256": "0142d9276347fd814618d3cc12686efc98b49ad040c98402d204dc9a78a88910",
+      "size": 1440
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.piechart/contents/faceproperties": {
+      "sha256": "74c9f6e166d9f518faf31a6d1e065fd4627b5daf119a17449a7ff76fdaae3628",
+      "size": 113
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.piechart/contents/ui/CompactRepresentation.qml": {
+      "sha256": "1d10c3e2191ab7dc59cab6d62d22ed167d58359d31055eeed9661cbcb1cd70b2",
+      "size": 1596
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.piechart/contents/ui/Config.qml": {
+      "sha256": "882844ef9a9fb45fa35a27b595324b4df9058882ecbe7212bc95001684eb8662",
+      "size": 2513
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.piechart/contents/ui/FullRepresentation.qml": {
+      "sha256": "12bb25388299b67010f926ef594d0aaa62e568155d77932e8977fd4a73db4219",
+      "size": 2479
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.piechart/contents/ui/PieChart.qml": {
+      "sha256": "aee428823add485ece9afb110ec1aaa69f818a40e6c8ad3174894c4d60ba824b",
+      "size": 3144
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.piechart/contents/ui/UsedTotalDisplay.qml": {
+      "sha256": "4e97b529da729d385f57180190602524e4b5f800555242557d1ff6506255a7b2",
+      "size": 5145
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.piechart/metadata.json": {
+      "sha256": "333e233d203e7b961e7b6eb830d1252ae510be2678b830c7c33f544d52a73859",
+      "size": 3894
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.processtable/contents/config/main.xml": {
+      "sha256": "f1fffba79a88a3889b6dd35d2748cba0583b9f3d6f75e966e6d40cc95e52375b",
+      "size": 2004
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.processtable/contents/faceproperties": {
+      "sha256": "0785c1f75339855362f665d17cd9934cb5a49bcb290c35732a18de525d732ed9",
+      "size": 143
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.processtable/contents/ui/CompactRepresentation.qml": {
+      "sha256": "2fa3e7e5cf413b48ea9332e11986b98b1a038b7861ba29e6bb7b5a5f9ffe46e1",
+      "size": 562
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.processtable/contents/ui/Config.qml": {
+      "sha256": "475c9a3107a762e944fd07f3d285fa0076bec64a680aa5ac5a42c782563628d1",
+      "size": 1549
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.processtable/contents/ui/FullRepresentation.qml": {
+      "sha256": "38ac1ecf1f8749751fedc0709c2b50904ffaac363147f38f4d15fddc01d9c274",
+      "size": 14943
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.processtable/contents/ui/ProcessTableView.qml": {
+      "sha256": "343f0a1f07916fbe6b154617fd9241f54b980acc8150f158f93c658cd9e8c2a3",
+      "size": 6922
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.processtable/metadata.json": {
+      "sha256": "0353dd1a895b41fc1554d919199cf347f49a1a78fe613f350e05fc3d8ff4ece2",
+      "size": 4637
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.textonly/contents/config/main.xml": {
+      "sha256": "2ab9517850cb3761012430004bfc315ed4dc5ddf928b46a7a8f04191565c17ad",
+      "size": 444
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.textonly/contents/faceproperties": {
+      "sha256": "2a8ad823b04d43dcdae037bce377885edd2a78dd1ca41b4f9ff71b900f4a27ce",
+      "size": 95
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.textonly/contents/ui/CompactRepresentation.qml": {
+      "sha256": "6a82064401d3607c56e46f1e3f5b7188ffedcf5cbae6ea3aed3e3562b9e421b7",
+      "size": 4202
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.textonly/contents/ui/Config.qml": {
+      "sha256": "97cc604cb9d56c56df89746632a7058aa7c47ad5bdb93b608f7e79b5e76eeaa3",
+      "size": 594
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.textonly/contents/ui/FullRepresentation.qml": {
+      "sha256": "53d968550d6b34638f6d10804e7e7fab4d34348a34377dc3798341d2f8fe2a92",
+      "size": 2364
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.textonly/contents/ui/GroupedText.qml": {
+      "sha256": "b7485b782728b06d6f8cc6c85a3b66033bac09b15c4d61972734cd9ea86e6fd8",
+      "size": 5104
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/faces/facepackages/org.kde.ksysguard.textonly/metadata.json": {
+      "sha256": "f80aa821432e8437f3b1d49d6ef808f2b343ed96ee7f417cee9dac580a93005c",
+      "size": 3765
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/ksysguard_sensorface.so": {
+      "sha256": "49625695ac760fd282ec771bc14afd3cc475caa183540afdecd0bc0fd9f0b1a2",
+      "size": 23288
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/Choices.qml": {
+      "sha256": "5d46eb9056394da33045a10ca3138f6d947c4cb58a36675a115bba73d3386733",
+      "size": 22377
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/CompactSensorFace.qml": {
+      "sha256": "23b1d5ed4ecb14907dd34b3f5f5a8a5bf999d2eebe5c49c3079fc736fe584d9e",
+      "size": 1625
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/ExtendedLegend.qml": {
+      "sha256": "6585d61b16473548900f0a1716299e1bd9e6a33a2f0dee302b16e6942dbae0de",
+      "size": 3544
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/SensorFace.qml": {
+      "sha256": "47c3c20aa15140689b253cc5d2c68b51fff01d4fc1396b62429321eed81d8fcc",
+      "size": 2545
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/SensorFaces.qmltypes": {
+      "sha256": "cc1a34f725c50caf7d97b4f8324543d7427c69057bc4ed8b1ea88e5b4fce4799",
+      "size": 12895
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/SensorRangeSpinBox.qml": {
+      "sha256": "ee57660ba267fe4b0e318b9aa74af6df9d507fa73f484a6d61f6a389d60c3b88",
+      "size": 4310
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/SuffixSpinBox.qml": {
+      "sha256": "b13e1f9909d92af5478c71dd5871b5d27975f5a479dbd4d89629b3ac5d755dc8",
+      "size": 1983
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/kde-qmlmodule.version": {
+      "sha256": "7c23b0e9de404054294f7b138c48ade912fa4d215881462cef3b78eb292decf8",
+      "size": 6
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/libSensorFacesplugin.so": {
+      "sha256": "61a8d298ad698c81db57cc19434cf3f982f89c12a0e835201b655cc839b62ded",
+      "size": 19064
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/private/SensorFacesPrivate.qmltypes": {
+      "sha256": "d8f77578082f120e1a526121ce2faec056114ad21b0d534c4d449e4f7a6bc6b6",
+      "size": 22595
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/private/kde-qmlmodule.version": {
+      "sha256": "7c23b0e9de404054294f7b138c48ade912fa4d215881462cef3b78eb292decf8",
+      "size": 6
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/private/libSensorFacesPrivate.so": {
+      "sha256": "1c48523b7fd155d629a29197c0ebe9fd621ef047e9456baaae9fd0309ef051ec",
+      "size": 36344
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/private/qmldir": {
+      "sha256": "26b61a3a4036b4d1353ac138a6e426361cc1985385eb67a82e27bf868d89c63d",
+      "size": 239
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/faces/qmldir": {
+      "sha256": "fc38a0517d6a5faec8c2f6c9b780f9cdd6caa4271a2cd8be91c4ed35ea7bb4e3",
+      "size": 494
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/formatter/Formatter.qmltypes": {
+      "sha256": "5ba5baca52503e8deb21ad9fb4c062e59ec77c47d8e0858b67bb312cf58de238",
+      "size": 5293
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/formatter/kde-qmlmodule.version": {
+      "sha256": "7c23b0e9de404054294f7b138c48ade912fa4d215881462cef3b78eb292decf8",
+      "size": 6
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/formatter/libFormatterplugin.so": {
+      "sha256": "0dbf81eed7260bbad39b314282488637b2c6f9fbfc93ddbdb2b22ea6126e5a9f",
+      "size": 19064
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/formatter/qmldir": {
+      "sha256": "2df7dd8ac5640c81ae72e2f360f8f75fb7b99861a8d68cfd70c415dcd5cffc99",
+      "size": 212
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/ColumnControl.qml": {
+      "sha256": "de2d4f4c6676107a5880587693fe74bb117968e8ff76a0d467d9b988d9391c58",
+      "size": 5191
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/ConditionalLoader.qml": {
+      "sha256": "83aae52a4f18dfbf5e99cc5bd6e74a9e2ab2aa9e18d22fa7409640aac5996dfc",
+      "size": 536
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/Container.qml": {
+      "sha256": "88bb42aa4194e254419c77007282543ca7267304f1f7cd97b2be040738c6396a",
+      "size": 4156
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/DialogLoader.qml": {
+      "sha256": "f5ce2fb5b99fdfca34e153d6043066c8b628f464e5551295c95dcbc102fc04b3",
+      "size": 440
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/EditablePage.qml": {
+      "sha256": "4c2f9e3eac62a1eac273ee8ece0fed4a113b814f60996631451155a7a0d86ecb",
+      "size": 9186
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/EditablePageAction.qml": {
+      "sha256": "bda5c53390635f5074b84196e773e7ff5ccfd884dbf7ebeeb462a4e3584c6593",
+      "size": 703
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/EditorToolBar.qml": {
+      "sha256": "e273d4abf72428516e881952d99b8a61e695cf7dfe5afcbbe4788d97f8251c34",
+      "size": 1398
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/FaceConfigurationPage.qml": {
+      "sha256": "660cdcd43fc727b3103cd9a9307efca062e05750b02b4ed9c04af19acebd587a",
+      "size": 7854
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/FaceControl.qml": {
+      "sha256": "bc71b1f90e1f5bd324138fc96e174353e7087ef1326dbcce4fc3d636eb2ae5d1",
+      "size": 2767
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/LoadPresetDialog.qml": {
+      "sha256": "aadb635007b56d30f9be4cbaafa23cfe9a92ab517b59a0e8ef0f995283b25750",
+      "size": 2152
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/MissingSensorsDialog.qml": {
+      "sha256": "74fad2a0caff0b4918dbac8616c208c252461fd8c5781ff90aa0afee57ff58ac",
+      "size": 2763
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/MoveButton.qml": {
+      "sha256": "19136f231f1f57f00de4422321ab7c0657301a27290da3a8734c0bae330edb8f",
+      "size": 6479
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/PageContents.qml": {
+      "sha256": "d97edd96c02f4926f35cbf068e17f5823ecf83cc14e00592760f406038ec4a4e",
+      "size": 12718
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/PageDialog.qml": {
+      "sha256": "58e748c6da94b21d2c124f1c343d477fe5e0144b2925871512699ed2acad5544",
+      "size": 5587
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/PageEditor.qml": {
+      "sha256": "fd3f37228a97ccb14ff027c53aa20b98796b2c342e3f1d7cfb388a0875f1838a",
+      "size": 6282
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/PageSortDialog.qml": {
+      "sha256": "2dbcfee01e44485abbfc167daf3bc0e7cc0eca29305ec2c26e229c97bffe5ec4",
+      "size": 10341
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/PlaceholderRectangle.qml": {
+      "sha256": "d1002daa2895439d8c2188d4e244e3239031951dc8d49b57760436ebf247bf47",
+      "size": 1018
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/PlasmaSystemMonitorPage.qmltypes": {
+      "sha256": "62ab0285cc2c3fe945e6990d78e1f3e36979d5912d38172292c4af5cf9eb9433",
+      "size": 39094
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/RowControl.qml": {
+      "sha256": "e0ea7d25da542fc43eb3530bf0f0254ef5bbd710886bf933acacec8102cec037",
+      "size": 6193
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/SectionControl.qml": {
+      "sha256": "9a822f13a92c605d42300ff9c9fc1cc6a6b738d5dd859ca3b1396571385200cb",
+      "size": 1537
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/kde-qmlmodule.version": {
+      "sha256": "22343ae4936a953e276b0f1c107dcf12131356c14ac56dcde35b3e653e0b2dcc",
+      "size": 6
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/libPlasmaSystemMonitorPageplugin.so": {
+      "sha256": "5994f64679fed4a1b82886b16959d2299e91a3a621fcd9e55fe117f118983738",
+      "size": 19056
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/page/qmldir": {
+      "sha256": "e44247297d8cd01ca1cece33a98a3e7db3ec599229a7e28af7d0df51220ba006",
+      "size": 1054
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/process/kde-qmlmodule.version": {
+      "sha256": "7c23b0e9de404054294f7b138c48ade912fa4d215881462cef3b78eb292decf8",
+      "size": 6
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/process/libprocesscoreplugin.so": {
+      "sha256": "faedec8b31617c9e8bc9b2ee65e3cf0804ee57e7a532e7e1fd85d8cd9ca82215",
+      "size": 19064
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/process/processcore.qmltypes": {
+      "sha256": "cbf88dba6b6e3ed39b083755f0d3244b9a5e25b42e8b6fbdcee73be4549f2d8f",
+      "size": 34600
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/process/qmldir": {
+      "sha256": "a0505e9da9445d7a2abfe7353e543c0d939f8598b536d8936e2d086cbac294d0",
+      "size": 212
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/sensors/Sensors.qmltypes": {
+      "sha256": "239a978ea4b2f383a5481a3d7544d9fec9628ecd8c9d9bfd7a443f61a20de44f",
+      "size": 29217
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/sensors/kde-qmlmodule.version": {
+      "sha256": "7c23b0e9de404054294f7b138c48ade912fa4d215881462cef3b78eb292decf8",
+      "size": 6
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/sensors/libSensorsplugin.so": {
+      "sha256": "bd9cc9f1bd04ad6fda85efbc79c64ab425559bb53dc58a26ad87c576d3145543",
+      "size": 19064
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/sensors/qmldir": {
+      "sha256": "49be54c15cca6eea86e6b98b442d5813de7abb754ff91cf85fe5546233ff79f6",
+      "size": 215
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/BaseCellDelegate.qml": {
+      "sha256": "cdba6c98addfbd5e4c35ecf3048e14ba3e1ed39c6e2f04586ad301dee2076f1c",
+      "size": 1553
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/BaseTableView.qml": {
+      "sha256": "bda8a4a896fc505b70ba4a97c43203824a1a330233415efea7b4a5b6df943f92",
+      "size": 8003
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/ColumnConfigurationDialog.qml": {
+      "sha256": "93545fbc51828ce957b85d6e55f3df7ab8868ea8183c3fbcd6471a982f3c4eca",
+      "size": 10887
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/FirstCellDelegate.qml": {
+      "sha256": "c68f79739863b32fb6db5fe6d822fcc62c86a1ccad1b4b60548881a231acce05",
+      "size": 1556
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/KillDialog.qml": {
+      "sha256": "bb2a6c6f8e1c0ce1e09792c86ec0b6c1c6377ac982b03acd925db63486c0f00f",
+      "size": 2323
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/LineChartCellDelegate.qml": {
+      "sha256": "cc4300750b9abf7ef4045e8eea2235be36227ac447383b95887fe9c66e28ea14",
+      "size": 1700
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/PlasmaSystemMonitorTable.qmltypes": {
+      "sha256": "ca0e40aace0f95e3ba5ae07f309a174b9c2e6d0fbd2f55367bc15bdd75b2eaf8",
+      "size": 36266
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/ReniceDialog.qml": {
+      "sha256": "e558f7b7c78f43d38be0894091cd82d793f9d59e0a45c15b3cea8a2bcac0b41d",
+      "size": 9571
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/TableViewHeader.qml": {
+      "sha256": "9808d13649136eb947ecb842d96fc8843fb8f808ffc4f38fe0ceb45720783fb4",
+      "size": 3593
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/TextCellDelegate.qml": {
+      "sha256": "ee006914eb18b773344e650ea521730461ef6e314ed3fff8abaac08d5ab3a473",
+      "size": 628
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/UserCellDelegate.qml": {
+      "sha256": "3b4ab5f22bc8ecadb55fc0661bb845600107243dec583d6a1a5b26e9e04d88b7",
+      "size": 1505
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/kde-qmlmodule.version": {
+      "sha256": "22343ae4936a953e276b0f1c107dcf12131356c14ac56dcde35b3e653e0b2dcc",
+      "size": 6
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/libPlasmaSystemMonitorTableplugin.so": {
+      "sha256": "f9b93373fd14bed36db34f7f46036006fc2b74b4cd4908386b82f66463ee6dc6",
+      "size": 19056
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/obj-original-ubuntu/bin/org/kde/ksysguard/table/qmldir": {
+      "sha256": "5d30eadb9d25dd566fd7467c22bd85921b6549de8c7fabff8f89ba7ec8342396",
+      "size": 718
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/systemstats/AggregateSensor.h": {
+      "sha256": "854945356a3a07c3b22c3f18a65266a70a052e9f3675871cade55cf84ad6d002",
+      "size": 3300
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/systemstats/DBusInterface.h": {
+      "sha256": "8396869a440a4a8d9961427ab659deddf1bb36622303b8acd883be44c853f534",
+      "size": 930
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/systemstats/SensorContainer.h": {
+      "sha256": "c68e6aba4227f8edf17f1d48811981a22f2840b523ff02967322c9a69d8270f3",
+      "size": 1713
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/systemstats/SensorInfo.h": {
+      "sha256": "28aa5a1aa1a0a05e9cf065ea8f848288268d2ce1259e93b35883ea82c470ec2d",
+      "size": 2741
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/systemstats/SensorObject.h": {
+      "sha256": "8efc0049129721a5d13641bc49cd0848ee654b1708335af6bc68a6272465c5f0",
+      "size": 1553
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/systemstats/SensorPlugin.h": {
+      "sha256": "5ac6905ec5cc05a324cae3085d593f26efa4bd9e7c20476fddd492fd02b4fe18",
+      "size": 1178
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/systemstats/SensorProperty.h": {
+      "sha256": "d821f4f99e671384c2deb537d4c7bdf94adf9397c741aace4b85d19e7c63f0dd",
+      "size": 3728
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/systemstats/SensorsFeatureSensor.h": {
+      "sha256": "a8b12f48f71abdb7cb2fbaa1805de34e6f1c8b9c4ea485acb34bdbcd1eb2d907",
+      "size": 2097
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/systemstats/SysFsSensor.h": {
+      "sha256": "07dc750a96c72a58c40807f8996d795c9a475510ee734454737ceedbc7bbf537",
+      "size": 1430
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/systemstats/SysctlSensor.h": {
+      "sha256": "94d7eeec100f2d990715c6f74c2962dcd74ee1ac76a63db4dd7174a4fc35b920",
+      "size": 3155
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/systemstats/org.kde.ksystemstats1.h": {
+      "sha256": "79f9fca9ee2da4b0a2d6aafff34966931f56566641ae84a7e051072eb841597b",
+      "size": 2746
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/original-ubuntu-layout-source/systemstats/systemstats_export.h": {
+      "sha256": "cdc96015d7b632fa7cb573862121399a9bb4bc9823456f0432ec6c4419c996cd",
+      "size": 1197
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/review.json": {
+      "sha256": "9f3afaa129143f383ff3e28a04c9d3f325cf80c9fc33f4754717109f92e05c79",
+      "size": 32439
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/run-private.py": {
+      "sha256": "ef74fee88af49e2a0b6c144d7d62d7707faade0265785f1c6288f8966c222538",
+      "size": 8209
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/wrong-qml-uri-negative.stderr": {
+      "sha256": "7e645d92a072a9407a26c23c0ade1e1fa1b376031ba74b1be03084a9f31f00a0",
+      "size": 421
+    },
+    ".work/dependent-plasma-review/libksysguard/native-plugin-layout-review/wrong-qml-uri-negative.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    }
+  },
+  "empty_offline_byte_restore_verified": true,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

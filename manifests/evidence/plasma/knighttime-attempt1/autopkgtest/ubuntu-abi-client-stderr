@@ -1,0 +1,2 @@
+dbus-daemon[1017]: [session uid=0 pid=1017 pidfd=5] Activating service name='org.kde.NightTime' requested by ':1.0' (uid=0 pid=1020 comm="/var/tmp/supralinux-knighttime-baseline/build/ubun" label="unconfined")
+dbus-daemon[1017]: [session uid=0 pid=1017 pidfd=5] Successfully activated service 'org.kde.NightTime'

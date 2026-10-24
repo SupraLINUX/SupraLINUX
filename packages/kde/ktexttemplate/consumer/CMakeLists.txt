@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXKF6TextTemplateConsumer LANGUAGES CXX)
+find_package(KF6TextTemplate 6.30.0 REQUIRED CONFIG)
+add_executable(ktexttemplate-consumer main.cpp)
+target_link_libraries(ktexttemplate-consumer PRIVATE KF6::TextTemplate)

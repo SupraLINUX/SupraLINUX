@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Actual local clean-rootfs derivation using exact immutable base and retained authoritative Ubuntu CA bytes, proposed generic admission/validation guard and original152-input CLI record; fresh KVM certification remains mandatory",
+  "archive_path": ".artifacts/host-network-safety/kde-cli-tools-rootfs-policy-repair-20261010/inputs.zip",
+  "archive_sha256": "8c5e6e2ae251cdb4e1f2a03ea7f0969842b0393a8f74675db2f9b61d55679158",
+  "files": {
+    ".work/kde-cli-tools-rootfs-policy-repair-20261010/derived-clean-rootfs.tar": {
+      "sha256": "099afb4d940579baa8bb5c761033f741e90f684d7863215524768ef277b26194",
+      "size": 434933760
+    },
+    ".work/kde-cli-tools-rootfs-policy-repair-20261010/local-rootfs-derivation.json": {
+      "sha256": "76954ce0d3b0bf2d06150e556e440e1a1a895e1045c6640b4775eee60e9e51a0",
+      "size": 15708
+    },
+    ".work/kde-cli-tools-rootfs-policy-repair-20261010/previous-authoritative-rootfs-admission.json": {
+      "sha256": "cee64ee5ef02a2c10a34f702effcd1ce9fde199770e79442986b9a67b8607720",
+      "size": 15564
+    },
+    ".work/kde-cli-tools-rootfs-policy-repair-20261010/record.json": {
+      "sha256": "582832afb94297fd702028bddd27ff0b72137bace887e35521eb611759b07221",
+      "size": 38097
+    },
+    ".work/kde-cli-tools-rootfs-policy-repair-20261010/rootfs-ca-certificates.crt": {
+      "sha256": "7975117e54f05f0ed1e1e767efd1f6827d662d720282ad4a360eecc636958de8",
+      "size": 182140
+    },
+    ".work/ubuntu-rootfs-https-review/bare.tar": {
+      "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+      "size": 434753024
+    },
+    "scripts/prepare-plasma-package.py": {
+      "sha256": "d41f391aff78c35ee2cca97536d01b31a11504998f1fa8eb4b6141d2f3d536b4",
+      "size": 7600
+    },
+    "scripts/admit-reviewed-plasma-level0-package.py": {
+      "sha256": "1f09f953077e3f70e6fa65dbbdce8b27626b86a8ba788da5f1c9f4559a201ca4",
+      "size": 7144
+    },
+    "scripts/validate_plasma_package_build.py": {
+      "sha256": "f15ba94c360e64981638fbd9f7115ea2cb24de466d715bd6bbf13e4dd11a03a5",
+      "size": 31408
+    },
+    "scripts/test-plasma-package-inputs.py": {
+      "sha256": "c34b7595570214ef3388cc0b5ce4e9ed0745a83ebfdeeb18c17d6dba6b980c0d",
+      "size": 27556
+    },
+    "scripts/prepare-milestone-sbuild-rootfs.py": {
+      "sha256": "ae5bd27f2a7c27de9bb926dcc6ed7096bf44095133cdbbfe517f7683b8ffa7f6",
+      "size": 9500
+    },
+    "scripts/test-milestone-sbuild-rootfs.py": {
+      "sha256": "328f829696640e5ff49b8c2fb91138bb11f74837bb25177c9f0f41b624817505",
+      "size": 6886
+    }
+  },
+  "empty_offline_byte_restore_verified": true,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

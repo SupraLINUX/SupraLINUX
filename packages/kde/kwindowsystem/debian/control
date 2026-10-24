@@ -1,0 +1,87 @@
+Source: kf6-kwindowsystem
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               dh-sequence-qmldeps,
+               cmake (>= 3.29~),
+               extra-cmake-modules (>= 6.30.0~),
+               libx11-dev,
+               libxcb-icccm4-dev,
+               libxcb-keysyms1-dev,
+               libxcb-res0-dev,
+               libxcb-xfixes0-dev,
+               libxcb1-dev,
+               libxfixes-dev,
+               libxkbcommon-dev,
+               libxrender-dev,
+               openbox <!nocheck>,
+               pkgconf,
+               plasma-wayland-protocols,
+               qt6-base-dev (>= 6.9.0~),
+               qt6-base-private-dev (>= 6.9.0~),
+               qt6-declarative-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+               qt6-wayland-dev (>= 6.9.0~) [linux-any],
+               wayland-protocols (>= 1.46~) [linux-any],
+               weston [linux-any] <!nocheck>,
+               x11-utils <!nocheck>,
+               xauth <!nocheck>,
+               xvfb <!nocheck>,
+Standards-Version: 4.7.3
+Homepage: https://invent.kde.org/frameworks/kwindowsystem
+Rules-Requires-Root: no
+
+Package: libkf6windowsystem-data
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: KWindowSystem shared data
+ KWindowSystem provides access to window-manager properties and features.
+ .
+ This package contains translations and logging metadata.
+
+Package: libkf6windowsystem-dev
+Section: libdevel
+Architecture: any
+Depends: libkf6windowsystem6 (= ${binary:Version}),
+         qml6-module-org-kde-kwindowsystem (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         qt6-declarative-dev (>= 6.9.0~),
+         qt6-wayland-dev (>= 6.9.0~) [linux-any],
+         ${misc:Depends},
+Recommends: libkf6windowsystem-doc (= ${source:Version}),
+Description: development files for KWindowSystem
+ This package contains headers, CMake metadata and the development symlink.
+
+Package: libkf6windowsystem-doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: KWindowSystem documentation compatibility package
+ This package preserves the Debian-family documentation package name.
+ .
+ The current SupraLINUX common Frameworks profile does not ship QCH files.
+Section: doc
+
+Package: libkf6windowsystem6
+Architecture: any
+Multi-Arch: same
+Depends: libkf6windowsystem-data (= ${source:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: qt6-wayland,
+Description: KWindowSystem runtime library
+ KWindowSystem provides access to window-manager properties and features on
+ X11 and Wayland while preserving KDE upstream Linux defaults.
+
+Package: qml6-module-org-kde-kwindowsystem
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+Description: KWindowSystem QML module
+ This package contains the QML bindings shipped by KDE KWindowSystem.

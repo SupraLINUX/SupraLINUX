@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "scope": "reviewed-ubuntu-baseline-preflight",
+  "state": "PASS",
+  "node": "breeze-plymouth",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "source_commit": "4164b993318158218843a5d88359ff0ea3dfbadd",
+  "inputs_sha256": {
+    "scripts/probe-reviewed-ubuntu-baseline.py": "9fe1eaf6c56fad54bc6e66b687b607ef2e789701b64bdc0092c468c649a213c7",
+    "scripts/plasma-package-testing.py": "6babb4d2b9936b34e6c6b63024fd1a9c581139f37bddc6234b1c78a4c1f0e381",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "packages/plasma/breeze-plymouth/debian/tests/baseline-setup": "03d04c74f787e677992cdbdd6228e913035464d45c50ce2b88f47aab28c232ea"
+  },
+  "candidate_installed": false,
+  "workflow_run_id": 37295330128,
+  "workflow_job_id": 111715082081,
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-runner-contract-20261005t101337z-2867688",
+  "host_evidence_seal_sha256": "05d9a43007953a8f19c506101e170b9eaaf847463225a4a6a35499167ce2c132",
+  "all_original_guest_hashes_verified": true,
+  "local_archive_path": ".artifacts/infrastructure/ubuntu-baseline-breeze-plymouth-20261005.zip",
+  "local_archive_sha256": "489e873959604897e7794ca0c094dd6aef228aaf669712f509ddee3702d497f0",
+  "files_sha256": {
+    "baseline-setup": "03d04c74f787e677992cdbdd6228e913035464d45c50ce2b88f47aab28c232ea",
+    "evidence-sha256.txt": "05d9a43007953a8f19c506101e170b9eaaf847463225a4a6a35499167ce2c132",
+    "host-result.json": "fa8cf188a7550d625abb59a9c3db8b54a90343b605d2ac81fe4bbce67266ba69",
+    "pipeline.log": "70a0fe22dba4e4fd2ca85800c905962e0b21479b3dcb354541ab632755d5933d",
+    "result.json": "c55f39022863bdfca535448a7507ff0f77f1ea9121faa7283047318dedeafd23",
+    "reviewed-inputs.json": "889f470d90e692e012d1dc690658b578fe14e08f20344015b44b6eeacd2ba686",
+    "setup-commands.txt": "752c24962fbd657defe5cf91de90d9e8e52792ee57565b8b3ebb20f73319c40c",
+    "summary": "36e1952a68e082ee9b1d71c36e7ee1d26054668b01a97ed5e481b3e31a7962e2",
+    "workflow-job.json": "47cef4b81e1813664070c8c20c836b4c8603b4a11e81c5591b84698d43fbdbb0"
+  }
+}

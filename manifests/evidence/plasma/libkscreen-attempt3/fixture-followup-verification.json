@@ -1,0 +1,23 @@
+{
+  "state": "PASS",
+  "scope": "local existing public client against genuine installed Ubuntu runtime; verifies revised fixture preserves functional paths and strict cleanup, not candidate certification",
+  "local_client_sha256": "a8bccf2c144fd5c2704a94b42ec8a50d236aeefc9e4fab5225950f220a6ab921",
+  "driver_sha256": "1fd38dc7d1ba6078b33b68360ef18ce70a4a8b93b5e2981d77d5d15c1509fe1a",
+  "installed_original_version": "4:6.6.4-0ubuntu1",
+  "fake_functional_path": "PASS",
+  "xrandr_functional_path": "PASS",
+  "process_groups_and_runtime_absent": true,
+  "candidate_certification": false,
+  "files_sha256": {
+    "fixture-review/original-runtime-fake-with-cleanup.log": "b2a83c104bd09222bc42a1175a2a97c9bca8c360e9accb1c2f08b874c3fe6a32",
+    "fixture-review/original-runtime-xrandr-with-cleanup.log": "e02c8a38f931bf5575336c502cb24f2b241a2206418117c9174c92dccafb2349",
+    "fixture-review/original-runtime-fake-with-cleanup/bus.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fixture-review/original-runtime-fake-with-cleanup/client.log": "3041dad0097ac903e6dce84ed363239a42efe21a18a61730984f20ec3f856487",
+    "fixture-review/original-runtime-fake-with-cleanup/launcher.log": "4f6a22e3c214f5b8f96d4e11d2448d43ea7cae30021167827d80d553992ae4f2",
+    "fixture-review/original-runtime-fake-with-cleanup/xvfb.log": "09af44186174436345e3e1e8877555c5d6aaa892a7414425cd9c2d8bfea148e7",
+    "fixture-review/original-runtime-xrandr-with-cleanup/bus.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fixture-review/original-runtime-xrandr-with-cleanup/client.log": "106a4bfe6d5323a602eca669fd1c471d78ea99d3a9e66d3e256e7dbce7d6521f",
+    "fixture-review/original-runtime-xrandr-with-cleanup/launcher.log": "d19824de1aeab91ed7d39c22c772d77a57eed5625afb39f99e258fa1dcf375ea",
+    "fixture-review/original-runtime-xrandr-with-cleanup/xvfb.log": "09af44186174436345e3e1e8877555c5d6aaa892a7414425cd9c2d8bfea148e7"
+  }
+}

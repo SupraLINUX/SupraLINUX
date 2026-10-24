@@ -1,0 +1,10 @@
+E: libkpipewire6: symbols-file-contains-current-version-with-debian-revision on symbol _ZN18PipeWireSourceItem15setObjectSerialEy@Base and 4 others (libKPipeWire.so.6) [symbols]
+E: libkpipewirerecord6: symbols-file-contains-current-version-with-debian-revision on symbol _ZN25PipeWireBaseEncodedStream15setObjectSerialEy@Base and 2 others (libKPipeWireRecord.so.6) [symbols]
+W: libkpipewire-data: old-fsf-address-in-copyright-file
+W: libkpipewire-dev: old-fsf-address-in-copyright-file
+W: libkpipewire6: old-fsf-address-in-copyright-file
+W: libkpipewiredmabuf6: old-fsf-address-in-copyright-file
+W: libkpipewirerecord6: old-fsf-address-in-copyright-file
+W: qml6-module-org-kde-pipewire: old-fsf-address-in-copyright-file
+W: kpipewire source: orig-tarball-missing-upstream-signature kpipewire_6.7.5.orig.tar.xz
+W: kpipewire source: syntax-error-in-dep5-copyright Duplicate field Files (line 30). [debian/copyright]

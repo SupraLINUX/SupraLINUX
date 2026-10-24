@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "authenticated original Ubuntu declared direct consumer ELF import audit; byte restore only, no candidate/runtime transition certification",
+  "archive_path": ".artifacts/plasma-frontier/kglobalacceld-original-ubuntu-consumer-elf-20261009/inputs.zip",
+  "archive_sha256": "21d50d1e1f4c7b81d1454ef53f51a4e1654ce32636e52377b999e5da689e40ae",
+  "files": {
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-inventory-20261009.json": {
+      "sha256": "3f638138cbb5f58fec45298c5fcab8d319d32422b34c94daa627e5a0b1827f41",
+      "size": 12602
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/archive.ubuntu.com_ubuntu_dists_resolute-updates_InRelease-signature.log": {
+      "sha256": "c8d16ff10e6c054b1fd154d48b877d4c83ae3c52a5779a7f95ed5756a15de5be",
+      "size": 221
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/archive.ubuntu.com_ubuntu_dists_resolute_InRelease-signature.log": {
+      "sha256": "5c009a515f3763d807cd3a18b8a4df85cf78db9664f858f145acfb306d95a6e6",
+      "size": 221
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/download/kglobalacceld_6.6.5-0ubuntu0.1_amd64.deb": {
+      "sha256": "ea186f181a738fa5c5ac03b3d215c6d57bd437d39126c4a3a188e43e3804eccc",
+      "size": 7878
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/download/kwin-wayland_6.6.6-0ubuntu0.1_amd64.deb": {
+      "sha256": "a52e4185f87144a9df121319902ff82b18a5532e0e5a27937dc0449853e48a91",
+      "size": 464212
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/download/libkwin-x11-6_6.6.4-0ubuntu1_amd64.deb": {
+      "sha256": "3926b9f13476583725e7e8350cd87f4c5c6b54eb5d413d9302ca40b15a0ec190",
+      "size": 2068328
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/download/libkwin6_6.6.6-0ubuntu0.1_amd64.deb": {
+      "sha256": "c2438dfaf46e940a98d201d0a64fc9de705e729b2a70e442111f0f861f83e2f6",
+      "size": 2454430
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/kglobalacceld/etc/xdg/autostart/kglobalacceld.desktop": {
+      "sha256": "9aede556883f5ed39c3ad58a6ae2debffabee25b4b5b068a7db167e3332d563a",
+      "size": 1698
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/kglobalacceld/usr/lib/systemd/user/plasma-kglobalaccel.service": {
+      "sha256": "42bae18ac5dbf5931b2a91146c68f3bb0e7092c8ef83decb244f2be3a2a9ef5a",
+      "size": 316
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/kglobalacceld/usr/lib/x86_64-linux-gnu/libexec/kglobalacceld": {
+      "sha256": "caaee9ad41f79c4e2b8aa6d9356dcae0beccd6517130ce122821d8eb44c9897a",
+      "size": 18832
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/kglobalacceld/usr/share/doc/kglobalacceld/copyright": {
+      "sha256": "3bd5ff0dbac777230ed1ec2a6b0641faed0dadaa5cba5b6abbf7e5fcdbdbd291",
+      "size": 4242
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/kglobalacceld/usr/share/qlogging-categories6/kglobalacceld.categories": {
+      "sha256": "29f03dbb4319d1085329c7ad13c2fe3c9b0bb530d4968cbec5ca4693031bd03d",
+      "size": 204
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/kwin-wayland/usr/bin/kwin_wayland": {
+      "sha256": "31858ca3969a93efff4909693db543444bd52286dd5f9eb945bc2df5b6d3dbf3",
+      "size": 1489832
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/kwin-wayland/usr/bin/kwin_wayland_wrapper": {
+      "sha256": "77e1efa55cb1592836b9eabb002c554a4e1e713da02bea29d8e159cd106af5db",
+      "size": 47784
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/kwin-wayland/usr/lib/systemd/user/plasma-kwin_wayland.service": {
+      "sha256": "7b9e88ff3ef0649e503f74fc984c126f7ede0929283d224e9b5e547b798d5458",
+      "size": 184
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/kwin-wayland/usr/share/doc/kwin-wayland/copyright": {
+      "sha256": "b881e3103bcab6ecdcc1435382af781389792add03cc3f300721421d00e06f78",
+      "size": 46840
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/kwin-wayland/usr/share/lintian/overrides/kwin-wayland": {
+      "sha256": "b95a3d95282b5b288f2a3673d19faac5408f6f8c171812a1ce77eb6be6d753b8",
+      "size": 112
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/libkwin-x11-6/usr/lib/x86_64-linux-gnu/libkwin-x11.so.6.6.4": {
+      "sha256": "f83c9e2755264124712fb74414ac131bbecae01898110b140a76bc16ab443f21",
+      "size": 7781720
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/libkwin-x11-6/usr/share/doc/libkwin-x11-6/changelog.Debian.gz": {
+      "sha256": "9a2fa516ad56941a9571cd8aab2b6f74d6ae465e77930775fe503b0699a7751b",
+      "size": 444
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/libkwin-x11-6/usr/share/doc/libkwin-x11-6/copyright": {
+      "sha256": "3270d172dc41121f448431602c38e61bb30ecda00eed8abdda69ac32ed3ef641",
+      "size": 42351
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/libkwin6/usr/lib/x86_64-linux-gnu/libkwin.so.6.6.6": {
+      "sha256": "fb4f9611686fb9e898fd902c0fa579f9c5183952f30580854935ca4ec060775a",
+      "size": 9104696
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/libkwin6/usr/share/doc/libkwin6/changelog.Debian.gz": {
+      "sha256": "2ee75053efd394e604c236474ae85a2f70d9b49006e88b8fe26af4445a7a63bf",
+      "size": 4284
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/extracted/libkwin6/usr/share/doc/libkwin6/copyright": {
+      "sha256": "b881e3103bcab6ecdcc1435382af781389792add03cc3f300721421d00e06f78",
+      "size": 46840
+    },
+    ".work/dependent-plasma-review/kglobalacceld/ubuntu-private-consumer-elf-audit-20261009-v2/review.json": {
+      "sha256": "e95ca3eef45c79921c2dff548c17ebb83275d167be1b322593692676dfa95bd8",
+      "size": 5437
+    },
+    ".work/audit-ubuntu-private-library-consumers-v2.py": {
+      "sha256": "fdf41049c63fdc1445b7203372366234c6ed7c33e182cd8ad3a35e108c2ed92a",
+      "size": 4723
+    },
+    ".work/kglobalacceld-private-elf-audit-v2.log": {
+      "sha256": "f0e4f10c91b7e900e10a686a22a05f83485fdb77a248f224e1b018b1f40749c8",
+      "size": 149
+    },
+    "manifests/evidence/plasma/kglobalacceld-attempt1/original-symbols.diff": {
+      "sha256": "65e6d456a5650820a3f6f21ab3c02e833d477847dcd82e2cf2a83fbba0e8ce53",
+      "size": 15045
+    },
+    "external/usr/share/keyrings/ubuntu-archive-keyring.gpg": {
+      "sha256": "80a36b0a6de2f69f49d2df75ef473ccde121e9e190b9ea01d20a4f63778d5c31",
+      "size": 3607
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_InRelease": {
+      "sha256": "6c634247704301b20293f748e6941efba4d5704d281f355a985b3905bbb6efb7",
+      "size": 137401
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_universe_binary-amd64_Packages": {
+      "sha256": "5205a50a497f3bf1d5707ff78733160d2fa307519af6834bbecc3b51f4162cca",
+      "size": 1574780
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_InRelease": {
+      "sha256": "45f95ce276cdba3e41870516a130e03c58b8b7a79e9546b0efe9e526d255740c",
+      "size": 135549
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_universe_binary-amd64_Packages": {
+      "sha256": "9c009342905706a05822f6e751f5b1ac34b687f054bfca9a0a652178445fc44c",
+      "size": 76792699
+    }
+  },
+  "empty_offline_byte_restore_verified": true,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

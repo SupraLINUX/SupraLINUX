@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "scope": "direct post-gate cleanup verification",
+  "checked_at": "2026-10-09T20:14:18.315883+00:00",
+  "vm_name": "supralinux-jit-startup-preflight-20261009t201208z-1453407",
+  "vm_absent": true,
+  "runner_id": 261,
+  "runner_absent": true,
+  "overlay_directory": "/var/lib/supralinux/ephemeral-runners/supralinux-jit-startup-preflight-20261009t201208z-1453407",
+  "overlay_absent": true,
+  "golden_image_preserved": true,
+  "execution_backing_image_preserved": true,
+  "workflow_run_id": null,
+  "source_commit": "56bd92044dff2322e2b55158c092d792d8e6c717",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-jit-startup-preflight-20261009t201208z-1453407"
+}

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "ksshaskpass",
+      "package_version": "4:6.7.5-0supralinux1",
+      "artifact_id": 11368957086,
+      "workflow_run_id": 37366901824,
+      "artifact_sha256": "24a955d9697ab59e768afb36a704da69385edfd36e7237687ee1d0e7771c4bfd",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

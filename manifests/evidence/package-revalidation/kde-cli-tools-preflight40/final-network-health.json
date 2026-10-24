@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "observed_at": "2026-10-10T20:18:25.508351+00:00",
+  "since": "2026-10-10 20:11:28 UTC",
+  "kernel_query_exit_code": 1,
+  "kernel_log_readability_exit_code": 0,
+  "hardware_hang_seen": false,
+  "eno1_carrier": "1",
+  "host_offloads": {
+    "tcp-segmentation-offload": "off",
+    "generic-segmentation-offload": "off"
+  },
+  "libvirt_networks": [],
+  "kernel_carrier_samples": 27,
+  "physical_gateway_samples": 6,
+  "host_network_modified": false
+}

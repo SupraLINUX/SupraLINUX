@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "generated_from": "manifests/kde-frameworks-tier2.json",
+  "frameworks_series": "6.30.0",
+  "tier": 2,
+  "canonical_snapshot": {
+    "pass": 15,
+    "pending": 0,
+    "current_fail": 0,
+    "blocked": 0
+  },
+  "retained_pass": [
+    "kauth",
+    "kcolorscheme",
+    "kcompletion",
+    "kcontacts",
+    "kcrash",
+    "kdeclarative",
+    "kfilemetadata",
+    "kmime",
+    "knotifications",
+    "kpackage",
+    "kpty",
+    "kservice",
+    "kstatusnotifieritem",
+    "kunitconversion",
+    "syndication"
+  ],
+  "provider_audit_required": [],
+  "package_contract_ready": [],
+  "human_decision_required": [],
+  "build_queue": [],
+  "audit_batch_size": 5,
+  "next_provider_audit_batch": [],
+  "policy": {
+    "canonical_manifest_is_source_of_truth": true,
+    "provider_audit_precedes_package_contract": true,
+    "package_contract_precedes_build_attempt": true,
+    "only_pass_artifacts_feed_dependents": true,
+    "stable_promotion_requires_explicit_user_approval": true
+  },
+  "compatibility_provider_required": []
+}

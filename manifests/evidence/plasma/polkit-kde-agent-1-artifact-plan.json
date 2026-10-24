@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "polkit-kde-agent-1",
+      "package_version": "4:6.7.5-0supralinux1",
+      "artifact_id": 12261299420,
+      "workflow_run_id": 39416478708,
+      "artifact_sha256": "b3403e7a820ae901faeedecc46b9cd8fdc555e104537e010be0a40bdca7d3422",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

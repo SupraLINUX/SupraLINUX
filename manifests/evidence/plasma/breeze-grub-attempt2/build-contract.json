@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "role": "reviewed-plasma-package-build",
+  "state": "execution-authorized",
+  "authorized_nodes": [
+    "breeze-grub"
+  ],
+  "package_execution_authorized": true,
+  "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
+  "scope": "per-node build, lintian, installed resources and Ubuntu APT upgrade; graphical GRUB rendering and final distro integration remain later gates",
+  "nodes": {
+    "breeze-grub": {
+      "state": "build-pending",
+      "source_package": "breeze-grub",
+      "version": "6.7.5-0supralinux1",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/breeze-grub-6.7.5.tar.xz",
+      "upstream_sha256": "bd14716ae52d946e37833b3a02d259f5268683af8382c21230c1ce7d767f032a",
+      "signature_sha256": "b5e5f90143e535a500353377fba4ada01ab9f361d789ccd639b20e2776281e11",
+      "packaging_path": "packages/plasma/breeze-grub/debian",
+      "packaging_review": "PASS",
+      "packaging_reference_version": "6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "ed779c7d96f18fe3b51b997a7494f41784e122ea14eecb15031d5cee0671d30d",
+      "packaging_sha256": {
+        "changelog": "b7653fcb4f40145e17baa9ddd6b1089118e6b6d35639e63a3edeffd21656975c",
+        "control": "a09dfb6f67a6333bcb72b76b6d3889d3f25302b497a9219ef52d4c28ecb07af3",
+        "copyright": "1e1407283abcfc9440faf52f3adfa0cc9fbaab1dd47204819a803e738fd28250",
+        "docs": "3764ceaff06f3c6d3dcf7404d0f29ba3a2abb4a52c000481646112524ea1923c",
+        "grub-theme-breeze.lintian-overrides": "d91596bc33b62643f90479e4804690de0f8b62ce22c87b8c4bcbde1650586f6e",
+        "install": "6272fb736b4e56685a88ab2e11173a42a999926d7a4cd36eda304578ae1cbadb",
+        "rules": "021a77ca102a0ffe05cc05be87fdcab6b53aa3bcab9bb7750c4586f0c1f6f8fa",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/control": "c421633b5a83bb6215cb335ba1d7544561314d85641189c0a3415094d4f9815b",
+        "tests/theme-resources": "d61f1ca2fe02d7494103338ad63ac977042d299c0a63e8c96cbe9b9192a54cf1",
+        "tests/theme-resources.json": "142713c1c32430ebdd20875e198ef4d56039598594d573c7d85360fc898abee7",
+        "tests/ubuntu-upgrade": "42170aad88f572d95348eb92fdf69fe9285700b88452319c3fcda67e16261a09"
+      },
+      "binary_packages": {
+        "grub-theme-breeze": "amd64"
+      },
+      "ubuntu_baseline_package": "grub-theme-breeze",
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "INFRA_INVALID",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "INFRA_INVALID",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 37230769694,
+          "workflow_job_id": 111519731444,
+          "source_commit": "cee200ca76b93af0a3a3d82db6714fa447f02c31",
+          "artifact_id": 11313542212,
+          "artifact_sha256": "aa360b543a6b28225eb712052bdb765f66c8b13e1a43fa448957870391cda064",
+          "result_path": "manifests/evidence/plasma/breeze-grub-attempt1/result.json",
+          "result_sha256": "9634dc07ba17030d3d5e680c637a4d8c2004dcf15121544a7a214f5f72e3a19c",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261004t200422z-2247488",
+          "host_evidence_manifest_sha256": "8f262cb4f8ce7a2c68f2fa8e44ed571250dfde60f4be873451094600920612b4",
+          "cause": "Sourcing /etc/os-release overwrote the shell VERSION variable; autopkgtest setup received the Ubuntu display version. Original result.version is preserved as invalid; package identity is independently verified in .dsc/.changes/.deb.",
+          "repair": "Use PACKAGE_VERSION for the frozen Debian candidate; rerun only this node on a fresh runner."
+        }
+      ],
+      "review": {
+        "upstream_changes": "Official 6.7.5 signed resources; no upstream code patches.",
+        "packaging_changes": "Retain Ubuntu names, linux-any and theme paths; update owner/VCS, SPDX licenses and autopkgtests.",
+        "build_dependencies": "Only debhelper-compat (=13); no Qt or Frameworks dependency.",
+        "test_policy": "No upstream build tests exist for this resource-only source; non-superficial integrity/font/reference and Ubuntu upgrade tests added.",
+        "activation_policy": "Installs resources only; does not enable the theme or rewrite boot configuration."
+      }
+    }
+  }
+}

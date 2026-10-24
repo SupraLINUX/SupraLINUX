@@ -1,0 +1,93 @@
+********* Start testing of FileTypesTest *********
+Config: Using QtTest library 6.10.2, Qt 6.10.2 (x86_64-little_endian-lp64 shared (dynamic) release build; by GCC 15.2.0), ubuntu 26.04
+QDEBUG : FileTypesTest::initTestCase() kf.coreaddons.kdirwatch: Available methods:  QList("Stat", "INotify", "QFileSystemWatcher") preferred= INotify
+PASS   : FileTypesTest::initTestCase()
+PASS   : FileTypesTest::testMimeTypeGroupAutoEmbed()
+PASS   : FileTypesTest::testMimeTypeAutoEmbed()
+QDEBUG : FileTypesTest::testMimeTypePatterns() Mimetype Patterns Dirty: old= QList("*,v", "*.asc", "*.txt") m_patterns= QList("*,v", "*.asc", "*.toto")
+QDEBUG : FileTypesTest::testMimeTypePatterns() Mimetype Patterns Dirty: old= QList("*,v", "*.asc", "*.txt") m_patterns= QList("*,v", "*.asc", "*.toto")
+QDEBUG : FileTypesTest::testMimeTypePatterns() writing "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/share/mime/packages/text-plain.xml"
+PASS   : FileTypesTest::testMimeTypePatterns()
+QDEBUG : FileTypesTest::testAddService() waiting for signal
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "CREATE" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: -->got CREATE signal for "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock" sub_entry= 0x0
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MODIFY" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MODIFY" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "#534304"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "CREATE" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: -->got CREATE signal for "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=" sub_entry= 0x62e730e0bac8
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "DELETE" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "CREATE" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: -->got CREATE signal for "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock" sub_entry= 0x0
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MODIFY" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "ATTRIB" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "#534315"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MODIFY" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "#534315"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "CREATE" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.ArukCV"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: -->got CREATE signal for "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.ArukCV" sub_entry= 0x0
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MOVED_FROM" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.ArukCV"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MOVED_TO" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: -->got CREATE signal for "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=" sub_entry= 0x62e730e0bac8
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "DELETE" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "CREATE" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: -->got CREATE signal for "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock" sub_entry= 0x0
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MODIFY" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "ATTRIB" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "#534317"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MODIFY" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "#534317"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "CREATE" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.hZvCxH"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: -->got CREATE signal for "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.hZvCxH" sub_entry= 0x0
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MOVED_FROM" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.hZvCxH"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MOVED_TO" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: -->got CREATE signal for "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=" sub_entry= 0x62e730e0bac8
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "DELETE" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock"
+QDEBUG : FileTypesTest::testAddService() got signal
+QDEBUG : FileTypesTest::testAddService() waiting for signal
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "CREATE" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: -->got CREATE signal for "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock" sub_entry= 0x0
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MODIFY" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "ATTRIB" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "#534321"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MODIFY" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "#534321"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "CREATE" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.iHkrlu"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: -->got CREATE signal for "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.iHkrlu" sub_entry= 0x0
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MOVED_FROM" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.iHkrlu"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "MOVED_TO" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: -->got CREATE signal for "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=" sub_entry= 0x62e730e0bac8
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "DELETE" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" [file] "ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=.lock"
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: path= "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" sub_entry: 0x62e730e0bac8
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: path= "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache" sub_entry: 0x62e730e0bac8
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: "KDirWatch-1" emitting created "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testAddService() got signal
+QDEBUG : FileTypesTest::testAddService() waiting for signal
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: got event "ATTRIB" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=" [file] ""
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: "KDirWatch-1" emitting deleted "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testAddService() kf.coreaddons.kdirwatch: "KDirWatch-1" emitting created "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testAddService() got signal
+PASS   : FileTypesTest::testAddService()
+QDEBUG : FileTypesTest::testRemoveTwice() initial list for "image/png" QList("fakeapplication2.desktop", "fakeapplication.desktop")
+QDEBUG : FileTypesTest::testRemoveTwice() waiting for signal
+QDEBUG : FileTypesTest::testRemoveTwice() kf.coreaddons.kdirwatch: got event "ATTRIB" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=" [file] ""
+QDEBUG : FileTypesTest::testRemoveTwice() kf.coreaddons.kdirwatch: "KDirWatch-1" emitting deleted "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testRemoveTwice() kf.coreaddons.kdirwatch: "KDirWatch-1" emitting created "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testRemoveTwice() got signal
+QDEBUG : FileTypesTest::testRemoveTwice() Removing fakeApplication2
+QDEBUG : FileTypesTest::testRemoveTwice() waiting for signal
+QDEBUG : FileTypesTest::testRemoveTwice() kf.coreaddons.kdirwatch: got event "ATTRIB" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=" [file] ""
+QDEBUG : FileTypesTest::testRemoveTwice() kf.coreaddons.kdirwatch: "KDirWatch-1" emitting deleted "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testRemoveTwice() kf.coreaddons.kdirwatch: "KDirWatch-1" emitting created "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testRemoveTwice() got signal
+QDEBUG : FileTypesTest::testRemoveTwice() Re-adding fakeApplication2
+QDEBUG : FileTypesTest::testRemoveTwice() waiting for signal
+QDEBUG : FileTypesTest::testRemoveTwice() kf.coreaddons.kdirwatch: got event "ATTRIB" for entry "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY=" [file] ""
+QDEBUG : FileTypesTest::testRemoveTwice() kf.coreaddons.kdirwatch: "KDirWatch-1" emitting deleted "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testRemoveTwice() kf.coreaddons.kdirwatch: "KDirWatch-1" emitting created "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/cache/ksycoca6_en-POSIX_HvEmfR4SRVluz+4lxpwqZ4fJ1QY="
+QDEBUG : FileTypesTest::testRemoveTwice() got signal
+PASS   : FileTypesTest::testRemoveTwice()
+QDEBUG : FileTypesTest::testCreateMimeType() New item, need to save it
+QDEBUG : FileTypesTest::testCreateMimeType() writing "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/share/mime/packages/fake-unit-test-fake-mimetype.xml"
+PASS   : FileTypesTest::testCreateMimeType()
+PASS   : FileTypesTest::testDeleteMimeType()
+QDEBUG : FileTypesTest::testModifyMimeTypeComment() Mimetype Comment Dirty: old= "PNG image" m_comment= "PNG image [testing]"
+QDEBUG : FileTypesTest::testModifyMimeTypeComment() Mimetype Comment Dirty: old= "PNG image" m_comment= "PNG image [testing]"
+QDEBUG : FileTypesTest::testModifyMimeTypeComment() writing "/var/tmp/supra-offline-diagnostic/exact-staged-native-launcher/tmp.WviN4N9Tvw/home/.qttest/share/mime/packages/image-png.xml"
+PASS   : FileTypesTest::testModifyMimeTypeComment()
+PASS   : FileTypesTest::cleanupTestCase()
+Totals: 10 passed, 0 failed, 0 skipped, 0 blacklisted, 59215ms
+********* Finished testing of FileTypesTest *********

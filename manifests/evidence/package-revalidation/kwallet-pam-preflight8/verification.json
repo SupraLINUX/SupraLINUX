@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "scope": "reviewed-package-input-preflight",
+  "node": "kwallet-pam",
+  "version": "4:6.7.5-0supralinux3",
+  "state": "PASS",
+  "source_commit": "2ff8bb7fc2aa57130d2c571f625a63e0f3119933",
+  "workflow_run_id": 37373260439,
+  "workflow_job_id": 111975410968,
+  "artifact_id": 11370523921,
+  "artifact_sha256": "6c62b1e138bc5f02638d53c66fab5dc3f7dc8826baa75bf0ac0d494a277474e1",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t205840z-2473586",
+  "host_evidence_manifest_sha256": "7f1cf234fc12a5b6cb228a35ef7e864d91c46b7d346c883300688f9b830ffe91",
+  "package_attempt_consumed": false,
+  "result_path": "manifests/evidence/package-revalidation/kwallet-pam-preflight8/result.json",
+  "result_sha256": "372346ce87341bff682939b105f043bd7d16399f096fdd9878747214a5e75a66",
+  "contract_path": "manifests/evidence/package-revalidation/kwallet-pam-preflight8/build-contract.json",
+  "archive_path": ".artifacts/package-revalidation/kwallet-pam-preflight8/sha256/6c62b1e138bc5f02638d53c66fab5dc3f7dc8826baa75bf0ac0d494a277474e1.zip",
+  "inspection": {
+    "source_complete": true,
+    "candidate_binaries_built": false
+  },
+  "offline_restore_verified": true,
+  "requires_github_for_restore": false,
+  "files_sha256": {
+    "artifact-meta.json": "8bbd032f88e92020d78b4a0dda782451b7d938b99f5dc9f3e2e75ca7218d4859",
+    "build-contract.json": "8cb4d176f6aca849356b08967fcc4f29571e9bee01eed07e1f6ed6ebface6587",
+    "cache-probe/installed-predecessor-contract.json": "aa1c06459f5737a33146bfe941d158b9e37c21731cf2c187063d2a215f180297",
+    "cache-probe/result.json": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+    "host-evidence-sha256.txt": "7f1cf234fc12a5b6cb228a35ef7e864d91c46b7d346c883300688f9b830ffe91",
+    "host-result.json": "9955b7653c0750b55fb747559abdb9b56883039c69234b246bc37097901069b6",
+    "qemu-cpu-policy.json": "b60213e45f35d74af31f58e6bfa1751c4015da826d17aa86f3088ba3647205b4",
+    "result.json": "372346ce87341bff682939b105f043bd7d16399f096fdd9878747214a5e75a66",
+    "rootfs-admission.json": "4838d532f1c03c5558df0a6e7cf61603e431bfc24c9e17e1e3e7830abdf2e20a",
+    "signature.log": "77e9a9ca9f7be7d6748360eaf81b7a74300eae220769401fe89f7d6742f20b05",
+    "ubuntu-baseline-preflight/result.json": "2fb9ce4cada49a8f98f0013c757622751eaaa39336c32601600037d1927a02f6",
+    "workflow-job.json": "9e0a7d65806f501ccdba513d2c1305202e3ea670ebe237ddf8c231bc9be2cc32"
+  },
+  "inputs_sha256": {
+    "scripts/run-authoritative-plasma-package.sh": "bc44243df48434c03b185e9ee8972ebcd0007221c1ea38c7ab25a9a18e97a930",
+    "scripts/prepare-plasma-package.py": "56afcabd4dbfff92d5bd685ebdde5bf90782bd8b0fb8150c4f3aa8112f7e7d6c",
+    "scripts/plasma-package-testing.py": "d0af4b36dad45ea121d71094176ba59873d7fb274babb268e586075a9914dd7d",
+    "scripts/probe-reviewed-ubuntu-baseline.py": "bf6e05cbee7372e35cbbd6b39d4d5dd00fbf10cda45bff8a1e0c7b9b77b5c6ba",
+    "scripts/admit-frameworks-cache.py": "2c2b60d7a5c105bee9eca4d0cd370f00d005e48b2d5d5260f59d05444ef9d4bb",
+    "scripts/prepare-milestone-sbuild-rootfs.py": "8a82a0a05fa913808a545e22a8601511a2f191e73df0963b0d1a913a41b22922",
+    "scripts/prepare-retained-package-inputs.py": "3cbd596da45a422981943afc4a2a5bfe072cbe9a9fe432ab19fc81906499b8e6",
+    "scripts/run-kvm-jit-gate-core.sh": "ea3980de4db3d5a247bc677fc8d2430f85c095ae15aaeb1898750e94c995e412",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "scripts/frameworks-revalidation-inputs.py": "178601caec0b1b3715a8194df40d98cb69ab76ff3cccf72a0a04c75fa2a68738",
+    "scripts/prepare-frameworks-revalidation-inputs.py": "4d7cf53b3450c8c1bcecc4a4f9914487aba99edfeb1835058237d9b9adf1be5a",
+    "scripts/probe-frameworks-build-inputs.sh": "443f1d35ebd35b72c92ae8dbac55d9330e0414896bbaf67dc171d8ee235b1a93",
+    "scripts/freeze-reviewed-package-contract.py": "55082d69f1653f33bf10d1803330393116b23773f811457660fd573c59d6e67b"
+  },
+  "packaging_sha256": {
+    "README.source": "e706c1a99c9a4d818c2d0f80b8be0f76552c5d7ec4932cf23610e5772afa63c1",
+    "changelog": "1e2a845bc4d58cafbfa132faf7e417fac23c36919aa8f0fe22570096aee00c2d",
+    "control": "a87c173644e246c139fb766c9309124a8ce5bc7a132bd21c43a35f7d3f23b97d",
+    "copyright": "42b6221759c9e539cd039f980ad2cc60091db91fcdf9ec73a4630113e0a2836a",
+    "libpam-kwallet-common.install": "ca85c26ebea763c01045c154c7b63282d64bfd409da90f6543189de6e35fbf3a",
+    "libpam-kwallet5.install": "d83f63cf617fdc6af2c8d79b8655c6553beb1420676038e80f9fd7ff67656d45",
+    "rules": "0bff12c16034d9b8be14733e84911393ef520773e696f35a397753da5557a798",
+    "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+    "tests/baseline-setup": "92997a397496def2f5ebb8069e19dd4da739e224af9981bdb0715dd7cf2e9d1a",
+    "tests/consumer": "d562e7947d7274c43ae5a0e58b7b7c3eb7936835c2cd7ca4ccaba9b48ca19880",
+    "tests/control": "a6c690b410d7830f43f7f1a66e91544f2da43b154a9b25ffce058fafb6894b50",
+    "tests/ubuntu-abi-client": "9be9b70c0ee2c32dfae83cdbd24e6d3421cc0b3a4035d722a059467c6dd66ebb",
+    "upstream/metadata": "cb69e555a8103e846f09d08b16e935a013120fb9969a16e890401f5456867bd1",
+    "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+    "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+  },
+  "frameworks_predecessors": {
+    "extra-cmake-modules": {
+      "source_package": "kf6-extra-cmake-modules",
+      "version": "6.30.0-0supralinux3",
+      "binaries": [
+        {
+          "package": "extra-cmake-modules",
+          "architecture": "all",
+          "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+        }
+      ]
+    }
+  }
+}

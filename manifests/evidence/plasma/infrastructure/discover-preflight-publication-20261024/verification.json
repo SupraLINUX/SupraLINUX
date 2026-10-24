@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "discover-authoritative-preflight-evidence-publication",
+  "publication_source_commit": "01aa0a755bdf0e14cf79730cfdbd387ea0024167",
+  "canonical_commit": "fa652cde5e60e14a6c38dcd74af3058636e1b83b",
+  "control": {
+    "router_run_id": 40095220951,
+    "host_job_id": 120875950998,
+    "artifact_id": 12561050415,
+    "artifact_digest": "sha256:f1ec0eb481c83beff6854d63742d14b68a3b2ae727d9297dcb729cdf931027aa",
+    "mode": "publish-evidence"
+  },
+  "package_evidence": {
+    "node": "discover",
+    "package_source_commit": "9ee507dd9340d5cc1074eda7ecca7669c1965fa0",
+    "workflow_run_id": 40094261769,
+    "workflow_job_id": 120873113140,
+    "artifact_id": 12559869720,
+    "artifact_sha256": "199c7c0b293849727f94aea8dafc0bcdc40d4387cc74995aa6347c8c5e6fd7f5",
+    "host_evidence_manifest_sha256": "38d042f6cfdcf66a48e06b5b13b5cc226ba0824d742aeacc6322fb1808ac8d44",
+    "package_attempt_consumed": false
+  },
+  "result": {
+    "closure_kind": "preflight",
+    "canonical_update_file_count": 16,
+    "canonical_update_manifest_sha256": "132fc576e7d4eca4d6b5331d07cdc950d15eea9fab0131e13b83f16918a2d306",
+    "publish_dry_run": false,
+    "published": true,
+    "offline_restore_verified": true,
+    "requires_github_for_restore": false,
+    "vm_created": false,
+    "jit_invoked": false,
+    "package_attempt_effect": "none"
+  },
+  "canonical_state": {
+    "execution_mode": "build",
+    "node_state": "build-pending",
+    "package_attempts": 0,
+    "next_gate": "authoritative-plasma-package-build:discover"
+  }
+}

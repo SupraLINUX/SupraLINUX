@@ -1,0 +1,4 @@
+Failed to gain real time thread priority (See CAP_SYS_NICE in the capabilities(7) man page). error: Operation not permitted
+Could not find color scheme "BreezeLight" falling back to BreezeLight
+QThreadStorage: entry 1 destroyed before end of thread 0x5a06b6f38dc0
+QThreadStorage: entry 0 destroyed before end of thread 0x5a06b6f38dc0

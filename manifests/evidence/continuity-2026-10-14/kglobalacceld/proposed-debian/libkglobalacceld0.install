@@ -1,0 +1,3 @@
+usr/lib/*/libKGlobalAccelD.so.0
+usr/lib/*/libKGlobalAccelD.so.6.*
+usr/lib/*/qt6/plugins/org.kde.kglobalacceld.platforms/KGlobalAccelDXcb.so

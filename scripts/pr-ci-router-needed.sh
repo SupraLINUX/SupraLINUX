@@ -1,0 +1,273 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+# Exit contract: 0 = reusable hosted CI required, 1 = Repository Policy only, any other status = classifier error.
+[[ "$#" -eq 2 ]] || { echo "Usage: $0 <before-sha> <after-sha>" >&2; exit 2; }
+BEFORE="$1"; AFTER="$2"
+for sha in "${BEFORE}" "${AFTER}"; do
+  [[ "${sha}" =~ ^[0-9a-fA-F]{40}$ ]] || exit 2
+  git cat-file -e "${sha}^{commit}" 2>/dev/null || exit 2
+done
+mapfile -t changed < <(git diff --name-only "${BEFORE}" "${AFTER}" --)
+(("${#changed[@]}" > 0)) || { echo "No changed paths; Repository Policy only."; exit 1; }
+
+
+desktop_stack_authoritative_ci_only() {
+  local path="manifests/desktop-stack.json"
+  git cat-file -e "${BEFORE}:${path}" 2>/dev/null || return 1
+  git cat-file -e "${AFTER}:${path}" 2>/dev/null || return 1
+  python3 - "${BEFORE}" "${AFTER}" "${path}" <<'PY'
+import copy,json,subprocess,sys
+before,after,path=sys.argv[1:]
+def load(ref):
+    return json.loads(subprocess.check_output(['git','show',f'{ref}:{path}'],text=True))
+def norm(d):
+    d=copy.deepcopy(d)
+    d.pop('as_of',None)
+    ci=d.get('ci')
+    if isinstance(ci,dict):
+        ci.pop('authoritative_runner',None)
+    return d
+raise SystemExit(0 if norm(load(before))==norm(load(after)) else 1)
+PY
+}
+
+canonical_state_is_promotion_only() {
+  local path="$1"
+  git cat-file -e "${BEFORE}:${path}" 2>/dev/null || return 1
+  git cat-file -e "${AFTER}:${path}" 2>/dev/null || return 1
+  python3 - "${BEFORE}" "${AFTER}" "${path}" <<'PY'
+import copy,json,subprocess,sys
+before,after,path=sys.argv[1:]
+def load(ref):
+    return json.loads(subprocess.check_output(['git','show',f'{ref}:{path}'],text=True))
+def norm(d):
+    d=copy.deepcopy(d)
+    d.pop('as_of',None)
+    if path=='manifests/kde-frameworks-tier1.json':
+        for node in d.get('nodes',[]):
+            node.pop('state',None)
+            node.pop('packaging',None)
+    elif path=='manifests/kde-dag.json':
+        d.pop('nodes',None)
+        d.pop('ci_scope_incidents',None)
+    elif path=='manifests/kde-tier1-global-discovery.json':
+        for key in ('promoted_snapshot','lanes','nodes','next_actions'):
+            d.pop(key,None)
+    elif path=='manifests/kde-frameworks-tier1-packaging-tree-evidence.json':
+        for key in ('status','evidence'):
+            d.pop(key,None)
+    else:
+        raise SystemExit(1)
+    return d
+raise SystemExit(0 if norm(load(before))==norm(load(after)) else 1)
+PY
+}
+
+canonical_tier2_is_planning_only() {
+  local path="manifests/kde-frameworks-tier2.json"
+  git cat-file -e "${BEFORE}:${path}" 2>/dev/null || return 1
+  git cat-file -e "${AFTER}:${path}" 2>/dev/null || return 1
+  python3 - "${BEFORE}" "${AFTER}" "${path}" <<'PY'
+import copy,json,subprocess,sys
+before,after,path=sys.argv[1:]
+def load(ref):
+    return json.loads(subprocess.check_output(['git','show',f'{ref}:{path}'],text=True))
+def norm(data):
+    data=copy.deepcopy(data)
+    data.pop('as_of',None)
+    for node in data.get('nodes',[]):
+        node.pop('planning',None)
+        if node.get('state') != 'PASS':
+            node.pop('package_identity',None)
+            node.pop('packaging',None)
+    return data
+raise SystemExit(0 if norm(load(before))==norm(load(after)) else 1)
+PY
+}
+
+tier2_dependencies_are_unmaterialized_only() {
+  local deps_path="manifests/kde-frameworks-tier2-dependencies.json"
+  local tier_path="manifests/kde-frameworks-tier2.json"
+  for ref in "${BEFORE}" "${AFTER}"; do
+    git cat-file -e "${ref}:${deps_path}" 2>/dev/null || return 1
+    git cat-file -e "${ref}:${tier_path}" 2>/dev/null || return 1
+  done
+  python3 - "${BEFORE}" "${AFTER}" "${deps_path}" "${tier_path}" <<'PY'
+import json,subprocess,sys
+before,after,deps_path,tier_path=sys.argv[1:]
+def load(ref,path):
+    return json.loads(subprocess.check_output(['git','show',f'{ref}:{path}'],text=True))
+def active_ids(ref):
+    tier=load(ref,tier_path)
+    ids=set()
+    for node in tier.get('nodes',[]):
+        planning=node.get('planning',{})
+        if node.get('state') == 'PASS' or planning.get('package_contract') not in (None,'not-materialized'):
+            ids.add(node['id'])
+    return ids
+ids=active_ids(before)|active_ids(after)
+bd=load(before,deps_path).get('nodes',{})
+ad=load(after,deps_path).get('nodes',{})
+raise SystemExit(0 if {i:bd.get(i) for i in ids} == {i:ad.get(i) for i in ids} else 1)
+PY
+}
+
+tier3_diagnostic_lifecycle_only() {
+  local path="$1"
+  git cat-file -e "${BEFORE}:${path}" 2>/dev/null || return 1
+  git cat-file -e "${AFTER}:${path}" 2>/dev/null || return 1
+  python3 - "${BEFORE}" "${AFTER}" "${path}" <<'PY'
+import copy,json,subprocess,sys
+before,after,path=sys.argv[1:]
+def load(ref):
+    return json.loads(subprocess.check_output(['git','show',f'{ref}:{path}'],text=True))
+def strip_active(d):
+    a=d.get('active_remediation')
+    if isinstance(a,dict):
+        for k in ('status','next_gate','execution_authorized','level1_execution_authorized'):
+            a.pop(k,None)
+def norm(d):
+    d=copy.deepcopy(d); d.pop('as_of',None)
+    if path=='manifests/kde-frameworks-tier3.json':
+        p=d.get('discovery_policy',{})
+        for k in ('phase','package_builds','remediation'): p.pop(k,None)
+        d.pop('build_level3_manifest',None)
+        d.pop('build_level3',None)
+        d.pop('level3_remediation',None)
+        for node in d.get('nodes',[]):
+            if node.get('id') in {'ktexteditor','purpose'}:
+                node.pop('state',None)
+                node.pop('packaging',None)
+        strip_active(d)
+    elif path=='manifests/kde-tier3-build-level1.json':
+        d.pop('next_gate',None); strip_active(d)
+    elif path in ('manifests/kde-tier3-package-contracts.json','manifests/kde-tier3-materialization.json'):
+        strip_active(d)
+    else:
+        raise SystemExit(1)
+    return d
+raise SystemExit(0 if norm(load(before))==norm(load(after)) else 1)
+PY
+}
+
+tier3_level3_materialization_is_routed() {
+  python3 - "${AFTER}" <<'PY'
+import json,subprocess,sys
+after=sys.argv[1]
+def load(path):
+    return json.loads(subprocess.check_output(['git','show',f'{after}:{path}'],text=True))
+m=load('manifests/kde-tier3-materialization.json')
+t=load('manifests/kde-frameworks-tier3.json')
+mr=m.get('level3_remediation',{})
+tr=t.get('level3_remediation',{})
+pending=(
+    m.get('state')=='remediation-pending-ci'
+    and mr.get('status')=='materialization-pending-ci'
+    and mr.get('materialization_authorized') is True
+    and mr.get('package_execution_authorized') is False
+    and tr.get('status')=='materialization-pending-ci'
+    and tr.get('materialization_authorized') is True
+    and tr.get('package_execution_authorized') is False
+)
+planning=(
+    m.get('state')=='PASS'
+    and mr.get('status')=='materialization-PASS'
+    and mr.get('materialization_authorized') is False
+    and mr.get('package_execution_authorized') is False
+    and tr.get('status') in {'materialization-PASS-pending-attempt2-planning-validation','materialization-PASS-pending-attempt3-planning-validation'}
+    and tr.get('materialization_authorized') is False
+    and tr.get('package_execution_authorized') is False
+)
+ok=pending or planning
+raise SystemExit(0 if ok else 1)
+PY
+}
+
+campaign_is_evidence_only() {
+  local path="$1" batch selector rc node
+  local -a nodes=()
+  batch="${path#manifests/kde-tier1-package-campaign-batch}"; batch="${batch%.json}"
+  [[ "${batch}" =~ ^[0-9]+$ ]] || return 1
+  selector="scripts/kde-tier1-package-batch${batch}-needed.sh"
+  [[ -f "${selector}" ]] || return 1
+  mapfile -t nodes < <(python3 - "${AFTER}" "${path}" <<'PY'
+import json,subprocess,sys
+ref,path=sys.argv[1:]
+d=json.loads(subprocess.check_output(['git','show',f'{ref}:{path}'],text=True))
+for node in d.get('selected_nodes',[]): print(node)
+PY
+  )
+  (("${#nodes[@]}" > 0)) || return 1
+  for node in "${nodes[@]}"; do
+    if bash "${selector}" "${node}" "${BEFORE}" "${AFTER}"; then return 1
+    else rc=$?; [[ "${rc}" -eq 1 ]] || return 1
+    fi
+  done
+  return 0
+}
+
+is_plasma_lane_path() {
+  local path="$1"
+  case "${path}" in
+    .github/workflows/kde-plasma-*.yml|scripts/*kde-plasma*|scripts/*kde_plasma*|manifests/kde-plasma*.json|docs/plasma*)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+for path in "${changed[@]}"; do
+  if is_plasma_lane_path "${path}"; then
+    continue
+  fi
+  case "${path}" in
+    docs/*|README.md|scripts/validate_*.py|scripts/test-*.sh|scripts/pr-ci-router-needed.sh|scripts/compile_kde_tier2_campaign.py|manifests/kde-tier1-package-batch*-attempts.json|manifests/kde-tier2-campaign-plan.json|.github/workflows/repository-policy.yml|.github/workflows/pr-ci-router.yml) continue ;;
+    manifests/authoritative-kvm-certification.json) continue ;;
+    manifests/desktop-stack.json)
+      if desktop_stack_authoritative_ci_only; then continue; fi
+      echo "${path}: desktop/KDE/Qt selection semantics changed; reusable hosted CI required."; exit 0 ;;
+    .github/workflows/runner-contract.yml|.github/workflows/authoritative-package-proof.yml|.github/workflows/authoritative-frameworks-sample-proof.yml|scripts/run-authoritative-package-proof.sh|scripts/run-authoritative-frameworks-sample-proof.sh|scripts/run-authoritative-kvm-certification.sh|scripts/run-kvm-jit-gate.sh|scripts/run-kvm-jit-gate-core.sh|scripts/provision-kvm-host.sh|scripts/check-kvm-host.sh|scripts/build-authoritative-runner-image.sh|scripts/provision-authoritative-runner-guest.sh|scripts/install-actions-runner.sh|scripts/prepare-autopkgtest-qemu-image.sh|scripts/seal-authoritative-runner-image.sh|scripts/check-nested-kvm-runtime.sh|scripts/check-actions-runner-runtime.sh|scripts/check-golden-image-provenance.sh|scripts/fetch-ubuntu-26.04-cloud-image.sh|scripts/verify-ubuntu-cloud-image-provenance.sh|scripts/qemu-kvm-required.sh)
+      continue ;;
+    .github/workflows/kde-tier3-build-level3.yml|scripts/run-kde-tier3-build-level3.sh|scripts/plan-kde-tier3-build-level3.py|scripts/test-kde-tier3-build-level3-planner.py|manifests/kde-tier3-build-level3.json|manifests/kde-tier3-build-level3-attempts.json|manifests/kde-tier3-build-campaign.json)
+      continue ;;
+    .github/workflows/kde-tier3-materialization.yml|scripts/materialize_kde_tier3_package.py|scripts/kde-tier3-materialization-needed.sh)
+      if tier3_level3_materialization_is_routed; then continue; fi
+      echo "${path}: Tier 3 materialization execution input changed outside routed remediation; reusable hosted CI required."; exit 0 ;;
+    .github/workflows/diagnostic-infrastructure-preflight.yml|scripts/run-diagnostic-infrastructure-preflight.sh|manifests/diagnostic-infrastructure-preflight.json)
+      continue ;;
+    .github/workflows/kde-tier3-kio-round*-diagnostic.yml|scripts/run-kde-tier3-kio-round*-diagnostic.sh|scripts/run-kde-tier3-kio-round*-hook.sh|manifests/kde-tier3-kio-round*-diagnostic.json)
+      continue ;;
+    manifests/kde-frameworks-tier3.json|manifests/kde-tier3-build-level1.json)
+      if tier3_diagnostic_lifecycle_only "${path}"; then continue; fi
+      echo "${path}: Tier 3 package/build semantics changed; reusable hosted CI required."; exit 0 ;;
+    manifests/kde-tier3-package-contracts.json|manifests/kde-tier3-materialization.json)
+      if tier3_level3_materialization_is_routed; then continue; fi
+      if tier3_diagnostic_lifecycle_only "${path}"; then continue; fi
+      echo "${path}: Tier 3 package/materialization semantics changed; reusable hosted CI required."; exit 0 ;;
+    manifests/kde-frameworks-tier2.json)
+      if canonical_tier2_is_planning_only; then continue; fi
+      echo "${path}: canonical Tier 2 build identity changed; reusable hosted CI required."; exit 0 ;;
+    manifests/kde-frameworks-tier2-dependencies.json)
+      if tier2_dependencies_are_unmaterialized_only; then continue; fi
+      echo "${path}: materialized/retained Tier 2 dependency input changed; reusable hosted CI required."; exit 0 ;;
+    .github/workflows/kde-tier2-provider-audit.yml|scripts/run-kde-tier2-provider-audit.sh|scripts/kde-tier2-provider-audit-needed.sh)
+      continue ;;
+    .github/workflows/kde-tier2-contract-reference.yml|scripts/run-kde-tier2-contract-reference-snapshot.sh|scripts/kde-tier2-contract-reference-needed.sh|manifests/kde-tier2-package-contracts.json)
+      continue ;;
+    .github/workflows/kde-tier2-package-materialization.yml|scripts/materialize_kde_tier2_package.py|scripts/run-kde-tier2-package-materialization.sh|scripts/kde-tier2-materialization-needed.sh)
+      continue ;;
+    .github/workflows/kde-tier2-package-batch2.yml|scripts/run-kde-tier2-package-batch2.sh|scripts/plan-kde-tier2-package-batch2.py|scripts/kde-tier2-package-batch2-needed.sh|manifests/kde-tier2-package-campaign-batch2.json|manifests/kde-tier2-package-batch2-attempts.json)
+      continue ;;
+    manifests/kde-tier1-package-campaign-batch*.json)
+      if campaign_is_evidence_only "${path}"; then continue; fi
+      echo "${path}: semantic package input changed; reusable hosted CI required."; exit 0 ;;
+    manifests/kde-frameworks-tier1.json|manifests/kde-dag.json|manifests/kde-tier1-global-discovery.json|manifests/kde-frameworks-tier1-packaging-tree-evidence.json)
+      if canonical_state_is_promotion_only "${path}"; then continue; fi
+      echo "${path}: canonical build identity changed; reusable hosted CI required."; exit 0 ;;
+    *) echo "${path}: build/reference/provider input may have changed; reusable hosted CI required."; exit 0 ;;
+  esac
+done
+echo "Event delta is evidence/policy-only; reusable hosted CI fan-out is skipped."
+exit 1

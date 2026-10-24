@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(ki18n_consumer LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+find_package(KF6I18n 6.30.0 REQUIRED)
+add_executable(ki18n-consumer main.cpp)
+target_link_libraries(ki18n-consumer PRIVATE KF6::I18n KF6::I18nLocaleData KF6::I18nQml)

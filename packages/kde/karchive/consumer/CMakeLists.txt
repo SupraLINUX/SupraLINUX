@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.29)
+project(SupraLINUXKF6ArchiveConsumer LANGUAGES CXX)
+find_package(KF6Archive 6.30.0 REQUIRED CONFIG)
+add_executable(karchive-consumer main.cpp)
+target_link_libraries(karchive-consumer PRIVATE KF6::Archive)

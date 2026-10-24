@@ -1,0 +1,74 @@
+[
+  {
+    "package": "extra-cmake-modules",
+    "source_package": "kf6-extra-cmake-modules",
+    "version": "6.30.0-0supralinux3",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6i18n-data",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6i18n-dev",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6i18n6",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6i18nlocaledata6",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6i18nqml6",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-i18n-localedata",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-ki18n",
+    "source_package": "kf6-ki18n",
+    "version": "6.30.0-0supralinux1",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6coreaddons-data",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "all"
+  },
+  {
+    "package": "libkf6coreaddons-dev",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "libkf6coreaddons6",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  },
+  {
+    "package": "qml6-module-org-kde-coreaddons",
+    "source_package": "kf6-kcoreaddons",
+    "version": "6.30.0-0supralinux4",
+    "architecture": "amd64"
+  }
+]

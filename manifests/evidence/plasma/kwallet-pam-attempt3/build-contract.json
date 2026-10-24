@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "role": "reviewed-plasma-package-build",
+  "state": "execution-authorized",
+  "package_execution_authorized": true,
+  "authorized_nodes": [
+    "kwallet-pam"
+  ],
+  "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
+  "execution_checkpoint": "frameworks-6.30-pass",
+  "execution_mode": "build",
+  "nodes": {
+    "kwallet-pam": {
+      "state": "build-pending",
+      "source_package": "kwallet-pam",
+      "version": "4:6.7.5-0supralinux3",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/kwallet-pam-6.7.5.tar.xz",
+      "upstream_sha256": "d71f5945ef3086f56f52f531508c2ab363078fbbd5ae4084bd3647049e6ee94f",
+      "signature_sha256": "6b561820cfebeb11586a42de2f6d515b8c9bf5db5d064789aceeabb041356ffb",
+      "packaging_reference_version": "4:6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "f588dc32e7c3b1a263a13e9732e66555926fa622d9014e962ee6ad83ac0522a3",
+      "packaging_path": "packages/plasma/kwallet-pam/debian",
+      "packaging_review": "PASS",
+      "binary_packages": {
+        "libpam-kwallet-common": "all",
+        "libpam-kwallet5": "amd64"
+      },
+      "ubuntu_baseline_package": "libpam-kwallet5",
+      "baseline_setup_script": "tests/baseline-setup",
+      "baseline_preflight_required": true,
+      "required_executable_files": [
+        "rules",
+        "tests/baseline-setup",
+        "tests/consumer",
+        "tests/ubuntu-abi-client"
+      ],
+      "upstream_tests": [],
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        }
+      },
+      "sbuild_rootfs_policy": {
+        "kind": "immutable-bare-milestone",
+        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+        "suites": [
+          "resolute",
+          "resolute-updates",
+          "resolute-security"
+        ]
+      },
+      "review": {
+        "source": "Unchanged signed upstream source; Ubuntu reference remains advisory.",
+        "version": "Preserve epoch 4 and the PAM module/common package contract.",
+        "dependencies": "Explicit actual kwallet6 runtime path and dependency; remove SDK dependencies used only for path discovery and unused xkbcommon. Exact ECM predecessor; Ubuntu PAM/libgcrypt/socat providers. Declare Ubuntu qt6-base-dev for the Qt6 CMake configuration and CoreTools target required by ECM path queries; the PAM module still does not link Qt. Real ECM local positive and tools-only negative controls verified.",
+        "tests": "No upstream CTest suite; real private libpam dispatch and 7 cases, independent key derivation, actual pipe/socket helper, preserved salt after upgrade; unchanged Ubuntu SDK and rebuilt consumer.",
+        "licensing": "Preserve LGPL-2.1-or-later module and Darwin source attribution, BSD-3-Clause FindPAM, GPL-2.0-or-later packaging and explicit CC0-1.0 CI metadata with full text.",
+        "profile": "PAM module/handoff package verification; real wallet, login and Wayland session acceptance remain separate."
+      },
+      "packaging_sha256": {
+        "README.source": "e706c1a99c9a4d818c2d0f80b8be0f76552c5d7ec4932cf23610e5772afa63c1",
+        "changelog": "1e2a845bc4d58cafbfa132faf7e417fac23c36919aa8f0fe22570096aee00c2d",
+        "control": "a87c173644e246c139fb766c9309124a8ce5bc7a132bd21c43a35f7d3f23b97d",
+        "copyright": "42b6221759c9e539cd039f980ad2cc60091db91fcdf9ec73a4630113e0a2836a",
+        "libpam-kwallet-common.install": "ca85c26ebea763c01045c154c7b63282d64bfd409da90f6543189de6e35fbf3a",
+        "libpam-kwallet5.install": "d83f63cf617fdc6af2c8d79b8655c6553beb1420676038e80f9fd7ff67656d45",
+        "rules": "0bff12c16034d9b8be14733e84911393ef520773e696f35a397753da5557a798",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/baseline-setup": "92997a397496def2f5ebb8069e19dd4da739e224af9981bdb0715dd7cf2e9d1a",
+        "tests/consumer": "d562e7947d7274c43ae5a0e58b7b7c3eb7936835c2cd7ca4ccaba9b48ca19880",
+        "tests/control": "a6c690b410d7830f43f7f1a66e91544f2da43b154a9b25ffce058fafb6894b50",
+        "tests/ubuntu-abi-client": "9be9b70c0ee2c32dfae83cdbd24e6d3421cc0b3a4035d722a059467c6dd66ebb",
+        "upstream/metadata": "cb69e555a8103e846f09d08b16e935a013120fb9969a16e890401f5456867bd1",
+        "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+      }
+    }
+  },
+  "next_package_attempt": 3,
+  "campaign_manifest": "manifests/kde-plasma-package-build.json",
+  "campaign_manifest_sha256": "8c3e24791f7c1c8da85304537ee79c383af9fdd4866f0a2f3e851c740a69702e"
+}

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+FIXTURE=$(cd "$(dirname "$0")" && pwd)
+python3 "${FIXTURE}/protocol-inventory.py" "${FIXTURE}/candidate-xml.json" 1.22.0
+BUILD="${AUTOPKGTEST_ARTIFACTS}/compiled-protocols"
+mkdir -p "${BUILD}"
+python3 - "${FIXTURE}/candidate-xml.json" <<'PY'
+import json,sys
+from pathlib import Path
+expected=json.loads(Path(sys.argv[1]).read_text())
+for name in sorted(set(expected)-{'screencast.xml','plasma-virtual-desktop.xml'}):print(name)
+PY
+mapfile -t PROTOCOLS < <(python3 -c 'import json,sys;print("\n".join(sorted(set(json.load(open(sys.argv[1])))-{"screencast.xml","plasma-virtual-desktop.xml"})))' "${FIXTURE}/candidate-xml.json")
+[[ ${#PROTOCOLS[@]} == 30 ]]
+for name in "${PROTOCOLS[@]}"; do
+    base=${name%.xml}
+    xml=/usr/share/plasma-wayland-protocols/${name}
+    wayland-scanner --strict client-header "${xml}" "${BUILD}/${base}-client.h"
+    wayland-scanner --strict server-header "${xml}" "${BUILD}/${base}-server.h"
+    wayland-scanner --strict private-code "${xml}" "${BUILD}/${base}.c"
+    printf '#include "%s-client.h"\n' "${base}" > "${BUILD}/${base}-client.c"
+    printf '#include "%s-server.h"\n' "${base}" > "${BUILD}/${base}-server.c"
+    cc -Wall -Wextra -Werror $(pkg-config --cflags wayland-client) -c "${BUILD}/${base}-client.c" -o "${BUILD}/${base}-client.o"
+    cc -Wall -Wextra -Werror $(pkg-config --cflags wayland-server) -c "${BUILD}/${base}-server.c" -o "${BUILD}/${base}-server.o"
+    cc -Wall -Wextra -Werror $(pkg-config --cflags wayland-client) -c "${BUILD}/${base}.c" -o "${BUILD}/${base}.o"
+done
+printf 'All 30 installed client headers, actual server headers and protocol code compiled: PASS\n'
+"${FIXTURE}/build-wire" /usr/share/plasma-wayland-protocols/plasma-window-management.xml "${BUILD}/wire"
+python3 "${FIXTURE}/wire-probe.py" "${BUILD}/wire/server" "${BUILD}/wire/client" "${AUTOPKGTEST_ARTIFACTS}/rebuilt-client"
+dpkg-query -W -f='${Architecture} ${Multi-Arch}\n' plasma-wayland-protocols | grep -x 'all foreign'

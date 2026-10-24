@@ -1,0 +1,15 @@
+{
+  "state": "PASS",
+  "kernel_carrier_samples": 12,
+  "kernel_carrier_incident_samples": 0,
+  "gateway_samples": 1,
+  "gateway_incident_samples": 0,
+  "gateway_scope": "late probe/cleanup observation; kernel and carrier watcher spans whole probe",
+  "journal_readability_exit_code": 0,
+  "host_libvirt_network_definitions": [],
+  "tso_off": true,
+  "gso_off": true,
+  "host_network_modified": false,
+  "host_firewall_modified": false,
+  "host_packages_installed": false
+}

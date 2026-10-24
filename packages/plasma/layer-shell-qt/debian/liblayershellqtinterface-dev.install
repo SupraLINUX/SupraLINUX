@@ -1,0 +1,3 @@
+usr/include/LayerShellQt/
+usr/lib/*/cmake/LayerShellQt/
+usr/lib/*/libLayerShellQtInterface.so

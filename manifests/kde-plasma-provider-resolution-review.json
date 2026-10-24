@@ -1,0 +1,360 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-02",
+  "authority": "supralinux-integration-review",
+  "desktop_authority": "kde-upstream-stable",
+  "provider_platform": "ubuntu-resolute",
+  "plasma_version": "6.7.5",
+  "state": "PASS",
+  "execution_authorized": false,
+  "package_execution_authorized": false,
+  "validation_run_kind": "planning-provider-resolution-review",
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "input": {
+    "provider_resolution_manifest": "manifests/kde-plasma-provider-resolution.json",
+    "workflow_run_id": 37086119189,
+    "job_id": 111096931279,
+    "commit": "3c1371fbec26dd2c06fab9fe3364eefe9d29fcfc",
+    "artifact_id": 11260780398,
+    "artifact_name": "kde-plasma-provider-resolution-3c1371fbec26dd2c06fab9fe3364eefe9d29fcfc",
+    "artifact_digest": "sha256:aeabbadbb4ea5d5388cfe0aee4eb62e8ca3b79de839414b77abd000724aa7785",
+    "files": {
+      "cmake-resolution.json": "832a121efba8d13c054fdfecc0fbb0a359869629d505bc95dbe6d27a8069973f",
+      "node-resolution.json": "edb2e4fcd9b9b83888871ba48ff99618135788634e354f30a25785b60afbb20f",
+      "pkg-config-resolution.json": "b371753f15167d11d4188100daadd9329ec727ab305d8e65fb9dbef12d8c1ef0",
+      "qml-resolution.json": "fb8b0716c55e154078bc17539b368e8457a3d838ac5406256f37c1ff1dcb411e",
+      "result.json": "49e137d999886f447264aafe857c351c5aca84171069c986bcdf182876176a21",
+      "ubuntu-build-dep-providers.json": "23b49003f3750f0f821a60e80e20145130f2ccd60adc703d76aa4af0e3e90edb",
+      "ubuntu-source-reference.json": "9f222f4cf51a4e08739fba3902cd98cf7b04a7b4240581ae7b236d467014992d"
+    }
+  },
+  "expected_sets": {
+    "missing_ubuntu_source_references": [
+      "plasma-bigscreen",
+      "plasma-login-manager",
+      "plasma-setup",
+      "spectacle",
+      "union"
+    ],
+    "missing_build_dep_candidates": [
+      "debhelper-compat",
+      "dh-sequence-kf5",
+      "dh-sequence-kf6",
+      "dh-sequence-pkgkde-symbolshelper",
+      "dh-sequence-python3",
+      "dh-sequence-qmldeps",
+      "dh-sequence-sodeps"
+    ],
+    "pending_qml_modules": [
+      "org.kde.config",
+      "org.kde.coreaddons",
+      "org.kde.draganddrop",
+      "org.kde.iconthemes",
+      "org.kde.kirigami",
+      "org.kde.kirigamiaddons.formcard",
+      "org.kde.kitemmodels",
+      "org.kde.kquickcontrolsaddons",
+      "org.kde.kquickimageeditor",
+      "org.kde.ksvg",
+      "org.kde.prison",
+      "org.kde.syntaxhighlighting"
+    ],
+    "legacy_cmake_references": [
+      "KF5",
+      "KF5ConfigWidgets",
+      "KF5FrameworkIntegration",
+      "KF5Wayland",
+      "Qt5",
+      "Qt5Gui",
+      "Qt5Qml",
+      "Qt5Test",
+      "Qt5ThemeSupport",
+      "Qt5X11Extras",
+      "Qt5XkbCommonSupport"
+    ],
+    "dynamic_cmake_references": [
+      "${GENMODULE}"
+    ],
+    "kde_extra_cmake_references": [
+      "KF${QT_MAJOR_VERSION}KirigamiAddons"
+    ]
+  },
+  "source_reference_decisions": {
+    "plasma-bigscreen": {
+      "status": "resolved",
+      "decision": "ubuntu-stonking-packaging-reference",
+      "reference_source": "plasma-bigscreen",
+      "reference_suite": "stonking",
+      "reference_version": "6.7.5-0ubuntu1",
+      "authority_source": "KDE Plasma 6.7.5 upstream",
+      "provider_policy": "resolve-build-and-runtime-providers-against-Ubuntu-Resolute-or-SupraLINUX",
+      "reference_only": true,
+      "source": "https://packages.ubuntu.com/source/stonking/plasma-bigscreen"
+    },
+    "plasma-login-manager": {
+      "status": "resolved",
+      "decision": "debian-near-upstream-packaging-reference",
+      "reference_source": "plasma-login-manager",
+      "reference_suite": "debian-sid",
+      "reference_version": "6.7.4-1",
+      "authority_source": "KDE Plasma 6.7.5 upstream",
+      "provider_policy": "adapt-packaging-to-6.7.5-and-resolve-providers-against-Ubuntu-Resolute-or-SupraLINUX",
+      "reference_only": true,
+      "source": "https://packages.debian.org/sid/plasma-login-manager"
+    },
+    "plasma-setup": {
+      "status": "resolved",
+      "decision": "kde-upstream-primary-no-resolute-source-reference",
+      "reference_source": null,
+      "authority_source": "KDE Plasma 6.7.5 upstream",
+      "provider_policy": "derive-contract-from-upstream-CMake-and-existing-SupraLINUX-Ubuntu-provider-decisions",
+      "reference_only": false,
+      "source": "https://download.kde.org/stable/plasma/6.7.5/plasma-setup-6.7.5.tar.xz"
+    },
+    "spectacle": {
+      "status": "resolved",
+      "decision": "ubuntu-resolute-source-name-alias",
+      "reference_source": "kde-spectacle",
+      "reference_suite": "resolute-updates",
+      "reference_version": "4:6.6.6-0ubuntu0.1",
+      "same_upstream_reference": "Ubuntu Stonking kde-spectacle 6.7.5-0ubuntu1",
+      "authority_source": "KDE Plasma 6.7.5 upstream",
+      "provider_policy": "reuse-Resolute-provider-contract-then-apply-6.7.5-upstream-delta",
+      "reference_only": true,
+      "source": "https://packages.ubuntu.com/source/resolute-updates/kde-spectacle"
+    },
+    "union": {
+      "status": "resolved",
+      "decision": "ubuntu-stonking-near-upstream-packaging-reference",
+      "reference_source": "union",
+      "reference_suite": "stonking",
+      "reference_version": "6.7.4-0ubuntu2",
+      "authority_source": "KDE Plasma 6.7.5 upstream",
+      "provider_policy": "reuse-near-upstream-packaging-structure-and-resolve-providers-against-Ubuntu-Resolute-or-SupraLINUX",
+      "reference_only": true,
+      "source": "https://packages.ubuntu.com/source/stonking/union"
+    }
+  },
+  "missing_build_dep_decisions": {
+    "debhelper-compat": {
+      "status": "resolved",
+      "decision": "debhelper-compat-relation",
+      "provider": "debhelper",
+      "note": "Versioned debhelper compatibility relation; absence of an apt candidate named debhelper-compat is expected."
+    },
+    "dh-sequence-kf5": {
+      "status": "resolved",
+      "decision": "virtual-dh-sequence",
+      "provider": "pkg-kde-tools"
+    },
+    "dh-sequence-kf6": {
+      "status": "resolved",
+      "decision": "virtual-dh-sequence",
+      "provider": "pkg-kde-tools"
+    },
+    "dh-sequence-pkgkde-symbolshelper": {
+      "status": "resolved",
+      "decision": "virtual-dh-sequence",
+      "provider": "pkg-kde-tools"
+    },
+    "dh-sequence-python3": {
+      "status": "resolved",
+      "decision": "virtual-dh-sequence",
+      "provider": "dh-python"
+    },
+    "dh-sequence-qmldeps": {
+      "status": "resolved",
+      "decision": "virtual-dh-sequence",
+      "provider": "pkg-kde-tools"
+    },
+    "dh-sequence-sodeps": {
+      "status": "resolved",
+      "decision": "virtual-dh-sequence",
+      "provider": "pkg-kde-tools"
+    }
+  },
+  "qml_provider_decisions": {
+    "org.kde.config": {
+      "status": "resolved",
+      "decision": "supralinux-frameworks",
+      "source_node": "kconfig",
+      "provider": "qml6-module-org-kde-config",
+      "version": "6.30.0-0supralinux4"
+    },
+    "org.kde.coreaddons": {
+      "status": "resolved",
+      "decision": "supralinux-frameworks",
+      "source_node": "kcoreaddons",
+      "provider": "qml6-module-org-kde-coreaddons",
+      "version": "6.30.0-0supralinux4"
+    },
+    "org.kde.draganddrop": {
+      "status": "resolved",
+      "decision": "supralinux-frameworks",
+      "source_node": "kdeclarative",
+      "provider": "qml6-module-org-kde-draganddrop",
+      "version": "6.30.0-0supralinux1"
+    },
+    "org.kde.iconthemes": {
+      "status": "resolved",
+      "decision": "supralinux-frameworks",
+      "source_node": "kiconthemes",
+      "provider": "qml6-module-org-kde-iconthemes",
+      "version": "6.30.0-0supralinux3"
+    },
+    "org.kde.kirigami": {
+      "status": "resolved",
+      "decision": "supralinux-frameworks",
+      "source_node": "kirigami",
+      "provider": "qml6-module-org-kde-kirigami",
+      "version": "6.30.0-0supralinux2"
+    },
+    "org.kde.kirigamiaddons.formcard": {
+      "status": "resolved",
+      "decision": "ubuntu-resolute-compatible-kde-extra",
+      "source_node": "kirigami-addons",
+      "provider": "qml6-module-org-kde-kirigamiaddons-formcard",
+      "version": "1.11.0-2ubuntu2"
+    },
+    "org.kde.kitemmodels": {
+      "status": "resolved",
+      "decision": "supralinux-frameworks",
+      "source_node": "kitemmodels",
+      "provider": "qml6-module-org-kde-kitemmodels",
+      "version": "6.30.0-0supralinux1"
+    },
+    "org.kde.kquickcontrolsaddons": {
+      "status": "resolved",
+      "decision": "supralinux-frameworks",
+      "source_node": "kdeclarative",
+      "provider": "qml6-module-org-kde-kquickcontrolsaddons",
+      "version": "6.30.0-0supralinux1"
+    },
+    "org.kde.kquickimageeditor": {
+      "status": "resolved",
+      "decision": "ubuntu-resolute-compatible-kde-extra",
+      "source_node": "kquickimageeditor",
+      "provider": "qml6-module-org-kde-kquickimageeditor",
+      "version": "0.6.0-2build1"
+    },
+    "org.kde.ksvg": {
+      "status": "resolved",
+      "decision": "supralinux-frameworks",
+      "source_node": "ksvg",
+      "provider": "qml6-module-org-kde-ksvg",
+      "version": "6.30.0-0supralinux1"
+    },
+    "org.kde.prison": {
+      "status": "resolved",
+      "decision": "supralinux-frameworks",
+      "source_node": "prison",
+      "provider": "qml6-module-org-kde-prison",
+      "version": "6.30.0-0supralinux1"
+    },
+    "org.kde.syntaxhighlighting": {
+      "status": "resolved",
+      "decision": "supralinux-frameworks",
+      "source_node": "syntax-highlighting",
+      "provider": "qml6-module-org-kde-syntaxhighlighting",
+      "version": "6.30.0-0supralinux2"
+    }
+  },
+  "cmake_source_reference_policy": {
+    "status": "resolved-by-context",
+    "expected_review_count": 117,
+    "rule": "Every source-build-dep-reference requirement is covered when each referring Plasma node has either an Ubuntu Resolute source Build-Depends reference or one explicit source_reference_decision above.",
+    "ubuntu_is_provider_reference_not_desktop_authority": true,
+    "no_package_attempt": true
+  },
+  "legacy_compatibility": {
+    "status": "resolved",
+    "decision": "retain-Ubuntu-Resolute-Qt5-KF5-compatibility-paths",
+    "provider": "ubuntu-resolute",
+    "references": [
+      "KF5",
+      "KF5ConfigWidgets",
+      "KF5FrameworkIntegration",
+      "KF5Wayland",
+      "Qt5",
+      "Qt5Gui",
+      "Qt5Qml",
+      "Qt5Test",
+      "Qt5ThemeSupport",
+      "Qt5X11Extras",
+      "Qt5XkbCommonSupport"
+    ],
+    "nodes": [
+      "breeze",
+      "kwayland-integration",
+      "oxygen",
+      "plasma-integration"
+    ],
+    "isolation": "Compatibility paths must not replace, downgrade, or become authority over SupraLINUX Frameworks 6.30 / Qt6 desktop paths."
+  },
+  "dynamic_cmake_decisions": {
+    "${GENMODULE}": {
+      "status": "resolved",
+      "decision": "generated-qml-runtime-probe",
+      "provider": "ECM-generated finder target",
+      "external_build_provider_required": false
+    }
+  },
+  "kde_extra_cmake_decisions": {
+    "KF${QT_MAJOR_VERSION}KirigamiAddons": {
+      "status": "resolved",
+      "decision": "ubuntu-resolute-compatible-kde-extra",
+      "provider": "kirigami-addons-dev",
+      "version": "1.11.0-2ubuntu2",
+      "qt_major": 6
+    }
+  },
+  "output": {
+    "evidence_dir": "evidence/kde-plasma-provider-resolution-review",
+    "artifact_name_template": "kde-plasma-provider-resolution-review-${commit}",
+    "retention_days": 90
+  },
+  "next_gate": "plasma-dag-executable-promotion",
+  "evidence": {
+    "result": "PASS",
+    "workflow_run_id": 37088387510,
+    "workflow_head_sha": "bab176ffbdc83e62f08030506983f28e34335f86",
+    "artifact_id": 11261258576,
+    "artifact_name": "kde-plasma-provider-resolution-review-bab176ffbdc83e62f08030506983f28e34335f86",
+    "artifact_digest": "sha256:7f6aa009fcd72086102f5e64a43bddf59a533c2972b2324f02ece6f1a5ce4aff",
+    "review_json_sha256": "838c60bbf5e16b72e3e8551b2fd0f77aeff7f82b0c11d269b1067df7146aebe7",
+    "result_json_sha256": "1d68c3373990aaa6dfeb614cd1a62d196be00e0208d9ea0c4cc5e7371d114bad",
+    "definition_sha256": "cf194c5818c88223e219ff56dcd537c0f0592038b5d101f1506621a7aa4354c4",
+    "package_execution_started": false,
+    "review_required": false
+  },
+  "post_review_findings": {
+    "semantic_source_identity_correction": {
+      "status": "applied-before-Level0-materialization",
+      "finding": "The historical provider-resolution mechanism treated same-name source availability as sufficient. For upstream node discover, apt-cache showsrc discover resolved Ubuntu source discover 2.1.2, which is unrelated to KDE Discover.",
+      "historical_evidence_immutable": true,
+      "historical_artifact_id": 11260780398,
+      "historical_reference_source": "discover",
+      "historical_reference_version": "2.1.2-10.1build1",
+      "corrected_reference_source": "plasma-discover",
+      "corrected_resolute_updates_version": "6.6.6-0ubuntu0.1",
+      "corrected_reference": "https://packages.ubuntu.com/source/resolute-updates/plasma-discover",
+      "scope_effect": "provider-packaging-reference-only",
+      "dag_topology_effect": "none",
+      "package_state_effect": "none",
+      "package_attempts_consumed": 0
+    },
+    "upstream_minimum_version_gap": {
+      "status": "open-individual-provider-package-review",
+      "finding": "Pinned KWayland and KWin require PlasmaWaylandProtocols >=1.21.0 while Ubuntu provides 1.20.0-2. KWin also requires WaylandProtocols >=1.48 while Ubuntu provides 1.47-1. Historical availability evidence does not certify changed upstream minimums.",
+      "live_manifest": "manifests/kde-plasma-supplementary-providers.json",
+      "historical_evidence_immutable": true,
+      "affected_nodes": [
+        "kwayland",
+        "kwin"
+      ],
+      "package_state_effect": "none; node not admitted for execution",
+      "package_attempts_consumed": 0
+    }
+  }
+}

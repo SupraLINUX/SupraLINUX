@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "scope": "reviewed-ubuntu-baseline-preflight",
+  "node": "plymouth-kcm",
+  "state": "PASS",
+  "exit_code": 0,
+  "source_commit": "743cc8c5814eac2b22ece0f7085a55fffc6b0f30",
+  "workflow_run_id": "40087662878",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "candidate_installed": false,
+  "inputs_sha256": {
+    "scripts/probe-reviewed-ubuntu-baseline.py": "242b1ad8d6e85027155391d11747f1d2cee77a9a8371bb6d1f4d57d4731dc03b",
+    "scripts/plasma-package-testing.py": "5fe6280e23080e98b13fbfd92f5db0988987e2b833567fbd4583ae88a8ec74d1",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "packages/plasma/plymouth-kcm/debian/tests/baseline-setup": "83de8455b1731133d4fac9ad41386fd59f22b91a44279db04b28d0ec0169bad0",
+    "packages/plasma/plymouth-kcm/debian/tests/control": "0a06ec471542f4e07e7c3c4ea81e42ad634dddf425c0d917d1cc05996673a1f8",
+    "packages/plasma/plymouth-kcm/debian/tests/installed-payload": "03e6d1f1c45935b877fef39616b9417e9e9dc487cbbe3a7c95ae2023957e4502",
+    "packages/plasma/plymouth-kcm/debian/tests/ubuntu-upgrade": "0ae81afb72c587848a11213727c4052980a8b13913fbd5c8563f31970df2c40e"
+  },
+  "files_sha256": {
+    "autopkgtest/log": "b31d3f1f33c3e6cd372edc81fde5b78504508638af21dad8f77f0a01efb12ebd",
+    "autopkgtest/reviewed-baseline-packages": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/reviewed-baseline-stdout": "d3b4cc1ff51e072e6cdc994df4920876c3641850e045eb736371c334bd043401",
+    "autopkgtest/summary": "36e1952a68e082ee9b1d71c36e7ee1d26054668b01a97ed5e481b3e31a7962e2",
+    "autopkgtest/testbed-packages": "a82cb26ada4b6411419b1825c069355b7e0985bc5f11ffadd8c2932ba8eb7cff",
+    "autopkgtest/testinfo.json": "92f4607e1b393552e0d84437d7ad822c8b4ae4d2b2e4a3174dddb6ab18865040",
+    "baseline-setup": "83de8455b1731133d4fac9ad41386fd59f22b91a44279db04b28d0ec0169bad0",
+    "reviewed-inputs.json": "6d984a05d376a2f97d09b0bc4c7cc85176b0aacf908ad0d6f417915ed83086eb",
+    "setup-commands.txt": "f976f6e221eba489c0c47024a488724c6798ade90df397fca3072f646449fdc9"
+  }
+}

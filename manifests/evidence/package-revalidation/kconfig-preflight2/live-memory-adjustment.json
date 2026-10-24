@@ -1,0 +1,13 @@
+{
+  "scope": "ephemeral-preflight-outer-VM-memory-adjustment",
+  "vm": "supralinux-package-revalidation-20261005t144801z-254021",
+  "at": "2026-10-05T14:59:52.569656+00:00",
+  "target_memory_mib": 8192,
+  "package_attempt_consumed": false,
+  "reason": "Client completed; autopkgtest runcmd waiting in kvm_async_pf_task_wait_schedule. Host has about 15 GiB swap in use; guest reports 7.7 GiB available. The adjustment is an infrastructure recovery probe, not a diagnosis of package failure.",
+  "before": "actual 12582912\nswap_in 0\nswap_out 0\nmajor_fault 0\nminor_fault 0\nunused 12084336\navailable 12162108\nusable 11932380\nlast_update 1791211773\ndisk_caches 11524\nhugetlb_pgalloc 0\nhugetlb_pgfail 0\nrss 5544592\n\n",
+  "exit_code": 0,
+  "stdout": "\n",
+  "stderr": "",
+  "after": "actual 12575744\nswap_in 0\nswap_out 0\nmajor_fault 0\nminor_fault 0\nunused 12084336\navailable 12162108\nusable 11932380\nlast_update 1791211773\ndisk_caches 11524\nhugetlb_pgalloc 0\nhugetlb_pgfail 0\nrss 5536072\n\n"
+}

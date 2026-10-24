@@ -1,0 +1,6 @@
+# Debian sid packaging copyright metadata retained in generic Tier 1 packaging-tree artifact.
+workflow_run=34708030450
+artifact_id=10301938362
+node=networkmanager-qt
+path=trees/debian/networkmanager-qt/debian/copyright
+sha256=c6d6d851fc0ac1e99ab9d5535159213b3ba4a7deff6a4239f76e59fb51316e1e

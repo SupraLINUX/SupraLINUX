@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "kind": "local-ubuntu-kgamma-unsupported-defaults-diagnosis",
+  "state": "ISSUE_CONFIRMED",
+  "authoritative": false,
+  "canonical_package_state_effect": "none",
+  "package_attempt_consumed": false,
+  "package_quality_certification": false,
+  "candidate_execution_started": false,
+  "observed_at": "2026-10-06T12:10:08.115293+00:00",
+  "repository_source_commit": "349fa3c4e062ff011a5078347f4731b0140135fa",
+  "installed_ubuntu_module": {
+    "package": "kgamma",
+    "version": "6.6.4-0ubuntu1",
+    "architecture": "amd64",
+    "path": "/usr/lib/x86_64-linux-gnu/qt6/plugins/plasma/kcms/systemsettings_qwidgets/kcm_kgamma.so",
+    "sha256": "f5e8d9952dd7ef697b0138597a3a58e84ea78f510006a4167ff1409164e9a106"
+  },
+  "ubuntu_runtime_versions": "dbus-daemon\t1.16.2-2ubuntu4\tamd64\nkgamma\t6.6.4-0ubuntu1\tamd64\nlibkf6configcore6\t6.24.0-0ubuntu1\tamd64\nlibkf6coreaddons6\t6.24.0-0ubuntu1.1\tamd64\nlibkf6kcmutils6\t6.24.0-0ubuntu1\tamd64\nlibkf6kcmutilscore6\t6.24.0-0ubuntu1\tamd64\nlibqt6core6t64\t6.10.2+dfsg-7\tamd64\nxvfb\t2:21.1.22-1ubuntu1.2\tamd64\n",
+  "extracted_sdk_debs": {
+    ".work/ubuntu-client-sdk/archives/libkf6config-dev_6.24.0-0ubuntu1_amd64.deb": {
+      "sha256": "4371d2cdd08cef200735e7952d37ad59c816fa5e80ce602930c790149a06ec57",
+      "identity": "Package: libkf6config-dev\nVersion: 6.24.0-0ubuntu1\nArchitecture: amd64"
+    },
+    ".work/ubuntu-client-sdk/libkf6coreaddons-dev_6.24.0-0ubuntu1.1_amd64.deb": {
+      "sha256": "069f87aa129a3e6e4aa6e9d9cf0edf77cb4eff48d8f7e2297752b43cf887f565",
+      "identity": "Package: libkf6coreaddons-dev\nVersion: 6.24.0-0ubuntu1.1\nArchitecture: amd64"
+    },
+    ".work/ubuntu-client-sdk/libkf6dbusaddons-dev_6.24.0-0ubuntu1_amd64.deb": {
+      "sha256": "b761c0c04f543fe34eb55e495d75b50ecf3777c226bbe8dc8790f55d7ed2712c",
+      "identity": "Package: libkf6dbusaddons-dev\nVersion: 6.24.0-0ubuntu1\nArchitecture: amd64"
+    },
+    ".work/ubuntu-client-sdk/libkf6kcmutils-dev_6.24.0-0ubuntu1_amd64.deb": {
+      "sha256": "71b2755e535041f0cfeff094eeb511dde98acffb0447ee1e66bb2758b9e0345e",
+      "identity": "Package: libkf6kcmutils-dev\nVersion: 6.24.0-0ubuntu1\nArchitecture: amd64"
+    },
+    ".work/ubuntu-client-sdk/libplasmaactivities-dev_6.6.4-0ubuntu1_amd64.deb": {
+      "sha256": "9275e715f5acf7ce949501836f3c4e294e1efa0bd17bbe50246b0dcda3541228",
+      "identity": "Package: libplasmaactivities-dev\nVersion: 6.6.4-0ubuntu1\nArchitecture: amd64"
+    },
+    ".work/ubuntu-client-sdk/qmake6-bin_6.10.2+dfsg-7_amd64.deb": {
+      "sha256": "658372d70cb627dc52c99e174d50f7acd72ed3e35245fc22cd0ee66353456265",
+      "identity": "Package: qmake6-bin\nVersion: 6.10.2+dfsg-7\nArchitecture: amd64"
+    },
+    ".work/ubuntu-client-sdk/qmake6_6.10.2+dfsg-7_amd64.deb": {
+      "sha256": "bbccf39041c68eb62beff40742f5ff831f2453a4d922492aa92ec3bb047cb7dd",
+      "identity": "Package: qmake6\nVersion: 6.10.2+dfsg-7\nArchitecture: amd64"
+    },
+    ".work/ubuntu-client-sdk/qt6-base-dev-tools_6.10.2+dfsg-7_amd64.deb": {
+      "sha256": "f75b03bc0f4c294d8b54d44a7fc4eeeb3a75b92b9fe13656cbb426f22f98a6f0",
+      "identity": "Package: qt6-base-dev-tools\nVersion: 6.10.2+dfsg-7\nArchitecture: amd64"
+    },
+    ".work/ubuntu-client-sdk/qt6-base-dev_6.10.2+dfsg-7_amd64.deb": {
+      "sha256": "37a09d02275eedbefec63c7d71dd6c310077d7feb6609fa938a4a8e0572762a7",
+      "identity": "Package: qt6-base-dev\nVersion: 6.10.2+dfsg-7\nArchitecture: amd64"
+    },
+    ".work/ubuntu-client-sdk/qt6-declarative-dev_6.10.2+dfsg-3_amd64.deb": {
+      "sha256": "4d3b87befda13385b65a82f526bc7fcf8c3a5bfd7708a76bfd2a6f06c6faaa9d",
+      "identity": "Package: qt6-declarative-dev\nVersion: 6.10.2+dfsg-3\nArchitecture: amd64"
+    }
+  },
+  "observations": {
+    "kind": "local-ubuntu-module-diagnosis",
+    "authoritative": false,
+    "package_attempt_consumed": false,
+    "package_quality_certification": false,
+    "candidate_execution_started": false,
+    "observations": [
+      {
+        "case": "functional",
+        "wrapper_exit_code": 0,
+        "log": "ubuntu-local-functional-output.txt"
+      },
+      {
+        "case": "unsupported",
+        "wrapper_exit_code": 139,
+        "log": "ubuntu-local-unsupported-output.txt"
+      }
+    ],
+    "private_xvfb_reaped": true
+  },
+  "candidate_static_review": {
+    "version": "6.7.5",
+    "upstream_sha256": "b45ad6608693034046b65bf68a3843f394f78def02c6f059bc69c5de07cace57",
+    "file": "kcmkgamma/kgamma.cpp",
+    "file_sha256": "9228cfb507ad6ed9ba1b3615dc392e67eaa4ca2f6c5d1344a457027b754cf420",
+    "official_branch": "Plasma/6.7",
+    "official_commit": "55e72f4f80848f86b3694b593dea574997a431a2",
+    "source_url": "https://invent.kde.org/plasma/kgamma/-/blob/55e72f4f80848f86b3694b593dea574997a431a2/kcmkgamma/kgamma.cpp",
+    "release_and_official_branch_file_identical": true,
+    "finding": "Defaults dereferences xf86cfgbox and syncbox outside the GammaCorrection guard; constructor creates these controls only when gamma support is available. This is static candidate evidence, not a candidate crash result."
+  },
+  "upstream_maintenance": {
+    "master_readme_url": "https://invent.kde.org/plasma/kgamma/-/blob/c969f9cb83d60d79ebb0514291861be908e213be/README.md",
+    "content_removal_commit": "c969f9cb83d60d79ebb0514291861be908e213be",
+    "scope": "Master was retired; Plasma/6.7 is the last maintained branch according to the official README."
+  },
+  "disposition": "Keep KGamma inventoried and unadmitted pending product/integration review. Do not modify upstream code or count an expected crash as package PASS. Other independent packages can proceed.",
+  "files_sha256": {
+    "compile-local.py": "9ab317013a52aba3c4dc1789aee51087105869278d7951a4b6970238d7173cf8",
+    "gamma-shim.cpp": "3bd4f8517043aa8ed2f1f36895892b8939a9d8c86fa09e00d217237bc92b3ef2",
+    "main.cpp": "f0291082b4aa9b2eb07cfd6196cd7fa039c25ad90d8d36605ced806358d9bba7",
+    "observations.json": "1e61ac86df868aa74032562938e66f91fefd8649789c9134296465c15ff6eeec",
+    "run-local-recorded.py": "7da1d5c5ccb84c1ae9f08e117b0f93f5438cced6a0fc4c4093c0b556f7a0dd9b",
+    "ubuntu-local-functional-output.txt": "bb5ca8b1302a656f05903877c713555c36bdcf4cc76398cb7e27a00278f950a3",
+    "ubuntu-local-unsupported-output.txt": "f5eec8ce60c581944ca75108bcb275f2d3da3b92e7f41421fcc204285ab04016",
+    "upstream-current-commits.json": "e1d66a469654966b45a763e74e3d4f204f0096b224111ed74cc39638e12e6388",
+    "upstream-readme.md": "4ff7b4b8d65c25cf5e292f539792cd01258b8bdfd37738905a0806bacfa110c6",
+    "upstream-stable-branch.json": "3ec1d9ee3592f7c9be8013688f8af69f819a9fd404821d39a044085aaef0eaec"
+  }
+}

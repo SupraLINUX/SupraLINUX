@@ -1,0 +1,7 @@
+kf6-prison (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Prison 6.30.0 from upstream stable.
+  * Preserve DMTX, ZXing, Qt Quick and Qt Multimedia default-enabled surfaces.
+  * Validate Prison/PrisonScanner ABIs, both QML roots and external consumer use.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 19 Sep 2026 18:30:00 -0300

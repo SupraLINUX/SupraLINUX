@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: CC0-1.0
+set -Eeuo pipefail
+mode=$1
+case "${mode}" in --suite|--native) shift ;; *) exit 2 ;; esac
+state=$(mktemp -d)
+trap 'rm -rf "${state}"' EXIT
+for directory in home runtime config data cache; do mkdir -m 0700 "${state}/${directory}"; done
+unset DISPLAY WAYLAND_DISPLAY SESSION_MANAGER DBUS_SESSION_BUS_ADDRESS DBUS_SYSTEM_BUS_ADDRESS
+unset QML_IMPORT_PATH QML2_IMPORT_PATH QT_PLUGIN_PATH QT_QPA_PLATFORM_PLUGIN_PATH LD_LIBRARY_PATH LD_PRELOAD
+export HOME="${state}/home" XDG_RUNTIME_DIR="${state}/runtime" XDG_CONFIG_HOME="${state}/config"
+export XDG_DATA_HOME="${state}/data" XDG_CACHE_HOME="${state}/cache"
+export DBUS_SYSTEM_BUS_ADDRESS="unix:path=${state}/nonexistent-system-bus"
+export QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software QT_QUICK_CONTROLS_STYLE=Fusion
+if [[ ${mode} == --native ]]; then
+    # CMake runs this launcher after debhelper has prepared HOME/XDG.
+    # Keep the original executable and assertions; wait for actual provider caches.
+    mkdir -m 0700 "${HOME}/.qttest"
+    for directory in config share cache; do mkdir -m 0700 "${HOME}/.qttest/${directory}"; done
+    export SUPRA_NATIVE_REAL_MIME_HELPER SUPRA_NATIVE_REAL_SYCOCA_HELPER SUPRA_NATIVE_CACHE_HELPER
+    SUPRA_NATIVE_REAL_MIME_HELPER=$(command -v update-mime-database)
+    SUPRA_NATIVE_REAL_SYCOCA_HELPER=$(command -v kbuildsycoca6)
+    SUPRA_NATIVE_CACHE_HELPER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/native-cache-helper"
+    test -x "${SUPRA_NATIVE_REAL_MIME_HELPER}" && test -x "${SUPRA_NATIVE_REAL_SYCOCA_HELPER}"
+    test -x "${SUPRA_NATIVE_CACHE_HELPER}"
+    mkdir -m 0700 "${state}/tools"
+    cat > "${state}/tools/update-mime-database" <<'TOOL'
+#!/bin/sh
+exec "$SUPRA_NATIVE_CACHE_HELPER" "$SUPRA_NATIVE_REAL_MIME_HELPER" 5.1 "$@"
+TOOL
+    cat > "${state}/tools/kbuildsycoca6" <<'TOOL'
+#!/bin/sh
+exec "$SUPRA_NATIVE_CACHE_HELPER" "$SUPRA_NATIVE_REAL_SYCOCA_HELPER" 1.6 "$@"
+TOOL
+    chmod 0700 "${state}/tools/update-mime-database" "${state}/tools/kbuildsycoca6"
+    export PATH="${state}/tools:${PATH}"
+fi
+# No service directories: native tests cannot activate a real KDED or helper.
+cat > "${state}/bus.conf" <<CONF
+<busconfig>
+  <type>session</type>
+  <listen>unix:path=${state}/runtime/bus</listen>
+  <policy context="default"><allow own="*"/><allow send_destination="*"/><allow receive_sender="*"/></policy>
+</busconfig>
+CONF
+timeout --signal=TERM --kill-after=5s 240s dbus-run-session --config-file="${state}/bus.conf" -- "$@"

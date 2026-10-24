@@ -1,0 +1,235 @@
+{
+  "schema": 2,
+  "as_of": "2026-09-20",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "batch": "tier2-batch-1",
+  "lane": "core-authorization",
+  "state": "PASS",
+  "attempt_ledger": "manifests/kde-tier2-package-batch1-attempts.json",
+  "canonical_snapshot": {
+    "tier1": "29 PASS / 0 pending / 0 current FAIL / 0 BLOCKED",
+    "tier2": "0 PASS / 2 pending / 0 current FAIL / 0 BLOCKED"
+  },
+  "selected_nodes": [
+    "kauth"
+  ],
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "kcoreaddons": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux4",
+      "workflow_run": 35122522242,
+      "job_id": 104883541991,
+      "artifact_id": 10457958023,
+      "artifact_sha256": "c90bb487aec031e71f49a7caaf8483002eb1e07dacf1642bcf1c9fd811473e64",
+      "files": {
+        "data": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908",
+        "dev": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636",
+        "runtime": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb"
+      }
+    },
+    "kwindowsystem": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux4",
+      "workflow_run": 35047623320,
+      "job_id": 104640833059,
+      "artifact_id": 10428130399,
+      "artifact_sha256": "9c35d5e228d3f8b71fb1e84863fac030bfd26a8e3c528ae718e788708db01272",
+      "files": {
+        "data": "f6c55bec9b08ccbf002bb52016f080c0804e3161576f01acccd608900a662200",
+        "dev": "d3a7f2fb13af68faf8bf36c048f039ff4aeaa50a90e44c5afb13f53bd7711e5c",
+        "runtime": "fd5245b8b292f94e6dce9be56e0ca721e7b4d007a8a85be9dd98fcbcd4671acc"
+      }
+    }
+  },
+  "technical_references": {
+    "debian_6_30": {
+      "role": "technical-packaging-reference-only",
+      "version": "6.30.0-1",
+      "debian_tar_url": "https://deb.debian.org/debian/pool/main/k/kf6-kauth/kf6-kauth_6.30.0-1.debian.tar.xz",
+      "debian_tar_sha256": "f304bd772cf958ca9dccab78ad33e12f8e2f7bf0b038999e629cf270bb068fc3",
+      "dsc_sha256": "21b8c054d7d9f7b80e4f4447871b8a4d1e176a179e155c186dbb5296a6054cf0",
+      "imported_file": "debian/libkf6authcore6.symbols",
+      "imported_file_sha256": "77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259",
+      "symbols_adjustment": {
+        "tag": "optional=private",
+        "symbols": [
+          "_ZTIN5KAuth11AuthBackend7PrivateE@Base 6.23.0",
+          "_ZTVN5KAuth11AuthBackend7PrivateE@Base 6.23.0"
+        ],
+        "rationale": "AuthBackend::Private is implementation-only in src/AuthBackend.cpp; Resolute does not emit its RTTI/vtable while all public ABI remains present."
+      }
+    }
+  },
+  "nodes": {
+    "kauth": {
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kauth",
+      "package_version": "6.30.0-0supralinux3",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kauth-6.30.0.tar.xz",
+      "source_sha256": "60b75e02abc2bfbb247c586e3ab94def7ecd7b4e1ddb8260358951d84d9ea8c9",
+      "signing_key": {
+        "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d"
+      },
+      "kde_framework_build_dependencies": [
+        "KCoreAddons",
+        "KWindowSystem"
+      ],
+      "external_build_dependencies": [
+        {
+          "name": "PolkitQt6-1",
+          "minimum": "0.112.0",
+          "provider_package": "libpolkit-qt6-1-dev",
+          "selected_provider_minimum": "0.200.0-2~"
+        }
+      ],
+      "backend_profile": {
+        "KAUTH_BACKEND_NAME": "POLKITQT6-1",
+        "KAUTH_HELPER_BACKEND_NAME": "DBUS",
+        "fake_backend_allowed": false
+      },
+      "runtime_package": "libkf6authcore6",
+      "soname": "libKF6AuthCore.so.6",
+      "binary_contracts": [
+        {
+          "name": "libkf6auth-data",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6auth-dev",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6auth-dev-bin",
+          "architecture": "amd64",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6auth-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6authcore6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "dependency_contracts": {
+        "libkf6auth-dev": [
+          "libkf6auth-dev-bin (= 6.30.0-0supralinux3)",
+          "libkf6authcore6 (= 6.30.0-0supralinux3)",
+          "libkf6coreaddons-dev (>= 6.30.0~)"
+        ],
+        "libkf6authcore6": [
+          "libkf6auth-data (= 6.30.0-0supralinux3)"
+        ]
+      },
+      "required_artifact_contracts": [
+        "polkit-backend-plugin",
+        "dbus-helper-plugin",
+        "kauth-policy-gen",
+        "KF6AuthConfig.cmake",
+        "symbols-contract",
+        "consumer-smoke",
+        "apt-runtime-closure"
+      ],
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "last_failure_evidence": {
+        "workflow_run": 35496445770,
+        "job_id": 106040197856,
+        "artifact_id": 10601410551,
+        "artifact_sha256": "4ea7588f1749ce7588cc06fc6bc9dc80350d7fc270bb30688ef173ee6262cfc9",
+        "rootfs_sha256": "bf90d45c1b750369d482757a4521ea3578a5ef8e10835bf008b258ffad49cbcf",
+        "stage": "sbuild-dh_makeshlibs",
+        "sbuild_started": true,
+        "tests": "6/6 PASS",
+        "source_package": "PASS",
+        "backend_profile": "POLKITQT6-1 + DBUS",
+        "cause": "Debian 6.30 symbols baseline contains two mandatory RTTI/vtable symbols for implementation-private KAuth::AuthBackend::Private that Resolute does not emit; existing missing templinst symbols were already optional."
+      },
+      "pass_evidence": {
+        "result": "PASS",
+        "workflow_run": 35497461178,
+        "job_id": 106043001431,
+        "commit": "3f67c5446e56d3029551bb5e481882ad3e208cfa",
+        "attempted_package_version": "6.30.0-0supralinux3",
+        "artifact_id": 10601382235,
+        "artifact_sha256": "443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b",
+        "rootfs_sha256": "15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668",
+        "stage": "complete",
+        "tests": "6/6 PASS",
+        "lintian": "PASS-errors",
+        "abi_soname": "libKF6AuthCore.so.6",
+        "abi_export_count": 118,
+        "backend": "POLKITQT6-1",
+        "helper_backend": "DBUS",
+        "symbols_reference_sha256": "77ab200ea8f5e9335831ef021dd2e446598b95d886d13237e91ea69e25812259",
+        "symbols_adjusted_sha256": "b8cf2fa877c94255f015cee08b89816d538cba23f1064d0360a329189fee0b78",
+        "consumer_smoke": "PASS",
+        "apt_check": "PASS",
+        "development_contract": "PASS",
+        "source_development_contract": "PASS",
+        "retained_predecessors": {
+          "extra-cmake-modules": "6.30.0-0supralinux3",
+          "kcoreaddons": "6.30.0-0supralinux4",
+          "kwindowsystem": "6.30.0-0supralinux4"
+        },
+        "downstream_eligible": true,
+        "files": {
+          "libkf6auth_data_deb_sha256": "c732bf3f06ec9763f74f7cc289cbd33869156c2842e755bd896f73fddb462604",
+          "libkf6auth_dev_bin_deb_sha256": "8552b1e1bca4b77255e9f93ddb342d8e0457366438968ad650a7b62191d0bb77",
+          "libkf6auth_dev_deb_sha256": "4e6d525cb30999861fe8a0ef6f643d0838240953ee97277803e7d28fe3806564",
+          "libkf6auth_doc_deb_sha256": "588fb69861abfad2a12066e275060600a741a915d03a3bd988b1076bb4735c3b",
+          "libkf6authcore6_deb_sha256": "924d9b02d46d59537fdef12603ddb3cb649770b8f1748b32203f593ae559a7ea",
+          "libkf6auth_dev_bin_dbgsym_ddeb_sha256": "3bbfc7ced79311449464282acbbef9bba7acd80d9fef17c308f6cc8365182a61",
+          "libkf6authcore6_dbgsym_ddeb_sha256": "020291579d0c8a7ed87f01a01400a2d0177ddb720b8ce61d1eeb87f6d226ed74",
+          "changes_sha256": "8672c31b1ffe5b7aae575395647251ae492434abda6056e7ea794748e6364eb6",
+          "buildinfo_sha256": "0cdf3239299f1877d255cec440e2f4b441733622164d43412d8425f3a820cd1d",
+          "dsc_sha256": "c824afdec24a383052cdaefc0ac89a1b900ae0c35b2e4c8e43448f0dcf7454d7",
+          "orig_tar_sha256": "60b75e02abc2bfbb247c586e3ab94def7ecd7b4e1ddb8260358951d84d9ea8c9",
+          "debian_tar_sha256": "9b4f362ea681172ac197f7c26c17334a1513ea4872d76e4220dcb238a8fdd8ed",
+          "rootfs_sha256": "15113b108b939e2575758c6696fc34808dfa925fa2dd3cc5e6c13e65e7be4668"
+        }
+      }
+    }
+  },
+  "canonical_promotion": {
+    "status": "promotion-candidate",
+    "tier2": "1 PASS / 1 pending / 0 current FAIL / 0 BLOCKED",
+    "dag_nodes": [
+      "kauth"
+    ]
+  },
+  "package_validation": {
+    "pr_ci_run": 35497461178,
+    "job_id": 106043001431,
+    "result": "PASS",
+    "artifact_id": 10601382235,
+    "artifact_sha256": "443a47a67188a52faae6c20b03c2c53203d5a9386dbbb5765af4f69e0cd1744b"
+  },
+  "inventory_context": {
+    "status": "historical-incomplete-inventory",
+    "note": "Batch 1 was prepared and promoted while the Tier 2 discovery incorrectly contained only KAuth and KMime. The KAuth build/PASS evidence remains valid; the global Tier 2 inventory was later corrected to 15 upstream nodes.",
+    "corrected_inventory_count": 15,
+    "corrected_current_state": "1 PASS / 14 pending / 0 current FAIL / 0 BLOCKED"
+  },
+  "post_campaign_inventory_correction": {
+    "kAuth_pass_unchanged": true,
+    "additional_pending_nodes": 13,
+    "kmime_state": "compatibility-decision-required",
+    "package_state_effect": "none"
+  }
+}

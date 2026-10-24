@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "state": "DIAGNOSED",
+  "scope": "plymouth-kcm-authoritative-host-preflight",
+  "source_commit": "8e4df2bf110a4e6ff104c1a4a3b8f230037eb688",
+  "diagnose_workflow_run_id": 39632799018,
+  "diagnose_workflow_job_id": 119335337945,
+  "diagnose_artifact_id": 12358929745,
+  "diagnose_artifact_digest": "sha256:59a1f0b113bb2130047c405e17a13db84d4d490bd867f8fe6ed19668257195bc",
+  "observations": {
+    "kernel": "7.0.0-38-generic",
+    "host_boot_since": "2026-10-20 22:42:34",
+    "kvm_open": "PASS",
+    "kvm_api_version": 12,
+    "nested_kvm": "Y",
+    "default_interface": "eno1",
+    "default_interface_driver": "e1000e",
+    "carrier": 1,
+    "tcp_segmentation_offload": "on",
+    "generic_segmentation_offload": "on",
+    "certified_requirement": "For e1000e, check-kvm-network.py requires tcp-segmentation-offload=off and generic-segmentation-offload=off before guest network traffic.",
+    "libguestfs_runtime_provenance": "present and hash-matched to the live 7.0.0-38 kernel/modules"
+  },
+  "diagnostic_checkout_note": "The diagnose mode intentionally invokes relative repository scripts from the Actions checkout without a broker-owned cwd, so its Permission denied lines are diagnostic-path artifacts and do not establish a defect in the broker's ephemeral control checkout. The independently observed e1000e TSO/GSO state is an actionable certified-host admission violation.",
+  "classification": "INFRA_INVALID",
+  "repair_mechanism": "Use the already-certified repair-host path, which applies the scoped reversible e1000e runtime offload mitigation and reports persistent_change=false, vm_created=false, jit_invoked=false, package_attempt_effect=none.",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "package_attempt_effect": "none"
+}

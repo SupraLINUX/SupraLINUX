@@ -1,0 +1,24 @@
+kf6-kauth (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Keep Debian 6.30 symbols as the baseline contract.
+  * Mark only AuthBackend::Private RTTI/vtable symbols optional for the
+    Resolute toolchain; no public KAuth ABI symbol is relaxed.
+  * Preserve 6/6 upstream tests and the PolkitQt6-1 + DBus profile.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 20 Sep 2026 04:31:00 -0300
+
+kf6-kauth (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Fix malformed helper-install-dir-cache quilt hunk.
+  * Preserve the same upstream source, backend profile and dependency set.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 20 Sep 2026 04:18:00 -0300
+
+kf6-kauth (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Frameworks KAuth 6.30.0 upstream stable.
+  * Select the real Linux PolkitQt6-1 authorization backend and DBus helper.
+  * Build against retained SupraLINUX KCoreAddons and KWindowSystem 6.30.
+  * Preserve Debian/Ubuntu binary package names and a pinned Debian 6.30 symbols contract.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 20 Sep 2026 03:58:00 -0300

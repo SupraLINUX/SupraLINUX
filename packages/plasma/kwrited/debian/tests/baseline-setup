@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+apt-get install -y --no-install-recommends build-essential cmake kwrited libkf6coreaddons-dev libkf6dbusaddons-dev qt6-base-dev qt6-qpa-plugins dbus-daemon
+BASE=/var/tmp/supralinux-kwrited-baseline
+mkdir -p "${BASE}/source"
+cat > "${BASE}/source/CMakeLists.txt" <<'CMAKE'
+cmake_minimum_required(VERSION 3.16)
+project(ubuntu-kwrited-client LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_AUTOMOC ON)
+find_package(Qt6 6.10 REQUIRED COMPONENTS Core Gui DBus)
+find_package(KF6CoreAddons 6.24 CONFIG REQUIRED)
+find_package(KF6DBusAddons 6.24 CONFIG REQUIRED)
+add_executable(ubuntu-kwrited-client main.cpp)
+target_link_libraries(ubuntu-kwrited-client Qt6::Core Qt6::Gui Qt6::DBus KF6::CoreAddons KF6::DBusAddons)
+CMAKE
+cat > "${BASE}/source/main.cpp" <<'CLIENT'
+#include <KDEDModule>
+#include <KPluginFactory>
+#include <KPluginMetaData>
+#include <QGuiApplication>
+#include <QDBusConnection>
+#include <QDir>
+#include <QFileInfo>
+#include <QElapsedTimer>
+#include <QEventLoop>
+#include <QRegularExpression>
+#include <QThread>
+#include <QSet>
+#include <memory>
+#include <iostream>
+#include <fcntl.h>
+#include <unistd.h>
+class Notifications : public QObject {
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface","org.freedesktop.Notifications")
+public:
+    QStringList messages;
+public Q_SLOTS:
+    QStringList GetCapabilities() { return {QStringLiteral("body"),QStringLiteral("persistence")}; }
+    uint Notify(const QString &,uint,const QString &,const QString &,const QString &body,const QStringList &,const QVariantMap &,int) {
+        messages.append(body);return uint(messages.size());
+    }
+    QString GetServerInformation(QString &vendor,QString &version,QString &specVersion) {
+        vendor=QStringLiteral("SupraLINUX");version=QStringLiteral("1");specVersion=QStringLiteral("1.2");return QStringLiteral("Private test fixture");
+    }
+    void CloseNotification(uint) {}
+};
+static QSet<QString> terminals() {
+    QSet<QString> result;
+    for (const auto &entry:QDir(QStringLiteral("/proc/self/fd")).entryList(QDir::AllEntries|QDir::NoDotAndDotDot)) {
+        const auto target=QFileInfo(QStringLiteral("/proc/self/fd/")+entry).symLinkTarget();
+        if (QRegularExpression(QStringLiteral("^/dev/pts/[0-9]+$")).match(target).hasMatch()) result.insert(target);
+    }
+    return result;
+}
+int main(int argc,char **argv) {
+    QGuiApplication app(argc,argv);
+    const auto fail=[](const char *check){std::cerr<<"kwrited client check failed: "<<check<<'\n';return 1;};
+    if(argc!=2)return fail("installed module argument");
+    Notifications notifications;auto bus=QDBusConnection::sessionBus();
+    if(!bus.registerObject(QStringLiteral("/org/freedesktop/Notifications"),&notifications,QDBusConnection::ExportAllSlots) ||
+       !bus.registerService(QStringLiteral("org.freedesktop.Notifications")))return fail("private notification service");
+    const auto before=terminals();
+    auto loaded=KPluginFactory::instantiatePlugin<KDEDModule>(KPluginMetaData(QString::fromLocal8Bit(argv[1])),nullptr);
+    if(!loaded) {std::cerr<<loaded.errorText.toStdString();return fail("actual KDED module instantiation");}
+    std::unique_ptr<KDEDModule> module(loaded.plugin);
+    const auto opened=terminals()-before;
+    if(opened.size()!=1)return fail("owned slave PTY");
+    const auto terminal=*opened.begin();const auto bytes=terminal.toLocal8Bit();
+    int fd=::open(bytes.constData(),O_WRONLY|O_NOCTTY);
+    if(fd<0)return fail("open module slave PTY");
+    const QByteArray payload("\r\a  SupraLINUX console message \r\n\a");
+    const auto written=::write(fd,payload.constData(),size_t(payload.size()));::close(fd);
+    if(written!=payload.size())return fail("PTY write");
+    QElapsedTimer timer;timer.start();
+    while(notifications.messages.isEmpty() && timer.elapsed()<10000) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents,100);QThread::msleep(10);
+    }
+    if(notifications.messages!=QStringList{QStringLiteral("SupraLINUX console message")})return fail("actual notification body and control-character normalization");
+    module.reset();
+    if(QFileInfo::exists(terminal))return fail("module unload and PTY cleanup");
+    std::cout<<"Installed KDED module, actual PTY input, private D-Bus notification body, normalization and PTY cleanup: PASS\n";
+    return 0;
+}
+#include "main.moc"
+CLIENT
+cat > "${BASE}/run-session" <<'SESSION'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+CLIENT=$1
+SESSION_ROOT=$(mktemp -d)
+trap 'rm -rf "${SESSION_ROOT}"' EXIT
+export XDG_CONFIG_HOME="${SESSION_ROOT}/config" XDG_DATA_HOME="${SESSION_ROOT}/data" XDG_CACHE_HOME="${SESSION_ROOT}/cache" XDG_RUNTIME_DIR="${SESSION_ROOT}/runtime" QT_QPA_PLATFORM=offscreen
+mkdir -p "${XDG_CONFIG_HOME}" "${XDG_DATA_HOME}" "${XDG_CACHE_HOME}" "${XDG_RUNTIME_DIR}"
+chmod 700 "${XDG_RUNTIME_DIR}"
+mapfile -t MODULES < <(dpkg -L kwrited | sed -n '\|/kf6/kded/kwrited.so$|p')
+[[ ${#MODULES[@]} == 1 ]]
+dbus-run-session -- "${CLIENT}" "${MODULES[0]}"
+SESSION
+chmod +x "${BASE}/run-session"
+cmake -S "${BASE}/source" -B "${BASE}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${BASE}/build"
+"${BASE}/run-session" "${BASE}/build/ubuntu-kwrited-client" | tee "${BASE}/baseline-output.txt"
+dpkg-query -W -f='${Version}' kwrited > "${BASE}/ubuntu-version"
+dpkg-query -W -f='${Version}' libqt6core6t64 > "${BASE}/ubuntu-qt-core-version"
+sha256sum "${BASE}/build/ubuntu-kwrited-client" > "${BASE}/binary-sha256.txt"

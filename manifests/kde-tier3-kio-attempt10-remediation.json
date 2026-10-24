@@ -1,0 +1,259 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-28",
+  "node": "kio",
+  "attempt": 10,
+  "authority": "kde-upstream",
+  "frameworks_series": "6.30.0",
+  "upstream_ref": "v6.30.0",
+  "status": "attempt10-closed-PASS",
+  "candidate_package_version": "6.30.0-0supralinux10",
+  "previous_package_version": "6.30.0-0supralinux9",
+  "package_revision_bump_required": true,
+  "source_rematerialization_required": true,
+  "materialization_authorized": false,
+  "package_execution_authorized": false,
+  "level1_execution_authorized": false,
+  "canonical_kio_state": "FAIL",
+  "canonical_kio_package_version": "6.30.0-0supralinux9",
+  "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+  "predecessor_attempt9": {
+    "workflow_run": 36416891314,
+    "commit": "e7dfc689bf18aea5ed194df03f31e9c74627ead0",
+    "result": "MIXED",
+    "kio_tests": "69/69 PASS",
+    "failure_substage": "lintian/symbol-metadata",
+    "rootfs": {
+      "artifact_id": 10967311404,
+      "artifact_sha256": "533a74c6ad1dbce5b6ce5e219cabbc720ad9e692017d24899afbe8dede69f72e"
+    },
+    "kio": {
+      "job_id": 108910323115,
+      "artifact_id": 10968800996,
+      "artifact_sha256": "17a0d0160104a1d095b433e3e80b5a8153c811a25ae802cb382ebcf85bf48260"
+    },
+    "kxmlgui": {
+      "job_id": 108910323005,
+      "artifact_id": 10967257671,
+      "artifact_sha256": "91d0f5100748097446079fe1cead44444c88cf1d7a729d286c442402774921e5"
+    }
+  },
+  "retained_functional_remediation": {
+    "krecent_patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+    "patched_source_sha256": "57d20f3786220178316b31819ba266432207b1f4d55859ccf8d1fad37645021b",
+    "test_home": "debian/supralinux-test-home/sbuild",
+    "upstream_tests": "69/69 PASS in Attempt 9",
+    "source_code_change_from_attempt9": false
+  },
+  "symbol_metadata_remediation": {
+    "total_symbols": 34,
+    "minimal_version": "6.30.0",
+    "tags": [
+      "optional"
+    ],
+    "public_abi_promotion": false,
+    "lintian_suppression": false,
+    "kiocore": {
+      "package": "libkf6kiocore6",
+      "soname": "libKF6KIOCore.so.6",
+      "symbols": [
+        "_ZN3KIO6Worker20setTestWorkerFactoryERKSt8weak_ptrINS_13WorkerFactoryEE@Base"
+      ],
+      "classification": "private test hook declared in worker_p.h"
+    },
+    "kiogui": {
+      "package": "libkf6kiogui6",
+      "soname": "libKF6KIOGui.so.6",
+      "symbols": [
+        "_ZN3KIO14FilePreviewJob11canBeCachedERK7QString@Base",
+        "_ZN3KIO14FilePreviewJob11emitPreviewERK6QImage@Base",
+        "_ZN3KIO14FilePreviewJob11qt_metacallEN11QMetaObject4CallEiPPv@Base",
+        "_ZN3KIO14FilePreviewJob11qt_metacastEPKc@Base",
+        "_ZN3KIO14FilePreviewJob11slotTimeoutEv@Base",
+        "_ZN3KIO14FilePreviewJob12isCacheValidERK6QImage@Base",
+        "_ZN3KIO14FilePreviewJob12slotStatFileEP4KJob@Base",
+        "_ZN3KIO14FilePreviewJob13parentDirPathERK7QString@Base",
+        "_ZN3KIO14FilePreviewJob13slotThumbDataEPNS_3JobERK10QByteArray@Base",
+        "_ZN3KIO14FilePreviewJob15createThumbnailERK7QString@Base",
+        "_ZN3KIO14FilePreviewJob16staticMetaObjectE@Base",
+        "_ZN3KIO14FilePreviewJob17saveThumbnailDataER6QImage@Base",
+        "_ZN3KIO14FilePreviewJob20getOrCreateThumbnailEv@Base",
+        "_ZN3KIO14FilePreviewJob20loadAvailablePluginsEv@Base",
+        "_ZN3KIO14FilePreviewJob20saveThumbnailToCacheERK6QImageRK7QString@Base",
+        "_ZN3KIO14FilePreviewJob20standardThumbnailersEv@Base",
+        "_ZN3KIO14FilePreviewJob21slotStandardThumbDataEPNS_3JobERK6QImage@Base",
+        "_ZN3KIO14FilePreviewJob22createThumbnailViaFuseERK4QUrlS3_@Base",
+        "_ZN3KIO14FilePreviewJob24preparePluginForMimetypeERK7QString@Base",
+        "_ZN3KIO14FilePreviewJob24slotGetOrCreateThumbnailEP4KJob@Base",
+        "_ZN3KIO14FilePreviewJob27createThumbnailViaLocalCopyERK4QUrl@Base",
+        "_ZN3KIO14FilePreviewJob5startEv@Base",
+        "_ZN3KIO14FilePreviewJobC1ERK9KFileItemiRKNS_14PreviewOptionsERKNS_16PreviewSetupDataE@Base",
+        "_ZN3KIO14FilePreviewJobC2ERK9KFileItemiRKNS_14PreviewOptionsERKNS_16PreviewSetupDataE@Base",
+        "_ZN3KIO14FilePreviewJobD0Ev@Base",
+        "_ZN3KIO14FilePreviewJobD1Ev@Base",
+        "_ZN3KIO14FilePreviewJobD2Ev@Base",
+        "_ZNK3KIO14FilePreviewJob10metaObjectEv@Base",
+        "_ZNK3KIO14FilePreviewJob12previewImageEv@Base",
+        "_ZNK3KIO14FilePreviewJob23thumbnailWorkerMetaDataEv@Base",
+        "_ZTIN3KIO14FilePreviewJobE@Base",
+        "_ZTSN3KIO14FilePreviewJobE@Base",
+        "_ZTVN3KIO14FilePreviewJobE@Base"
+      ],
+      "classification": "FilePreviewJob exported only under BUILD_TESTING via KIOGUI_TEST_EXPORT"
+    }
+  },
+  "build_scope": {
+    "source_materialization_nodes": [
+      "kio"
+    ],
+    "retained_revalidation_nodes": [
+      "kxmlgui"
+    ],
+    "full_level1_rerun_required": true
+  },
+  "gates": {
+    "current": "tier3-attempt10-closed-PASS",
+    "after_materialization": "tier3-attempt10-kio-planning-validation",
+    "package_execution_requires_separate_authorization": true,
+    "next": "tier3-build-level2-planning"
+  },
+  "package_attempted": true,
+  "package_state_effect": "PASS",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "source_materialization_complete": true,
+  "execution_authorized": false,
+  "definition_contract": {
+    "status": "PASS",
+    "definition_commit": "0a36afe3c2841dd4d00f783fc9b898a29580497c",
+    "validation_commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
+    "repository_policy_workflow_run": 36424068693,
+    "candidate_package_version": "6.30.0-0supralinux10",
+    "materialization_authorized_at_definition": true,
+    "package_execution_authorized_at_definition": false,
+    "symbol_count": 34,
+    "minimal_version": "6.30.0",
+    "optional_only": true,
+    "functional_source_unchanged": true
+  },
+  "definition_validation": {
+    "commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
+    "repository_policy_workflow_run": 36424068693,
+    "result": "PASS"
+  },
+  "materialization_evidence": {
+    "workflow_run": 36424068585,
+    "job_id": 108933677695,
+    "commit": "a77f6e1f247792ccb486720010d969e2cbc41680",
+    "artifact_id": 10970466420,
+    "artifact_sha256": "f25ae14e1f393d24f95b1118680d7967f6bef449c8790981b170cfb78a1f3d22",
+    "package_version": "6.30.0-0supralinux10",
+    "orig_tar_sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
+    "reference_tree_sha256": "50508b96984930b303c3d4467b464c8275de59ae68e210c8ad671e0832262e84",
+    "dsc_sha256": "4f27b6ab8797bf44c3104e57cf33a69f921ba7ac83e90b5ea82082cdd1342eb3",
+    "debian_tar_sha256": "801680a76fa4013f07ae2891a0f4ab3c98f31b974bc94385912333b625719fd5",
+    "source_tree_sha256": "05a15e08edad1e95358383e97ae326d41c308b64a116cb0dcaf37a11f4677d0e",
+    "materialized_tree_sha256": "06bbd34131df5bc52793703782b7db2b5f6a3a9c8541d82c4ee8daeba947c8a8",
+    "adapted_control_sha256": "b5f687a50fd97d7ca90871a49610dc35be3ca92c51bfd20d38c9f48af45585a5",
+    "adapted_rules_sha256": "bda27ef4c2d07b790e6eb0473a32abe6c58371e29f909ab7f52ee45e69ed0a3f",
+    "supralinux_source_patches": [
+      {
+        "name": "supralinux-krecent-deterministic-ordering.patch",
+        "target": "src/core/krecentdocument.cpp",
+        "patch_sha256": "8718c28a240e5cd5700fff23afe9c122d3f632b80e6db5cde83bcee7e631c602",
+        "patched_source_sha256": "57d20f3786220178316b31819ba266432207b1f4d55859ccf8d1fad37645021b"
+      }
+    ],
+    "result": "PASS",
+    "package_attempted": false,
+    "package_state_effect": "none",
+    "full_result_json_retained_in_artifact": true
+  },
+  "planning_validation": {
+    "repository_policy_workflow_run": 36424710656,
+    "level1_workflow_run": 36424710626,
+    "commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
+    "result": "PASS"
+  },
+  "activation": {
+    "scope": "full-level1-rerun-2-nodes",
+    "nodes": [
+      "kio",
+      "kxmlgui"
+    ],
+    "kio_package_version": "6.30.0-0supralinux10",
+    "kxmlgui_package_version": "6.30.0-0supralinux5",
+    "repository_policy_workflow_run": 36424710656,
+    "level1_planning_workflow_run": 36424710626,
+    "commit": "0471d2332eef5f02344b2ffad96828f31ee3a405",
+    "level1_execution_authorized": true
+  },
+  "attempt10_result": {
+    "workflow_run": 36425867815,
+    "commit": "dc7cedb37689eb6eb27b6034b58584c33985a5b0",
+    "result": "PASS",
+    "rootfs": {
+      "artifact_id": 10971154003,
+      "artifact_sha256": "963ca24b1ef3e5b97cb0a52d767ae22696f21d16921315690b08266756ee1103"
+    },
+    "kio": {
+      "job_id": 108939890139,
+      "artifact_id": 10972557457,
+      "artifact_sha256": "700a7abebfaca99ae76e36cfb8f54798694732f248b0002224025cfc80d94056",
+      "package_version": "6.30.0-0supralinux10",
+      "tests": "69/69 PASS",
+      "lintian": "PASS-errors",
+      "apt_check": "PASS",
+      "abi_contract": "PASS",
+      "cmake_consumer": "PASS",
+      "downstream_eligible": true,
+      "artifacts": {
+        "kf6-kio_6.30.0-0supralinux10.debian.tar.xz": "801680a76fa4013f07ae2891a0f4ab3c98f31b974bc94385912333b625719fd5",
+        "kf6-kio_6.30.0-0supralinux10.dsc": "4f27b6ab8797bf44c3104e57cf33a69f921ba7ac83e90b5ea82082cdd1342eb3",
+        "kf6-kio_6.30.0-0supralinux10_amd64.buildinfo": "1cc23d9d2a93f349ae45811b5ef6e294e5c334ac257724185e2c47208be08f99",
+        "kf6-kio_6.30.0-0supralinux10_amd64.changes": "f50fc781871b5078f7a26385d4b65fbaaa33314d4324c314af3bf7d2854261e4",
+        "kf6-kio_6.30.0.orig.tar.xz": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2",
+        "kio6-dbgsym_6.30.0-0supralinux10_amd64.ddeb": "a97c224d2da8429c6f3a4ee5fba0eeec4e092b3fc0de9dd79f7af64591945916",
+        "kio6_6.30.0-0supralinux10_amd64.deb": "f8ff63f173f67e6151d22c45db48298d25957e0d9fb5f1ef44caf336c342dc04",
+        "libkf6kio-dev-dbgsym_6.30.0-0supralinux10_amd64.ddeb": "877679d5366f62c8a2e9163d0c7cede3b153f8e7e67d083e1541fc701042e8b2",
+        "libkf6kio-dev_6.30.0-0supralinux10_amd64.deb": "10225a85a14b38cf34a238269edbebbaaa1635aec768e2397b64bca7a3a8cd16",
+        "libkf6kio-doc_6.30.0-0supralinux10_all.deb": "7b52b44608bc9aa5f3371a6c476ec0670bc7d0edc1b428d667c9fbfc0e560d3a",
+        "libkf6kiocore6-dbgsym_6.30.0-0supralinux10_amd64.ddeb": "974b3c1ea4bec92468d430fbc0ee5d4e44818a24587b7a7eed8014660af57ee4",
+        "libkf6kiocore6_6.30.0-0supralinux10_amd64.deb": "080c5eba2441a60ae714b6d42b5420e8efb0d37d1cd116519ddc1cd2cb69e9e8",
+        "libkf6kiofilewidgets6-dbgsym_6.30.0-0supralinux10_amd64.ddeb": "c15ed3d79a5ca493046694783e24c65b8416cf13c26a82a6b164d74c65dc2834",
+        "libkf6kiofilewidgets6_6.30.0-0supralinux10_amd64.deb": "78df15c0959d6ffcbe03c6384f98d243f27104a227f81a70df8d0a5b5d1404fb",
+        "libkf6kiogui6-dbgsym_6.30.0-0supralinux10_amd64.ddeb": "985303099c95f361c79689afb1ae1084f4667abe5368eae204985f0f141b7e6e",
+        "libkf6kiogui6_6.30.0-0supralinux10_amd64.deb": "bcc18064e09f03a5b6dc221b4c0b80bc0d5767c038f81719be263168ebf818fb",
+        "libkf6kiowidgets6-dbgsym_6.30.0-0supralinux10_amd64.ddeb": "140a517ac642c98e49b05e94f0a829a7f583da6152b9bb330bb0b852fd8cf3ca",
+        "libkf6kiowidgets6_6.30.0-0supralinux10_amd64.deb": "6d6fe01c9c44e4cc46ae71dc942b5ba9a4558ceebdbf860d19a96cf84ac38db3"
+      }
+    },
+    "kxmlgui": {
+      "job_id": 108939889724,
+      "artifact_id": 10971509790,
+      "artifact_sha256": "a4a5bac1ca996792cc9d44e20d68d451ac61ea0a30811781260299bf87a04c00",
+      "package_version": "6.30.0-0supralinux5",
+      "tests": "7/7 PASS",
+      "lintian": "PASS-errors",
+      "python_import": "PASS",
+      "package_state_effect": "PASS-revalidation",
+      "artifacts": {
+        "kf6-kxmlgui_6.30.0-0supralinux5.debian.tar.xz": "82c7bc714edf2a0f12d77294d679df2b371a1d755f07720cccfd15fd799bfa21",
+        "kf6-kxmlgui_6.30.0-0supralinux5.dsc": "e52d49a6576fbea650803e5b75de8dd3430781db1b589ea15e0819b129e55f23",
+        "kf6-kxmlgui_6.30.0-0supralinux5_amd64.buildinfo": "fb0c0a098f82c7a9396c18d1f7de11deebe5c9cfb267f83dc4768129a7cb2d81",
+        "kf6-kxmlgui_6.30.0-0supralinux5_amd64.changes": "1994470871aaea0a035e31e1bdbc1f728903e9f08e937e9b0eeedaf8fc41500e",
+        "kf6-kxmlgui_6.30.0.orig.tar.xz": "10fb8a0f7b874248ff60d9a8ee4e1f06a0efcf01b0d34d7635dfff86e848c352",
+        "libkf6xmlgui-data_6.30.0-0supralinux5_all.deb": "6e7ce0401f82ce9ca93d9bcea1a1a1f41d682d29a00c053399f95948cee58236",
+        "libkf6xmlgui-dev-dbgsym_6.30.0-0supralinux5_amd64.ddeb": "dd001a4c5e22838be13b44b94ef6f2b5bdfa64d6f22a0546f84e1201564bfd6a",
+        "libkf6xmlgui-dev_6.30.0-0supralinux5_amd64.deb": "5e88d08f5e243542b53d43d22249c4da128d3892bc65e1f1cab8312ec0286374",
+        "libkf6xmlgui-doc_6.30.0-0supralinux5_all.deb": "df80fb13e43f0c02ae25899a50e7c1d1235894edd1127fb7cee40bff7965474d",
+        "libkf6xmlgui6-dbgsym_6.30.0-0supralinux5_amd64.ddeb": "ec579bc6390176c4feec95616be46b3f079ace7fdf7d033b51c78fa68670686d",
+        "libkf6xmlgui6_6.30.0-0supralinux5_amd64.deb": "6e6564474fb35639c663c6865f0a1dba8ef09fcd0f66640fcd14c20296c7b4bf",
+        "python3-kf6xmlgui-dbgsym_6.30.0-0supralinux5_amd64.ddeb": "ecd920c5bab996269bd49f2442a5b5e9ce325e080932eeaadb85d7f944bb33f5",
+        "python3-kf6xmlgui_6.30.0-0supralinux5_amd64.deb": "29c4b383d796b087ad8ba65fd549100022dae9f8391bebbe610f35d86f58fcb6"
+      }
+    },
+    "canonical_snapshot": "13 PASS / 7 pending / 0 current FAIL / 0 BLOCKED",
+    "canonical_promotions": 1,
+    "next_gate": "tier3-build-level2-planning"
+  }
+}

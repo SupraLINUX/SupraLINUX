@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "repository": "SupraLINUX/SupraLINUX",
+  "artifact_id": 11725306126,
+  "expected_sha256": "066c2c2a9bd09643185ffedfd3065b552fa7c9b1e141e62ccdcc66e19d9f9f83",
+  "metadata_sha256": "55dc7d56be9c147aa031bec2a65e3870143ee8b36c78be4407ab64b19bbd88b9",
+  "attempts": [
+    {
+      "read": 1,
+      "started_at": "2026-10-12T03:41:59.243290+00:00",
+      "exit_code": 0,
+      "bytes": 72285907,
+      "sha256": "066c2c2a9bd09643185ffedfd3065b552fa7c9b1e141e62ccdcc66e19d9f9f83",
+      "valid": true
+    }
+  ],
+  "credential_or_response_output": false,
+  "host_network_modified": false,
+  "package_attempt_consumed": false,
+  "operator_source_sha256": "80d9e26c85a8e5964081a94c171128c1b201320f07f53d90380686425ff8c59b"
+}

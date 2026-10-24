@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-kwayland-baseline
+sha256sum --check --strict "${BASE}/ubuntu-client.sha256"
+dpkg-query -W -f='${Package} ${Architecture} ${Version}\n' libqt6core6t64 libqt6gui6 libwayland-client0 libwayland-server0 > "${AUTOPKGTEST_TMP}/providers"
+cmp "${BASE}/ubuntu-provider-versions" "${AUTOPKGTEST_TMP}/providers"
+# Re-run the unchanged Ubuntu client/server pair against the upgraded library.
+python3 "${BASE}/source/run-private.py" "${BASE}/build/private-server" "${BASE}/build/kwayland-client" "${AUTOPKGTEST_ARTIFACTS}/unchanged-ubuntu-client"
+# Compile only the provider-side fixture from the exact candidate protocol SDK.
+cmake -S "${BASE}/source" -B "${AUTOPKGTEST_TMP}/candidate-server" -DBUILD_CLIENT=OFF -DCANDIDATE_CONSUMER=ON -DCMAKE_BUILD_TYPE=Release
+cmake --build "${AUTOPKGTEST_TMP}/candidate-server" --parallel 2
+python3 "${BASE}/source/run-private.py" "${AUTOPKGTEST_TMP}/candidate-server/private-server" "${BASE}/build/kwayland-client" "${AUTOPKGTEST_ARTIFACTS}/unchanged-client-candidate-protocols"
+version=$(dpkg-query -W -f='${Version}' libkwaylandclient6)
+[[ "${version}" == 4:6.7.5-0supralinux2 ]]
+dpkg --compare-versions "${version}" gt "$(cat "${BASE}/ubuntu-version")"
+for package in kwayland-dev kwayland6-data kwayland-doc; do
+    [[ $(dpkg-query -W -f='${Version}' "${package}") == "${version}" ]]
+done
+[[ $(dpkg-query -W -f='${Version}' plasma-wayland-protocols) == 1.22.0-0supralinux1 ]]
+ldconfig -p | grep -F 'libKWaylandClient.so.6 ' >/dev/null
+pkg-config --atleast-version=6.7.5 KWaylandClient
+test -s /usr/share/qt6/doc/KWayland.qch
+test -s /usr/share/qt6/doc/KWayland.tags
+test -s /usr/share/qlogging-categories6/kwayland.categories
+apt-get check
+cp -a "${BASE}" "${AUTOPKGTEST_ARTIFACTS}/ubuntu-client-baseline"

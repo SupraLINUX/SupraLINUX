@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "scope": "reviewed Ubuntu client fixture; no package execution",
+  "node": "knighttime",
+  "source_commit": "af479614cd06a2027657bbd1acd7ccb3495fa613",
+  "workflow_run_id": 37299890272,
+  "workflow_job_id": 111729842614,
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "original_result_sha256": "d2fac079a89eba641420cf26532bed7347533c77118a98ba2f74bec4476ea750",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261005t105602z-3120835",
+  "host_evidence_seal_sha256": "78b0bfc73e9e52bbf9a264e1d260fa9cbfae353f8c3311e69caa24dbc3bd473c",
+  "original_guest_hashes_verified": true,
+  "original_actions_artifact_sha256": "abb0a430468beab9c32847112f124549d4b799d812fbe4a54dd08385e58cc650",
+  "local_archive_path": ".artifacts/infrastructure/knighttime-baseline-preflight1-20261005.zip",
+  "local_archive_sha256": "47038e8c9df0d375f7abfbe907300c01847de162b636b3393261b9e4eae7be10",
+  "ubuntu_source_authentication": "Signed InRelease -> exact complete Sources SHA-256 -> source archive SHA-256/size",
+  "ubuntu_source_archives": [
+    {
+      "name": "knighttime_6.6.5.orig.tar.xz",
+      "sha256": "5f26692a864540b993351106f5469fd17939bd55e79f931c8f97395d9c5a809d",
+      "size": 40284
+    },
+    {
+      "name": "knighttime_6.6.5-0ubuntu0.1.debian.tar.xz",
+      "sha256": "51f98bbc54842805b3b476a55e58b8dac24cb3f92875cb710b05914fddf9b2f0",
+      "size": 8564
+    },
+    {
+      "name": "knighttime_6.6.5-0ubuntu0.1.dsc",
+      "sha256": "70ada1afcde11c9176de504197b9d31f620a86c6290f26902ac68ef0305db20e",
+      "size": 2604
+    }
+  ],
+  "ubuntu_source_file_sha256": "35500b22c26752241bf325e697b1c52f3c6d5c25e6edbfbf838060a97fa7e9e6",
+  "candidate_source_file_sha256": "35500b22c26752241bf325e697b1c52f3c6d5c25e6edbfbf838060a97fa7e9e6",
+  "identical_transition_relation_implementation": true,
+  "cause": "The client expected Upcoming one second before start. Both Ubuntu 6.6.5 and official 6.7.5 classify it InProgress within the 60-second tolerance. The client compiled, then returned 1; autopkgtest stopped setup before candidate compilation.",
+  "repair": "Exercise the exact -61/-60-second start and end boundaries and emit a descriptive diagnostic for every client failure; re-run the existing KVM Ubuntu preflight before sbuild.",
+  "files_sha256": {
+    "build-contract.json": "005271c55c104036e5cf4443106bddb338b01602f2e1aaed1b426d7c33cb1e42",
+    "ubuntu-reference-signature.log": "030a321cf4f36017be8208961da4e983095fe06926e4931a39cf3c6818f0feec",
+    "result.json": "d2fac079a89eba641420cf26532bed7347533c77118a98ba2f74bec4476ea750",
+    "evidence-sha256.txt": "78b0bfc73e9e52bbf9a264e1d260fa9cbfae353f8c3311e69caa24dbc3bd473c",
+    "artifact.json": "7035d5691232acb2cc5c0117f1dd041922f03c0818d149970b2717322640fd05",
+    "transition-relation.cpp": "f3428d19036b7996e5a9b9a9d2d92a93663cd01991cca797c858c236ea4eeab7",
+    "host-result.json": "f8bd1051816d4ab7af2e048276eea634ee7d02cc11d9076799cf2711c86c82fe",
+    "workflow-job.json": "14d682e0d43fee81197e0a37725eb1bdd6e28826c6192175af7ad479b98cb00e",
+    "pipeline.log": "de4c666f89eb16f1e777714bf8348fe3e10186ac6618bc2cd0e1af8a8aa5e9a6",
+    "ubuntu-reference.txt": "c7f7be7535b8b2e860d82a13df794fc4003a20cc15b97ef9954c9ef75069b4e0",
+    "ubuntu-baseline-preflight/result.json": "3d239f5a6c76db495aec072a1ef30f36d9d0a392c4b782d590a61493c3c33868",
+    "ubuntu-baseline-preflight/baseline-setup": "b832eb1e02c33d28b5c4a10af9265cd3ff2a5fcc03979cc8eca1b1cdc0a7d7e7",
+    "ubuntu-baseline-preflight/reviewed-inputs.json": "b19e415d38e2e1ba978e00757c1c1fa86f79df001bb509db828d9018c367d076",
+    "ubuntu-baseline-preflight/setup-commands.txt": "6005b0eddefd082d023793f7c97803ee5ec6ea2639cedb8cfc1bf6fabe59eb87",
+    "ubuntu-baseline-preflight/pipeline.log": "65528aaf067afd28fe033fc8c97bc55fcc570f60cb964df16bbb102d22304001",
+    "ubuntu-baseline-preflight/autopkgtest/log": "6c4f6aad3d5cae330acb5fcb92452224abd161bee032fd611ebadb11cc331845",
+    "ubuntu-baseline-preflight/autopkgtest/summary": "518c710b79955711b024b03f492de1e98f3895dddbe11e6bd429f88be20bda82",
+    "ubuntu-baseline-preflight/autopkgtest/testinfo.json": "cffb0ec3759dd141ae49f3f26f3b6111d6d6ac611b3d66f078a611754876d8ae"
+  }
+}

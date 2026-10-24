@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "e1000e-runtime-offload-safety-restore",
+  "source_commit": "5ce2689db84b257d43692f692aca831668d3b957",
+  "workflow_run_id": 39261460375,
+  "workflow_job_id": 118090018558,
+  "artifact_id": 12190272678,
+  "artifact_digest": "sha256:35b1dbd7ab1dd5cd729413b55875425f6c8a5531bb59a565767c5949569e9673",
+  "interface": "eno1",
+  "driver": "e1000e",
+  "changed": true,
+  "features_before": {
+    "gso": "on",
+    "tso": "on"
+  },
+  "features_after": {
+    "gso": "off",
+    "tso": "off"
+  },
+  "carrier_before": "1",
+  "carrier_after": "1",
+  "addresses_preserved": true,
+  "default_route_preserved": true,
+  "userspace_network_admission": "PASS",
+  "kvm_open_ok": true,
+  "kvm_api_version": 12,
+  "persistent_change": false,
+  "host_firewall_modified": false,
+  "host_packages_installed": false,
+  "host_routes_modified": false,
+  "host_bridges_modified": false,
+  "docker_modified": false,
+  "vm_created": false,
+  "jit_invoked": false,
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "package_attempt_effect": "none",
+  "next_gate": "authoritative-golden-rebuild"
+}

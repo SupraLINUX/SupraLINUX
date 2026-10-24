@@ -1,0 +1,13 @@
+{
+  "scope": "original input preflight infrastructure diagnosis",
+  "state": "INFRA_INVALID",
+  "stage": "predecessor-transport-probe",
+  "ubuntu_baseline": "PASS",
+  "package_attempt_consumed": false,
+  "candidate_sbuild": "not-run",
+  "candidate_tests": "not-run",
+  "cause": "Original bare-rootfs APT HTTPS requests failed certificate validation for all three Ubuntu suites. apt-get update continued with no usable index, then the synthetic probe reported unavailable Build-Depends. Ubuntu nested-KVM baseline PASS; no candidate package execution or new Attempt.",
+  "repair": "Diagnose the exact APT/OpenSSL trust search in the SDK-free rootfs, bind APT explicitly to the retained admitted Ubuntu CA file with verification enabled, reject incomplete updates, and certify a small real APT transport/signature probe before the dependent preflight and candidate build.",
+  "cleanup": "PASS: own VM/runner238/overlay absent; golden/milestone preserved",
+  "tls_data_bytes_and_digest_retained": true
+}

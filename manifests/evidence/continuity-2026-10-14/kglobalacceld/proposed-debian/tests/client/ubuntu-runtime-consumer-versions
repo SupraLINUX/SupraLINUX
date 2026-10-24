@@ -1,0 +1,4 @@
+kwin-wayland amd64 4:6.6.6-0ubuntu0.1
+kwin-x11 amd64 4:6.6.4-0ubuntu1
+libkwin6 amd64 4:6.6.6-0ubuntu0.1
+libkwin-x11-6 amd64 4:6.6.4-0ubuntu1

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-plymouth-kcm-baseline
+mkdir -p -- "${BASE}"
+actual="$(dpkg-query -W -f='${Version}' kde-config-plymouth)"
+expected="$(cat /var/tmp/supralinux-ubuntu-package-version)"
+[[ "${actual}" == "${expected}" ]]
+printf '%s\n' "${actual}" > "${BASE}/ubuntu-version"
+dpkg-query -L kde-config-plymouth > "${BASE}/installed-files.txt"
+grep -F '/kplymouththemeinstaller' "${BASE}/installed-files.txt" >/dev/null
+grep -F '/plymouthhelper' "${BASE}/installed-files.txt" >/dev/null
+grep -F '/plymouth.knsrc' "${BASE}/installed-files.txt" >/dev/null
+printf 'Reviewed Ubuntu Plymouth KCM baseline: PASS\n'

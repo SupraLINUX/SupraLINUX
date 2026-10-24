@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+"""Verify every installed wallpaper, metadata, alias and decoded image."""
+import datetime
+import hashlib
+import json
+import os
+import re
+import struct
+import subprocess
+import zlib
+from pathlib import Path
+
+def resource_hash(payload, name):
+    if not name.endswith(".png"):
+        return hashlib.sha256(payload).hexdigest()
+    # dh_strip_nondeterminism rewrites tIME to SOURCE_DATE_EPOCH. Preserve
+    # exact identity of every other chunk, including compressed pixel data.
+    assert payload[:8] == b"\x89PNG\r\n\x1a\n", f"Invalid PNG: {name}"
+    normalized = bytearray(payload[:8])
+    offset = 8
+    tags = []
+    while offset < len(payload):
+        assert offset + 12 <= len(payload), f"Truncated PNG: {name}"
+        size, tag = struct.unpack(">I4s", payload[offset:offset + 8])
+        end = offset + 12 + size
+        assert end <= len(payload), f"Truncated PNG chunk: {name}"
+        data = payload[offset + 8:end - 4]
+        crc = struct.unpack(">I", payload[end - 4:end])[0]
+        assert zlib.crc32(tag + data) & 0xffffffff == crc, f"Invalid PNG CRC: {name}"
+        if tag == b"tIME":
+            assert size == 7, f"Invalid PNG timestamp: {name}"
+            datetime.datetime(*struct.unpack(">H5B", data))
+        elif tag == b'tEXt' and data.split(b'\0',1)[0] in {b'date:create',b'date:modify'}:
+            key, timestamp = data.split(b'\0',1)
+            assert re.fullmatch(rb'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})',timestamp), f'Invalid PNG date text: {name}'
+            assert datetime.datetime.fromisoformat(timestamp.decode()).tzinfo is not None, name
+            # Debian normalizes ImageMagick's two date fields as well as tIME.
+            # Keep the key, occurrence/order and every other text/EXIF chunk.
+            normalized.extend(tag+b'\0'+key+b'\0<validated-timestamp>')
+        else:
+            normalized.extend(payload[offset:end])
+        tags.append(tag)
+        offset = end
+    assert tags[0] == b"IHDR" and tags[-1] == b"IEND" and tags.count(b"tIME") <= 1, name
+    return hashlib.sha256(normalized).hexdigest()
+
+
+def verify(root, contract):
+    expected = contract['resources']
+    owned = subprocess.check_output(['dpkg-query', '-L', 'plasma-workspace-wallpapers'], text=True).splitlines()
+    actual = {str(Path(p).relative_to(root)) for p in owned
+              if p.startswith(str(root)+'/') and (Path(p).is_file() or Path(p).is_symlink())}
+    assert actual == set(expected), f'Wallpaper resource set changed: {actual ^ set(expected)}'
+    images = set()
+    for relative, spec in expected.items():
+        path = root/relative
+        if 'symlink' in spec:
+            assert path.is_symlink() and os.readlink(path) == spec['symlink'], f'Wallpaper alias changed: {relative}'
+            assert path.is_file() and path.resolve().is_relative_to(root), f'Wallpaper alias is broken or escapes: {relative}'
+        else:
+            assert not path.is_symlink() and resource_hash(path.read_bytes(),relative) == spec['sha256'], f'Wallpaper changed: {relative}'
+        if path.suffix.lower() in {'.png','.jpg','.jpeg'}:
+            images.add(path.resolve())
+    for name, expected_metadata in contract['metadata'].items():
+        meta = json.loads((root/name/'metadata.json').read_text())['KPlugin']
+        actual_metadata = {'Id':meta['Id'], 'License':meta['License'], 'Authors':[a['Name'] for a in meta['Authors']]}
+        assert actual_metadata == expected_metadata, f'Wallpaper metadata changed: {name}'
+        assert any((root/name/'contents/images').glob('*')), f'Wallpaper has no image variants: {name}'
+    for path in sorted(images):
+        subprocess.run(['ffmpeg','-v','error','-xerror','-i',str(path),'-frames:v','1','-f','null','-'],check=True)
+    print(f"Wallpaper integrity: PASS; sets={len(contract['metadata'])}, resources={len(expected)}, unique decoded images={len(images)}")
+
+
+if __name__ == '__main__':
+    verify(Path('/usr/share/wallpapers'),json.loads(Path(__file__).with_name('wallpaper-resources.json').read_text()))

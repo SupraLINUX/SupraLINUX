@@ -1,0 +1,302 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Original Ubuntu public CLI actual PASS and owned cleanup, individual packaging/input check-only, 34-node/152-bin staged runtime closure; no canonical admission or candidate execution",
+  "archive_path": ".artifacts/plasma-frontier/kde-cli-tools-original-and-runtime-closure-review-20261010/inputs.zip",
+  "archive_sha256": "6921ec268643554d1ea6b198c705bc39d64e835d1cb558340ffb26c2c8b1a76d",
+  "files": {
+    ".work/dependent-plasma-review/kde-cli-tools/client/main.cpp": {
+      "sha256": "8b65543d1eee8c1f8fdac6ada4029952a737cd361d9d92326e100fa2d46fca97",
+      "size": 9695
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/client/CMakeLists.txt": {
+      "sha256": "6e7623fab4dd950d53619e9f1545895a58954d0009d75dddaf6de4fd2c08dc54",
+      "size": 321
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/client/run-private.py": {
+      "sha256": "25dfc64848ff8cd9a71c8a3c4cafaafee5bd531e5e24d33045af4974d55e3921",
+      "size": 5311
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/ubuntu-cli-client": {
+      "sha256": "eb025ddf22df7ef464b790ceadb7e044601a7c794679c9a2a9e4c853592470f4",
+      "size": 173912
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/record.json": {
+      "sha256": "ac2a96edf6ff5492f5fff185feaec26b3f4d969f0dc76926a4dfeb95c2cec9b9",
+      "size": 36252
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-client-build.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/bus.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/cleanup.json": {
+      "sha256": "5a8bead49bb5073ad36778cbfc13727e8999500d3041ed71b701adfad16baf1e",
+      "size": 111
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/client-stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/client-stdout.log": {
+      "sha256": "c400ba434574cb6715f5313c9412cde183d6ee3f8f25516985e8228d0026561d",
+      "size": 197
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/child-result": {
+      "sha256": "6a0ec1ddacfe2a86974d6fb7562b146c750f2c31f012d3ffc896f552a3290357",
+      "size": 22
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/child.py": {
+      "sha256": "bd4416a8e991062da6ae3ecfd760b8415c27d2f61be99f4ed854504e1a6c6502",
+      "size": 113
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-1-kmimetypefinder-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-1-kmimetypefinder-stdout": {
+      "sha256": "51a74e08056080b9d9bfc8b4334795301d213e39a0fa7f2c213da37632a6d842",
+      "size": 11
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-10-kbroadcastnotification-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-10-kbroadcastnotification-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-2-kmimetypefinder-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-2-kmimetypefinder-stdout": {
+      "sha256": "41a09b47da2ca65514a30c77cc4fc67b5ae25a33b86e3feb7d2c4583d8a7851a",
+      "size": 14
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-3-ksvgtopng-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-3-ksvgtopng-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-4-kmimetypefinder-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-4-kmimetypefinder-stdout": {
+      "sha256": "d058a9481f2d003bb084ae7338c09c5f375b39299119b002edf7a8d0e3c9b159",
+      "size": 10
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-5-kioclient-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-5-kioclient-stdout": {
+      "sha256": "9fce7dfa2408af25b123a679ea72b3e41c2109a0f558522d93b6544da937ee7c",
+      "size": 36
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-6-kdecp-stderr": {
+      "sha256": "d2272b620d4a850c32de384c42dc630f28ab74d65176fb0ae6390fd34d8c91a9",
+      "size": 339
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-6-kdecp-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-7-kdemv-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-7-kdemv-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-8-kmimetypefinder5-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-8-kmimetypefinder5-stdout": {
+      "sha256": "51a74e08056080b9d9bfc8b4334795301d213e39a0fa7f2c213da37632a6d842",
+      "size": 11
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-9-kde-inhibit-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/command-9-kde-inhibit-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/fixture.svg": {
+      "sha256": "33b82e4aca93c508dadc1ee2db4e284562bf9665ff105c43a9c58143006eca3d",
+      "size": 166
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/moved.txt": {
+      "sha256": "9fce7dfa2408af25b123a679ea72b3e41c2109a0f558522d93b6544da937ee7c",
+      "size": 36
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/render.png": {
+      "sha256": "d17aecdbad014b46f257d5de4dd59a39d42433686f6b40c11cb49bcc1e2e16f7",
+      "size": 111
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/payload/source.txt": {
+      "sha256": "9fce7dfa2408af25b123a679ea72b3e41c2109a0f558522d93b6544da937ee7c",
+      "size": 36
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli/result.json": {
+      "sha256": "0259b657fd7c7f962f9fdea96f2284f99ab76b046dfb87129bae4372e77da7b7",
+      "size": 371
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/local-original-ubuntu-cli-review.json": {
+      "sha256": "7643fe6551014b11b49bb2f532a70ebbb78f1ed720e4b1e680fb4d3d50ddcf03",
+      "size": 5623
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/source-input-review.json": {
+      "sha256": "875bb8311b84b890f2225b78418f1c719cb691e429e3f49f398561d015cbb555",
+      "size": 1898
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/source-profile-review.json": {
+      "sha256": "7e4c0c419916eac996e534a1a7d13eaa213325c64058153c3b6017a2d1aaad46",
+      "size": 1208
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/frameworks-input-review.json": {
+      "sha256": "e1ed1862daacecc6a6ce543cb2f6330091160ced0fe15dff8edaca0e8e47baba",
+      "size": 29773
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/README.source": {
+      "sha256": "8d37ce7e01aa670360ce8cacc5bc51b2183b44a57494eb359ac8a0b325fc3dcf",
+      "size": 2037
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/changelog": {
+      "sha256": "2aa529bb32c57029bb42ead327833ae17b8b1ddffab8615992d9fbfdb384be76",
+      "size": 34882
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/control": {
+      "sha256": "65c34ed69391f4bf2384349d7ff1b1161fe953a8ddec1ca9cb41dc8aef5e7c5c",
+      "size": 2918
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/copyright": {
+      "sha256": "f03fde8c3b47843122eb1739ae23da4d2bdf03646dae1c13ef93f569233c4f98",
+      "size": 26656
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/kde-cli-tools-data.install": {
+      "sha256": "8d4e78a4b276faa93c2c94c226f9985e9bd685374f964df22b5080d3f158a56d",
+      "size": 117
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/kde-cli-tools.install": {
+      "sha256": "71444834108d1b58a8b0e5af447a608bd0da74ba4c013f1d74702ed07e764d3e",
+      "size": 678
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/kde-cli-tools.lintian-overrides": {
+      "sha256": "1937929493c478842d2f25f40e8144ceb3881f97cc55e92b1af624374766c307",
+      "size": 1220
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/not-installed": {
+      "sha256": "484b77843be0a0db7f0b318cf147c413ea8a5a6deabc6ee3017f45bc1c7918e1",
+      "size": 88
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/rules": {
+      "sha256": "64fe8948219251714133c4082932732c7a58edac528b9b95bdac5848415450d3",
+      "size": 311
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/salsa/extra_repository.list": {
+      "sha256": "412646a06d733ca403c3175d36f1d1e734baaa8a76bb8e5176a0d0fb4bda7d45",
+      "size": 64
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/salsa/qt-kde-team.debian.net.asc": {
+      "sha256": "2b218b250b8929ad7055afe891bd29288228cfb6efac0e4ed638d9db8d3c4e77",
+      "size": 3106
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/salsa-ci.yml": {
+      "sha256": "04779f76232c171e1b0094a8bf323543669e75a3131a1d706b8c6f61ec7c2ab0",
+      "size": 344
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/source/format": {
+      "sha256": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+      "size": 12
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/tests/baseline-setup": {
+      "sha256": "8dffa232988eb914e0dd21afdd74dab8ba973f772110832cc687d7607d9479f1",
+      "size": 866
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/tests/client/CMakeLists.txt": {
+      "sha256": "6e7623fab4dd950d53619e9f1545895a58954d0009d75dddaf6de4fd2c08dc54",
+      "size": 321
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/tests/client/main.cpp": {
+      "sha256": "8b65543d1eee8c1f8fdac6ada4029952a737cd361d9d92326e100fa2d46fca97",
+      "size": 9695
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/tests/client/run-private.py": {
+      "sha256": "25dfc64848ff8cd9a71c8a3c4cafaafee5bd531e5e24d33045af4974d55e3921",
+      "size": 5311
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/tests/consumer": {
+      "sha256": "03af7fbf530351494ab70d4466de102e448b552053b9b139dcdea0f87447631c",
+      "size": 1450
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/tests/control": {
+      "sha256": "45d53676dfc78cfa9eeaae875e251b162240523fc72d7a388643ceda8c9b7505",
+      "size": 352
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/tests/ubuntu-abi-client": {
+      "sha256": "4dd413a129801be763c200e693f7b10fecee1cdb19102e11aa19ee7a48dff405",
+      "size": 788
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/tests/upstream-session": {
+      "sha256": "2ff5ab41bdd2cd3026c024c036611bd9082994d0765e50e9e4e88b90baa096f8",
+      "size": 1180
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/upstream/metadata": {
+      "sha256": "d55afe23039f74e509aefaa6830c854af22483d65cc2e61b38c1e03fc0002a91",
+      "size": 340
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/upstream/signing-key.asc": {
+      "sha256": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+      "size": 9538
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/overlay/debian/watch": {
+      "sha256": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b",
+      "size": 125
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/runtime-closure-review/record.json": {
+      "sha256": "f30becd01c01c0433631c64cdca31487f5323efc6967c6dba0ba7d973eb95f13",
+      "size": 37850
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/runtime-closure-review/review.json": {
+      "sha256": "ee726afa35ab1b8b47df1a4a2b7190ea15ebfd537ab66791120421b07f806250",
+      "size": 1047
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/runtime-closure-review/origin.json": {
+      "sha256": "5f0df31b62e8888c33b0795d364c131969563245a6a8fe97b1157beae7a1b2de",
+      "size": 587
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/runtime-closure-review/apt/result.json": {
+      "sha256": "2104f545a89722996f68fcdb3bde7c51a294f8630c187d95dfd5069cf258e74d",
+      "size": 7444
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/runtime-closure-review/apt/apt-resolution.log": {
+      "sha256": "5df2177e09168a6f57c98034be7260b826cad1a164982cc122a67d694e772099",
+      "size": 113217
+    },
+    ".work/dependent-plasma-review/kde-cli-tools/runtime-closure-review/admission-check.log": {
+      "sha256": "bd45b0e154feef664abaef60f68f7c977403c5ea77658229a9097a1e656b7e04",
+      "size": 76
+    },
+    ".work/kde-cli-tools-next-node-private-review-20261010.json": {
+      "sha256": "94d97e232db313223eb3b6635bd9a63beac47de3845d7a208645e07271d865de",
+      "size": 742
+    }
+  },
+  "empty_offline_byte_restore_verified": true,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

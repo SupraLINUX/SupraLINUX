@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "plymouth-kcm-attempt1-evidence-publication-check",
+  "source_commit": "b4b939e28d3c4e3f34847f2d50595e7726598334",
+  "control": {
+    "router_run_id": 40089799275,
+    "host_job_id": 120860008436,
+    "artifact_id": 12558164400,
+    "artifact_digest": "sha256:06f687e2c1772907eae5724cb2dfd31b2dd94b9eea778d693f003a72f86495ac",
+    "mode": "publish-evidence-check"
+  },
+  "package_evidence": {
+    "node": "plymouth-kcm",
+    "version": "6.7.5-0supralinux1",
+    "package_source_commit": "743cc8c5814eac2b22ece0f7085a55fffc6b0f30",
+    "workflow_run_id": 40087662878,
+    "workflow_job_id": 120853779635,
+    "artifact_id": 12557933576,
+    "artifact_sha256": "4e8e9308c98c9f4dc28bb0a4b6cd42f41d024c13fdaa00c3de5902e98a89ac5b",
+    "host_evidence_manifest_sha256": "67cd069d54743bae3bbf535febfc594a1cefd247db4385c3f3165db24209298d",
+    "package_attempt_consumed": true,
+    "sbuild_result": "PASS",
+    "lintian_result": "PASS",
+    "autopkgtest_result": "PASS"
+  },
+  "result": {
+    "closure_kind": "package-attempt-pass",
+    "canonical_update_file_count": 14,
+    "canonical_update_manifest_sha256": "faa4faed1e66ec4314d800d353e994c237b2d2afb7a97669f72babc095432d23",
+    "candidate_commit": "c302455b4519c52177f4ce8d6f91c7d88e2eecb4",
+    "publish_dry_run": true,
+    "published": false,
+    "offline_restore_verified": true,
+    "requires_github_for_restore": false,
+    "vm_created": false,
+    "jit_invoked": false,
+    "package_attempt_effect": "none"
+  },
+  "conclusion": "The current host-side evidence publication path replayed the exact authoritative Plymouth Attempt 1 PASS, validated the 14-file canonical update, created a local closure commit and completed a force-with-lease dry-run without changing the branch or consuming another package Attempt."
+}

@@ -1,0 +1,8 @@
+{
+  "state": "not-applicable",
+  "expected_tests": [],
+  "executed_tests": [
+    "appstreamtest"
+  ],
+  "scope": "CTest suite executed during the clean package build"
+}

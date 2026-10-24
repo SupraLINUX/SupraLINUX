@@ -1,0 +1,71 @@
+dpkg-gensymbols: error: some new symbols appeared in the symbols file: see diff output below
+dpkg-gensymbols: warning: /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/libkscreen-revision3-negative-symbols does not match completely /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/libkscreen-revision3-original-symbols
+--- /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/libkscreen-revision3-original-symbols (libkf6screen8_4:6.7.5-0supralinux3_amd64)
++++ dpkg-gensymbolsYp5K24	2026-10-08 14:40:30.881457903 -0300
+@@ -173,6 +173,7 @@
+  (arch=amd64v3)_ZN7KScreen6Output10setPrimaryEb@Base 4:6.6.0
+  _ZN7KScreen6Output11qt_metacallEN11QMetaObject4CallEiPPv@Base 4:6.1.0
+  _ZN7KScreen6Output11qt_metacastEPKc@Base 4:6.1.0
++ _ZN7KScreen6Output11setAbmLevelEj@Base 4:6.7.5-0supralinux3
+  _ZN7KScreen6Output11setOverscanEj@Base 4:6.1.0
+  _ZN7KScreen6Output11setPriorityEj@Base 4:6.1.0
+  _ZN7KScreen6Output11setRgbRangeENS0_8RgbRangeE@Base 4:6.1.0
+@@ -194,6 +195,7 @@
+  _ZN7KScreen6Output13vendorChangedEv@Base 4:6.2.90
+  _ZN7KScreen6Output14dimmingChangedEv@Base 4:6.2.90
+  (arch=!amd64v3)_ZN7KScreen6Output14setCustomModesERK5QListINS_8ModeInfoEE@Base 4:6.6.0
++ _ZN7KScreen6Output15abmLevelChangedEv@Base 4:6.7.5-0supralinux3
+  _ZN7KScreen6Output15overscanChangedEv@Base 4:6.1.0
+  _ZN7KScreen6Output15priorityChangedEv@Base 4:6.1.0
+  _ZN7KScreen6Output15rgbRangeChangedEv@Base 4:6.1.0
+@@ -224,6 +226,7 @@
+  _ZN7KScreen6Output20minBrightnessChangedEv@Base 4:6.1.0
+  _ZN7KScreen6Output20sdrBrightnessChangedEv@Base 4:6.1.0
+  _ZN7KScreen6Output20setBitsPerColorRangeENS0_8BpcRangeE@Base 4:6.3.91
++ _ZN7KScreen6Output20setHdrIccProfilePathERK7QString@Base 4:6.7.5-0supralinux3
+  _ZN7KScreen6Output20setMaxPeakBrightnessEd@Base 4:6.1.0
+  _ZN7KScreen6Output20setReplicationSourceEi@Base 4:6.1.0
+  _ZN7KScreen6Output21iccProfilePathChangedEv@Base 4:6.1.0
+@@ -236,8 +239,10 @@
+  _ZN7KScreen6Output23sdrGamutWidenessChangedEv@Base 4:6.1.0
+  _ZN7KScreen6Output23setColorPowerPreferenceENS0_18ColorPowerTradeoffE@Base 4:6.2.90
+  _ZN7KScreen6Output23setMaxAverageBrightnessEd@Base 4:6.1.0
++ _ZN7KScreen6Output24hdrIccProfilePathChangedEv@Base 4:6.7.5-0supralinux3
+  _ZN7KScreen6Output24maxPeakBrightnessChangedEv@Base 4:6.1.0
+  _ZN7KScreen6Output24replicationSourceChangedEv@Base 4:6.1.0
++ _ZN7KScreen6Output24setHdrColorProfileSourceENS0_18ColorProfileSourceE@Base 4:6.7.5-0supralinux3
+  _ZN7KScreen6Output24setMinBrightnessOverrideESt8optionalIdE@Base 4:6.1.0
+  _ZN7KScreen6Output25colorProfileSourceChangedEv@Base 4:6.1.0
+  (arch=!amd64v3)_ZN7KScreen6Output26automaticBrightnessChangedEv@Base 4:6.6.0
+@@ -245,6 +250,7 @@
+  _ZN7KScreen6Output26followPreferredModeChangedEb@Base 4:6.1.0
+  _ZN7KScreen6Output27colorPowerPreferenceChangedEv@Base 4:6.2.90
+  _ZN7KScreen6Output27maxAverageBrightnessChangedEv@Base 4:6.1.0
++ _ZN7KScreen6Output28hdrColorProfileSourceChangedEv@Base 4:6.7.5-0supralinux3
+  _ZN7KScreen6Output28minBrightnessOverrideChangedEv@Base 4:6.1.0
+  _ZN7KScreen6Output28setMaxPeakBrightnessOverrideESt8optionalIdE@Base 4:6.1.0
+  _ZN7KScreen6Output31setMaxAverageBrightnessOverrideESt8optionalIdE@Base 4:6.1.0
+@@ -369,6 +375,7 @@
+  _ZNK7KScreen6Output16enforcedModeSizeEv@Base 4:6.1.0
+  _ZNK7KScreen6Output16sdrGamutWidenessEv@Base 4:6.1.0
+  _ZNK7KScreen6Output17bitsPerColorRangeEv@Base 4:6.3.91
++ _ZNK7KScreen6Output17hdrIccProfilePathEv@Base 4:6.7.5-0supralinux3
+  _ZNK7KScreen6Output17maxPeakBrightnessEv@Base 4:6.1.0
+  _ZNK7KScreen6Output17replicationSourceEv@Base 4:6.1.0
+  _ZNK7KScreen6Output18colorProfileSourceEv@Base 4:6.1.0
+@@ -377,6 +384,7 @@
+  _ZNK7KScreen6Output19followPreferredModeEv@Base 4:6.1.0
+  _ZNK7KScreen6Output20colorPowerPreferenceEv@Base 4:6.2.90
+  _ZNK7KScreen6Output20maxAverageBrightnessEv@Base 4:6.1.0
++ _ZNK7KScreen6Output21hdrColorProfileSourceEv@Base 4:6.7.5-0supralinux3
+  _ZNK7KScreen6Output21minBrightnessOverrideEv@Base 4:6.1.0
+  _ZNK7KScreen6Output22explicitLogicalSizeIntEv@Base 4:6.1.0
+  _ZNK7KScreen6Output25maxPeakBrightnessOverrideEv@Base 4:6.1.0
+@@ -401,6 +409,7 @@
+  _ZNK7KScreen6Output6vendorEv@Base 4:6.2.90
+  _ZNK7KScreen6Output7dimmingEv@Base 4:6.2.90
+  _ZNK7KScreen6Output7hashMd5Ev@Base 4:6.1.0
++ _ZNK7KScreen6Output8abmLevelEv@Base 4:6.7.5-0supralinux3
+  _ZNK7KScreen6Output8geometryEv@Base 4:6.1.0
+  _ZNK7KScreen6Output8overscanEv@Base 4:6.1.0
+  _ZNK7KScreen6Output8priorityEv@Base 4:6.1.0

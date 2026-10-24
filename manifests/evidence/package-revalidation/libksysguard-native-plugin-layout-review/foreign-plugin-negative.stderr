@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-plugin-layout-review/run-private.py", line 42, in <module>
+    assert plugin == build/'bin/ksysguard_sensorface.so' and plugin.resolve().is_relative_to(build), 'Foreign native plugin output'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Foreign native plugin output

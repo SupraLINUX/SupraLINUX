@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "plymouth-kcm-attempt1-evidence-publication",
+  "publication_source_commit": "eea4c0817f8db9ca3ab28f6aad81ac7125edef56",
+  "canonical_commit": "a8f143f75d9f785651baf9df0690be07d29e31c3",
+  "control": {
+    "router_run_id": 40090067022,
+    "host_job_id": 120860791626,
+    "artifact_id": 12558870743,
+    "artifact_digest": "sha256:527b74e41981c45d32a2c5bea516a89e7669bf7fba6efb8d308fcf58f3f5e37f",
+    "mode": "publish-evidence"
+  },
+  "package_evidence": {
+    "node": "plymouth-kcm",
+    "version": "6.7.5-0supralinux1",
+    "package_source_commit": "743cc8c5814eac2b22ece0f7085a55fffc6b0f30",
+    "workflow_run_id": 40087662878,
+    "workflow_job_id": 120853779635,
+    "artifact_id": 12557933576,
+    "artifact_sha256": "4e8e9308c98c9f4dc28bb0a4b6cd42f41d024c13fdaa00c3de5902e98a89ac5b",
+    "host_evidence_manifest_sha256": "67cd069d54743bae3bbf535febfc594a1cefd247db4385c3f3165db24209298d",
+    "package_attempt_consumed": true,
+    "sbuild_result": "PASS",
+    "lintian_result": "PASS",
+    "autopkgtest_result": "PASS"
+  },
+  "result": {
+    "closure_kind": "package-attempt-pass",
+    "canonical_update_file_count": 14,
+    "canonical_update_manifest_sha256": "faa4faed1e66ec4314d800d353e994c237b2d2afb7a97669f72babc095432d23",
+    "published": true,
+    "offline_restore_verified": true,
+    "requires_github_for_restore": false,
+    "vm_created": false,
+    "jit_invoked": false,
+    "new_package_attempt_consumed": false
+  },
+  "canonical_state": {
+    "node_state": "PASS",
+    "attempt_count": 1,
+    "last_attempt_state": "PASS",
+    "package_execution_authorized": false,
+    "next_gate": "plasma-level0-remaining-packaging-preparation"
+  }
+}

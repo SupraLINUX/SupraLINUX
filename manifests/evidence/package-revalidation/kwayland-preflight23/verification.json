@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "scope": "reviewed-package-input-preflight",
+  "node": "kwayland",
+  "version": "4:6.7.5-0supralinux2",
+  "state": "PASS",
+  "source_commit": "951574d00a0a87a36bfca3ba563aee08a0371f33",
+  "workflow_run_id": 37694174660,
+  "workflow_job_id": 113041544386,
+  "artifact_id": 11515913112,
+  "artifact_sha256": "0e5406bf66c68724a83e02954f54f0898718138acfa6b14beb2f84b6b89c44b9",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261007t220603z-105467",
+  "host_evidence_manifest_sha256": "c1dda306504183ebb86536cde8eeb9ffee581d22fc32c84be90fb992084ac56a",
+  "package_attempt_consumed": false,
+  "result_path": "manifests/evidence/package-revalidation/kwayland-preflight23/result.json",
+  "result_sha256": "264e292ab5cc7aba38b6aa04adf2885349e69373d708035c20493fc593a5f46d",
+  "contract_path": "manifests/evidence/package-revalidation/kwayland-preflight23/build-contract.json",
+  "archive_path": ".artifacts/package-revalidation/kwayland-preflight23/sha256/0e5406bf66c68724a83e02954f54f0898718138acfa6b14beb2f84b6b89c44b9.zip",
+  "inspection": {
+    "source_complete": true,
+    "candidate_binaries_built": false
+  },
+  "offline_restore_verified": true,
+  "requires_github_for_restore": false,
+  "files_sha256": {
+    "artifact-meta.json": "f0abd947a1cab57ddd5319639220453d376debbdab18feba012279b67b655166",
+    "build-contract.json": "2848db8598e6de481db75ac009842e7ba8d146001c026d6210edefd3a17e2afe",
+    "build-predecessor-verifier-tests.log": "d9d734ee1c2de67b748aeef1c4126433aa438ad8375ca953916f12b1df11414d",
+    "cache-probe/installed-predecessor-contract.json": "b147599423e8af99c6bb8471f36e9fb5e779a452b597c5afa0be75bb0c8acd2d",
+    "cache-probe/result.json": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+    "cache-probe/sbuild.log": "d4289a1355d0be04465f844ea84196c168219a2589d76a160722c6120b308b25",
+    "cleanup.json": "b0d0dcbe013d719256620a01ae4ede353184815a371afcacc2a9cf8dce7c2fad",
+    "host-evidence-sha256.txt": "c1dda306504183ebb86536cde8eeb9ffee581d22fc32c84be90fb992084ac56a",
+    "host-result.json": "79a3099c72b89ab79bc2d5991545439a1faa284a51d61bcf2abd44fdc078eb65",
+    "host-workflow-run.json": "990b1815bf2918619110756154122343a4ae145496a4e50505e12700e8e2cd48",
+    "qemu-cpu-policy.json": "b60213e45f35d74af31f58e6bfa1751c4015da826d17aa86f3088ba3647205b4",
+    "result.json": "264e292ab5cc7aba38b6aa04adf2885349e69373d708035c20493fc593a5f46d",
+    "reviewed-baseline-stdout": "d3b4cc1ff51e072e6cdc994df4920876c3641850e045eb736371c334bd043401",
+    "rootfs-admission.json": "b1aecf3a27d69cee5715e27e1d2903f5666f08aa95467d00382f7639cd6c9f09",
+    "rootfs-ca-certificates.crt": "7975117e54f05f0ed1e1e767efd1f6827d662d720282ad4a360eecc636958de8",
+    "signature.log": "fb1786b17de3af672cfb7bdab8b5ae66fbd01c67c5f112e1b0293cce2152177e",
+    "ubuntu-baseline-preflight/result.json": "7dfa0b2fdf6280264a7139002ed26e2c1ade1cd52ef5be48bc2dc72b3c108b85",
+    "workflow-job.json": "d0b41bd8b931d4ecc75caa9801a270f8321a79298d0cf8cb31664377afccfe58"
+  },
+  "inputs_sha256": {
+    "scripts/run-authoritative-plasma-package.sh": "1e3a32ed3347202189ccb8cec56df996fa7ff77939a07ca2f38ef3246a002600",
+    "scripts/prepare-plasma-package.py": "92732b8a56807d005ba760e367bfc4e06fb3452eb7a77af9955710f8bf91efac",
+    "scripts/plasma-package-testing.py": "1ce68a6a5cfecd43b93943235cddb8a57b00aa531a02b9174cc2363d6650dfbb",
+    "scripts/probe-reviewed-ubuntu-baseline.py": "242b1ad8d6e85027155391d11747f1d2cee77a9a8371bb6d1f4d57d4731dc03b",
+    "scripts/admit-frameworks-cache.py": "0c9b6b0a8bf2cc2894c84ff4c79dd147e48b4a6ef50a353cf035727a3aec37af",
+    "scripts/prepare-milestone-sbuild-rootfs.py": "ae5bd27f2a7c27de9bb926dcc6ed7096bf44095133cdbbfe517f7683b8ffa7f6",
+    "scripts/prepare-retained-package-inputs.py": "3cbd596da45a422981943afc4a2a5bfe072cbe9a9fe432ab19fc81906499b8e6",
+    "scripts/run-kvm-jit-gate-core.sh": "b1ad009fd0db63c03bdc532032293a9332cc48a7df08d943d846d7ae3bbe054d",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "scripts/verify-reviewed-build-predecessors.py": "ffdae9ff1a2505e014a2af2062a366321346606dcf65d7eba7bfbd83a5f44f11",
+    "scripts/test-reviewed-package-contract.py": "b06deb15b71f0c8794d97576d53676792eb33c4164338bacd26994dc6f3ee71a",
+    "scripts/frameworks-revalidation-inputs.py": "178601caec0b1b3715a8194df40d98cb69ab76ff3cccf72a0a04c75fa2a68738",
+    "scripts/prepare-frameworks-revalidation-inputs.py": "4d7cf53b3450c8c1bcecc4a4f9914487aba99edfeb1835058237d9b9adf1be5a",
+    "scripts/probe-frameworks-build-inputs.sh": "ba6be44e97aeae285a00c4ee04f21d11566c2e2f2dd4a535f43ea3e90497d54e",
+    "scripts/freeze-reviewed-package-contract.py": "55082d69f1653f33bf10d1803330393116b23773f811457660fd573c59d6e67b",
+    "scripts/supplementary-package-inputs.py": "e346f50b62f80667e1b88f2986fa63ac1a31b48d66bc2d80713b6411a8dc80b7"
+  },
+  "packaging_sha256": {
+    "README.source": "bff718cd410ef390d2f68efab299e6dbf26434dcf7d4b6d5f433847b4ab3c062",
+    "changelog": "cd18f2cff7bdb8a66be73ba02c64c1bd6787a15af8e16bef1556e87f28bfe426",
+    "control": "03c2b38eb5a867aa0b65cd7040d68217303b10e4358af3d224e495a06c066ae2",
+    "copyright": "0bc2887e93f26bd6b2b35b01eaf8be7b229d865ca4dca945be0c3f1ccac03762",
+    "kwayland-dev.install": "e365cb6ef6b8af49edbaece31e68380c024dbc4c389c513f00b98c21e2a0c75b",
+    "kwayland-doc.install": "01b8ab64dfde533ae470ba98539dbc10bec83e0e83446a2409758d987118c1e9",
+    "kwayland6-data.install": "5ef98bfc12848dc0cdb4751388cd5801a1c2fc1711b32914bcfa314d3e26561a",
+    "libkwayland-dev.acc.in": "4ab36e1c9fcee5d2d600b7a773fdb74c84430b6d28bd46cbb8a32e61368bfa00",
+    "libkwaylandclient6.install": "910793398309141e95be5eb2bb2030feeeae6c12504fad54a43fe2f844e0b348",
+    "libkwaylandclient6.symbols": "acfa5920820467ff20f86dc97484bb2765c8a14123faf56483a0dcf97576a40d",
+    "patches/Add-missing-header.patch": "ee96ae9ddc6146729dffd1f2838e47347c40f8115988278dd9087c7b6038e0cb",
+    "patches/series": "fce3f02eda3376c10a29ee75aacbb7b15c6cf7ac0b0c0a33c51786f96bdaf427",
+    "rules": "12928e18f792d6567eeba63e86bda98c13fbaea5e262dbd9bbf1d21a975c1fb7",
+    "salsa/extra_repository.list": "412646a06d733ca403c3175d36f1d1e734baaa8a76bb8e5176a0d0fb4bda7d45",
+    "salsa/qt-kde-team.debian.net.asc": "2b218b250b8929ad7055afe891bd29288228cfb6efac0e4ed638d9db8d3c4e77",
+    "salsa-ci.yml": "04779f76232c171e1b0094a8bf323543669e75a3131a1d706b8c6f61ec7c2ab0",
+    "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+    "tests/acc": "66cd0b90010f187688d28bec28b554ecedd51f925821c65d62ae13922a13d1ec",
+    "tests/baseline-setup": "bea3e9d8c68534966e8c719c636649503bb2e2b2c8c2743808865f8f403e6430",
+    "tests/client/CMakeLists.txt": "b23cb20493c49d4d602951b6f617d083edcbb337a23fbe6a271c74dddc708ef4",
+    "tests/client/main.cpp": "01ccf3f0f413a6cf6c0ef8e0ad431f291729fe5ccb5a64c926d35314b78a912a",
+    "tests/client/run-private.py": "14cfffbc476d3133c5430bc9ec5aed27afafd16fc43c19054694fcef544b50cc",
+    "tests/client/server.c": "b9ae33e2275aec3ce1c62e9db33537a9011fe38608b9b7f2010f76fe60485443",
+    "tests/consumer": "f80d82982bf79cb594047f6d013d8c17c0b1ae9aaab455be98c0b53a23fbca18",
+    "tests/control": "123ff0a5eb2fa03fcbe2e7ee2cface9e877cf5599a3a3e574960d83b0c0cfbe3",
+    "tests/control.disabled": "bebd0667963d3ddf5428954e055d6d198eebf892483f25be0b569c7fce46c0d2",
+    "tests/ubuntu-abi-client": "9771687d0d19808709b87c48b113e9b820410d5dfba5376138f59dc26d8a1417",
+    "upstream/metadata": "2fe2a484586eefed01ebb95a6661763b539e17a0034ed0052001ae76b3864f5f",
+    "upstream/signing-key.asc": "6127abf3f3ecbb19cc3f32a693da628825e117131218afd44cda1be9a7d8623e",
+    "watch": "9bea6d61806bb2398b46f769d0ac6e09082364c5bc38785d91d913a5be39b41e"
+  },
+  "frameworks_predecessors": {
+    "extra-cmake-modules": {
+      "source_package": "kf6-extra-cmake-modules",
+      "version": "6.30.0-0supralinux3",
+      "binaries": [
+        {
+          "package": "extra-cmake-modules",
+          "architecture": "all",
+          "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+        }
+      ]
+    }
+  },
+  "supplementary_predecessors": {
+    "plasma-wayland-protocols": {
+      "source_package": "plasma-wayland-protocols",
+      "version": "1.22.0-0supralinux1",
+      "upstream_version": "1.22.0",
+      "cmake_package": "PlasmaWaylandProtocols",
+      "binaries": [
+        {
+          "package": "plasma-wayland-protocols",
+          "architecture": "all",
+          "sha256": "85b989ff73b9b8d4e0797a4f326dbe17df3b14f8026a3ea59856b732110f26e7"
+        }
+      ],
+      "evidence": {
+        "result_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/result.json",
+        "result_sha256": "a8360723475a3973e9676f6f02eb9bea654b1d0dcb3c256093cf490deee76f56",
+        "contract_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/build-contract.json",
+        "artifact_id": 11480891803,
+        "artifact_sha256": "2df8366c884296d8c07c0e4431f11fdefb1b62f2dde12c913e740a7fb8b945d1",
+        "contract_sha256": "d24fbde21fb6fb792a204f6143f865ed4db82641f052ef1f6d2a8584ab4ca40a",
+        "archive_root": ".artifacts/plasma-1.22.0/plasma-wayland-protocols-attempt1",
+        "payload_prefix": "packages/"
+      }
+    }
+  }
+}

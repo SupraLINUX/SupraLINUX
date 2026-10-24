@@ -1,0 +1,15 @@
+{
+  "state": "PASS",
+  "network": "default",
+  "forward": "nat",
+  "bridge": "virbr0",
+  "subnets": [
+    "192.168.122.0/24"
+  ],
+  "host_network_modified": false,
+  "host_default_interfaces": [
+    "eno1"
+  ],
+  "guest_download_kib_per_second": 256,
+  "guest_upload_kib_per_second": 128
+}

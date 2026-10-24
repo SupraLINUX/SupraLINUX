@@ -1,0 +1,630 @@
+sbuild (Debian sbuild) 0.91.2ubuntu3 (11 February 2026) on supralinux-golden-20261001t012658z-3d4ce1a31222-149797
+
++==============================================================================+
+| supralinux-cache-probe 1.0 (amd64)           Thu, 08 Oct 2026 22:56:21 +0000 |
++==============================================================================+
+
+Package: supralinux-cache-probe
+Version: 1.0
+Source Version: 1.0
+Distribution: resolute
+Machine Architecture: amd64
+Host Architecture: amd64
+Build Architecture: amd64
+Build Type: binary
+
+I: Unpacking /home/ubuntu/.cache/sbuild/resolute-amd64.tar to /tmp/tmp.sbuild.Xx0czkHoWZ...
+I: Setting up the chroot...
+I: Creating chroot session...
+I: Setting up log color...
+I: Setting up apt archive...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/extra-cmake-modules_6.30.0-0supralinux3_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6archive-data_6.30.0-0supralinux4_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6archive-dev_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6archive6_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6bookmarks-data_6.30.0-0supralinux1_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6bookmarks-dev_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6bookmarks6_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6bookmarkswidgets6_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6codecs-data_6.30.0-0supralinux4_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6codecs-dev_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6codecs6_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6colorscheme-data_6.30.0-0supralinux1_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6colorscheme-dev_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6colorscheme6_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6completion-data_6.30.0-0supralinux1_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6completion-dev_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6completion6_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /opt/actions-runner/_work/SupraLINUX/SupraLINUX/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6config-bin_6.30.0-0supralinux5_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /opt/actions-runner/_work/SupraLINUX/SupraLINUX/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6config-data_6.30.0-0supralinux5_all.deb to /sbuild-unshare-dummy-location...
+Copying /opt/actions-runner/_work/SupraLINUX/SupraLINUX/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6config-dev_6.30.0-0supralinux5_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /opt/actions-runner/_work/SupraLINUX/SupraLINUX/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6config-dev-bin_6.30.0-0supralinux5_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /opt/actions-runner/_work/SupraLINUX/SupraLINUX/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6configcore6_6.30.0-0supralinux5_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /opt/actions-runner/_work/SupraLINUX/SupraLINUX/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6configgui6_6.30.0-0supralinux5_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /opt/actions-runner/_work/SupraLINUX/SupraLINUX/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6configqml6_6.30.0-0supralinux5_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /opt/actions-runner/_work/SupraLINUX/SupraLINUX/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/qml6-module-org-kde-config_6.30.0-0supralinux5_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6coreaddons-data_6.30.0-0supralinux4_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6coreaddons-dev_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6coreaddons6_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/qml6-module-org-kde-coreaddons_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6crash-dev_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6crash6_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6dbusaddons-bin_6.30.0-0supralinux3_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6dbusaddons-data_6.30.0-0supralinux3_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6dbusaddons-dev_6.30.0-0supralinux3_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6dbusaddons6_6.30.0-0supralinux3_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6globalaccel-data_6.30.0-0supralinux2_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6globalaccel-dev_6.30.0-0supralinux2_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6globalaccel6_6.30.0-0supralinux2_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6guiaddons-bin_6.30.0-0supralinux2_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6guiaddons-data_6.30.0-0supralinux2_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6guiaddons-dev_6.30.0-0supralinux2_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6guiaddons6_6.30.0-0supralinux2_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/python3-kguiaddons_6.30.0-0supralinux2_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/qml6-module-org-kde-guiaddons_6.30.0-0supralinux2_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6i18n-data_6.30.0-0supralinux1_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6i18n-dev_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6i18n6_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6i18nlocaledata6_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6i18nqml6_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/qml6-module-org-kde-i18n-localedata_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/qml6-module-org-kde-ki18n_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6iconthemes-bin_6.30.0-0supralinux3_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6iconthemes-data_6.30.0-0supralinux3_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6iconthemes-dev_6.30.0-0supralinux3_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6iconthemes6_6.30.0-0supralinux3_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6iconwidgets6_6.30.0-0supralinux3_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/qml6-module-org-kde-iconthemes_6.30.0-0supralinux3_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/kio6_6.30.0-0supralinux10_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6kio-dev_6.30.0-0supralinux10_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6kiocore6_6.30.0-0supralinux10_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6kiofilewidgets6_6.30.0-0supralinux10_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6kiogui6_6.30.0-0supralinux10_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6kiowidgets6_6.30.0-0supralinux10_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6itemviews-data_6.30.0-0supralinux1_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6itemviews-dev_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6itemviews6_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6jobwidgets-data_6.30.0-0supralinux4_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6jobwidgets-dev_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6jobwidgets6_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/python3-kf6jobwidgets_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6notifications-data_6.30.0-0supralinux1_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6notifications-dev_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6notifications6_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/python3-kf6notifications_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/qml6-module-org-kde-notifications_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6service-bin_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6service-data_6.30.0-0supralinux1_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6service-dev_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6service6_6.30.0-0supralinux1_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/kwallet6_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6wallet-data_6.30.0-0supralinux4_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6wallet-dev_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6wallet6_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6walletbackend6_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6widgetsaddons-data_6.30.0-0supralinux7_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6widgetsaddons-dev_6.30.0-0supralinux7_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6widgetsaddons6_6.30.0-0supralinux7_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/python3-kwidgetsaddons_6.30.0-0supralinux7_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6windowsystem-data_6.30.0-0supralinux4_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6windowsystem-dev_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6windowsystem6_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/qml6-module-org-kde-kwindowsystem_6.30.0-0supralinux4_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6solid-bin_6.30.0-0supralinux2_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6solid-data_6.30.0-0supralinux2_all.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6solid-dev_6.30.0-0supralinux2_amd64.deb to /sbuild-unshare-dummy-location...
+Copying /var/lib/supralinux/milestones/frameworks-6.30/repo/pool/libkf6solid6_6.30.0-0supralinux2_amd64.deb to /sbuild-unshare-dummy-location...
+
++------------------------------------------------------------------------------+
+| Update chroot                                Thu, 08 Oct 2026 22:56:53 +0000 |
++------------------------------------------------------------------------------+
+
+Ign:1 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ InRelease
+Get:2 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ Release [609 B]
+Get:2 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ Release [609 B]
+Ign:3 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ Release.gpg
+Get:4 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ Packages [91.3 kB]
+Get:5 https://archive.ubuntu.com/ubuntu resolute InRelease [136 kB]
+Get:6 https://archive.ubuntu.com/ubuntu resolute-updates InRelease [137 kB]
+Get:7 https://archive.ubuntu.com/ubuntu resolute-security InRelease [137 kB]
+Get:8 https://archive.ubuntu.com/ubuntu resolute/main amd64 Packages [1480 kB]
+Get:9 https://archive.ubuntu.com/ubuntu resolute/universe amd64 Packages [16.0 MB]
+Get:10 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 Packages [734 kB]
+Get:11 https://archive.ubuntu.com/ubuntu resolute-updates/universe amd64 Packages [323 kB]
+Get:12 https://archive.ubuntu.com/ubuntu resolute-security/universe amd64 Packages [200 kB]
+Get:13 https://archive.ubuntu.com/ubuntu resolute-security/main amd64 Packages [599 kB]
+Fetched 19.7 MB in 9s (2295 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Calculating upgrade...
+The following NEW packages will be installed:
+  libcrypt-dev
+The following packages will be upgraded:
+  base-files build-essential bzip2 diffutils gnu-coreutils gpgv gzip libattr1
+  libaudit-common libaudit1 libblkid1 libbz2-1.0 libc-bin libc-dev-bin
+  libc-gconv-modules-extra libc6 libc6-dev libgcrypt20 libmount1
+  libpam-modules libpam-modules-bin libpam-runtime libpam0g libperl5.40
+  libsmartcols1 libssl3t64 libsystemd0 libudev1 libuuid1 linux-libc-dev
+  openssl-provider-legacy perl perl-base perl-modules-5.40 rust-coreutils sed
+  tar util-linux zlib1g
+39 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 31.2 MB of archives.
+After this operation, 1313 kB of additional disk space will be used.
+Get:1 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libc-dev-bin amd64 2.43-2ubuntu2.4 [23.3 kB]
+Get:2 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libc6-dev amd64 2.43-2ubuntu2.4 [2294 kB]
+Get:3 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libc-gconv-modules-extra amd64 2.43-2ubuntu2.4 [1362 kB]
+Get:4 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libc6 amd64 2.43-2ubuntu2.4 [2104 kB]
+Get:5 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 linux-libc-dev amd64 7.0.0-38.38 [1715 kB]
+Get:6 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 base-files amd64 14ubuntu6.2 [74.9 kB]
+Get:7 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 diffutils amd64 1:3.12-1ubuntu0.1 [176 kB]
+Get:8 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 gzip amd64 1.14-1~exp2ubuntu1.1 [106 kB]
+Get:9 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libperl5.40 amd64 5.40.1-7ubuntu0.3 [4889 kB]
+Get:10 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 perl amd64 5.40.1-7ubuntu0.3 [262 kB]
+Get:11 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 perl-base amd64 5.40.1-7ubuntu0.3 [1850 kB]
+Get:12 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 perl-modules-5.40 all 5.40.1-7ubuntu0.3 [3212 kB]
+Get:13 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 bzip2 amd64 1.0.8-6ubuntu0.1 [34.3 kB]
+Get:14 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libbz2-1.0 amd64 1.0.8-6ubuntu0.1 [36.2 kB]
+Get:15 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 zlib1g amd64 1:1.3.dfsg+really1.3.1-1ubuntu3.1 [61.6 kB]
+Get:16 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 sed amd64 4.9-2ubuntu1 [195 kB]
+Get:17 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 tar amd64 1.35+dfsg-4ubuntu0.4 [258 kB]
+Get:18 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libsmartcols1 amd64 2.41.3-3ubuntu2.2 [84.9 kB]
+Get:19 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libuuid1 amd64 2.41.3-3ubuntu2.2 [36.7 kB]
+Get:20 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libblkid1 amd64 2.41.3-3ubuntu2.2 [126 kB]
+Get:21 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libmount1 amd64 2.41.3-3ubuntu2.2 [159 kB]
+Get:22 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 util-linux amd64 2.41.3-3ubuntu2.2 [1070 kB]
+Get:23 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libc-bin amd64 2.43-2ubuntu2.4 [701 kB]
+Get:24 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 gnu-coreutils amd64 9.7-3ubuntu2.1 [1339 kB]
+Get:25 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libpam-runtime all 1.7.0-5ubuntu3.2 [149 kB]
+Get:26 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libaudit-common all 1:4.1.2-1ubuntu0.1 [4958 B]
+Get:27 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libaudit1 amd64 1:4.1.2-1ubuntu0.1 [55.1 kB]
+Get:28 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libpam0g amd64 1.7.0-5ubuntu3.2 [65.0 kB]
+Get:29 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libsystemd0 amd64 259.5-0ubuntu3.4 [481 kB]
+Get:30 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libpam-modules-bin amd64 1.7.0-5ubuntu3.2 [45.6 kB]
+Get:31 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libpam-modules amd64 1.7.0-5ubuntu3.2 [193 kB]
+Get:32 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libattr1 amd64 1:2.5.2-4ubuntu0.1 [12.0 kB]
+Get:33 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 openssl-provider-legacy amd64 3.5.5-1ubuntu3.7 [39.7 kB]
+Get:34 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libssl3t64 amd64 3.5.5-1ubuntu3.7 [2368 kB]
+Get:35 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libudev1 amd64 259.5-0ubuntu3.4 [151 kB]
+Get:36 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 rust-coreutils amd64 0.10.0-1ubuntu2~26.04.1 [4515 kB]
+Get:37 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 libgcrypt20 amd64 1.12.0-2ubuntu1.1 [675 kB]
+Get:38 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 gpgv amd64 2.4.8-4ubuntu3.1 [155 kB]
+Get:39 https://archive.ubuntu.com/ubuntu resolute/main amd64 libcrypt-dev amd64 1:4.5.1-1 [122 kB]
+Get:40 https://archive.ubuntu.com/ubuntu resolute-updates/main amd64 build-essential amd64 12.12ubuntu2.26.04.2 [5158 B]
+Preconfiguring packages ...
+Fetched 31.2 MB in 11s (2854 kB/s)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libc-dev-bin_2.43-2ubuntu2.4_amd64.deb ...
+Unpacking libc-dev-bin (2.43-2ubuntu2.4) over (2.43-2ubuntu2) ...
+Preparing to unpack .../libc6-dev_2.43-2ubuntu2.4_amd64.deb ...
+Unpacking libc6-dev:amd64 (2.43-2ubuntu2.4) over (2.43-2ubuntu2) ...
+Preparing to unpack .../libc-gconv-modules-extra_2.43-2ubuntu2.4_amd64.deb ...
+Unpacking libc-gconv-modules-extra:amd64 (2.43-2ubuntu2.4) over (2.43-2ubuntu2) ...
+Setting up libc-gconv-modules-extra:amd64 (2.43-2ubuntu2.4) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libc6_2.43-2ubuntu2.4_amd64.deb ...
+Unpacking libc6:amd64 (2.43-2ubuntu2.4) over (2.43-2ubuntu2) ...
+Setting up libc6:amd64 (2.43-2ubuntu2.4) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../linux-libc-dev_7.0.0-38.38_amd64.deb ...
+Unpacking linux-libc-dev:amd64 (7.0.0-38.38) over (7.0.0-14.14) ...
+Preparing to unpack .../base-files_14ubuntu6.2_amd64.deb ...
+Unpacking base-files (14ubuntu6.2) over (14ubuntu6) ...
+Setting up base-files (14ubuntu6.2) ...
+Installing new version of config file /etc/issue ...
+Installing new version of config file /etc/issue.net ...
+Installing new version of config file /etc/lsb-release ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../diffutils_1%3a3.12-1ubuntu0.1_amd64.deb ...
+Unpacking diffutils (1:3.12-1ubuntu0.1) over (1:3.12-1) ...
+Setting up diffutils (1:3.12-1ubuntu0.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../gzip_1.14-1~exp2ubuntu1.1_amd64.deb ...
+Unpacking gzip (1.14-1~exp2ubuntu1.1) over (1.14-1~exp2ubuntu1) ...
+Setting up gzip (1.14-1~exp2ubuntu1.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libperl5.40_5.40.1-7ubuntu0.3_amd64.deb ...
+Unpacking libperl5.40:amd64 (5.40.1-7ubuntu0.3) over (5.40.1-7build1) ...
+Preparing to unpack .../perl_5.40.1-7ubuntu0.3_amd64.deb ...
+Unpacking perl (5.40.1-7ubuntu0.3) over (5.40.1-7build1) ...
+Preparing to unpack .../perl-base_5.40.1-7ubuntu0.3_amd64.deb ...
+Unpacking perl-base (5.40.1-7ubuntu0.3) over (5.40.1-7build1) ...
+Setting up perl-base (5.40.1-7ubuntu0.3) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../perl-modules-5.40_5.40.1-7ubuntu0.3_all.deb ...
+Unpacking perl-modules-5.40 (5.40.1-7ubuntu0.3) over (5.40.1-7build1) ...
+Preparing to unpack .../bzip2_1.0.8-6ubuntu0.1_amd64.deb ...
+Unpacking bzip2 (1.0.8-6ubuntu0.1) over (1.0.8-6build2) ...
+Preparing to unpack .../libbz2-1.0_1.0.8-6ubuntu0.1_amd64.deb ...
+Unpacking libbz2-1.0:amd64 (1.0.8-6ubuntu0.1) over (1.0.8-6build2) ...
+Setting up libbz2-1.0:amd64 (1.0.8-6ubuntu0.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../zlib1g_1%3a1.3.dfsg+really1.3.1-1ubuntu3.1_amd64.deb ...
+Unpacking zlib1g:amd64 (1:1.3.dfsg+really1.3.1-1ubuntu3.1) over (1:1.3.dfsg+really1.3.1-1ubuntu3) ...
+Setting up zlib1g:amd64 (1:1.3.dfsg+really1.3.1-1ubuntu3.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../sed_4.9-2ubuntu1_amd64.deb ...
+Unpacking sed (4.9-2ubuntu1) over (4.9-2build3) ...
+Setting up sed (4.9-2ubuntu1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../tar_1.35+dfsg-4ubuntu0.4_amd64.deb ...
+Unpacking tar (1.35+dfsg-4ubuntu0.4) over (1.35+dfsg-4) ...
+Setting up tar (1.35+dfsg-4ubuntu0.4) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libsmartcols1_2.41.3-3ubuntu2.2_amd64.deb ...
+Unpacking libsmartcols1:amd64 (2.41.3-3ubuntu2.2) over (2.41.3-3ubuntu2) ...
+Setting up libsmartcols1:amd64 (2.41.3-3ubuntu2.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libuuid1_2.41.3-3ubuntu2.2_amd64.deb ...
+Unpacking libuuid1:amd64 (2.41.3-3ubuntu2.2) over (2.41.3-3ubuntu2) ...
+Setting up libuuid1:amd64 (2.41.3-3ubuntu2.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libblkid1_2.41.3-3ubuntu2.2_amd64.deb ...
+Unpacking libblkid1:amd64 (2.41.3-3ubuntu2.2) over (2.41.3-3ubuntu2) ...
+Setting up libblkid1:amd64 (2.41.3-3ubuntu2.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libmount1_2.41.3-3ubuntu2.2_amd64.deb ...
+Unpacking libmount1:amd64 (2.41.3-3ubuntu2.2) over (2.41.3-3ubuntu2) ...
+Setting up libmount1:amd64 (2.41.3-3ubuntu2.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../util-linux_2.41.3-3ubuntu2.2_amd64.deb ...
+Unpacking util-linux (2.41.3-3ubuntu2.2) over (2.41.3-3ubuntu2) ...
+Setting up util-linux (2.41.3-3ubuntu2.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libc-bin_2.43-2ubuntu2.4_amd64.deb ...
+Unpacking libc-bin (2.43-2ubuntu2.4) over (2.43-2ubuntu2) ...
+Setting up libc-bin (2.43-2ubuntu2.4) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../gnu-coreutils_9.7-3ubuntu2.1_amd64.deb ...
+Unpacking gnu-coreutils (9.7-3ubuntu2.1) over (9.7-3ubuntu2) ...
+Setting up gnu-coreutils (9.7-3ubuntu2.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libpam-runtime_1.7.0-5ubuntu3.2_all.deb ...
+Unpacking libpam-runtime (1.7.0-5ubuntu3.2) over (1.7.0-5ubuntu3) ...
+Setting up libpam-runtime (1.7.0-5ubuntu3.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libaudit-common_1%3a4.1.2-1ubuntu0.1_all.deb ...
+Unpacking libaudit-common (1:4.1.2-1ubuntu0.1) over (1:4.1.2-1build1) ...
+Setting up libaudit-common (1:4.1.2-1ubuntu0.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libaudit1_1%3a4.1.2-1ubuntu0.1_amd64.deb ...
+Unpacking libaudit1:amd64 (1:4.1.2-1ubuntu0.1) over (1:4.1.2-1build1) ...
+Setting up libaudit1:amd64 (1:4.1.2-1ubuntu0.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libpam0g_1.7.0-5ubuntu3.2_amd64.deb ...
+Unpacking libpam0g:amd64 (1.7.0-5ubuntu3.2) over (1.7.0-5ubuntu3) ...
+Setting up libpam0g:amd64 (1.7.0-5ubuntu3.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libsystemd0_259.5-0ubuntu3.4_amd64.deb ...
+Unpacking libsystemd0:amd64 (259.5-0ubuntu3.4) over (259.5-0ubuntu3) ...
+Setting up libsystemd0:amd64 (259.5-0ubuntu3.4) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libpam-modules-bin_1.7.0-5ubuntu3.2_amd64.deb ...
+Unpacking libpam-modules-bin (1.7.0-5ubuntu3.2) over (1.7.0-5ubuntu3) ...
+Setting up libpam-modules-bin (1.7.0-5ubuntu3.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libpam-modules_1.7.0-5ubuntu3.2_amd64.deb ...
+Unpacking libpam-modules:amd64 (1.7.0-5ubuntu3.2) over (1.7.0-5ubuntu3) ...
+Setting up libpam-modules:amd64 (1.7.0-5ubuntu3.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libattr1_1%3a2.5.2-4ubuntu0.1_amd64.deb ...
+Unpacking libattr1:amd64 (1:2.5.2-4ubuntu0.1) over (1:2.5.2-4) ...
+Setting up libattr1:amd64 (1:2.5.2-4ubuntu0.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../openssl-provider-legacy_3.5.5-1ubuntu3.7_amd64.deb ...
+Unpacking openssl-provider-legacy (3.5.5-1ubuntu3.7) over (3.5.5-1ubuntu3) ...
+Setting up openssl-provider-legacy (3.5.5-1ubuntu3.7) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libssl3t64_3.5.5-1ubuntu3.7_amd64.deb ...
+Unpacking libssl3t64:amd64 (3.5.5-1ubuntu3.7) over (3.5.5-1ubuntu3) ...
+Setting up libssl3t64:amd64 (3.5.5-1ubuntu3.7) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../libudev1_259.5-0ubuntu3.4_amd64.deb ...
+Unpacking libudev1:amd64 (259.5-0ubuntu3.4) over (259.5-0ubuntu3) ...
+Setting up libudev1:amd64 (259.5-0ubuntu3.4) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13014 files and directories currently installed.)
+Preparing to unpack .../rust-coreutils_0.10.0-1ubuntu2~26.04.1_amd64.deb ...
+Unpacking rust-coreutils (0.10.0-1ubuntu2~26.04.1) over (0.8.0-0ubuntu3) ...
+Setting up rust-coreutils (0.10.0-1ubuntu2~26.04.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13079 files and directories currently installed.)
+Preparing to unpack .../libgcrypt20_1.12.0-2ubuntu1.1_amd64.deb ...
+Unpacking libgcrypt20:amd64 (1.12.0-2ubuntu1.1) over (1.12.0-2) ...
+Setting up libgcrypt20:amd64 (1.12.0-2ubuntu1.1) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13079 files and directories currently installed.)
+Preparing to unpack .../gpgv_2.4.8-4ubuntu3.1_amd64.deb ...
+Unpacking gpgv (2.4.8-4ubuntu3.1) over (2.4.8-4ubuntu3) ...
+Setting up gpgv (2.4.8-4ubuntu3.1) ...
+Selecting previously unselected package libcrypt-dev:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 13079 files and directories currently installed.)
+Preparing to unpack .../libcrypt-dev_1%3a4.5.1-1_amd64.deb ...
+Unpacking libcrypt-dev:amd64 (1:4.5.1-1) ...
+Preparing to unpack .../build-essential_12.12ubuntu2.26.04.2_amd64.deb ...
+Unpacking build-essential (12.12ubuntu2.26.04.2) over (12.12ubuntu2) ...
+Setting up linux-libc-dev:amd64 (7.0.0-38.38) ...
+Setting up bzip2 (1.0.8-6ubuntu0.1) ...
+Setting up perl-modules-5.40 (5.40.1-7ubuntu0.3) ...
+Setting up libcrypt-dev:amd64 (1:4.5.1-1) ...
+Setting up libc-dev-bin (2.43-2ubuntu2.4) ...
+Setting up libperl5.40:amd64 (5.40.1-7ubuntu0.3) ...
+Setting up perl (5.40.1-7ubuntu0.3) ...
+Setting up libc6-dev:amd64 (2.43-2ubuntu2.4) ...
+Setting up build-essential (12.12ubuntu2.26.04.2) ...
+Processing triggers for libc-bin (2.43-2ubuntu2.4) ...
+
++------------------------------------------------------------------------------+
+| Fetch source files                           Thu, 08 Oct 2026 22:57:17 +0000 |
++------------------------------------------------------------------------------+
+
+
+Local sources
+-------------
+
+/opt/actions-runner/_work/SupraLINUX/SupraLINUX/.work/authoritative-plasma-package/cache-probe/supralinux-cache-probe_1.0.dsc exists in /opt/actions-runner/_work/SupraLINUX/SupraLINUX/.work/authoritative-plasma-package/cache-probe; copying to chroot
+
++------------------------------------------------------------------------------+
+| Install package build dependencies           Thu, 08 Oct 2026 22:57:17 +0000 |
++------------------------------------------------------------------------------+
+
+
+Setup apt archive
+-----------------
+
+Merged Build-Depends: debhelper-compat (= 13), cmake, extra-cmake-modules (= 6.30.0-0supralinux3), qt6-base-dev, python3, libkf6archive-data (= 6.30.0-0supralinux4), libkf6archive-dev (= 6.30.0-0supralinux4), libkf6archive6 (= 6.30.0-0supralinux4), libkf6bookmarks-data (= 6.30.0-0supralinux1), libkf6bookmarks-dev (= 6.30.0-0supralinux1), libkf6bookmarks6 (= 6.30.0-0supralinux1), libkf6bookmarkswidgets6 (= 6.30.0-0supralinux1), libkf6codecs-data (= 6.30.0-0supralinux4), libkf6codecs-dev (= 6.30.0-0supralinux4), libkf6codecs6 (= 6.30.0-0supralinux4), libkf6colorscheme-data (= 6.30.0-0supralinux1), libkf6colorscheme-dev (= 6.30.0-0supralinux1), libkf6colorscheme6 (= 6.30.0-0supralinux1), libkf6completion-data (= 6.30.0-0supralinux1), libkf6completion-dev (= 6.30.0-0supralinux1), libkf6completion6 (= 6.30.0-0supralinux1), libkf6config-bin (= 6.30.0-0supralinux5), libkf6config-data (= 6.30.0-0supralinux5), libkf6config-dev (= 6.30.0-0supralinux5), libkf6config-dev-bin (= 6.30.0-0supralinux5), libkf6configcore6 (= 6.30.0-0supralinux5), libkf6configgui6 (= 6.30.0-0supralinux5), libkf6configqml6 (= 6.30.0-0supralinux5), qml6-module-org-kde-config (= 6.30.0-0supralinux5), libkf6coreaddons-data (= 6.30.0-0supralinux4), libkf6coreaddons-dev (= 6.30.0-0supralinux4), libkf6coreaddons6 (= 6.30.0-0supralinux4), qml6-module-org-kde-coreaddons (= 6.30.0-0supralinux4), libkf6crash-dev (= 6.30.0-0supralinux1), libkf6crash6 (= 6.30.0-0supralinux1), libkf6dbusaddons-bin (= 6.30.0-0supralinux3), libkf6dbusaddons-data (= 6.30.0-0supralinux3), libkf6dbusaddons-dev (= 6.30.0-0supralinux3), libkf6dbusaddons6 (= 6.30.0-0supralinux3), libkf6globalaccel-data (= 6.30.0-0supralinux2), libkf6globalaccel-dev (= 6.30.0-0supralinux2), libkf6globalaccel6 (= 6.30.0-0supralinux2), libkf6guiaddons-bin (= 6.30.0-0supralinux2), libkf6guiaddons-data (= 6.30.0-0supralinux2), libkf6guiaddons-dev (= 6.30.0-0supralinux2), libkf6guiaddons6 (= 6.30.0-0supralinux2), python3-kguiaddons (= 6.30.0-0supralinux2), qml6-module-org-kde-guiaddons (= 6.30.0-0supralinux2), libkf6i18n-data (= 6.30.0-0supralinux1), libkf6i18n-dev (= 6.30.0-0supralinux1), libkf6i18n6 (= 6.30.0-0supralinux1), libkf6i18nlocaledata6 (= 6.30.0-0supralinux1), libkf6i18nqml6 (= 6.30.0-0supralinux1), qml6-module-org-kde-i18n-localedata (= 6.30.0-0supralinux1), qml6-module-org-kde-ki18n (= 6.30.0-0supralinux1), libkf6iconthemes-bin (= 6.30.0-0supralinux3), libkf6iconthemes-data (= 6.30.0-0supralinux3), libkf6iconthemes-dev (= 6.30.0-0supralinux3), libkf6iconthemes6 (= 6.30.0-0supralinux3), libkf6iconwidgets6 (= 6.30.0-0supralinux3), qml6-module-org-kde-iconthemes (= 6.30.0-0supralinux3), kio6 (= 6.30.0-0supralinux10), libkf6kio-dev (= 6.30.0-0supralinux10), libkf6kiocore6 (= 6.30.0-0supralinux10), libkf6kiofilewidgets6 (= 6.30.0-0supralinux10), libkf6kiogui6 (= 6.30.0-0supralinux10), libkf6kiowidgets6 (= 6.30.0-0supralinux10), libkf6itemviews-data (= 6.30.0-0supralinux1), libkf6itemviews-dev (= 6.30.0-0supralinux1), libkf6itemviews6 (= 6.30.0-0supralinux1), libkf6jobwidgets-data (= 6.30.0-0supralinux4), libkf6jobwidgets-dev (= 6.30.0-0supralinux4), libkf6jobwidgets6 (= 6.30.0-0supralinux4), python3-kf6jobwidgets (= 6.30.0-0supralinux4), libkf6notifications-data (= 6.30.0-0supralinux1), libkf6notifications-dev (= 6.30.0-0supralinux1), libkf6notifications6 (= 6.30.0-0supralinux1), python3-kf6notifications (= 6.30.0-0supralinux1), qml6-module-org-kde-notifications (= 6.30.0-0supralinux1), libkf6service-bin (= 6.30.0-0supralinux1), libkf6service-data (= 6.30.0-0supralinux1), libkf6service-dev (= 6.30.0-0supralinux1), libkf6service6 (= 6.30.0-0supralinux1), kwallet6 (= 6.30.0-0supralinux4), libkf6wallet-data (= 6.30.0-0supralinux4), libkf6wallet-dev (= 6.30.0-0supralinux4), libkf6wallet6 (= 6.30.0-0supralinux4), libkf6walletbackend6 (= 6.30.0-0supralinux4), libkf6widgetsaddons-data (= 6.30.0-0supralinux7), libkf6widgetsaddons-dev (= 6.30.0-0supralinux7), libkf6widgetsaddons6 (= 6.30.0-0supralinux7), python3-kwidgetsaddons (= 6.30.0-0supralinux7), libkf6windowsystem-data (= 6.30.0-0supralinux4), libkf6windowsystem-dev (= 6.30.0-0supralinux4), libkf6windowsystem6 (= 6.30.0-0supralinux4), qml6-module-org-kde-kwindowsystem (= 6.30.0-0supralinux4), libkf6solid-bin (= 6.30.0-0supralinux2), libkf6solid-data (= 6.30.0-0supralinux2), libkf6solid-dev (= 6.30.0-0supralinux2), libkf6solid6 (= 6.30.0-0supralinux2), build-essential
+Filtered Build-Depends: debhelper-compat (= 13), cmake, extra-cmake-modules (= 6.30.0-0supralinux3), qt6-base-dev, python3, libkf6archive-data (= 6.30.0-0supralinux4), libkf6archive-dev (= 6.30.0-0supralinux4), libkf6archive6 (= 6.30.0-0supralinux4), libkf6bookmarks-data (= 6.30.0-0supralinux1), libkf6bookmarks-dev (= 6.30.0-0supralinux1), libkf6bookmarks6 (= 6.30.0-0supralinux1), libkf6bookmarkswidgets6 (= 6.30.0-0supralinux1), libkf6codecs-data (= 6.30.0-0supralinux4), libkf6codecs-dev (= 6.30.0-0supralinux4), libkf6codecs6 (= 6.30.0-0supralinux4), libkf6colorscheme-data (= 6.30.0-0supralinux1), libkf6colorscheme-dev (= 6.30.0-0supralinux1), libkf6colorscheme6 (= 6.30.0-0supralinux1), libkf6completion-data (= 6.30.0-0supralinux1), libkf6completion-dev (= 6.30.0-0supralinux1), libkf6completion6 (= 6.30.0-0supralinux1), libkf6config-bin (= 6.30.0-0supralinux5), libkf6config-data (= 6.30.0-0supralinux5), libkf6config-dev (= 6.30.0-0supralinux5), libkf6config-dev-bin (= 6.30.0-0supralinux5), libkf6configcore6 (= 6.30.0-0supralinux5), libkf6configgui6 (= 6.30.0-0supralinux5), libkf6configqml6 (= 6.30.0-0supralinux5), qml6-module-org-kde-config (= 6.30.0-0supralinux5), libkf6coreaddons-data (= 6.30.0-0supralinux4), libkf6coreaddons-dev (= 6.30.0-0supralinux4), libkf6coreaddons6 (= 6.30.0-0supralinux4), qml6-module-org-kde-coreaddons (= 6.30.0-0supralinux4), libkf6crash-dev (= 6.30.0-0supralinux1), libkf6crash6 (= 6.30.0-0supralinux1), libkf6dbusaddons-bin (= 6.30.0-0supralinux3), libkf6dbusaddons-data (= 6.30.0-0supralinux3), libkf6dbusaddons-dev (= 6.30.0-0supralinux3), libkf6dbusaddons6 (= 6.30.0-0supralinux3), libkf6globalaccel-data (= 6.30.0-0supralinux2), libkf6globalaccel-dev (= 6.30.0-0supralinux2), libkf6globalaccel6 (= 6.30.0-0supralinux2), libkf6guiaddons-bin (= 6.30.0-0supralinux2), libkf6guiaddons-data (= 6.30.0-0supralinux2), libkf6guiaddons-dev (= 6.30.0-0supralinux2), libkf6guiaddons6 (= 6.30.0-0supralinux2), python3-kguiaddons (= 6.30.0-0supralinux2), qml6-module-org-kde-guiaddons (= 6.30.0-0supralinux2), libkf6i18n-data (= 6.30.0-0supralinux1), libkf6i18n-dev (= 6.30.0-0supralinux1), libkf6i18n6 (= 6.30.0-0supralinux1), libkf6i18nlocaledata6 (= 6.30.0-0supralinux1), libkf6i18nqml6 (= 6.30.0-0supralinux1), qml6-module-org-kde-i18n-localedata (= 6.30.0-0supralinux1), qml6-module-org-kde-ki18n (= 6.30.0-0supralinux1), libkf6iconthemes-bin (= 6.30.0-0supralinux3), libkf6iconthemes-data (= 6.30.0-0supralinux3), libkf6iconthemes-dev (= 6.30.0-0supralinux3), libkf6iconthemes6 (= 6.30.0-0supralinux3), libkf6iconwidgets6 (= 6.30.0-0supralinux3), qml6-module-org-kde-iconthemes (= 6.30.0-0supralinux3), kio6 (= 6.30.0-0supralinux10), libkf6kio-dev (= 6.30.0-0supralinux10), libkf6kiocore6 (= 6.30.0-0supralinux10), libkf6kiofilewidgets6 (= 6.30.0-0supralinux10), libkf6kiogui6 (= 6.30.0-0supralinux10), libkf6kiowidgets6 (= 6.30.0-0supralinux10), libkf6itemviews-data (= 6.30.0-0supralinux1), libkf6itemviews-dev (= 6.30.0-0supralinux1), libkf6itemviews6 (= 6.30.0-0supralinux1), libkf6jobwidgets-data (= 6.30.0-0supralinux4), libkf6jobwidgets-dev (= 6.30.0-0supralinux4), libkf6jobwidgets6 (= 6.30.0-0supralinux4), python3-kf6jobwidgets (= 6.30.0-0supralinux4), libkf6notifications-data (= 6.30.0-0supralinux1), libkf6notifications-dev (= 6.30.0-0supralinux1), libkf6notifications6 (= 6.30.0-0supralinux1), python3-kf6notifications (= 6.30.0-0supralinux1), qml6-module-org-kde-notifications (= 6.30.0-0supralinux1), libkf6service-bin (= 6.30.0-0supralinux1), libkf6service-data (= 6.30.0-0supralinux1), libkf6service-dev (= 6.30.0-0supralinux1), libkf6service6 (= 6.30.0-0supralinux1), kwallet6 (= 6.30.0-0supralinux4), libkf6wallet-data (= 6.30.0-0supralinux4), libkf6wallet-dev (= 6.30.0-0supralinux4), libkf6wallet6 (= 6.30.0-0supralinux4), libkf6walletbackend6 (= 6.30.0-0supralinux4), libkf6widgetsaddons-data (= 6.30.0-0supralinux7), libkf6widgetsaddons-dev (= 6.30.0-0supralinux7), libkf6widgetsaddons6 (= 6.30.0-0supralinux7), python3-kwidgetsaddons (= 6.30.0-0supralinux7), libkf6windowsystem-data (= 6.30.0-0supralinux4), libkf6windowsystem-dev (= 6.30.0-0supralinux4), libkf6windowsystem6 (= 6.30.0-0supralinux4), qml6-module-org-kde-kwindowsystem (= 6.30.0-0supralinux4), libkf6solid-bin (= 6.30.0-0supralinux2), libkf6solid-data (= 6.30.0-0supralinux2), libkf6solid-dev (= 6.30.0-0supralinux2), libkf6solid6 (= 6.30.0-0supralinux2), build-essential
+dpkg-deb: building package 'sbuild-build-depends-main-dummy' in '/build/reproducible-path/resolver-KlNgXj/apt_archive/sbuild-build-depends-main-dummy.deb'.
+Ign:1 copy:/build/reproducible-path/resolver-KlNgXj/apt_archive ./ InRelease
+Get:2 copy:/build/reproducible-path/resolver-KlNgXj/apt_archive ./ Release [615 B]
+Ign:3 copy:/build/reproducible-path/resolver-KlNgXj/apt_archive ./ Release.gpg
+Get:4 copy:/build/reproducible-path/resolver-KlNgXj/apt_archive ./ Sources [4950 B]
+Get:5 copy:/build/reproducible-path/resolver-KlNgXj/apt_archive ./ Packages [4987 B]
+Fetched 10.6 kB in 0s (0 B/s)
+Reading package lists...
+Ign:1 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ InRelease
+Get:2 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ Release [609 B]
+Get:2 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ Release [609 B]
+Ign:3 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ Release.gpg
+Reading package lists...
+Reading package lists...
+
+Install main build dependencies (apt-based resolver)
+----------------------------------------------------
+
+Installing build dependencies
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Solving dependencies...
+Some packages could not be installed. This may mean that you have
+requested an impossible situation or if you are using the unstable
+distribution that some required packages have not yet been created
+or been moved out of Incoming.
+The following information may help to resolve the situation:
+
+The following packages have unmet dependencies:
+ sbuild-build-depends-main-dummy : Depends: debhelper-compat (= 13)
+                                   Depends: cmake but it is not going to be installed
+                                   Depends: extra-cmake-modules (= 6.30.0-0supralinux3) but it is not going to be installed
+                                   Depends: qt6-base-dev but it is not going to be installed
+                                   Depends: python3 but it is not going to be installed
+                                   Depends: libkf6archive-data (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6archive-dev (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6archive6 (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6bookmarks-data (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6bookmarks-dev (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6bookmarks6 (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6bookmarkswidgets6 (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6codecs-data (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6codecs-dev (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6codecs6 (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6colorscheme-data (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6colorscheme-dev (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6colorscheme6 (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6completion-data (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6completion-dev (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6completion6 (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6config-bin (= 6.30.0-0supralinux5) but it is not going to be installed
+                                   Depends: libkf6config-data (= 6.30.0-0supralinux5) but it is not going to be installed
+                                   Depends: libkf6config-dev (= 6.30.0-0supralinux5) but it is not going to be installed
+                                   Depends: libkf6config-dev-bin (= 6.30.0-0supralinux5) but it is not going to be installed
+                                   Depends: libkf6configcore6 (= 6.30.0-0supralinux5) but it is not going to be installed
+                                   Depends: libkf6configgui6 (= 6.30.0-0supralinux5) but it is not going to be installed
+                                   Depends: libkf6configqml6 (= 6.30.0-0supralinux5) but it is not going to be installed
+                                   Depends: qml6-module-org-kde-config (= 6.30.0-0supralinux5) but it is not going to be installed
+                                   Depends: libkf6coreaddons-data (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6coreaddons-dev (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6coreaddons6 (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: qml6-module-org-kde-coreaddons (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6crash-dev (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6crash6 (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6dbusaddons-bin (= 6.30.0-0supralinux3) but it is not going to be installed
+                                   Depends: libkf6dbusaddons-data (= 6.30.0-0supralinux3) but it is not going to be installed
+                                   Depends: libkf6dbusaddons-dev (= 6.30.0-0supralinux3) but it is not going to be installed
+                                   Depends: libkf6dbusaddons6 (= 6.30.0-0supralinux3) but it is not going to be installed
+                                   Depends: libkf6globalaccel-data (= 6.30.0-0supralinux2) but it is not going to be installed
+                                   Depends: libkf6globalaccel-dev (= 6.30.0-0supralinux2) but it is not going to be installed
+                                   Depends: libkf6globalaccel6 (= 6.30.0-0supralinux2) but it is not going to be installed
+                                   Depends: libkf6guiaddons-bin (= 6.30.0-0supralinux2) but it is not going to be installed
+                                   Depends: libkf6guiaddons-data (= 6.30.0-0supralinux2) but it is not going to be installed
+                                   Depends: libkf6guiaddons-dev (= 6.30.0-0supralinux2) but it is not going to be installed
+                                   Depends: libkf6guiaddons6 (= 6.30.0-0supralinux2) but it is not going to be installed
+                                   Depends: python3-kguiaddons (= 6.30.0-0supralinux2) but it is not going to be installed
+                                   Depends: qml6-module-org-kde-guiaddons (= 6.30.0-0supralinux2) but it is not going to be installed
+                                   Depends: libkf6i18n-data (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6i18n-dev (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6i18n6 (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6i18nlocaledata6 (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6i18nqml6 (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: qml6-module-org-kde-i18n-localedata (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: qml6-module-org-kde-ki18n (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6iconthemes-bin (= 6.30.0-0supralinux3) but it is not going to be installed
+                                   Depends: libkf6iconthemes-data (= 6.30.0-0supralinux3) but it is not going to be installed
+                                   Depends: libkf6iconthemes-dev (= 6.30.0-0supralinux3) but it is not going to be installed
+                                   Depends: libkf6iconthemes6 (= 6.30.0-0supralinux3) but it is not going to be installed
+                                   Depends: libkf6iconwidgets6 (= 6.30.0-0supralinux3) but it is not going to be installed
+                                   Depends: qml6-module-org-kde-iconthemes (= 6.30.0-0supralinux3) but it is not going to be installed
+                                   Depends: kio6 (= 6.30.0-0supralinux10) but it is not going to be installed
+                                   Depends: libkf6kio-dev (= 6.30.0-0supralinux10) but it is not going to be installed
+                                   Depends: libkf6kiocore6 (= 6.30.0-0supralinux10) but it is not going to be installed
+                                   Depends: libkf6kiofilewidgets6 (= 6.30.0-0supralinux10) but it is not going to be installed
+                                   Depends: libkf6kiogui6 (= 6.30.0-0supralinux10) but it is not going to be installed
+                                   Depends: libkf6kiowidgets6 (= 6.30.0-0supralinux10) but it is not going to be installed
+                                   Depends: libkf6itemviews-data (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6itemviews-dev (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6itemviews6 (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6jobwidgets-data (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6jobwidgets-dev (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6jobwidgets6 (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: python3-kf6jobwidgets (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6notifications-data (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6notifications-dev (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6notifications6 (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: python3-kf6notifications (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: qml6-module-org-kde-notifications (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6service-bin (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6service-data (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6service-dev (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: libkf6service6 (= 6.30.0-0supralinux1) but it is not going to be installed
+                                   Depends: kwallet6 (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6wallet-data (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6wallet-dev (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6wallet6 (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6walletbackend6 (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6widgetsaddons-data (= 6.30.0-0supralinux7) but it is not going to be installed
+                                   Depends: libkf6widgetsaddons-dev (= 6.30.0-0supralinux7) but it is not going to be installed
+                                   Depends: libkf6widgetsaddons6 (= 6.30.0-0supralinux7) but it is not going to be installed
+                                   Depends: python3-kwidgetsaddons (= 6.30.0-0supralinux7) but it is not going to be installed
+                                   Depends: libkf6windowsystem-data (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6windowsystem-dev (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6windowsystem6 (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: qml6-module-org-kde-kwindowsystem (= 6.30.0-0supralinux4) but it is not going to be installed
+                                   Depends: libkf6solid-bin (= 6.30.0-0supralinux2) but it is not going to be installed
+                                   Depends: libkf6solid-data (= 6.30.0-0supralinux2) but it is not going to be installed
+                                   Depends: libkf6solid-dev (= 6.30.0-0supralinux2) but it is not going to be installed
+                                   Depends: libkf6solid6 (= 6.30.0-0supralinux2) but it is not going to be installed
+E: Unable to satisfy dependencies. Reached two conflicting assignments:
+   1. libkf6iconthemes6:amd64=6.30.0-0supralinux3 is selected for install because:
+      1. sbuild-build-depends-main-dummy:amd64=0.invalid.0 is selected for install
+      2. sbuild-build-depends-main-dummy:amd64 Depends libkf6iconthemes6 (= 6.30.0-0supralinux3)
+   2. libkf6iconthemes6:amd64=6.30.0-0supralinux3 Depends libkf6breezeicons6 (>= 4:6.30.0~)
+      but none of the choices are installable:
+      [no choices]
+apt-get failed.
+E: Package installation failed
+Not removing build depends: cloned chroot in use
+
+Setup apt archive
+-----------------
+
+Merged Build-Depends: dose-distcheck
+Filtered Build-Depends: dose-distcheck
+dpkg-deb: building package 'sbuild-build-depends-dose3-dummy' in '/build/reproducible-path/resolver-KlNgXj/apt_archive/sbuild-build-depends-dose3-dummy.deb'.
+Ign:1 copy:/build/reproducible-path/resolver-KlNgXj/apt_archive ./ InRelease
+Get:2 copy:/build/reproducible-path/resolver-KlNgXj/apt_archive ./ Release [615 B]
+Ign:3 copy:/build/reproducible-path/resolver-KlNgXj/apt_archive ./ Release.gpg
+Get:4 copy:/build/reproducible-path/resolver-KlNgXj/apt_archive ./ Sources [5529 B]
+Get:5 copy:/build/reproducible-path/resolver-KlNgXj/apt_archive ./ Packages [5602 B]
+Fetched 11.7 kB in 0s (0 B/s)
+Reading package lists...
+Ign:1 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ InRelease
+Get:2 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ Release [609 B]
+Get:2 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ Release [609 B]
+Ign:3 file:/build/reproducible-path/resolver-SfWw6n/apt_archive ./ Release.gpg
+Reading package lists...
+Reading package lists...
+
+Install dose3 build dependencies (apt-based resolver)
+-----------------------------------------------------
+
+Installing build dependencies
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Solving dependencies...
+The following additional packages will be installed:
+  dose-distcheck
+The following NEW packages will be installed:
+  dose-distcheck sbuild-build-depends-dose3-dummy
+0 upgraded, 2 newly installed, 0 to remove and 0 not upgraded.
+Need to get 1406 kB of archives.
+After this operation, 5131 kB of additional disk space will be used.
+Get:1 copy:/build/reproducible-path/resolver-KlNgXj/apt_archive ./ sbuild-build-depends-dose3-dummy 0.invalid.0 [632 B]
+Get:2 https://archive.ubuntu.com/ubuntu resolute/universe amd64 dose-distcheck amd64 7.0.0-7build1 [1406 kB]
+Fetched 1406 kB in 2s (608 kB/s)
+Selecting previously unselected package dose-distcheck.
+(Reading database ... 13100 files and directories currently installed.)
+Preparing to unpack .../dose-distcheck_7.0.0-7build1_amd64.deb ...
+Unpacking dose-distcheck (7.0.0-7build1) ...
+Selecting previously unselected package sbuild-build-depends-dose3-dummy.
+Preparing to unpack .../sbuild-build-depends-dose3-dummy_0.invalid.0_amd64.deb ...
+Unpacking sbuild-build-depends-dose3-dummy (0.invalid.0) ...
+Setting up dose-distcheck (7.0.0-7build1) ...
+Setting up sbuild-build-depends-dose3-dummy (0.invalid.0) ...
+(I)Doseparse: Parsing and normalizing...
+(I)Dose_deb: Parsing Packages file -...
+(I)Dose_common: total packages 78176
+(I)Dose_applications: Cudf Universe: 78176 packages
+(I)Dose_applications: --checkonly specified, consider all packages as background packages
+(I)Dose_applications: Solving...
+output-version: 1.2
+native-architecture: amd64
+report:
+ -
+  package: sbuild-build-depends-main-dummy
+  version: 0.invalid.0
+  architecture: amd64
+  status: broken
+  reasons:
+   -
+    missing:
+     pkg:
+      package: libkf6iconthemes6
+      version: 6.30.0-0supralinux3
+      architecture: amd64
+      unsat-dependency: libkf6breezeicons6:amd64 (>= 4:6.30.0~)
+     depchains:
+      -
+       depchain:
+        -
+         package: sbuild-build-depends-main-dummy
+         version: 0.invalid.0
+         architecture: amd64
+         depends: libkf6iconthemes6:amd64 (= 6.30.0-0supralinux3)
+ 
+background-packages: 78175
+foreground-packages: 1
+total-packages: 78176
+broken-packages: 1
+
++------------------------------------------------------------------------------+
+| Cleanup                                      Thu, 08 Oct 2026 22:57:35 +0000 |
++------------------------------------------------------------------------------+
+
+Purging /build/reproducible-path
+Not cleaning session: cloned chroot in use
+E: Package build dependencies not satisfied; skipping
+
++------------------------------------------------------------------------------+
+| Summary                                      Thu, 08 Oct 2026 22:57:35 +0000 |
++------------------------------------------------------------------------------+
+
+Build Architecture: amd64
+Build Type: binary
+Build-Space: n/a
+Build-Time: 0
+Distribution: resolute
+Fail-Stage: install-deps
+Host Architecture: amd64
+Install-Time: 0
+Job: /opt/actions-runner/_work/SupraLINUX/SupraLINUX/.work/authoritative-plasma-package/cache-probe/supralinux-cache-probe_1.0.dsc
+Machine Architecture: amd64
+Package: supralinux-cache-probe
+Package-Time: 0
+Source-Version: 1.0
+Space: n/a
+Status: given-back
+Version: 1.0
+--------------------------------------------------------------------------------
+Finished at 2026-10-08T22:56:21Z
+Build needed 00:00:00, no disk space
+E: Package build dependencies not satisfied; skipping

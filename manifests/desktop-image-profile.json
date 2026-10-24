@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "name": "core-session-test-image",
+  "state": "planning-only",
+  "scope": "Wayland-only core Plasma session with XWayland application compatibility; no X11 session or retired X11-only KDE components. Scheduling analysis, not an installation seed.",
+  "roots": [
+    "kwin",
+    "plasma-workspace",
+    "plasma-desktop",
+    "systemsettings",
+    "breeze",
+    "kscreenlocker",
+    "plasma-pa",
+    "plasma-nm",
+    "polkit-kde-agent-1",
+    "xdg-desktop-portal-kde",
+    "discover"
+  ],
+  "final_install_seed": false,
+  "image_build_authorized": false,
+  "additional_image_gates": [
+    "Close exact eligible desktop and application package dependencies",
+    "Functional KVM Wayland session and required platform integrations",
+    "Verify APT Depends/Recommends and installed package/file manifest excludes X11 sessions, kwin-x11 and kgamma while preserving XWayland applications",
+    "Freeze initial-image seed and explicitly declare remaining features/limitations",
+    "Generate local image with retained inputs and SHA256",
+    "Verify actual live boot, installation to disposable VM disks and first boot; remove VMs/overlays afterwards",
+    "Minimal Ubuntu image composition and exact APT seed",
+    "Signed APT repository/publisher and normal package resolution",
+    "Live image/installer generation",
+    "Btrfs/Snapper/APT recovery integration",
+    "BIOS/UEFI boot, disposable-disk install, first boot/update/recovery verification"
+  ],
+  "final_release_gates": [
+    "Ubuntu Qt and Ubuntu/third-party application compatibility certification",
+    "Complete desktop profile and hardware QA",
+    "Selected Gear applications and upstream inventory campaign",
+    "Authoritative clean-input rebuild/retention recovery",
+    "Explicit final merge/stable approval"
+  ],
+  "product_profile": "desktop-wayland"
+}

@@ -1,0 +1,2 @@
+# make sure to pull libkscreen-bin for libkscreen users
+libkf6screen8: symbols-declares-dependency-on-other-package libkscreen-bin * [symbols]

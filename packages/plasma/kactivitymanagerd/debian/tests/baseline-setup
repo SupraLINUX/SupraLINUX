@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+apt-get install -y --no-install-recommends kactivitymanagerd build-essential cmake libplasmaactivities-dev qt6-declarative-dev python3 dbus-daemon qt6-qpa-plugins qml6-module-qtcore plasma-activities-bin
+BASE=/var/tmp/supralinux-kactivitymanagerd-baseline
+mkdir -p "${BASE}/source"
+cp -a "${SCRIPT_DIR}/client/." "${BASE}/source/"
+cmake -S "${BASE}/source" -B "${BASE}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${BASE}/build" --parallel 2
+python3 "${BASE}/source/run-session.py" "${BASE}/build/ubuntu-kactivitymanagerd-client" "${BASE}/ubuntu-results"
+dpkg-query -W -f='${Version}' kactivitymanagerd > "${BASE}/ubuntu-version"
+dpkg-query -W -f='${Version}' libqt6core6t64 > "${BASE}/ubuntu-qt-core-version"
+dpkg-query -W -f='${Version}' libplasmaactivities7 > "${BASE}/ubuntu-activities-version"
+sha256sum "${BASE}/build/ubuntu-kactivitymanagerd-client" > "${BASE}/ubuntu-client.sha256"

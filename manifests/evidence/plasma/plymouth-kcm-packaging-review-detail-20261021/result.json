@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "plymouth-kcm-packaging-review-detail",
+  "source_commit": "5e68e3de64dc667a9829777a08f9a9f9cd5116e5",
+  "node": "plymouth-kcm",
+  "ubuntu_source_version": "6.6.4-0ubuntu1",
+  "candidate_version": "6.7.5-0supralinux1",
+  "ubuntu_debian_tree_sha256": "5eefac021e21e7d2e4ee45a08dbe3a7cb4b9a8169e3cc73e0dbcb089d38ceb37",
+  "upstream_sha256": "ce723d67e6b8cd71b6eb353e87c10f698a095ea7d455bee703d8ba59e793e57e",
+  "signature_sha256": "60ef1e6ebd75b3d156b2e3687a1e15d05b427085ba24ee3f327960739a2a507d",
+  "signature_verification": "PASS",
+  "ubuntu_binary_path_count": 63,
+  "ubuntu_binary_paths_sha256": "4d46da9985acbf56f27641ff7efdee8b141b120a244a9ec8d407fdeeb3efee83",
+  "ubuntu_binary_control_sha256": "ca7adb21bcd00c17b8ec6e24f66e0c3d8456fbede9bd5bfc0936b49dbfbc1000",
+  "upstream_files_sha256": "6ff6c4ab7eaadd3a816a13de41f8b9f14d72f796db666fe472025a511157f006",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none"
+}

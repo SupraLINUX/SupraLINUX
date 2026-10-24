@@ -1,0 +1,6 @@
+Tests: ubuntu-abi-client
+Depends: @, python3, binutils, apt
+Restrictions: needs-root
+
+Tests: consumer
+Depends: @, cmake, g++, qt6-base-dev

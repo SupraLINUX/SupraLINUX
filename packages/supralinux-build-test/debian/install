@@ -1,0 +1,2 @@
+src/supralinux-build-test usr/bin
+data/build-proof.txt usr/share/supralinux

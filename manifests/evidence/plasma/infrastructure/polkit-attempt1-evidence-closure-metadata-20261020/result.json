@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "kind": "host-evidence-closure-package-pass-metadata-wiring",
+  "source_commit": "3579baec5c7173cf953f747cb32b3bd7df07f97b",
+  "control": {
+    "router_run_id": 39418099298,
+    "host_job_id": 118612018507,
+    "artifact_id": 12263020329,
+    "artifact_digest": "sha256:290200a5ba34d5941d2d1bb14d3d54b085e9bfccda4c0ab849bf29a99fc4e2f2",
+    "mode": "close-evidence",
+    "exit_code": 1
+  },
+  "preserved_package_pass": {
+    "node": "polkit-kde-agent-1",
+    "version": "4:6.7.5-0supralinux1",
+    "source_commit": "a8bfddd4a39c719016476a0e7425aaf461d9d9c5",
+    "workflow_run_id": 39416478708,
+    "workflow_job_id": 118606632416,
+    "artifact_id": 12261299420,
+    "artifact_sha256": "b3403e7a820ae901faeedecc46b9cd8fdc555e104537e010be0a40bdca7d3422",
+    "host_evidence_manifest_sha256": "15ee76f5930a2d82665898a11750206c1145c179902580d76d687ac2034ab242",
+    "package_attempt_consumed": true,
+    "package_result": "PASS"
+  },
+  "observations": {
+    "canonical_update_created": false,
+    "new_package_execution_started": false,
+    "closure_package_attempt_effect": "none",
+    "build_contract_campaign_manifest_sha256": "e32db5d0bd2dc608c78662c10814297869eeecb8cb1c1ad4a741e0ff644ed780"
+  },
+  "cause": "The new host evidence-closure helper invoked scripts/close-plasma-package-evidence.py without --workflow-job-meta. Current frozen package contracts include campaign_manifest_sha256, so the existing closure validator requires the original workflow job metadata and exited before canonical evidence retention. The original authoritative PolicyKit Attempt 1 PASS remains intact.",
+  "repair": "Pass the already-downloaded original workflow job JSON through --workflow-job-meta for package-attempt PASS closure, and surface captured child stdout/stderr in the host closure log. Enforce both behaviors in the cheap authoritative host-control contract before retrying only the evidence-closure step."
+}

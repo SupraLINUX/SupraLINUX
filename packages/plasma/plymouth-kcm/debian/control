@@ -1,0 +1,45 @@
+Source: plymouth-kcm
+Section: kde
+Priority: optional
+Maintainer: SupraLINUX Developers <dev@supralinux.org>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Uploaders: Aurélien COUDERC <coucouf@debian.org>,
+           Patrick Franz <deltaone@debian.org>,
+           Scarlett Moore <sgmoore@kde.org>,
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               dh-sequence-kf6,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               gettext,
+               libkf6archive-dev (= 6.30.0-0supralinux4),
+               libkf6auth-dev (= 6.30.0-0supralinux3),
+               libkf6config-dev (= 6.30.0-0supralinux5),
+               libkf6i18n-dev (= 6.30.0-0supralinux1),
+               libkf6kcmutils-dev (= 6.30.0-0supralinux3),
+               libkf6kio-dev (= 6.30.0-0supralinux10),
+               libkf6newstuff-dev (= 6.30.0-0supralinux1),
+               libplymouth-dev,
+               pkgconf,
+               qt6-base-dev (>= 6.10.0~),
+               qt6-declarative-dev (>= 6.10.0~),
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/plymouth-kcm
+Vcs-Git: https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/plymouth-kcm
+Vcs-Browser: https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/plymouth-kcm
+Rules-Requires-Root: no
+
+Package: kde-config-plymouth
+Architecture: any
+Depends: qml6-module-org-kde-kcmutils,
+         qml6-module-org-kde-kirigami,
+         qml6-module-org-kde-newstuff,
+         qml6-module-qtquick,
+         qml6-module-qtquick-controls,
+         qml6-module-qtquick-layouts,
+         qml6-module-qtquick-window,
+         systemsettings,
+         ${misc:Depends},
+         ${shlibs:Depends},
+Enhances: plymouth,
+Description: KCM for Plymouth
+ KDE systemsettings module to manage plymouth theming.

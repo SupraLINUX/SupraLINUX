@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Authenticated original Ubuntu library exports, exact consumer-name intersection, installed interface header comparison and read-only KWin help with owned cleanup; static/CLI preparation only, no transition certification",
+  "archive_path": ".artifacts/plasma-frontier/kglobalacceld-original-consumer-followup-20261009/inputs.zip",
+  "archive_sha256": "ee9565ef5ef701f4db0c97138c2fc072c26e7af8efed8eb3601942700035de6b",
+  "files": {
+    ".work/dependent-plasma-review/kglobalacceld/original-library-export-membership-20261009/extracted/usr/lib/x86_64-linux-gnu/libKGlobalAccelD.so.6.6.5": {
+      "sha256": "f71d93c392423651f9f7730c3558c3386b94b7ac5f4552b957e1ea53d8fc2dde",
+      "size": 291488
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-library-export-membership-20261009/extracted/usr/lib/x86_64-linux-gnu/qt6/plugins/org.kde.kglobalacceld.platforms/KGlobalAccelDXcb.so": {
+      "sha256": "e39edf3194dbf7635e01cb366d196de345e58036ba84108bc56c1b0b6978f846",
+      "size": 39536
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-library-export-membership-20261009/extracted/usr/share/doc/libkglobalacceld0/changelog.Debian.gz": {
+      "sha256": "7c800e7ed22b3c82c440182da4a34fb8d32fecf1b857e28f97ae6b09bd59a05e",
+      "size": 476
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-library-export-membership-20261009/extracted/usr/share/doc/libkglobalacceld0/copyright": {
+      "sha256": "3bd5ff0dbac777230ed1ec2a6b0641faed0dadaa5cba5b6abbf7e5fcdbdbd291",
+      "size": 4242
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-library-export-membership-20261009/libkglobalacceld0_6.6.5-0ubuntu0.1_amd64.deb": {
+      "sha256": "0ccdd572690d3f7257f1dec7f094fa94323c54aa16b43296e3975e9836220fd1",
+      "size": 105892
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-library-export-membership-20261009/original-library-dynsyms.txt": {
+      "sha256": "d7d870e6c72d41ca5a7e83dfc4d606fc6e737d36953343b0bbd7de27498cafc7",
+      "size": 55713
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-library-export-membership-20261009/review.json": {
+      "sha256": "92e44640387541539f5689e83e9d44955d4fd97aedb01afe9011888c25d238eb",
+      "size": 4421
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-interface-compatibility-followup-20261009.json": {
+      "sha256": "089761bf1e4e9e8ea530c1e2ab574872055b38cd2920dbcad664320791cdf13f",
+      "size": 1123
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-kwin-owned-help-review-20261009.json": {
+      "sha256": "c48259ba1c4f7f6ef6d13fca2c52036c02966ff7d3033b3f6b4cbb13f204d959",
+      "size": 902
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-kwin-owned-help-20261009.stdout": {
+      "sha256": "fa4ba234346a5ca4192d5fc757edce386169ac428bc0b3ae4c1764524ccce344",
+      "size": 5090
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-kwin-owned-help-20261009.stderr": {
+      "sha256": "c61e96a9178ab73232e305dd710a4640e3b6782d3bdc2b38f9b145713b8690a9",
+      "size": 334
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-kwin-owned-help-20261009/bus-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-kwin-owned-help-20261009/client-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-kwin-owned-help-20261009/client-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-kwin-owned-help-20261009/daemon-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-kwin-owned-help-20261009/daemon-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/kglobalacceld/original-kwin-owned-help-20261009/xvfb-stderr": {
+      "sha256": "09af44186174436345e3e1e8877555c5d6aaa892a7414425cd9c2d8bfea148e7",
+      "size": 132
+    },
+    ".work/kglobalacceld-gui-private-target-review/original-sdk/usr/include/KGlobalAccelD/kglobalaccel_interface.h": {
+      "sha256": "9a7b85c053186ad58fafae75e4bcab80f1053f82859b9aad5e75541bc87e494a",
+      "size": 2538
+    },
+    ".work/dependent-plasma-review/kglobalacceld/source/kglobalacceld-6.7.5/src/kglobalaccel_interface.h": {
+      "sha256": "9a7b85c053186ad58fafae75e4bcab80f1053f82859b9aad5e75541bc87e494a",
+      "size": 2538
+    },
+    ".artifacts/plasma-frontier/kglobalacceld-original-ubuntu-consumer-elf-20261009/index.json": {
+      "sha256": "62236521a0e95055aee230cb2e61ec0c01852fb9934ba4f8aed722a28b3be56a",
+      "size": 8614
+    }
+  },
+  "empty_offline_byte_restore_verified": true,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

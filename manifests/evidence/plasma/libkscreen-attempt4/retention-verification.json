@@ -1,0 +1,40 @@
+{
+  "state": "PASS",
+  "scope": "new package PASS raw evidence and independent cleanup retention",
+  "source_commit": "c4691bb3fc2661d8388ce3a8f8d3ec8814b3ef68",
+  "node": "libkscreen",
+  "version": "4:6.7.5-0supralinux4",
+  "artifact_sha256": "5ed2be587ce2f8ddbff922c7f11f59789f949c44bb913921b2d2b7e8282926a9",
+  "raw_original_logs_retained": [
+    "autopkgtest/consumer-stdout",
+    "autopkgtest/log",
+    "autopkgtest/ubuntu-abi-client-stdout",
+    "lintian.log",
+    "sbuild.log",
+    "ubuntu-baseline-preflight/autopkgtest/log"
+  ],
+  "original_result_unchanged": true,
+  "direct_cleanup_verified": true,
+  "offline_restore_verified_by_package_closure": true,
+  "archive_index_sha256": "ca51e4a04fa6acac4052ca439a7182733f122fc8793d04ed173601ea4888f637",
+  "files_sha256": {
+    "autopkgtest/consumer-stdout": "8b06a62a11186965dedee2b4db385f2321227a2dd4f6f5c26cf30b17af6253d1",
+    "autopkgtest/log": "37fb1114de3b359868dad141406f5077b6eef7018dc44a78ed4e39ac7ed06908",
+    "autopkgtest/ubuntu-abi-client-stdout": "f1003e0a845e736ff6ce272fe2aeff049d819c54264c6f964d3b809f632d04a0",
+    "build-contract.json": "05cf0c92a9cd4d1d88410c09c6143b48e0b04b4b8ab3dffb6ada2cfc8e5237ad",
+    "cache-probe-result.json": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+    "cleanup.json": "01a7d98aa2b36249c28f771470342c9a8e647f0c184ae19ce574575171f0a57b",
+    "host-evidence-sha256.txt": "276ae609ba5bcfdc9bf16df0077c369d8425fbd94dd92a161fabbf5b6eebbbc9",
+    "host-result.json": "d2f8dfbed637342939393d8af88b27d718ffaaf288016a3e1095b145025d0fca",
+    "host-workflow-run.json": "33e547305cf117d53c564ac1171fbe03d28478eab71b65787fade2e802c62935",
+    "lintian.log": "da2674ab984497bf33cf4a2cda5b253c551dedf8036fa54045ac9051dee23d3c",
+    "result.json": "3d3b36d8a40e669d4d21d6330411593228fcc3a935c61bbd28ea4803b7dcf48b",
+    "rootfs-admission.json": "90281a2d0895ab58499c313cdfed11dc5985a54032c38f743eb327f6c11d4f04",
+    "sbuild.log": "3c363d8ef8573b6d0c1957a9b6b66fa4e87514f09fc0946fa2dfa78b4521cf6a",
+    "summary": "73c01090c6d24bc509023831429c4e223f6135f36e30b3f45e770f7d52ccf05d",
+    "ubuntu-baseline-preflight/autopkgtest/log": "91667ebfdb4212ea7b164577507201f5de7dfa2f18264d700ebe331e945deed6",
+    "ubuntu-baseline-preflight.json": "a99b3d882b36f35860c20d8e88b29e59f7f5c6a9ab211611c976a71aa09f373a",
+    "upstream-tests.json": "4bd42720088ef5e4762476e0ffabc79a3577733b36a31852153b3100791435c3",
+    "workflow-job.json": "7725014b1d444bb0877dacb34d7a0affcb68be2e483655009d6704134e6e14f7"
+  }
+}

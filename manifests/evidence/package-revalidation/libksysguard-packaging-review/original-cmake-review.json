@@ -1,0 +1,76 @@
+{
+  "state": "PASS",
+  "scope": "actual original Ubuntu complete public client CMake and compile; local missing SDK link negative control, not candidate or KVM certification",
+  "authenticated_sdk_packages": [
+    {
+      "package": "libsensors-dev",
+      "version": "1:3.6.2-2build1",
+      "architecture": "amd64",
+      "source": "lm-sensors",
+      "sha256": "a4b63e770a13b083eeef69b496e21fafb6be3bed22007c475d7c3495b02dfd41"
+    },
+    {
+      "package": "libkf6config-dev-bin",
+      "version": "6.24.0-0ubuntu1",
+      "architecture": "amd64",
+      "source": "kf6-kconfig",
+      "sha256": "2c1dd2a423bc7b6ef28814c29384e96045dd6b242577afc2362f5d95e8ae8e00"
+    },
+    {
+      "package": "libkf6i18n-dev",
+      "version": "6.24.0-0ubuntu1",
+      "architecture": "amd64",
+      "source": "kf6-ki18n",
+      "sha256": "a61cdb730376d1e2c984f38adabe7d85969415f6fc7f2c829638305d145018ae"
+    },
+    {
+      "package": "libkf6config-dev",
+      "version": "6.24.0-0ubuntu1",
+      "architecture": "amd64",
+      "source": "kf6-kconfig",
+      "sha256": "4371d2cdd08cef200735e7952d37ad59c816fa5e80ce602930c790149a06ec57"
+    },
+    {
+      "package": "libksysguard-dev",
+      "version": "4:6.6.5-0ubuntu0.1",
+      "architecture": "amd64",
+      "source": "libksysguard",
+      "sha256": "e56fbc55e6c2582b2f7ada092d9adb4e3d9668227c57baeffed99e6c3a8cb630"
+    }
+  ],
+  "actual_runtime_libraries": {
+    "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/sdk/usr/lib/libexec/kf6/kconfig_compiler_kf6": "43600fe913f36557411427a31dff1bb24e6e996be5576ef4d8fc53adfa836569",
+    "/usr/lib/x86_64-linux-gnu/libexec/kf6/kconf_update": "a719b1dd10edff5f746ae9dcb16883358b24cf2430934f29cafa1faac387a33e",
+    "/usr/lib/x86_64-linux-gnu/libKF6ConfigCore.so.6.24.0": "4cdf5af110bc288e704b0f0823ac44266477bf66f6cb78554db00143d6750822",
+    "/usr/lib/x86_64-linux-gnu/libKF6ConfigGui.so.6.24.0": "0ff59cc662fbd656dd9fdb049056460acdbe83745815ff939bad7ed9767b8aa1",
+    "/usr/lib/x86_64-linux-gnu/libKF6ConfigQml.so.6.24.0": "b82db0e22a847dd10b2bebea2142dbc6dbc4a4ac33300086c89b7d9506712088",
+    "/usr/lib/x86_64-linux-gnu/libKF6I18n.so.6.24.0": "aa4067b19a8ba8f638f51beb64d9a4d96743210b6a9c5841045ff101353f2262",
+    "/usr/lib/x86_64-linux-gnu/libKF6I18nLocaleData.so.6.24.0": "da81f514aaaa5c66948648d7ede4e15e86a12bf2f1089169c304fe7bb45dd652",
+    "/usr/lib/x86_64-linux-gnu/libKF6I18nQml.so.6.24.0": "ce585b4e6be5ee68565c79fe6a4d44222dd86d661782e7e582b53c5452f26040",
+    "/usr/lib/x86_64-linux-gnu/libKSysGuardFormatter.so.6.6.5": "b22b32044dd816044c08d557c86a2e58137acbb92ffd7b296abd30173ac7ae18",
+    "/usr/lib/x86_64-linux-gnu/libprocesscore.so.6.6.5": "0042bd1682f7d428f8dc29e9047e5eb5a66e58d5ed7c5a08dc6ed223b5f2da68",
+    "/usr/lib/x86_64-linux-gnu/libKSysGuardSensors.so.6.6.5": "fc915a9932bbc0c6875d1e296e7711b669899a1ca16653cf2318eba98309f5bb",
+    "/usr/lib/x86_64-linux-gnu/libKSysGuardSensorFaces.so.6.6.5": "bd8d071dd0842c97d4002b7b4d9e31d20c5e11ae37c3093f61a301e9d34c0fc7",
+    "/usr/lib/x86_64-linux-gnu/libKSysGuardSystemStats.so.6.6.5": "548a794223663902343a51070ee6863bcb31de3f6e8ac55e711c352265f1adfe"
+  },
+  "controls": {
+    "negative": {
+      "configure_exit": 0,
+      "build_exit": 2
+    },
+    "positive": {
+      "configure_exit": 0,
+      "build_exit": 0
+    }
+  },
+  "relocation": "Only original absolute libsensors.so link path points to the extracted exact Ubuntu development link; no replacement target or upstream patch. All client source and original exported CMake definitions preserved.",
+  "package_attempt_consumed": false,
+  "files_sha256": {
+    "negative-build.log": "00b7f646c2cfa591dd6705a484946fc35b71d8ccd37d58086c064d45cdc1a653",
+    "negative-configure.log": "c5921962c991ed40f466309f06439001b6ea2792932231d8f1a2922f881cf6a7",
+    "positive-build.log": "b9922d3862014a80c2fd9355594d649777db35e00ec9357e2bd548de44fbeed6",
+    "positive-configure.log": "ce5526763621b3be2da711080c9b714bca6bc81d33e522ca98e44a102d661ec2",
+    "resolute-signature.log": "5c009a515f3763d807cd3a18b8a4df85cf78db9664f858f145acfb306d95a6e6",
+    "resolute-updates-signature.log": "c8d16ff10e6c054b1fd154d48b877d4c83ae3c52a5779a7f95ed5756a15de5be"
+  }
+}

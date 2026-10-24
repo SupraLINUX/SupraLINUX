@@ -1,0 +1,25 @@
+Source: ocean-sound-theme
+Section: kde
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+XSBC-Original-Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               dh-sequence-kf6,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               qt6-base-dev (>= 6.10.0~),
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/ocean-sound-theme
+Vcs-Browser: https://github.com/SupraLINUX/SupraLINUX/tree/architecture/bootstrap-v1/packages/plasma/ocean-sound-theme
+Vcs-Git: https://github.com/SupraLINUX/SupraLINUX.git
+Rules-Requires-Root: no
+Testsuite: autopkgtest
+
+Package: ocean-sound-theme
+Architecture: all
+Depends: ${misc:Depends},
+Description: Ocean Sound Theme for the Plasma desktop
+ The Ocean Sound Theme for Plasma for the release of Plasma 6.
+ .
+ This package contains the sounds that are used in the sound theme.
+Multi-Arch: foreign

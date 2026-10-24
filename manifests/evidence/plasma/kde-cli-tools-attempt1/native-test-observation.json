@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "state": "FAIL",
+  "scope": "Actual authoritative KVM Attempt1 unchanged source CTest and QtTest results; no candidate installed test admission",
+  "compilation": "PASS; all build targets compiled before native test invocation",
+  "sbuild": "FAIL at dh_auto_test",
+  "ctest_entries": {
+    "appstreamtest": "Process PASS; payload NOT RUN (Not installed yet, skipping)",
+    "filetypestest": "FAIL",
+    "kcm_smoketest": "PASS"
+  },
+  "filetypestest": {
+    "passed": 8,
+    "failed": 2,
+    "skipped": 0,
+    "blacklisted": 0,
+    "failed_functions": [
+      "testMimeTypePatterns",
+      "testAddService"
+    ]
+  },
+  "appstream_payload_validation": "NOT RUN",
+  "lintian": "NOT RUN",
+  "installed_autopkgtest": "NOT RUN",
+  "infrastructure": {
+    "eligible_predecessor_clean_probe": "PASS",
+    "original_ubuntu_baseline": "PASS",
+    "build_started_validly": true
+  },
+  "parallelism_diagnosis": "CTest ran its entries sequentially; no parallelism repair has been demonstrated",
+  "sbuild_log_sha256": "2b4ebf6df8babeed5daa1ff3cbebae3112738df8dca3ac06889237b2e181dddc",
+  "original_result_sha256": "20c190b3b5a7157325a99efb4058de6d8369dff1c96b98a2d98b6711b9a88366",
+  "package_attempt_consumed": true,
+  "downstream_eligible": false
+}

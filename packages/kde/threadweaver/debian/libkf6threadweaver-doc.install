@@ -1,0 +1,3 @@
+# threadweaver 6.30 exposes QDoc through explicit ECMGenerateQDoc targets.
+# The default package-build profile does not build optional QDoc targets.
+# Keep libkf6threadweaver-doc as a Debian-contract compatibility package.

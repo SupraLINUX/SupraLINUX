@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+import subprocess
+from pathlib import Path
+
+candidate = "4:6.7.5-0supralinux1"
+baseline = Path("/var/tmp/supralinux-ubuntu-package-version").read_text().strip()
+installed = subprocess.check_output(["dpkg-query", "-W", "-f=${Version}", "oxygen-sounds"], text=True).strip()
+assert installed == candidate
+subprocess.run(["dpkg", "--compare-versions", candidate, "gt", baseline], check=True)
+subprocess.run(["apt-get", "check"], check=True)
+assert subprocess.check_output(["dpkg-query", "-W", "-f=${Multi-Arch}", "oxygen-sounds"], text=True).strip() == "foreign"
+subprocess.run([str(Path(__file__).with_name("sound-resources"))], check=True)
+print(f"Ubuntu {baseline} -> SupraLINUX {candidate}: PASS")

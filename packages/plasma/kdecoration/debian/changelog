@@ -1,0 +1,1188 @@
+kdecoration (4:6.7.5-0supralinux1) resolute; urgency=medium
+
+  * Package the signed stable KDE source with retained ECM and KI18n 6.30.0.
+  * Preserve epoch, binary identities, Multi-Arch and public/private SONAMEs.
+  * Enable all three upstream tests under Qt's offscreen platform.
+  * Test an Ubuntu-built binary client after the library upgrade.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 04 Oct 2026 20:00:00 -0300
+
+kdecoration (4:6.6.4-0ubuntu1) resolute; urgency=medium
+
+  * New upstream bugfix release (6.6.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 07 Apr 2026 13:05:35 +0100
+
+kdecoration (4:6.6.3-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.3)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 18 Mar 2026 14:41:03 +0000
+
+kdecoration (4:6.6.2-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 03 Mar 2026 12:21:19 +0000
+
+kdecoration (4:6.6.1-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.6.0)
+  * Update symbols.
+  * New upstream release (6.6.1)
+
+ -- Rik Mills <rikmills@kde.org>  Sat, 28 Feb 2026 22:12:50 +0000
+
+kdecoration (4:6.5.5-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 13 Jan 2026 14:54:19 +0000
+
+kdecoration (4:6.5.4-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 09 Dec 2025 11:16:47 +0000
+
+kdecoration (4:6.5.3-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.3)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 18 Nov 2025 12:06:27 +0000
+
+kdecoration (4:6.5.2-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 04 Nov 2025 17:11:08 +0000
+
+kdecoration (4:6.5.1-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.1)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 29 Oct 2025 05:45:21 +0000
+
+kdecoration (4:6.5.0-0ubuntu1) resolute; urgency=medium
+
+  * New upstream release (6.5.0)
+  * Update symbols.
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 20 Oct 2025 18:36:02 +0100
+
+kdecoration (4:6.4.5-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.4.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 09 Sep 2025 17:01:03 +0100
+
+kdecoration (4:6.4.4-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.4.4)
+  * Update symbols from build logs.
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 12 Aug 2025 17:27:42 +0100
+
+kdecoration (4:6.3.5-0ubuntu1) questing; urgency=medium
+
+  * New upstream release (6.3.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 06 May 2025 21:33:00 +0100
+
+kdecoration (4:6.3.4-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.4)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 02 Apr 2025 08:54:20 +0100
+
+kdecoration (4:6.3.3-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.3)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 11 Mar 2025 15:16:34 +0000
+
+kdecoration (4:6.3.2-1ubuntu1) plucky; urgency=medium
+
+  * Merge from Debian unstable. Remaining changes:
+    - Kubuntu Vcs and maintainer fields.
+    - Breaks/Replaces for version histrory in Ubuntu.
+    - Keep our symbols files.
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 10 Mar 2025 14:45:51 +0000
+
+kdecoration (4:6.3.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.3.1).
+  * Update build-deps and deps with the info from cmake.
+  * New upstream release (6.3.2).
+  * Adapt packaging to soname bump of libkdecorations3private2.
+  * Update symbols from build for 6.3.2.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 28 Feb 2025 01:08:24 +0100
+
+kdecoration (4:6.3.2-0ubuntu2) plucky; urgency=medium
+
+  * Follow upstream library SONAME bump.
+    libkdecorations3private1 -> libkdecorations3private2
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 25 Feb 2025 18:53:54 +0000
+
+kdecoration (4:6.3.2-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 25 Feb 2025 18:14:55 +0000
+
+kdecoration (4:6.3.1-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.1)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 18 Feb 2025 14:22:00 +0000
+
+kdecoration (4:6.3.0-2) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * Reintroduce Breaks/Replaces against libkdecorations2-5v5 as dropping
+    it is causing issues upgrading from older versions of kdecorations.
+    (Closes: #1098263)
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 19 Feb 2025 08:41:19 +0100
+
+kdecoration (4:6.3.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.3.0).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 10 Feb 2025 14:51:59 +0100
+
+kdecoration (4:6.3.0-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.3.0)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 11 Feb 2025 12:53:49 +0000
+
+kdecoration (4:6.2.91-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.91).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 23 Jan 2025 23:50:34 +0100
+
+kdecoration (4:6.2.91-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.91)
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 23 Jan 2025 13:40:34 +0000
+
+kdecoration (4:6.2.90-2) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * Update symbols from buildds for 4:6.2.90.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 21 Jan 2025 18:59:05 +0100
+
+kdecoration (4:6.2.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.90).
+  * Update build-deps and deps with the info from cmake.
+  * Adapt packaging to library soname changes to libkdecorations3 and
+    libkdecorations3private1.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 11 Jan 2025 23:06:01 +0100
+
+kdecoration (4:6.2.90-0ubuntu3) plucky; urgency=medium
+
+  * Restore Breaks/Replaces against libkdecorations2 libs now all of
+    Plasma Beta is migrated.
+
+ -- Rik Mills <rikmills@kde.org>  Sun, 12 Jan 2025 14:14:06 +0000
+
+kdecoration (4:6.2.90-0ubuntu2) plucky; urgency=medium
+
+  * Drop unneeded Breaks/Replaces.
+
+ -- Rik Mills <rikmills@kde.org>  Sat, 11 Jan 2025 23:21:05 +0000
+
+kdecoration (4:6.2.90-0ubuntu1) plucky; urgency=medium
+
+  [ Rik Mills ]
+  * New upstream release (6.2.90)
+  * Update symbols from build logs.
+
+  [ Simon Quigley ]
+  * Package renames for kdecoration2 -> kdecoration3:
+    - libkdecorations2-6 -> libkdecorations3-6
+    - libkdecorations2private11 -> libkdecorations3private1
+    - libkdecorations2-dev -> libkdecorations3-dev
+
+ -- Rik Mills <rikmills@kde.org>  Fri, 10 Jan 2025 03:40:20 +0000
+
+kdecoration (4:6.2.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.5).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 05 Jan 2025 10:56:21 +0100
+
+kdecoration (4:6.2.5-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.5)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 31 Dec 2024 18:59:40 +0000
+
+kdecoration (4:6.2.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 03 Dec 2024 16:21:25 +0100
+
+kdecoration (4:6.2.4-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.4)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 26 Nov 2024 12:12:39 +0000
+
+kdecoration (4:6.2.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.3).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 23 Nov 2024 21:57:23 +0100
+
+kdecoration (4:6.2.3-0ubuntu1) plucky; urgency=medium
+
+  * New upstream release (6.2.0)
+  * Update symbols from build logs.
+  * New upstream release (6.2.1)
+  * New upstream release (6.2.2)
+  * New upstream release (6.2.3)
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 07 Nov 2024 19:55:55 +0000
+
+kdecoration (4:6.2.1-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.2.1).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 15 Oct 2024 17:43:43 +0200
+
+kdecoration (4:6.2.0-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.90).
+  * Update build-deps and deps with the info from cmake.
+  * Update symbols from build for 6.1.90.
+  * New upstream release (6.2.0).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 05 Oct 2024 23:17:39 +0200
+
+kdecoration (4:6.1.5-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 11 Sep 2024 23:27:31 +0200
+
+kdecoration (4:6.1.5-0ubuntu1) oracular; urgency=medium
+
+  * New upstream release (6.1.5)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 11 Sep 2024 05:58:17 +0100
+
+kdecoration (4:6.1.4-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 11 Aug 2024 23:58:16 +0200
+
+kdecoration (4:6.1.4-0ubuntu1) oracular; urgency=medium
+
+  * New upstream release (6.1.4)
+
+ -- Rik Mills <rikmills@kde.org>  Wed, 14 Aug 2024 21:41:30 +0100
+
+kdecoration (4:6.1.3-1ubuntu1) UNRELEASED; urgency=medium
+
+  * Kubuntu Vcs and maintainer.
+  * Mark 2 symbols as optional to fix FTBFS on launchpad buildds.
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 01 Aug 2024 12:15:36 +0100
+
+kdecoration (4:6.1.3-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (6.1.3).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 21 Jul 2024 23:46:08 +0200
+
+kdecoration (4:6.1.0-4) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * Add missing Breaks+Replaces for libkdecorations2-6 against
+    libkdecorations2-5v5 (Closes: #1074264).
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 25 Jun 2024 17:49:16 +0200
+
+kdecoration (4:6.1.0-3) experimental; urgency=medium
+
+  * Team upload.
+  * Update symbols files from the logs of buildds.
+
+ -- Pino Toscano <pino@debian.org>  Sat, 22 Jun 2024 07:04:02 +0200
+
+kdecoration (4:6.1.0-2) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * Recreate the symbol-files as they had the wrong version.
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 21 Jun 2024 19:05:50 +0200
+
+kdecoration (4:6.1.0-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (6.1.0).
+  * Update build-deps and deps with the info from cmake.
+  * New binary packages libkdecorations2-6 and
+    libkdecorations2private11.
+  * Update d/copyright.
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 18 Jun 2024 19:58:04 +0200
+
+kdecoration (4:5.27.11-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Bump Standards-Version to 4.7.0 (No changes needed).
+  * New upstream release (5.27.11).
+  * Remove inactive uploaders, thanks for your work.
+
+ -- Patrick Franz <deltaone@debian.org>  Sun, 19 May 2024 12:18:07 +0200
+
+kdecoration (4:5.27.11-0ubuntu2) noble; urgency=medium
+
+  * No-change rebuild for CVE-2024-3094
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Sun, 31 Mar 2024 07:41:09 +0000
+
+kdecoration (4:5.27.11-0ubuntu1) noble; urgency=medium
+
+  * New upstream release (5.27.11)
+
+ -- Scarlett Moore <sgmoore@debian.org>  Sun, 17 Mar 2024 07:21:00 +0000
+
+kdecoration (4:5.27.10-1ubuntu2) noble; urgency=medium
+
+  * No-change rebuild against libqt5core5t64
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 15 Mar 2024 04:50:13 +0000
+
+kdecoration (4:5.27.10-1ubuntu1) noble; urgency=medium
+
+  * Merge from Debian unstable. Remaining changes:
+    - Kubuntu Vcs and maintainer fields.
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 19 Dec 2023 12:56:25 +0000
+
+kdecoration (4:5.27.10-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream release (5.27.10).
+
+ -- Matthias Klumpp <mak@debian.org>  Mon, 18 Dec 2023 21:06:30 +0100
+
+kdecoration (4:5.27.10-0ubuntu1) noble; urgency=medium
+
+  * New upstream release (5.27.10)
+
+ -- José Manuel Santamaría Lema <panfaust@gmail.com>  Mon, 11 Dec 2023 11:20:54 +0000
+
+kdecoration (4:5.27.9-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.9).
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 27 Oct 2023 21:53:11 +0200
+
+kdecoration (4:5.27.9-0ubuntu1) noble; urgency=medium
+
+  * New upstream release (5.27.9)
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 26 Oct 2023 12:18:02 +0100
+
+kdecoration (4:5.27.8-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.8).
+
+ -- Patrick Franz <deltaone@debian.org>  Wed, 13 Sep 2023 20:48:15 +0200
+
+kdecoration (4:5.27.8-0ubuntu1) mantic; urgency=medium
+
+  * New upstream release (5.27.8)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 12 Sep 2023 12:29:51 +0100
+
+kdecoration (4:5.27.7-1ubuntu1) mantic; urgency=medium
+
+  * Merge from Debian unstable. Remaining changes:
+    - Kubuntu Vcs and maintainer fields.
+
+ -- Rik Mills <rikmills@kde.org>  Mon, 11 Sep 2023 14:21:34 +0100
+
+kdecoration (4:5.27.7-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.7).
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 03 Aug 2023 18:49:36 +0200
+
+kdecoration (4:5.27.7-0ubuntu1) mantic; urgency=medium
+
+  * New upstream release (5.27.7)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 01 Aug 2023 17:14:02 +0100
+
+kdecoration (4:5.27.6-0ubuntu1) mantic; urgency=medium
+
+  * New upstream release (5.27.6)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 20 Jun 2023 17:35:29 +0100
+
+kdecoration (4:5.27.5-2) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 27 May 2023 18:23:40 +0200
+
+kdecoration (4:5.27.5-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.5).
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 09 May 2023 23:25:55 +0200
+
+kdecoration (4:5.27.5-0ubuntu1) mantic; urgency=medium
+
+  * New upstream release (5.27.5)
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 11 May 2023 05:13:44 +0100
+
+kdecoration (4:5.27.4-0ubuntu1) lunar; urgency=medium
+
+  * New upstream release (5.27.4)
+
+ -- Rik Mills <rikmills@kde.org>  Thu, 06 Apr 2023 09:37:18 +0100
+
+kdecoration (4:5.27.3-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.27.3).
+
+ -- Patrick Franz <deltaone@debian.org>  Wed, 22 Mar 2023 23:14:56 +0100
+
+kdecoration (4:5.27.3-0ubuntu1) lunar; urgency=medium
+
+  * New upstream release (5.27.3)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 14 Mar 2023 15:17:45 +0000
+
+kdecoration (4:5.27.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.27.1).
+  * New upstream release (5.27.2).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 28 Feb 2023 14:58:57 +0100
+
+kdecoration (4:5.27.2-0ubuntu1) lunar; urgency=medium
+
+  * New upstream release (5.27.2)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 28 Feb 2023 16:22:33 +0000
+
+kdecoration (4:5.27.1-0ubuntu1) lunar; urgency=medium
+
+  * New upstream release (5.27.1)
+
+ -- Rik Mills <rikmills@kde.org>  Sat, 25 Feb 2023 18:46:16 +0000
+
+kdecoration (4:5.27.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * Fix Breaks against older version of kwin.
+  * New upstream release (5.27.0).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 18 Feb 2023 17:08:35 +0100
+
+kdecoration (4:5.27.0-0ubuntu1) lunar; urgency=medium
+
+  * New upstream release (5.27.0)
+
+ -- Rik Mills <rikmills@kde.org>  Tue, 14 Feb 2023 13:40:17 +0000
+
+kdecoration (4:5.26.90-2) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Mon, 23 Jan 2023 21:50:52 +0100
+
+kdecoration (4:5.26.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.90).
+  * Bump Standards-Version to 4.6.2, no change required.
+  * Bump soname of libkdecorations2private to 10.
+  * Update symbols from build for 5.26.90.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 22 Jan 2023 01:31:41 +0100
+
+kdecoration (4:5.26.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sat, 07 Jan 2023 00:20:10 +0100
+
+kdecoration (4:5.26.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 29 Nov 2022 15:58:56 +0100
+
+kdecoration (4:5.26.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.3).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 08 Nov 2022 15:41:58 +0100
+
+kdecoration (4:5.26.2-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.1).
+  * New upstream release (5.26.2).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 27 Oct 2022 23:25:09 +0200
+
+kdecoration (4:5.26.0-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.26.0).
+  * Release to unstable.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 11 Oct 2022 15:43:58 +0200
+
+kdecoration (4:5.25.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.90).
+  * Update build-deps and deps with the info from cmake.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 25 Sep 2022 00:14:19 +0200
+
+kdecoration (4:5.25.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 09 Sep 2022 23:20:26 +0200
+
+kdecoration (4:5.25.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 02 Aug 2022 17:30:20 +0200
+
+kdecoration (4:5.25.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.25.2).
+  * New upstream release (5.25.3).
+  * Release to unstable
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Sun, 17 Jul 2022 15:26:03 +0200
+
+kdecoration (4:5.25.1-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.25.1).
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 21 Jun 2022 21:45:24 +0200
+
+kdecoration (4:5.25.0-1) experimental; urgency=medium
+
+  * New upstream release (5.25.0).
+  * Bump Standards-Version to 4.6.1, no change required.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Tue, 14 Jun 2022 21:26:01 +0200
+
+kdecoration (4:5.24.90-1) experimental; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.90).
+  * Update symbols from build for 5.24.90.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Fri, 20 May 2022 11:25:14 +0200
+
+kdecoration (4:5.24.5-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.5).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 12 May 2022 21:38:58 +0200
+
+kdecoration (4:5.24.4-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.4).
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Wed, 30 Mar 2022 13:43:22 +0200
+
+kdecoration (4:5.24.3-1) unstable; urgency=medium
+
+  [ Aurélien COUDERC ]
+  * New upstream release (5.24.3).
+  * Added myself to the uploaders.
+
+ -- Aurélien COUDERC <coucouf@debian.org>  Thu, 10 Mar 2022 07:44:17 +0100
+
+kdecoration (4:5.24.2-2) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Remove autopkgtest.
+
+ -- Patrick Franz <deltaone@debian.org>  Sat, 26 Feb 2022 22:29:19 +0100
+
+kdecoration (4:5.24.2-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.24.2).
+  * Update B-Ds and deps with the info from cmake.
+  * Update symbols from buildlogs.
+  * Re-export signing key without extra signatures.
+  * Update d/copyright.
+
+ -- Patrick Franz <deltaone@debian.org>  Sat, 26 Feb 2022 21:58:17 +0100
+
+kdecoration (4:5.23.5-1) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.23.5).
+
+ -- Patrick Franz <deltaone@debian.org>  Fri, 07 Jan 2022 15:43:26 +0100
+
+kdecoration (4:5.23.4-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.4).
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 02 Dec 2021 20:24:08 +0100
+
+kdecoration (4:5.23.3-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.3).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 10 Nov 2021 08:37:32 +0900
+
+kdecoration (4:5.23.2-1) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.1).
+  * New upstream release (5.23.2).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 03 Nov 2021 22:21:02 +0900
+
+kdecoration (4:5.23.0-3) unstable; urgency=medium
+
+  [ Norbert Preining ]
+  * Tighten breaks against old versions (Closes: #996670).
+
+ -- Norbert Preining <norbert@preining.info>  Sun, 17 Oct 2021 16:07:35 +0900
+
+kdecoration (4:5.23.0-2) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Update upstream signing-key.
+  * Update symbols.
+  * Bump Standards-Version to 4.6.0 (no changes needed).
+
+ -- Patrick Franz <deltaone@debian.org>  Thu, 14 Oct 2021 20:38:18 +0200
+
+kdecoration (4:5.23.0-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.23.0).
+  * libkdecoration2private so bump 8->9.
+
+ -- Norbert Preining <norbert@preining.info>  Thu, 14 Oct 2021 20:13:14 +0900
+
+kdecoration (4:5.21.5-2) unstable; urgency=medium
+
+  [ Patrick Franz ]
+  * Release to unstable.
+
+ -- Patrick Franz <deltaone@debian.org>  Tue, 17 Aug 2021 03:23:18 +0200
+
+kdecoration (4:5.21.5-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.5).
+
+ -- Patrick Franz <patfra71@gmail.com>  Fri, 07 May 2021 13:54:05 +0200
+
+kdecoration (4:5.21.4-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.4).
+
+ -- Patrick Franz <patfra71@gmail.com>  Tue, 06 Apr 2021 17:46:27 +0200
+
+kdecoration (4:5.21.3-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.3).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 17 Mar 2021 05:49:40 +0900
+
+kdecoration (4:5.21.2-1) experimental; urgency=medium
+
+  [ Patrick Franz ]
+  * New upstream release (5.21.2).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 03 Mar 2021 05:33:49 +0900
+
+kdecoration (4:5.21.1-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.1).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 24 Feb 2021 14:36:38 +0900
+
+kdecoration (4:5.21.0-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.21.0).
+  * Update build-deps and deps with the info from cmake.
+  * Update library name: libkdecorations2private7 -> libkdecorations2private8
+  * Bump conflicts against old kwin.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 17 Feb 2021 05:42:26 +0900
+
+kdecoration (4:5.20.5-1) unstable; urgency=medium
+
+  * New upstream release (5.20.5).
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 06 Jan 2021 23:50:51 +0900
+
+kdecoration (4:5.20.4-2) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Norbert Preining <norbert@preining.info>  Tue, 22 Dec 2020 11:04:36 +0900
+
+kdecoration (4:5.20.4-1) experimental; urgency=medium
+
+  [ Norbert Preining ]
+  * New upstream release (5.20.4).
+
+  [ Pino Toscano ]
+  * Update lintian overrides.
+  * Bump Standards-Version to 4.5.1, no changes required.
+  * Tighten the inter-library dependencies.
+
+ -- Norbert Preining <norbert@preining.info>  Wed, 09 Dec 2020 14:17:31 +0900
+
+kdecoration (4:5.19.5-4) unstable; urgency=high
+
+  [ Norbert Preining ]
+  * Tighten breaks against kwin packages to ensure synced install
+    (Closes: #974019).
+
+ -- Norbert Preining <norbert@preining.info>  Tue, 10 Nov 2020 05:32:39 +0900
+
+kdecoration (4:5.19.5-3) unstable; urgency=medium
+
+  [ Scarlett Moore ]
+  * Remove obsolete entries from d/upstream/metadata as
+    they are already defined in d/copyright.
+  * Add Mutli-Arch support, Used same as suggested
+    by multiarch-hints.
+  * Bump -dev runtime dep on qtbase5-dev to match build
+    version.
+
+ -- Norbert Preining <norbert@preining.info>  Fri, 06 Nov 2020 08:37:22 +0900
+
+kdecoration (4:5.19.5-2) experimental; urgency=medium
+
+  * Rebuild for Qt 5.15
+
+ -- Norbert Preining <norbert@preining.info>  Mon, 02 Nov 2020 09:27:39 +0900
+
+kdecoration (4:5.19.5-1) experimental; urgency=medium
+
+  [ Scarlett Moore ]
+  * New upstream release (5.19.5).
+
+  [ Norbert Preining ]
+  * Add Patrick and myself to uploaders.
+
+ -- Norbert Preining <norbert@preining.info>  Mon, 19 Oct 2020 10:31:42 +0900
+
+kdecoration (4:5.19.4-1) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Scarlett Moore ]
+  * Bump compat level to 13.
+  * Add Rules-Requires-Root field to control.
+  * New upstream release (5.18.5).
+  * Update build-deps and deps with the info from cmake.
+  * So version bump to 7 for libkdecorations2private lib.
+    - Rename package to libkdecorations2private7.
+    - update install file.
+    - rename snd update symbols file.
+  * Add myself to Uploaders.
+  * Remove not needed injection of linker flags.
+  * Update Homepage link to point to new invent.kde.org
+  * Update field Source in debian/copyright to invent.kde.org move.
+  * Set/Update field Upstream-Contact in debian/copyright.
+  * Refresh symbol files.
+
+  [ Patrick Franz ]
+  * Add hardening=+all build flag.
+  * Update data in /debian/upstream/metadata.
+  * New upstream release (5.19.4).
+  * Bump Qt build-dependencies to 5.14.
+  * Add Lintian-override for spelling-error in libkdecorations2-5v5.
+  * Change Maintainer in debian/control to Debian Qt/KDE Maintainers.
+  * Remove Maxy from Uploaders as requested.
+  * Bump KF5 build-dependencies to 5.70.
+
+ -- Pino Toscano <pino@debian.org>  Sat, 29 Aug 2020 22:35:21 +0200
+
+kdecoration (4:5.17.5-2) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable.
+  * Bump Standards-Version to 4.5.0, no changes required.
+
+ -- Pino Toscano <pino@debian.org>  Fri, 14 Feb 2020 20:49:06 +0100
+
+kdecoration (4:5.17.5-1) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.16.5).
+  * Salsa CI automatic initialization by Tuco
+  * Update build-deps and deps with the info from cmake
+
+  [ Pino Toscano ]
+  * New upstream release.
+  * Update the build dependencies according to the upstream build system:
+    - bump KF packages to 5.62.0
+    - explicitly add gettext
+  * Bump the debhelper compatibility to 12:
+    - switch the debhelper build dependency to debhelper-compat 12
+    - remove debian/compat
+  * Drop old breaks/replaces.
+  * Drop the migration from libkdecorations2-dbg, no more needed after two
+    Debian stable releases.
+  * Drop the 'testsuite' autopkgtest, as it does not test the installed
+    packages.
+  * Add Build-Depends-Package in symbols files.
+  * Bump Standards-Version to 4.4.1, no changes required.
+  * Use https for Format in copyright.
+
+ -- Pino Toscano <pino@debian.org>  Sun, 12 Jan 2020 13:43:54 +0100
+
+kdecoration (4:5.14.5-1) unstable; urgency=medium
+
+  * New upstream release (5.14.5).
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 24 Jan 2019 09:25:45 -0300
+
+kdecoration (4:5.14.3-1) unstable; urgency=medium
+
+  * Update upsteam signing-key
+  * New upstream release (5.14.3).
+  * Update build-deps and deps with the info from cmake
+  * Update symbols files.
+  * Bump group breaks (4:5.14)
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 23 Nov 2018 08:50:30 -0300
+
+kdecoration (4:5.13.4-1) unstable; urgency=medium
+
+  * New upstream release (5.13.4).
+  * Update install files
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 19 Aug 2018 23:17:55 +0200
+
+kdecoration (4:5.13.1-1) unstable; urgency=medium
+
+  * New upstream release (5.12.2).
+  * New upstream release (5.13.1).
+  * Update build-deps and deps with the info from cmake
+  * Follow upstream soversion bump for the private lib
+  * Update symbols files
+  * testsuite: Update the test
+  * Bump group breaks (4:5.13)
+  * Release to unstable
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 26 Jun 2018 13:42:53 +0200
+
+kdecoration (4:5.12.1-1) sid; urgency=medium
+
+  * Use the salsa canonical urls
+  * New upstream release (5.12.1).
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 20 Feb 2018 22:08:43 +0100
+
+kdecoration (4:5.12.0-2) sid; urgency=medium
+
+  * New revision
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 12 Feb 2018 16:03:30 +0100
+
+kdecoration (4:5.12.0-1) experimental; urgency=medium
+
+  * Bump debhelper build-dep and compat to 11.
+  * Build without build_stamp
+  * Add link options as-needed
+  * Add Bhushan Shah upstream signing key
+  * New upstream release (5.12.0).
+  * Bump Standards-Version to 4.1.3.
+  * Bump group breaks (5.12)
+  * Use https uri for uscan
+  * Release to experimental
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 08 Feb 2018 15:20:33 +0100
+
+kdecoration (4:5.11.4-1) experimental; urgency=medium
+
+  * New upstream release (5.11.4).
+  * Bump Standards-Version to 4.1.2.
+  * Release to experimental
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 03 Jan 2018 16:48:49 -0300
+
+kdecoration (4:5.10.5-2) sid; urgency=medium
+
+  * New revision
+  * Bump Standards-Version to 4.1.0.
+  * Release to sid
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 03 Sep 2017 09:55:17 +0200
+
+kdecoration (4:5.10.5-1) experimental; urgency=medium
+
+  [ Maximiliano Curia ]
+  * New upstream release (5.10.3).
+  * Bump Standards-Version to 4.0.0.
+  * Update upstream metadata
+  * Bump group breaks (5.10)
+  * Update symbols files.
+  * New upstream release (5.10.4).
+  * Update build-deps and deps with the info from cmake
+  * New upstream release (5.10.5).
+  * Release to experimental
+
+  [ Jonathan Riddell ]
+  * update watch file to version=4 with pgp signature checking
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 28 Aug 2017 15:28:14 +0200
+
+kdecoration (4:5.8.5-1) experimental; urgency=medium
+
+  * New upstream release (5.8.5).
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 30 Dec 2016 18:46:14 +0100
+
+kdecoration (4:5.8.4-1) unstable; urgency=medium
+
+  * New upstream release (5.8.4)
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 23 Nov 2016 18:35:12 +0100
+
+kdecoration (4:5.8.2-1) unstable; urgency=medium
+
+  * New upstream release (5.8.2)
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 19 Oct 2016 15:20:20 +0200
+
+kdecoration (4:5.8.1-1) unstable; urgency=medium
+
+  * New upstream release (5.8.1)
+
+ -- Maximiliano Curia <maxy@debian.org>  Sun, 16 Oct 2016 22:57:33 +0200
+
+kdecoration (4:5.8.0-1) unstable; urgency=medium
+
+  * New upstream release (5.8.0)
+  * Replace dbus-launch with dbus-run-session in tests
+  * Bump group breaks (5.8)
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 07 Oct 2016 14:02:55 +0200
+
+kdecoration (4:5.7.4-1) unstable; urgency=medium
+
+  * New upstream release (5.7.4)
+  * Bump group breaks (5.7)
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 26 Aug 2016 14:47:43 +0200
+
+kdecoration (4:5.7.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 11 Jul 2016 19:35:31 +0200
+
+kdecoration (4:5.6.5-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 18 Jun 2016 08:13:06 +0200
+
+kdecoration (4:5.6.4-1) unstable; urgency=medium
+
+  * Release to unstable.
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 18 May 2016 21:14:06 +0200
+
+kdecoration (4:5.6.3-1) experimental; urgency=medium
+
+  [ Maximiliano Curia ]
+  * uscan no longer supports this kind of watch files.
+  * New upstream release (5.5.5).
+  * Automatic update with ddeb_migration3.py
+  * Add upstream metadata (DEP-12)
+  * debian/control: Update Vcs-Browser and Vcs-Git fields
+
+  [ Automatic packaging ]
+  * Bump Standards-Version to 3.9.8
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 05 May 2016 18:31:11 +0200
+
+kdecoration (4:5.5.4-1) experimental; urgency=medium
+
+  * New upstream release (5.5.0).
+  * New upstream release (5.5.1).
+  * New upstream release (5.5.2).
+  * New upstream release (5.5.3).
+  * New upstream release (5.5.4).
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 27 Jan 2016 16:49:19 +0100
+
+kdecoration (4:5.4.3-1) unstable; urgency=medium
+
+  * New upstream release (5.4.3).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 01 Dec 2015 11:46:12 +0100
+
+kdecoration (4:5.4.2-1) unstable; urgency=medium
+
+  * New upstream release (5.4.2).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 06 Oct 2015 07:52:29 +0200
+
+kdecoration (4:5.4.1-1) unstable; urgency=medium
+
+  * New upstream release (5.4.1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Fri, 11 Sep 2015 18:45:49 +0200
+
+kdecoration (4:5.4.0-1) unstable; urgency=medium
+
+  * New upstream release (5.3.95).
+  * New upstream release (5.4.0).
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 03 Sep 2015 13:51:41 +0200
+
+kdecoration (4:5.3.2-3) unstable; urgency=medium
+
+  * Rename library to it's v5 version.
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 20 Aug 2015 22:56:47 +0200
+
+kdecoration (4:5.3.2-2) unstable; urgency=medium
+
+  * Drop XS-Testsuite field
+
+ -- Maximiliano Curia <maxy@debian.org>  Thu, 13 Aug 2015 12:14:42 +0200
+
+kdecoration (4:5.3.2-1) unstable; urgency=medium
+
+  * New upstream release (5.3.2).
+
+ -- Maximiliano Curia <maxy@debian.org>  Tue, 30 Jun 2015 17:36:15 +0200
+
+kdecoration (4:5.3.1-1) unstable; urgency=medium
+
+  * New upstream release (5.3.0).
+  * Update symbols files.
+  * New upstream release (5.3.1).
+
+ -- Maximiliano Curia <maxy@debian.org>  Mon, 29 Jun 2015 22:59:11 +0200
+
+kdecoration (4:5.2.2-1) experimental; urgency=medium
+
+  * New upstream release (5.2.1).
+  * New upstream release (5.2.2).
+
+ -- Maximiliano Curia <maxy@debian.org>  Wed, 25 Mar 2015 23:18:04 +0100
+
+kdecoration (4:5.2.2-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Tue, 24 Mar 2015 07:12:56 -0700
+
+kdecoration (4:5.2.1-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Scarlett Clark <sgclark@kubuntu.org>  Mon, 23 Feb 2015 09:37:12 -0800
+
+kdecoration (4:5.2.0-1) experimental; urgency=medium
+
+  * Prepare initial Debian release.
+  * Update build dependencies to build against experimental and to
+    follow cmake.
+  * Update copyright information.
+  * Add myself as Uploader.
+  * Update install files.
+  * Add acc autopkgtests.
+  * Bump Standards-Version to 3.9.6, no changes needed.
+  * Add missing dev dependency (thanks to acc headers check)
+
+ -- Maximiliano Curia <maxy@debian.org>  Sat, 07 Feb 2015 15:42:34 +0100
+
+kdecoration (4:5.2.0-0ubuntu1) vivid; urgency=medium
+
+  * New upstream release
+
+ -- Harald Sitter <sitter@kde.org>  Tue, 27 Jan 2015 14:50:46 +0100
+
+kdecoration (4:5.1.95-0ubuntu1) vivid; urgency=medium
+
+  [ Sergey Popov ]
+  * Initial release.
+
+ -- Jonathan Riddell <jriddell@ubuntu.com>  Wed, 14 Jan 2015 13:25:43 +0100

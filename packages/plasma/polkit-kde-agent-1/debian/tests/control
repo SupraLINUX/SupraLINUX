@@ -1,0 +1,7 @@
+Tests: installed-payload
+Depends: @, python3, libc-bin, dpkg
+Restrictions: allow-stderr
+
+Tests: ubuntu-upgrade
+Depends: @, python3, dpkg, dpkg-dev, apt
+Restrictions: needs-root, allow-stderr

@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-20",
+  "scope": "kde-frameworks-tier1-6.30",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "strategy": "dag-global-discovery",
+  "canonical_tier1_manifest": "manifests/kde-frameworks-tier1.json",
+  "policy": {
+    "build_every_runnable_node_per_topological_level": true,
+    "parallelize_independent_nodes": true,
+    "fail_fast": false,
+    "continue_after_independent_failures": true,
+    "blocked_is_not_fail": true,
+    "only_pass_artifacts_feed_dependents": true,
+    "preserve_every_real_attempt": true,
+    "rerun_affected_nodes_after_remediation": true,
+    "repeat_full_campaign_after_remediation_set": true
+  },
+  "promoted_snapshot": {
+    "pass": 29,
+    "pending": 0,
+    "current_fail": 0,
+    "blocked": 0,
+    "note": "Promoted DAG state only. Historical failed package attempts and infrastructure incidents remain retained separately and do not become promoted FAIL after a later PASS."
+  },
+  "readiness_state_model": {
+    "runnable": "A real package attempt is technically valid with the current runner lane and retained predecessors.",
+    "lane-pending": "The node is topologically available but must not be attempted until a runner can validate its package surface without false CI failures.",
+    "dependency-blocked": "The node cannot yet be attempted because a required local predecessor has no retained PASS artifact.",
+    "note": "Readiness states are campaign-planning metadata. They are not DAG PASS/FAIL/BLOCKED results.",
+    "package-validation-dependent": "The node has no failed KDE build predecessor, but its full package/runtime validation requires a retained PASS artifact from another SupraLINUX package."
+  },
+  "lanes": {
+    "single-abi-python": {
+      "status": "completed",
+      "runner": "scripts/run-kde-tier1-package-batch7-preflight.sh",
+      "nodes": []
+    },
+    "multi-abi": {
+      "status": "completed",
+      "runner": "scripts/run-kde-tier1-package-batch9-preflight.sh",
+      "workflow": ".github/workflows/kde-tier1-package-batch9.yml",
+      "nodes": [],
+      "required_capability": "validate multiple runtime ABIs/symbol files and package splits in one source build"
+    },
+    "qml-multisurface": {
+      "status": "completed",
+      "nodes": [],
+      "required_capability": "validate QML-heavy packages, multiple libraries, QML imports and runtime closure",
+      "runner": "scripts/run-kde-tier1-package-batch10-preflight.sh",
+      "workflow": ".github/workflows/kde-tier1-package-batch10.yml"
+    },
+    "multi-surface-optional": {
+      "status": "completed",
+      "nodes": [],
+      "required_capability": "validate multiple libraries plus optional/provider-selected feature surfaces without silently disabling upstream defaults",
+      "runner": "scripts/run-kde-tier1-package-batch11-preflight.sh",
+      "workflow": ".github/workflows/kde-tier1-package-batch11.yml"
+    },
+    "local-predecessor": {
+      "status": "completed",
+      "nodes": [],
+      "required_capability": "consume the retained local KCoreAddons PASS -dev/runtime artifacts rather than Ubuntu KDE packages",
+      "runner": "scripts/run-kde-tier1-package-batch8-preflight.sh"
+    }
+  },
+  "nodes": {},
+  "next_actions": [
+    "Freeze the KDE Frameworks 6.30 Tier 1 baseline at 29/29 canonical PASS nodes.",
+    "Preserve retained package artifacts and historical FAIL/INFRA evidence.",
+    "Use only retained PASS artifacts as local predecessors for later dependency tiers.",
+    "Begin the next KDE dependency-tier discovery without changing the completed Tier 1 state."
+  ]
+}

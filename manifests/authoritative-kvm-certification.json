@@ -1,0 +1,679 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-01",
+  "authority": "supralinux",
+  "role": "live-authoritative-kvm-certification-state",
+  "hosted_frameworks_precondition": {
+    "status": "PASS",
+    "canonical_snapshot": "20 PASS / 0 pending / 0 current FAIL / 0 BLOCKED",
+    "manifest": "manifests/kde-frameworks-tier3.json",
+    "closure_commit": "600bbf1e824427dc8a30bc724b56a89284490aa6",
+    "repository_policy_run": 36656731103
+  },
+  "host_kvm_preflight": {
+    "status": "PASS",
+    "evidence": [
+      {
+        "kind": "host-local-file",
+        "host": "espadarunica",
+        "checked_at": "2026-09-30T14:55:37Z",
+        "pr_head_sha": "fe3fa1bc6b8cedf764e211928a4a1b34bbe0d822",
+        "golden_input_digest": "0fe642396e44b571b8d26521d02b4b079917277971f633b6232a8961f753f92c",
+        "path": "/var/lib/supralinux/evidence/authoritative-certification/host-preflight-fe3fa1bc6b8c/host-kvm-preflight.txt",
+        "sha256": "5128a6af307a690ae0768a1212f3d1f5d141e500bdb7cec9983a9d83337d10a8"
+      },
+      {
+        "kind": "host-local-recertification-bundle",
+        "host": "espadarunica",
+        "checked_at": "2026-09-30T16:08:22Z",
+        "pr_head_sha": "27731184d4e87ddc75577e1a8579878890dfb1ad",
+        "golden_input_digest": "8c719053230aed83b748b8407c0a24b1acfa15ad2fc36ca1d9751e6f9c5e6aa2",
+        "path": "/var/lib/supralinux/evidence/authoritative-certification/host-recertification-27731184d4e8-20260930T160816Z",
+        "result": "PASS",
+        "artifacts": {
+          "libguestfs-runtime-prepare.txt": "0feb1701e523c20630d6f42fec4c7d3d3ec1a82b9f1ab0d8c6c284ea7aef36e0",
+          "libguestfs-runtime-describe.txt": "f523f8d4af0aaa98a61b3451e81b0270d3532803b5880532239d2927fde79583",
+          "host-kvm-preflight.txt": "570fc8d269ef7ae43ff28b6f55b91d32a87f76ec468d92b4bb224fa0f781314e",
+          "golden-lifecycle-console.txt": "24ad0a0e0d42ccbfdf6ce6c210191c0df318f5c0480941610bb9c7a7c9aace0f",
+          "golden-lifecycle/result.txt": "2c6a464d8797c2c8f9bbcd26762484e1b6263178e63cfd798547341a14a474e7",
+          "golden-lifecycle/guest-marker.txt": "3f46ea84fd46dcf96234f2d9e71f878657aa4959c71a29d38c99f1a9a6e64abe",
+          "golden-lifecycle/libguestfs-test-tool.txt": "c61623f1ff74ed744a5a684c469ded837aa2deae632c62e175372e4d0876482a",
+          "golden-lifecycle/source-image-verification.txt": "1e7e7e34f8cc1547f6f3e4348f062bfa8baa47e190c4fb80a23b5b12dac7bc05",
+          "golden-lifecycle/virt-install.txt": "19d0f14f6e6a26ed36393adbac374d6d9c47a041038c2317157bc6c6b6e61aa9"
+        }
+      },
+      {
+        "kind": "host-local-recertification-bundle",
+        "host": "chmodmasx-h370mds3h",
+        "checked_at": "2026-10-01T01:06:33Z",
+        "pr_head_sha": "6159b39a9c15b9fc551b7a9d57022a86972c0ace",
+        "path": "/var/lib/supralinux/evidence/authoritative-certification/host-recertification-20261001T010539Z-6159b39a9c15",
+        "result": "PASS",
+        "source_image_sha256": "8800651811af9a85465ad1d552add729947bb16488dddb4a9b5305a3d97332b2",
+        "artifacts": {
+          "libguestfs-runtime-prepare.txt": "0feb1701e523c20630d6f42fec4c7d3d3ec1a82b9f1ab0d8c6c284ea7aef36e0",
+          "libguestfs-runtime-describe.txt": "5db0c7947abfb53e236634e530bd2587e63ef12cd972a2974c45d182a00448ff",
+          "host-kvm-preflight.txt": "475c7128cb081893e6687d612dcf6f719904e91fca30b099c9fd49d22a0216bc",
+          "source-image-fetch.txt": "fb04c2cf6334c85bd36761f9bdf6a51c5f1f27d71b0ffec960442b1392211484",
+          "source-image-verification.txt": "9f575d21c9bb05e8a9cbfda67fdda707dcab5e4465cec09298ce565453656ea0",
+          "libguestfs-test-tool.txt": "64b59d8a6cbae36486b05a1585eb8b93588ead0064147511f8e717a7eb05275a",
+          "golden-lifecycle-console.txt": "4eabf2da23f2bab6828fc2aa6d1ad0f15c45988a14c8f3a1a6d1c5db86a7796f",
+          "golden-lifecycle/20261001T010633Z-34731/result.txt": "9eade6622aae97425ef019bbc97e9c0765e7728367653ac1bdb95ccb91171144",
+          "golden-lifecycle/20261001T010633Z-34731/guest-marker.txt": "3f46ea84fd46dcf96234f2d9e71f878657aa4959c71a29d38c99f1a9a6e64abe",
+          "golden-lifecycle/20261001T010633Z-34731/libguestfs-test-tool.txt": "767a1c41dc619da7960c9ed0c3de3b270030e029732d1c829eefb4237ef11825",
+          "golden-lifecycle/20261001T010633Z-34731/source-image-verification.txt": "1e7e7e34f8cc1547f6f3e4348f062bfa8baa47e190c4fb80a23b5b12dac7bc05",
+          "golden-lifecycle/20261001T010633Z-34731/virt-install.txt": "2dbe76650c7f4facbb751879ec52c85f158e9c96eaadafaf27f2dcefa380ffa1",
+          "golden-lifecycle/20261001T010633Z-34731/domain-state.txt": "4ac2843107022561129b54a476ecd4001dec7a2f57e73177fdc9cadf28eb19e1",
+          "golden-lifecycle/20261001T010633Z-34731/libvirt-storage-access.txt": "2187afdaa681ee7521e3a2b8ee924642344c421d1e2c61733b8a2218ae433ae7"
+        }
+      }
+    ],
+    "recertification_reason": "authoritative-host-provider-migration-from-espadarunica-certified-on-replacement-provider",
+    "current_contract_requires": [
+      "kvm-host-preflight",
+      "private-libguestfs-runtime",
+      "golden-preparation-lifecycle-synthetic-preflight"
+    ],
+    "recertification_closed_at": "2026-10-01T01:06:33Z"
+  },
+  "golden_image": {
+    "status": "PASS",
+    "evidence": [
+      {
+        "kind": "host-local-golden-build",
+        "host": "chmodmasx-h370mds3h",
+        "checked_at": "2026-10-01T02:05:10Z",
+        "build_id": "20261001T012658Z-3d4ce1a31222-149797",
+        "path": "/var/lib/supralinux/evidence/golden-build/20261001T012658Z-3d4ce1a31222-149797",
+        "result": "PASS",
+        "build_exit_code": 0,
+        "source_image_sha256": "8800651811af9a85465ad1d552add729947bb16488dddb4a9b5305a3d97332b2",
+        "nested_autopkgtest_image_sha256": "e4fc9fc613bf662fd297ac05ebad8c01cbf77a3d761f9f67d2da36e74a27727e",
+        "admission": {
+          "path": "/var/lib/supralinux/evidence/golden-build/20261001T012658Z-3d4ce1a31222-149797/golden-provenance-admission.txt",
+          "sha256": "81a69dd0b5e935ba41e7c84bf8a5d960e2b6a50fd32a5e6ce2263ca9fc7e2651",
+          "golden_input_compatibility": "PASS",
+          "golden_provenance_verification": "PASS"
+        }
+      }
+    ],
+    "image_sha256": "a0b88447d9a9ecd9785087390cf499abaf9416291864fe1be4d63d9a334b2acd",
+    "source_commit": "3d4ce1a312220337934a51025c32c8429bf8fb3a",
+    "source_checkout_removed": true,
+    "input_fingerprint_schema": 1,
+    "input_digest": "2d5ec214607124d11c279b8d3f715808a065e88ad0fd6e57f40c89ca6b37110b"
+  },
+  "gates": [
+    {
+      "id": "runner-contract",
+      "workflow": ".github/workflows/runner-contract.yml",
+      "trigger_label": "ci:runner-contract",
+      "status": "PASS",
+      "execution_authorized": false,
+      "requires": [
+        "host-kvm-preflight",
+        "golden-image-admission"
+      ],
+      "evidence": [
+        {
+          "kind": "github-actions-run",
+          "workflow_run_id": 36814843490,
+          "workflow_name": "Authoritative runner contract",
+          "workflow_head_sha": "31b28aa91ec8430159ecaf249dee14121bdb4fde",
+          "job_id": 110217559631,
+          "conclusion": "success",
+          "artifact": {
+            "id": 11141310599,
+            "name": "authoritative-runner-contract-9af348d1086c32ef3cbbf34692db607fbf56a98c",
+            "digest": "sha256:1e227aa48517efb3f8c90075781213dd49b1dfbc7418af43a75dee868d6fbbb7",
+            "size_in_bytes": 2834,
+            "retention_days": 90
+          }
+        },
+        {
+          "kind": "host-local-runner-contract-bundle",
+          "host": "chmodmasx-h370mds3h",
+          "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-runner-contract-20261001t042143z-1121254",
+          "result": "PASS",
+          "finished_at": "2026-10-01T04:23:37Z",
+          "workflow_run_id": 36814843490,
+          "evidence_manifest_sha256": "89fa380bc9706e43e9544339cc4372651f3db6884b0de39e158c15119a7cba50",
+          "artifacts": {
+            "guest-copy-out.txt": "aa17deedcd84cd8403c73ec16a04e31c69d48f29d106ca9f90900fc671a10712",
+            "host-environment.txt": "046374a92791132eade0ee5fcb0e3fd6a159a08d05e70b82c678590a9f4fae9d",
+            "host-result.json": "bda4118f9a86f9ef27e3a9449d1ffe1e4968d41494f46dfc735bc48ddf2ae516",
+            "runner-busy.json": "cd4e7505bd74355b1f9dc18687c3b1e4e8af3f122d942693a349a5fae6737580",
+            "runner-online.json": "1286aa4d8d31d4630846a11b5ef6682dbdc13992980218fb326ae7096ccd3f1c",
+            "workflow-run-created.json": "5ae8119ccb8abdc6996ce74097a1a4ddac2c24acaacac4bc58419af382fc869f",
+            "workflow-run.json": "c1d698419955473d95d088b2133387187fa64192d123a61b46fd8395ca7db8a5"
+          }
+        }
+      ],
+      "closed_infrastructure_hold": {
+        "mechanism": "github-jit-runner-api",
+        "consecutive_infra_invalid": 2,
+        "reason": "repository-scoped JIT creation returned HTTP 404; organization-scoped synthetic creation then returned HTTP 502 after creating an offline runner, proving an ambiguous non-idempotent side effect",
+        "resume_requires": "scripts/check-jit-runner-api-lifecycle.sh:PASS",
+        "closed_by": "scripts/check-jit-runner-api-lifecycle.sh:PASS",
+        "recovery_evidence": {
+          "kind": "host-local-jit-api-preflight",
+          "host": "chmodmasx-h370mds3h",
+          "checked_at": "2026-10-01T03:07:05Z",
+          "path": "/var/lib/supralinux/evidence/jit-api-preflight/20261001T030705Z-706614",
+          "result": "PASS",
+          "repository": "SupraLINUX/SupraLINUX",
+          "runner_organization": "SupraLINUX",
+          "runner_group_id": 3,
+          "runner_group_name": "SupraLINUX Authoritative JIT",
+          "synthetic_runner_id": 154,
+          "http_status": 201,
+          "cleanup": "PASS",
+          "artifacts": {
+            "result.txt": "fa8afa3e4640097e34c36d350b4177de28f2dabe08fbd8ba40b31060ba464db8",
+            "transport.txt": "2b779bd5cf937111ea7e80c53b581735c452c411010c4143d44e71ba8183cf9c"
+          }
+        }
+      },
+      "closed_guest_startup_hold": {
+        "mechanism": "guest-actions-runner-startup",
+        "consecutive_infra_invalid": 3,
+        "reason": "guest Actions Runner startup failed before online state in the real runner-contract and two isolated startup validation runs; both validation failures were caused by non-root cleanup operations against root-owned /run",
+        "resume_requires": "scripts/check-jit-runner-startup-lifecycle.sh:PASS",
+        "incident_evidence": {
+          "kind": "host-local-runner-contract-infrastructure-incident",
+          "host": "chmodmasx-h370mds3h",
+          "finished_at": "2026-10-01T03:16:08Z",
+          "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-runner-contract-20261001t031511z-747622",
+          "runner_id": 155,
+          "guest_exec_pid": 1298,
+          "guest_exit_code": 1,
+          "workflow_run_id": "",
+          "package_attempt_consumed": false
+        },
+        "diagnosis": {
+          "cause": "the runner user may delete the secret file inside its own 0700 /run/supralinux-jit directory, but it cannot remove that directory because deleting it requires write permission on root-owned /run",
+          "remediation": "delete only /run/supralinux-jit/config as ubuntu before run.sh; leave the now-empty private directory in the disposable VM overlay for host cleanup"
+        },
+        "diagnostic_history": [
+          {
+            "kind": "runner-contract-infrastructure-incident",
+            "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-runner-contract-20261001t031511z-747622",
+            "finished_at": "2026-10-01T03:16:08Z",
+            "guest_exit_code": 1,
+            "observed_failure": "rm /run/supralinux-jit-config: Permission denied",
+            "workflow_created": false,
+            "package_attempt_consumed": false
+          },
+          {
+            "kind": "jit-startup-validation-run",
+            "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-jit-startup-preflight-20261001t033332z-850468",
+            "finished_at": "2026-10-01T03:34:33Z",
+            "guest_exit_code": 1,
+            "observed_failure": "rm /run/supralinux-jit-config: Permission denied",
+            "jit_config_expected_bytes": 4144,
+            "jit_config_written_bytes": 4144,
+            "jit_config_flush": "PASS",
+            "workflow_created": false,
+            "package_attempt_consumed": false
+          },
+          {
+            "kind": "jit-startup-validation-run",
+            "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-jit-startup-preflight-20261001t034242z-901645",
+            "guest_exit_code": 1,
+            "observed_failure": "rmdir /run/supralinux-jit: Permission denied",
+            "jit_config_written_bytes": 4144,
+            "guest_copy_out": "PASS for /var/lib/supralinux/evidence and runner console; _diag absent because run.sh was never reached",
+            "workflow_created": false,
+            "package_attempt_consumed": false
+          }
+        ],
+        "closed_by": "host-local-evidence-adjudication:PASS",
+        "closed_after_repository_policy_run": 36813130825,
+        "recovery_evidence": {
+          "kind": "host-local-jit-startup-validation-run",
+          "host": "chmodmasx-h370mds3h",
+          "finished_at": "2026-10-01T03:55:51Z",
+          "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-jit-startup-preflight-20261001t035441z-968661",
+          "infrastructure_result": "PASS",
+          "validation_run_result": "INFRA_INVALID",
+          "validator_defect": ".busy // true treats explicit false as fallback true",
+          "runner_id": 158,
+          "runner_status": "online",
+          "runner_busy": false,
+          "runner_version": "2.337.0",
+          "console_state": "Connected to GitHub; Listening for Jobs",
+          "workflow_run_id": "",
+          "package_attempt_consumed": false,
+          "cleanup": "PASS",
+          "evidence_manifest_sha256": "8f7f10b6eaff80ad05ec3f5dc890a6da50841033665fc5fc3877bbbdc38f1f05",
+          "artifacts": {
+            "guest-copy-out.txt": "aa17deedcd84cd8403c73ec16a04e31c69d48f29d106ca9f90900fc671a10712",
+            "guest-files/_diag/Runner_20261001-035533-utc.log": "acc7cc13d519bc5350639ec2b3a2f44668bbfce9e4b2e16b0be69241d80523ab",
+            "guest-files/supralinux-actions-runner-console.log": "145b7ddf53f5368a907d058074af76fccc5ae8b943e493ab4ce3808e30490de1",
+            "host-result.json": "3b1cc0d86825c3f252f721d47f4104bdecd74bec8f2ec69ee418af253540d0b2",
+            "jit-config-flush.json": "246463fd3dbec1484e517f7fdc730765fb006f0332af64f8e348811f42f92a74",
+            "jit-config-write.json": "c3ba0f2fee383fc79f84a0ba46459363991142b5d7f8e795e2456d3a7ebbe595",
+            "runner-online.json": "14eed6f90f2908b1e8ac6427d1e23b3f0566f2762cc712e294aa046839f3e49c"
+          }
+        }
+      },
+      "closed_evidence_capture_hold": {
+        "mechanism": "runner-contract-evidence-capture",
+        "consecutive_infra_invalid": 1,
+        "reason": "the authoritative runner contract reached and passed runner provenance, Ubuntu/KVM boundary, toolchain and nested-KVM runtime, but the evidence-capture step invoked unsupported `autopkgtest --version`, causing workflow failure before repository invariants could run",
+        "resume_requires": "repository-policy:PASS-after-runner-contract-evidence-capture-remediation",
+        "incident_evidence": {
+          "kind": "github-actions-runner-contract-validation-run",
+          "workflow_run_id": 36813959540,
+          "workflow_head_sha": "b9b0ce85785a8bcda5cdcdcd735783b863c1ab19",
+          "job_id": 110214858616,
+          "failing_step": "Capture runner contract evidence",
+          "failure": "autopkgtest: error: unrecognized arguments: --version",
+          "failure_exit_code": 20,
+          "passed_contract_steps": [
+            "Checkout",
+            "Verify effective Actions runner provenance",
+            "Verify operating system and KVM boundary",
+            "Verify build and test tool contract",
+            "Prove nested KVM runtime"
+          ],
+          "repository_invariants_ran": false,
+          "package_attempt_consumed": false,
+          "partial_artifact": {
+            "id": 11140222717,
+            "name": "authoritative-runner-contract-c606e5b0a9a599439bf22054fe957ca23d4ae8e3",
+            "digest": "sha256:4e7d2f6cf6e2f7743d02f0a3f76dbbc879e610444628d89e947076bb35e35699",
+            "size_in_bytes": 1843,
+            "retention_days": 90
+          }
+        },
+        "remediation": "capture autopkgtest version with dpkg-query; retain all existing contract checks and rerun only after Repository Policy passes",
+        "closed_by": "repository-policy:PASS-after-runner-contract-evidence-capture-remediation",
+        "repository_policy_run": 36814180227,
+        "remediation_commit": "c280d83fcb1c170c15fb6b712e3e3161587c9b56",
+        "recovery_state": "runner-contract-pending"
+      }
+    },
+    {
+      "id": "authoritative-package-proof",
+      "workflow": ".github/workflows/authoritative-package-proof.yml",
+      "trigger_label": "ci:authoritative-package-proof",
+      "status": "PASS",
+      "execution_authorized": false,
+      "requires": [
+        "runner-contract"
+      ],
+      "evidence": [
+        {
+          "kind": "github-actions-authoritative-package-proof-pass",
+          "workflow_run_id": 36821470840,
+          "workflow_name": "Phase 1 authoritative KVM package proof",
+          "workflow_head_sha": "985bb09eadb9c8ebd5d48d58f84aeedf55831e14",
+          "workflow_checkout_merge_sha": "a859f3b13ea2549993c90825ab13a4c4cef9b03a",
+          "job_id": 110237761112,
+          "conclusion": "success",
+          "result": {
+            "state": "PASS",
+            "exit_code": 0,
+            "stage": "complete",
+            "authoritative": true,
+            "package_attempt_consumed": true,
+            "canonical_kde_package_state_effect": "none",
+            "sbuild_result": "PASS",
+            "autopkgtest_result": "PASS",
+            "autopkgtest_exit_code": 0
+          },
+          "artifact": {
+            "id": 11143842131,
+            "name": "phase1-authoritative-package-proof-a859f3b13ea2549993c90825ab13a4c4cef9b03a",
+            "digest": "sha256:3a67e29341afa78c29cae1d29e1849659aa47825b160c6ce1fe84dc12f17ba02",
+            "size_in_bytes": 48387,
+            "retention_days": 90,
+            "files": {
+              "result.json": "a4d15540ebe223efea74650b27cd2aa9ee70a95d7f2c47c54ff3d5c6c161c7b0",
+              "autopkgtest.log": "a1d5bd74946c5dc57830ebf581baf47a34f1284cb60ebf7457a38539c87c7717",
+              "sbuild.log": "cd0f1e09ccdbf4364fe2dd893bfe0b0b1c5d57eef33ab78d26ba849bbb48cf0b",
+              "supralinux-build-test_0.1.0_all.deb": "3422149c39160b984a1fe3afa8e04286b29050144029a305c5058a7dadc5caf4",
+              "supralinux-build-test_0.1.0_amd64.changes": "a08ae65a1333d3e80638a298cb2d0ca4e99e02640e2c1e81bd7a6e9b570be3e5",
+              "supralinux-build-test_0.1.0_amd64.buildinfo": "8510f65d19e05c9faebbc221c746ff6237ea78e835d97794d5bca2018db03581"
+            }
+          }
+        },
+        {
+          "kind": "host-local-package-proof-bundle",
+          "host": "chmodmasx-h370mds3h",
+          "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-authoritative-package-proof-20261001t054618z-1590921",
+          "result": "PASS",
+          "workflow_run_id": 36821470840,
+          "host_result_exit_code": 0,
+          "finished_at": "2026-10-01T05:50:07Z",
+          "evidence_manifest_sha256": "4311ddf6967d746c44adced1ff39d840197a267566f25a125d6027549ced60a2",
+          "workspace_evidence_exported": false,
+          "evidence_capture_gap": "the host exporter copied /var/lib/supralinux/evidence but the workflow evidence lived under the Actions runner workspace; the sealed host bundle therefore proves host/run identity and cleanup but not result.json"
+        },
+        {
+          "kind": "host-local-supplemental-package-proof-archive",
+          "host": "chmodmasx-h370mds3h",
+          "path": "/var/lib/supralinux/evidence/authoritative-package-proof-pass/36821470840",
+          "result": "PASS",
+          "workflow_run_id": 36821470840,
+          "workflow_job_id": 110237761112,
+          "workflow_head_sha": "985bb09eadb9c8ebd5d48d58f84aeedf55831e14",
+          "artifact_id": 11143842131,
+          "artifact_digest": "sha256:3a67e29341afa78c29cae1d29e1849659aa47825b160c6ce1fe84dc12f17ba02",
+          "source_host_evidence_manifest_sha256": "4311ddf6967d746c44adced1ff39d840197a267566f25a125d6027549ced60a2",
+          "result_json_sha256": "a4d15540ebe223efea74650b27cd2aa9ee70a95d7f2c47c54ff3d5c6c161c7b0",
+          "evidence_manifest_sha256": "6e87286d11f08fc00b0f9f011e37869f97613dbaad20deb67195084c3964191f"
+        }
+      ],
+      "closed_infrastructure_hold": {
+        "mechanism": "autopkgtest-qemu-acceleration-argv",
+        "consecutive_infra_invalid": 1,
+        "reason": "the synthetic package built successfully with sbuild/unshare, but autopkgtest's QEMU testbed could not start because the KVM wrapper added top-level -accel kvm while autopkgtest already supplied -machine accel=..., which QEMU rejects as incompatible accelerator syntax",
+        "resume_requires": "repository-policy:PASS-after-autopkgtest-qemu-acceleration-remediation",
+        "incident_evidence": {
+          "kind": "github-actions-authoritative-package-proof-validation-run",
+          "workflow_run_id": 36815641827,
+          "workflow_head_sha": "f6de7272b507cb2b9cacc7cb3b4f5fb96c28acc7",
+          "job_id": 110219976560,
+          "failing_step": "Run authoritative package proof",
+          "stage": "autopkgtest-qemu",
+          "autopkgtest_exit_code": 16,
+          "failure": "qemu-system-x86_64: The -accel and \"-machine accel=\" options are incompatible",
+          "testbed_failure": "Timed out waiting for autopkgtest QEMU ttyS0 socket; virtualisation server EOF",
+          "package_attempt": {
+            "kind": "synthetic-certification-package-attempt",
+            "package": "supralinux-build-test",
+            "version": "0.1.0",
+            "execution_started": true,
+            "sbuild_result": "PASS",
+            "canonical_kde_package_state_effect": "none"
+          },
+          "raw_result_state_before_semantic_fix": "FAIL",
+          "canonical_adjudication": "INFRA_INVALID",
+          "artifact": {
+            "id": 11141147657,
+            "name": "phase1-authoritative-package-proof-33f953fdf05040f1b70305765b57d3591e1366be",
+            "digest": "sha256:cbe9e3bbc6983a72ff94f70d66004cce75af18fa0f9cdfed789bc024f484638d",
+            "size_in_bytes": 46977,
+            "retention_days": 90
+          },
+          "host_local_evidence_path": "/var/lib/supralinux/evidence/host-kvm/supralinux-authoritative-package-proof-20261001t043158z-1178971"
+        },
+        "remediation": "normalize existing QEMU -machine accel= to accel=kvm and only use top-level -accel kvm when no -machine option exists; classify autopkgtest exit 16 as INFRA_INVALID instead of package FAIL",
+        "closed_by": "repository-policy:PASS-after-autopkgtest-qemu-acceleration-remediation",
+        "repository_policy_run": 36816437830,
+        "remediation_commit": "35fc1ce488f2f51a8dc940d55b51866d4a0b7a2b",
+        "synthetic_validation": {
+          "qemu_wrapper_test": "PASS",
+          "repository_invariants": "PASS",
+          "authoritative_kvm_state_validator": "PASS"
+        },
+        "recovery_state": "authoritative-package-proof-pending"
+      },
+      "closed_repeated_infrastructure_hold": {
+        "mechanism": "autopkgtest-qemu-acceleration-argv",
+        "consecutive_infra_invalid": 2,
+        "reason": "two consecutive authoritative package-proof validation runs reached valid synthetic package execution and sbuild PASS, then failed before autopkgtest testbed boot with the same QEMU accelerator-selection conflict",
+        "resume_requires": "scripts/check-autopkgtest-qemu-argv-lifecycle.sh:PASS-and-repository-policy:PASS",
+        "diagnosis": {
+          "provider": "autopkgtest 5.55",
+          "provider_behavior": "on KVM-compatible x86_64 with /dev/kvm, autopkgtest adds -enable-kvm to the QEMU argv",
+          "first_remediation_gap": "the first synthetic wrapper test covered -accel and -machine accel= but did not reproduce autopkgtest's -enable-kvm path",
+          "cause": "the wrapper added canonical -accel kvm while leaving autopkgtest-provided -enable-kvm in the argv, so QEMU received conflicting accelerator selectors",
+          "remediation": "strip autopkgtest -enable-kvm and any existing top-level -accel selector; emit exactly one canonical KVM selector, using -machine accel=kvm when a machine option exists and -accel kvm otherwise"
+        },
+        "incident_history": [
+          {
+            "sequence": 1,
+            "workflow_run_id": 36815641827,
+            "workflow_head_sha": "f6de7272b507cb2b9cacc7cb3b4f5fb96c28acc7",
+            "job_id": 110219976560,
+            "stage": "autopkgtest-qemu",
+            "autopkgtest_exit_code": 16,
+            "package_attempt": {
+              "kind": "synthetic-certification-package-attempt",
+              "package": "supralinux-build-test",
+              "version": "0.1.0",
+              "execution_started": true,
+              "sbuild_result": "PASS",
+              "canonical_kde_package_state_effect": "none"
+            },
+            "artifact": {
+              "id": 11141147657,
+              "digest": "sha256:cbe9e3bbc6983a72ff94f70d66004cce75af18fa0f9cdfed789bc024f484638d"
+            }
+          },
+          {
+            "sequence": 2,
+            "workflow_run_id": 36817238333,
+            "workflow_head_sha": "7b952961c6939a18b855e3814c43479cb6b7b4b7",
+            "job_id": 110224861819,
+            "stage": "autopkgtest-qemu",
+            "autopkgtest_exit_code": 16,
+            "package_attempt": {
+              "kind": "synthetic-certification-package-attempt",
+              "package": "supralinux-build-test",
+              "version": "0.1.0",
+              "execution_started": true,
+              "sbuild_result": "PASS",
+              "canonical_kde_package_state_effect": "none"
+            },
+            "artifact": {
+              "id": 11141369927,
+              "name": "phase1-authoritative-package-proof-e54f6afd3f4d1cab7bc751d682633b4e62a83b84",
+              "digest": "sha256:eac3c15aa99dae57de683862b8758b6f47dca776bfdbd8e3dc88a79e261617be",
+              "size_in_bytes": 47095,
+              "retention_days": 90
+            },
+            "result_semantics": {
+              "state": "INFRA_INVALID",
+              "sbuild_result": "PASS",
+              "autopkgtest_result": "testbed-failure",
+              "package_attempt_consumed": true,
+              "canonical_kde_package_state_effect": "none"
+            },
+            "qemu_wrapper_sha256": "f27de04824122ba9b2fa80244c68cabde942a84d3dc1eec8e1e734e24ab7ff32",
+            "host_local_evidence_path": "/var/lib/supralinux/evidence/host-kvm/supralinux-authoritative-package-proof-20261001t045249z-1294514"
+          }
+        ],
+        "latest_incident": {
+          "workflow_run_id": 36817238333,
+          "workflow_head_sha": "7b952961c6939a18b855e3814c43479cb6b7b4b7",
+          "job_id": 110224861819,
+          "failure": "qemu-system-x86_64: The -accel and \"-machine accel=\" options are incompatible",
+          "autopkgtest_exit_code": 16,
+          "canonical_adjudication": "INFRA_INVALID",
+          "artifact_id": 11141369927,
+          "artifact_digest": "sha256:eac3c15aa99dae57de683862b8758b6f47dca776bfdbd8e3dc88a79e261617be"
+        },
+        "closed_by": "synthetic-autopkgtest-qemu-argv-preflight-and-repository-policy:PASS",
+        "repository_policy_run": 36819196488,
+        "repository_policy_job": 110230862901,
+        "recovery_head_sha": "3cba7dc932ab062bc78dbe61a138c46bb341ef95",
+        "remediation_commits": [
+          "daec41391737023014d6315aa525c457b325b52e",
+          "cd9cb70d693ba80c7287372f52998b9466191e5c",
+          "01536a93ae8323cb890fa4198de49fdb565ab198",
+          "ec7914d51349af6bf3baf18bd2156a28a4ab1ed3",
+          "fbdb311f8c271200f76a23343701bef5fffd8b4b",
+          "27213ff871fa959188138c27cc2b7f54b5f80741",
+          "3cba7dc932ab062bc78dbe61a138c46bb341ef95"
+        ],
+        "synthetic_recovery_evidence": {
+          "shellcheck": "PASS",
+          "qemu_wrapper_functional_test": "PASS",
+          "autopkgtest_qemu_argv_lifecycle": "PASS",
+          "autopkgtest_version": "5.55",
+          "provider_contract": "-enable-kvm",
+          "normalized_acceleration": "-accel kvm",
+          "repository_invariants": "PASS",
+          "authoritative_kvm_state_validator": "PASS"
+        },
+        "recovery_state": "authoritative-package-proof-pending",
+        "retry_authorized": true
+      },
+      "closed_superficial_only_infrastructure_hold": {
+        "mechanism": "autopkgtest-superficial-only-proof",
+        "consecutive_infra_invalid": 1,
+        "reason": "the authoritative QEMU/KVM testbed booted successfully and the smoke test passed, but the only autopkgtest was marked superficial, so autopkgtest exited 8 because no substantive non-superficial test completed",
+        "resume_requires": "repository-policy:PASS-after-substantive-autopkgtest-remediation",
+        "incident_evidence": {
+          "workflow_run_id": 36820141760,
+          "workflow_head_sha": "d2fb30b01bec76548ef1bced75d52d7f030c8020",
+          "job_id": 110233743928,
+          "stage": "autopkgtest-qemu",
+          "package_attempt": {
+            "kind": "synthetic-certification-package-attempt",
+            "package": "supralinux-build-test",
+            "version": "0.1.0",
+            "execution_started": true,
+            "sbuild_result": "PASS",
+            "canonical_kde_package_state_effect": "none"
+          },
+          "qemu_kvm_testbed": {
+            "booted": true,
+            "architecture": "amd64",
+            "release": "resolute",
+            "kernel": "7.0.0-34-generic"
+          },
+          "autopkgtest": {
+            "version": "5.55",
+            "exit_code": 8,
+            "smoke_result": "PASS (superficial)",
+            "canonical_adjudication": "INFRA_INVALID",
+            "meaning": "no substantive non-superficial test completed"
+          },
+          "raw_result_state_before_semantic_fix": "FAIL",
+          "artifact": {
+            "id": 11142903389,
+            "name": "phase1-authoritative-package-proof-ce8f099d0829c414d78486bc1e1d82b4907996ed",
+            "digest": "sha256:7e23b9b797eb2e99749cf1352ecb869e69fe9dccd529b6890e658a9d081aa61c",
+            "size_in_bytes": 48430,
+            "retention_days": 90,
+            "result_json_sha256": "58c6507e18dceea51904d8bc192f50db2718c94e365237effc8d04df71319d0c",
+            "autopkgtest_log_sha256": "ad340af027a0c713ab9f462b72129630604f4a759f6c9d6edabec7dd8122d03c",
+            "qemu_wrapper_sha256": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+            "deb_sha256": "3422149c39160b984a1fe3afa8e04286b29050144029a305c5058a7dadc5caf4",
+            "changes_sha256": "342b450fe769d94a179ff927eab74b837cc047610c08ad30f568188412308886",
+            "buildinfo_sha256": "d9d3ad6f281b307ad32b74a9b4d4a62cdeef2c0ff34907d3125f5643e0ef990f"
+          }
+        },
+        "remediation": "remove the superficial restriction from the synthetic smoke test so the certification proof requires a substantive autopkgtest PASS; classify autopkgtest exit 8 as INFRA_INVALID proof insufficiency rather than package FAIL",
+        "closed_by": "repository-policy:PASS-after-substantive-autopkgtest-remediation",
+        "repository_policy_run": 36820787722,
+        "repository_policy_job": 110235765685,
+        "remediation_head_sha": "361d4ceb2d4ee3a06cbb6e218340b5cf2f4299ae",
+        "synthetic_validation": {
+          "shellcheck": "PASS",
+          "qemu_wrapper_functional_test": "PASS",
+          "autopkgtest_qemu_argv_lifecycle": "PASS",
+          "repository_invariants": "PASS",
+          "authoritative_kvm_state_validator": "PASS",
+          "smoke_test_superficial_restriction_absent": true,
+          "autopkgtest_exit_8_classification": "INFRA_INVALID"
+        },
+        "recovery_state": "authoritative-package-proof-pending",
+        "retry_authorized": true
+      }
+    },
+    {
+      "id": "frameworks-sample-proof",
+      "workflow": ".github/workflows/authoritative-frameworks-sample-proof.yml",
+      "trigger_label": "ci:frameworks-sample-proof",
+      "status": "PASS",
+      "execution_authorized": false,
+      "requires": [
+        "authoritative-package-proof"
+      ],
+      "sample": {
+        "framework": "karchive",
+        "package_version": "6.30.0-0supralinux4",
+        "ecm_predecessor": "6.30.0-0supralinux3",
+        "package_state_effect": "none"
+      },
+      "evidence": [
+        {
+          "kind": "github-actions-authoritative-frameworks-sample-pass",
+          "workflow_run_id": 36823362745,
+          "workflow_name": "Authoritative Frameworks sample proof",
+          "workflow_head_sha": "7125f11efee46e478a37b010d89d4896ed5e61bf",
+          "workflow_checkout_merge_sha": "eb5adde4b605afa4d32c7029c1ff43f387ddcb28",
+          "job_id": 110243543920,
+          "conclusion": "success",
+          "result": {
+            "node": "karchive",
+            "state": "PASS",
+            "exit_code": 0,
+            "stage": "complete",
+            "authoritative": true,
+            "run_kind": "authoritative-certification-sample",
+            "package_execution_started": true,
+            "package_state_effect": "none",
+            "canonical_package_version": "6.30.0-0supralinux4",
+            "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
+            "outer_virtualization": "kvm",
+            "nested_kvm_runtime": "required",
+            "sbuild_backend": "unshare"
+          },
+          "retained_inputs": {
+            "ecm_run": 34694951158,
+            "ecm_artifact": 10298635300,
+            "ecm_version": "6.30.0-0supralinux3",
+            "ecm_deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f",
+            "karchive_run": 34884764702,
+            "karchive_artifact": 10364726750,
+            "karchive_version": "6.30.0-0supralinux4",
+            "source_dsc_sha256": "4938c3df5f4299d5feae1bfe22663dec64455f62519a310d664a5daaeb5839cd",
+            "source_debian_tar_sha256": "1f76ab399b9f8c839bdd161b2e0ef0e607e54796e79c96ae8674bf0faae0a11f",
+            "source_orig_tar_sha256": "4cf89d91e429d2ece3110e78f7ef7011952b0412cb15011329516b46f21e98e2"
+          },
+          "validation": {
+            "upstream_ctest": "5/5 PASS",
+            "lintian": "completed-with-warnings",
+            "consumer_configure": "PASS",
+            "consumer_build": "PASS",
+            "consumer_link_qt": "6.10.2"
+          },
+          "artifact": {
+            "id": 11143244708,
+            "name": "authoritative-frameworks-sample-eb5adde4b605afa4d32c7029c1ff43f387ddcb28",
+            "digest": "sha256:2419e353f66856bb398cf1d72e50b7d4d12a282ff675d8fb3b42afd595729e76",
+            "size_in_bytes": 2442293,
+            "retention_days": 90,
+            "files": {
+              "result.json": "44b8ae4d1fcd94ab8453941ca7fc5d55956068ed41852b9f036acebfb793dd00",
+              "kf6-karchive_6.30.0-0supralinux4_amd64.buildinfo": "90dec690ec5ab61ba7d67835521ffeb92c0a4ed451e6419ebbff40e0d228bd62",
+              "kf6-karchive_6.30.0-0supralinux4_amd64.changes": "7904a815a8d983163b53ebca1b92ca940993fa29f98478656a88bb0fa20ec6ba",
+              "libkf6archive6_6.30.0-0supralinux4_amd64.deb": "dca57450e619cd01834152a3fffb943342128bd61ca514fa082c8b0eb1ba7541",
+              "libkf6archive-dev_6.30.0-0supralinux4_amd64.deb": "e9d34c95f1d25405cc603b9f1db5ee18e779d170bd5e3b1bd420a1137ca38843",
+              "libkf6archive-data_6.30.0-0supralinux4_all.deb": "da46f11fc791e0038b981b1fcddf6bc41718bd0fe9edd932bbd0e0ab26745d83",
+              "libkf6archive-doc_6.30.0-0supralinux4_all.deb": "a053b59865cf3dd4031dbcc0c417eef581f5ee57d2b1d3ca3844b59bdb6f7e65"
+            }
+          }
+        },
+        {
+          "kind": "host-local-frameworks-sample-bundle",
+          "host": "chmodmasx-h370mds3h",
+          "path": "/var/lib/supralinux/evidence/host-kvm/supralinux-frameworks-sample-proof-20261001t060913z-1718536",
+          "result": "PASS",
+          "workflow_run_id": 36823362745,
+          "host_result_exit_code": 0,
+          "workspace_evidence_exported": true,
+          "workspace_result_json_sha256": "44b8ae4d1fcd94ab8453941ca7fc5d55956068ed41852b9f036acebfb793dd00",
+          "evidence_manifest_sha256": "293e4847e6460dec41ff8c798ab9222b2fa3d4100457121ce6b28a8a8e59a903"
+        }
+      ]
+    }
+  ],
+  "release_relevant_desktop": {
+    "status": "unlocked",
+    "plasma_authorized": true,
+    "kwin_authorized": true,
+    "session_authorized": true,
+    "unlock_requires": "frameworks-sample-proof:PASS",
+    "unlocked_by": "frameworks-sample-proof:PASS"
+  },
+  "next_gate": "certification-complete",
+  "stable_publication_authorized": false
+}

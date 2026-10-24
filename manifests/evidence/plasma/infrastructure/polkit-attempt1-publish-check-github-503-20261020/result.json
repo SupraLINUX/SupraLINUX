@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "kind": "host-evidence-publication-check-transient-github-read",
+  "source_commit": "ca7896c643c44e49129238c5983f9f5d789ac0e6",
+  "control": {
+    "router_run_id": 39446459086,
+    "host_job_id": 118709665580,
+    "artifact_id": 12275777346,
+    "artifact_digest": "sha256:5b2e7aa2e220affdee4f950205fe4fba63888dbb424a9280a5cc763e27581675",
+    "mode": "publish-evidence-check",
+    "exit_code": 1
+  },
+  "preserved_package_pass": {
+    "node": "polkit-kde-agent-1",
+    "source_commit": "a8bfddd4a39c719016476a0e7425aaf461d9d9c5",
+    "workflow_run_id": 39416478708,
+    "workflow_job_id": 118606632416,
+    "artifact_id": 12261299420,
+    "artifact_sha256": "b3403e7a820ae901faeedecc46b9cd8fdc555e104537e010be0a40bdca7d3422",
+    "package_attempt_consumed": true,
+    "package_result": "PASS"
+  },
+  "observations": {
+    "failure_stage": "read-only GitHub Actions artifact download",
+    "github_status": 503,
+    "canonical_publication_started": false,
+    "canonical_commit_created": false,
+    "branch_updated": false,
+    "new_package_execution_started": false,
+    "package_attempt_effect": "none"
+  },
+  "cause": "The first non-mutating publication check used a single-shot gh api read for the retained package artifact. GitHub returned transient HTTP 503 before closure replay or canonical commit creation.",
+  "repair": "Retry only read-only GitHub API calls on bounded transient HTTP 429/502/503/504 responses. Keep publication fail-closed for all other errors and preserve the exact package PASS without rerunning sbuild."
+}

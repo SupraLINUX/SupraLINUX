@@ -1,0 +1,45 @@
+{
+  "state": "PASS",
+  "scope": "local source/reference materialization for packaging review",
+  "materialization_manifest": "manifests/evidence/kde-plasma-level0-materialization-result.json",
+  "node": "kmenuedit",
+  "upstream": {
+    "required_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+    "sha256": "2d9801b7f89988046472c2b32385d848a0a98095fb178d58d6e3b5090ced9b8b",
+    "signature": "kmenuedit-6.7.5.tar.xz.sig",
+    "signature_sha256": "fddb8a522dbd5debc87866843c8a4377fc0f03df4c960291f9791eab9634e02a",
+    "signature_verification": "PASS",
+    "tarball": "kmenuedit-6.7.5.tar.xz",
+    "url": "https://download.kde.org/stable/plasma/6.7.5/kmenuedit-6.7.5.tar.xz",
+    "version": "6.7.5"
+  },
+  "ubuntu_reference": {
+    "apt_source_versions": [
+      "4:6.6.4-0ubuntu1"
+    ],
+    "debian_tree_tar_sha256": "3f22f39af8e7c03642ab9c545fcc6e2a0d93932f4ea471c9599a439c265cfd21",
+    "downloaded_source_files": {
+      "kmenuedit_6.6.4-0ubuntu1.debian.tar.xz": {
+        "sha256": "a17ca8fd1382ca49eb09e95088c5e153bf51b38639970105670063736ea47a1b",
+        "size": 16060
+      },
+      "kmenuedit_6.6.4-0ubuntu1.dsc": {
+        "sha256": "d86b0b9c46ff9b36fe2239b16a1b68c823be66e5dddb0025989e4fdac32c89cc",
+        "size": 2681
+      },
+      "kmenuedit_6.6.4.orig.tar.xz": {
+        "sha256": "b098c176623e9d848e80c769c1857ba7309187e2704e53e56c5eff84dc89760f",
+        "size": 887020
+      }
+    },
+    "dsc_file": "kmenuedit_6.6.4-0ubuntu1.dsc",
+    "dsc_sha256": "d86b0b9c46ff9b36fe2239b16a1b68c823be66e5dddb0025989e4fdac32c89cc",
+    "source_package": "kmenuedit",
+    "source_version": "4:6.6.4-0ubuntu1"
+  },
+  "source_modified": false,
+  "package_execution_started": false,
+  "package_attempt_consumed": false,
+  "canonical_admission": "NOT-ADMITTED",
+  "original_signature_authority": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D"
+}

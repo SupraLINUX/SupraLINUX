@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "batch": "tier1-batch-11",
+  "lane": "multi-surface-optional",
+  "nodes": [
+    "kuserfeedback",
+    "prison"
+  ],
+  "real_attempts": {
+    "kuserfeedback": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "c27404f7778f96d20fd63ddaa993b8d36ae81295",
+        "workflow_run": 35485199667,
+        "job_id": 106010235329,
+        "artifact_id": 10596274248,
+        "artifact_sha256": "a8db3c3c85e0645f64b62ba4ee0fe0d6c9b50a85a446680b0da1b0bb9fc44b6d",
+        "rootfs_sha256": "5052240705cf505e2642ffd75badc99317e56d7ef27c84f2f6f6efa015787b4e",
+        "package_attempted": true,
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "8/15 CTest PASS",
+        "cause": "PHPUnit 13 ignored legacy @dataProvider metadata and scoped loading left the SQLite fixture configuration outside $GLOBALS; upstream PHP tests failed while PHP/PHPUnit remained enabled."
+      },
+      {
+        "attempt": 2,
+        "package_version": "6.30.0-0supralinux2",
+        "commit": "7f4a42af54c4d3a1603f9b7cca95a5b45786ff58",
+        "workflow_run": 35488901554,
+        "job_id": 106020266302,
+        "artifact_id": 10597719819,
+        "artifact_sha256": "9c3ff5ccb61cc6ea9e55b4443ccbcf672580861e334316b9bf946612b4ff4f0d",
+        "rootfs_sha256": "03a77efc61c2447913a1d2be1484807e8ac3dc67ae859ab5f4525cbb486f8bf6",
+        "package_attempted": true,
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "14/15 CTest PASS",
+        "cause": "The PHPUnit 13 DataProvider and SQLite fixture remediation worked; SampleTest alone still used removed TestCase::getActualOutput(), causing four errors in one CTest entry."
+      },
+      {
+        "attempt": 3,
+        "package_version": "6.30.0-0supralinux3",
+        "commit": "a95947a0bacf042c5d067355cac34184facc4754",
+        "workflow_run": 35489184465,
+        "job_id": 106021045629,
+        "artifact_id": 10598602563,
+        "artifact_sha256": "e70ed24da8adcd0cedf6b28f9281bbc7d8e5f891337ec953d767a1de68b37a9a",
+        "rootfs_sha256": "11648ec215e367b6e152b820c0d617f970395b27434041352225ecd07c2e7139",
+        "package_attempted": true,
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "14/15 CTest PASS",
+        "cause": "SampleTest no longer uses getActualOutput(), but PHPUnit 13 has also removed assertObjectHasAttribute/assertObjectNotHasAttribute; three SampleTest errors remain."
+      },
+      {
+        "attempt": 4,
+        "package_version": "6.30.0-0supralinux4",
+        "commit": "44e78d30572a1aaecbbd77de99f4c8a0e6a51b9a",
+        "workflow_run": 35489499984,
+        "job_id": 106021890875,
+        "artifact_id": 10598313568,
+        "artifact_sha256": "15458a33a3b4091bab61523097c23d7caeb46b188ba78188a92afec9f582dec5",
+        "rootfs_sha256": "caddb55927435be40069ab9a3d8429f8997b10eb126a839c4fa4c03f84529dce",
+        "package_attempted": true,
+        "result": "FAIL",
+        "stage": "sbuild",
+        "tests": "15/15 CTest PASS",
+        "cause": "PHPUnit 13 compatibility is complete; dh_missing found the upstream ENABLE_DOCS UserFeedbackConsole QCH manual unassigned to a binary package."
+      },
+      {
+        "attempt": 5,
+        "package_version": "6.30.0-0supralinux5",
+        "commit": "69d271891f96f75ada404623611ffa42bc061090",
+        "workflow_run": 35489771315,
+        "job_id": 106022610412,
+        "artifact_id": 10597923863,
+        "artifact_sha256": "0a057d591a198f74cf6eee24d3b1ef4355f2a0d6073d48de8e220ac37f0a38b7",
+        "rootfs_sha256": "8b5518bea1704ffb9830b4d9a3259e2655ca69efb6dff108b9a9709e66d87e39",
+        "package_attempted": true,
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "15/15 PASS",
+        "lintian": "PASS-errors",
+        "abi_contract": "PASS",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "consumer_smoke": "PASS",
+        "development_contract": "PASS",
+        "downstream_eligible": true
+      }
+    ],
+    "prison": [
+      {
+        "attempt": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "7f4a42af54c4d3a1603f9b7cca95a5b45786ff58",
+        "workflow_run": 35488901554,
+        "job_id": 106020266290,
+        "artifact_id": 10597829797,
+        "artifact_sha256": "f0074c8da29cfda08018fa568fce9cabbf6fc23669416caf20c714c25ff7773f",
+        "rootfs_sha256": "a1ae6cb653ec18a6dba7142f4ee5acd94210076a9adba23d9d67d03ac03885e7",
+        "package_attempted": true,
+        "result": "PASS",
+        "stage": "complete",
+        "tests": "9/9 PASS",
+        "lintian": "PASS-errors",
+        "abi_contract": "PASS",
+        "apt_check": "PASS",
+        "qml_import_smoke": "PASS",
+        "consumer_smoke": "PASS",
+        "development_contract": "PASS",
+        "downstream_eligible": true
+      }
+    ]
+  },
+  "validation_incidents": {
+    "kuserfeedback": [],
+    "prison": [
+      {
+        "validation_cycle": 1,
+        "package_version": "6.30.0-0supralinux1",
+        "commit": "c27404f7778f96d20fd63ddaa993b8d36ae81295",
+        "workflow_run": 35485199667,
+        "job_id": 106010235300,
+        "artifact_id": 10596344285,
+        "artifact_sha256": "67803dee1fc950cd960bfd836de516e3e397b7132f02338df00703c4f611c779",
+        "rootfs_sha256": "6b8a9abdf3720fe8e291209b7bab8ba98d812e5df573c2b0ccfce9a53d70c500",
+        "stage": "sbuild-postcheck",
+        "classification": "INFRA",
+        "package_state_effect": "none",
+        "package_build": "successful",
+        "lintian": "PASS-errors",
+        "tests": "9/9 PASS",
+        "cause": "False-negative exact CTest count: campaign expected 8, but Prison 6.30 has 9 CTest entries and all 9 passed."
+      }
+    ]
+  },
+  "infrastructure_incidents": [
+    {
+      "phase": "preparation",
+      "workflow_run": 35485140225,
+      "job_id": 106010004365,
+      "stage": "repository-policy-shellcheck",
+      "classification": "infrastructure-shellcheck",
+      "package_state_effect": "none",
+      "package_attempted": false,
+      "cause": "ShellCheck SC2100 rejected unquoted hyphenated STAGE labels in the new Batch 11 runner after bash syntax validation had passed; no package state was evaluated.",
+      "remediation": "Quote literal STAGE labels; package inputs, feature profile, revisions and attempt counters remain unchanged."
+    },
+    {
+      "phase": "batch11-cycle-1-superseded",
+      "workflow_run": 35485140362,
+      "job_ids": [
+        106010025659,
+        106010025725
+      ],
+      "stage": "build-and-validate",
+      "classification": "superseded-run-cancelled",
+      "package_state_effect": "none",
+      "package_attempted": false,
+      "cause": "The first Batch 11 PR run was superseded by the ShellCheck remediation push; both in-progress package jobs were cancelled and are not package results."
+    }
+  ],
+  "blocked_events": {
+    "kuserfeedback": [],
+    "prison": []
+  }
+}

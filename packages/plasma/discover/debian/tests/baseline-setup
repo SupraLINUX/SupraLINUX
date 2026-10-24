@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-discover-baseline
+packages=(
+  plasma-discover
+  kde-config-updates
+  plasma-discover-backend-flatpak
+  plasma-discover-backend-fwupd
+  plasma-discover-backend-snap
+  plasma-discover-common
+  plasma-discover-notifier
+)
+apt-get install -y --no-install-recommends "${packages[@]}"
+mkdir -p -- "${BASE}"
+: > "${BASE}/ubuntu-versions.tsv"
+for pkg in "${packages[@]}"; do
+  version="$(dpkg-query -W -f='${Version}' "${pkg}")"
+  printf '%s\t%s\n' "${pkg}" "${version}" >> "${BASE}/ubuntu-versions.tsv"
+  dpkg-query -L "${pkg}" > "${BASE}/${pkg}.files"
+done
+expected="$(cat /var/tmp/supralinux-ubuntu-package-version)"
+actual="$(dpkg-query -W -f='${Version}' plasma-discover)"
+[[ "${actual}" == "${expected}" ]]
+grep -F '/plasma-discover' "${BASE}/plasma-discover.files" >/dev/null
+grep -F '/flatpak-backend.so' "${BASE}/plasma-discover-backend-flatpak.files" >/dev/null
+grep -F '/fwupd-backend.so' "${BASE}/plasma-discover-backend-fwupd.files" >/dev/null
+grep -F '/snap-backend.so' "${BASE}/plasma-discover-backend-snap.files" >/dev/null
+printf 'Reviewed Ubuntu Discover seven-binary baseline: PASS\n'

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "scope": "Exact frozen/stable official KDE source compared with retained original source archive; signal-ordering explanation is an inference supported by actual failures",
+  "source_sha256": "85bfbdb0e8624af1f901de3d8e726f85201c848047b8fa1df077fd03bfce3d9d",
+  "official_stable_and_frozen_tag_byte_identical": true,
+  "observed_code": "SensorTreeModel::init begins a reset, calls addSensor for the nonempty initial snapshot before endResetModel; addSensor emits beginInsertRows/endInsertRows",
+  "upstream_history_records_reviewed": 20,
+  "model_merge_request_search_records": 57,
+  "applicable_official_fix_found_in_review": false,
+  "sources": [
+    "https://invent.kde.org/plasma/libksysguard/-/blob/v6.7.5/sensors/SensorTreeModel.cpp",
+    "https://doc.qt.io/qt-6/qabstractitemmodeltester.html"
+  ],
+  "candidate_source_changed": false,
+  "native_assertions_changed": false
+}

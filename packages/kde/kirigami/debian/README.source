@@ -1,0 +1,18 @@
+SupraLINUX kirigami packaging notes
+
+Authority is KDE Frameworks upstream stable 6.30.0. Ubuntu 26.04 Resolute is a provider platform only. Debian 6.28 packaging is retained only as a technical baseline for Debian-family binary names, package splits and symbols metadata.
+
+The active .symbols files are not stored in this package tree. The Batch 10 runner materializes the hash-pinned Debian 6.28 references into the ephemeral source package and validates architecture-aware required export floors before accepting PASS.
+
+QCH follows the common SupraLINUX Frameworks profile and is disabled. Upstream tests remain enabled. No downstream test-suppression patch or behavior patch is retained.
+
+Attempt-1 ABI remediation
+-------------------------
+
+Real package attempt 1 (PR CI run 35389030840, Kirigami job 105742841430) built successfully and passed 44/44 upstream tests, then Lintian rejected 38 newly emitted C++ template-instantiation symbols because dpkg-gensymbols assigned the current Debian revision.
+
+These symbols are not promoted as public Kirigami ABI. The exact nine QMetaType/QMetaSequence symbols are documented by KDE bug 519452 as parallel-build-dependent template instantiations; dpkg symbols policy supports marking such private/toolchain template instantiations optional=templinst. The two std::_Rb_tree<QString,QVariant> exports are treated the same way.
+
+Revision 6.30.0-0supralinux2 therefore applies a deterministic, hash-guarded overlay to five ephemeral retained .symbols baselines immediately before dh_makeshlibs. Delegates uses the externally documented 6.23.0 minimum for the exact nine-symbol set. Controls, FormsPrivateCards, FormsPrivateFlat and Templates use the conservative 6.30.0 first-observed minimum; no earlier per-library introduction is asserted. The helper verifies both the retained baseline SHA-256 and complete transformed SHA-256 before writing.
+
+Reference: https://bugs.kde.org/show_bug.cgi?id=519452

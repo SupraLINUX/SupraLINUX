@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "discover-level0-individual-packaging-review-and-admission",
+  "source_commit": "bd76c8054bc5b02d28c38a594fccedd01b7322ba",
+  "node": "discover",
+  "version": "6.7.5-0supralinux1",
+  "product_profile": {
+    "profile": "desktop-wayland",
+    "core_session_test_image_root": true,
+    "excluded": false,
+    "kgamma_remains_excluded": true
+  },
+  "materialization": {
+    "workflow_run_id": 37226892171,
+    "workflow_job_id": 111508551648,
+    "artifact_id": 11312113744,
+    "artifact_digest": "sha256:85e5d78bd4f6bba9de810a01894669dee9efde9341b685c8a32f42794e09c3c8",
+    "upstream_sha256": "e9830fffebc54c781dcb076db4ab9462ee27ddd7fd3769403a211743636e1f67",
+    "signature_sha256": "3c3b49ba122690b454e6ce16cc860e5738ac3f3af4065c5557c3821829501bc8",
+    "signing_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+    "ubuntu_reference_version": "6.6.6-0ubuntu0.1",
+    "ubuntu_debian_tree_sha256": "18d995b3053c6a64081674eedd7a74a40918329cca01532c963ec6412dd64b41"
+  },
+  "remaining_packaging_scan": {
+    "workflow_run_id": 39549904045,
+    "workflow_job_id": 119056979692,
+    "artifact_id": 12323515646,
+    "artifact_digest": "sha256:c3ea954de9e9a845df77f25d2bc836fa5ac5accef6744256210bdcf774830f0f"
+  },
+  "packaging": {
+    "binary_count": 7,
+    "packaging_sha256": {
+      "changelog": "8b645716f54f05cbd5865c825abcb8e4a22c2163d66865bcdbb83aab84bacf45",
+      "control": "c29eea737cdf9432032d60647aabf120b330815f602b9e9c10fdeb6b74aed641",
+      "copyright": "228432b0f323d2731408ca1597054e9514718f7d2d845b6e1c23fbc4c507110e",
+      "kde-config-updates.install": "2c50a67460f832ac7e8718dd33caef2a8910bc96766dac2f3d0f39239a8b03c3",
+      "kde-config-updates.lintian-overrides": "04882aa5ed2b982e74b98908909d5c3890838c9abf7a105c44594ed06716692b",
+      "plasma-discover-backend-flatpak.install": "03693ec7a00688a3d894a94fd9947a281da5054717d814623137af0f12568bc4",
+      "plasma-discover-backend-flatpak.lintian-overrides": "ad8bbf02acea7cf0da3e2296167d113cdd61b84870fca6c13f5444ef3b2d5069",
+      "plasma-discover-backend-fwupd.install": "aa2dfa4a5a45f72aae50268acec3a304c82381e7721dc927f25e55c678aa98a2",
+      "plasma-discover-backend-snap.install": "1aea276156e1465e5e32f9114d50229b4363b7eb2f948506e0d996e7578f6d4f",
+      "plasma-discover-backend-snap.lintian-overrides": "73c739c7c6ac49bed6b36d15f1c27243393b423ceee340b8e232997cc246eb55",
+      "plasma-discover-common.install": "34ec8f5e2ba2654f3bf91170382f01c6ddde55202cc9a83fb7d309ed54789b7b",
+      "plasma-discover-notifier.install": "524b6dbc279b03a6b31e7cb8b950f16ed690b9def967b65a7a21840c20a11cd3",
+      "plasma-discover.install": "9b1604a8c7601539358aacd5279d3bbb8cf4f28c5fc34bb826f3a298360e84fe",
+      "plasma-discover.lintian-overrides": "b15b039f806881f9b75a9462618e136cd99d4d73f731a9351d1cf4ed932cc996",
+      "plasma-discover.qmlfiles": "f815ba18013d35e16ae9bc695da39fb028d4210d68da1bf6d0e0904ab34d2896",
+      "qmldeps.optional": "e79b7c376d46a88cc65acba9d72c8d9676589247988848354af5769ccfa67747",
+      "qmldeps.overrides": "5d426ab3236a193d909b1f32dbf6bdc56b19cbd649dc7d026dfbf512a562dad0",
+      "rules": "08e68155ffa75f0d55939194a71dc2ae0060f4b859b33a87ad3b617f17c1d1c9",
+      "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+      "tests/baseline-setup": "bd4a70359658e42dfd2b189562e5aa63fcdcaeeb76c262b3270e96217d767d5f",
+      "tests/control": "0a06ec471542f4e07e7c3c4ea81e42ad634dddf425c0d917d1cc05996673a1f8",
+      "tests/installed-payload": "bc7d0c4e268979217b8fcbd71b20e7d9d80e28efe30700060486beef6155d496",
+      "tests/ubuntu-upgrade": "43268650ae3b0a05b7ba95b043e1f0f3121b760560ddbdd4f04ad58b53bc7096"
+    },
+    "direct_dependency_repairs": [
+      "Declare libkf6windowsystem-dev exactly; Discover links KF6::WindowSystem directly.",
+      "Declare qml6-module-org-kde-kitemmodels exactly; configure requires org.kde.kitemmodels.",
+      "Raise Kirigami Addons minimum to upstream 1.10.0 and AppStreamQt minimum to upstream 1.0.4."
+    ],
+    "adaptation": "Copied the build/install Debian contract from the verified Ubuntu reference while omitting build-irrelevant Ubuntu CI/watch/key metadata; no upstream source code is modified."
+  },
+  "frameworks": {
+    "source_dag_closure_count": 40,
+    "predecessor_contract_source": "Plymouth certified predecessor map plus six additional Frameworks source nodes",
+    "added_sources": [
+      "kidletime",
+      "kitemmodels",
+      "kstatusnotifieritem",
+      "kuserfeedback",
+      "prison",
+      "purpose"
+    ],
+    "binary_transport_count": 189
+  },
+  "tests": {
+    "upstream_required": [
+      "CategoriesTest"
+    ],
+    "excluded_from_clean_build": [
+      {
+        "name": "flatpaktest",
+        "reason": "Contacts public Flathub and installs/removes Flatpak content; reserved for controlled integration."
+      }
+    ],
+    "dep8": [
+      "installed-payload",
+      "ubuntu-upgrade"
+    ],
+    "ubuntu_baseline_scope": "All seven Ubuntu Discover binary packages"
+  },
+  "execution": {
+    "execution_mode": "preflight",
+    "package_attempts": 0,
+    "package_execution_started": false,
+    "package_attempt_effect": "none"
+  }
+}

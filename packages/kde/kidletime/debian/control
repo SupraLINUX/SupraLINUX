@@ -1,0 +1,60 @@
+Source: kf6-kidletime
+Section: libs
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+Build-Depends: debhelper-compat (= 13),
+               dh-exec,
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               cmake (>= 3.29~),
+               extra-cmake-modules (>= 6.30.0~),
+               libwayland-dev (>= 1.9~),
+               libx11-dev,
+               libx11-xcb-dev,
+               libxcb-sync-dev,
+               libxcb1-dev,
+               libxss-dev,
+               pkgconf,
+               plasma-wayland-protocols (>= 1.6.0~),
+               qt6-base-dev (>= 6.9.0~),
+               qt6-base-private-dev (>= 6.9.0~),
+               qt6-tools-dev (>= 6.9.0~),
+               qt6-wayland-dev (>= 6.9.0~),
+               wayland-protocols (>= 1.27~),
+               xauth <!nocheck>,
+               xvfb <!nocheck>,
+Standards-Version: 4.7.3
+Homepage: https://invent.kde.org/frameworks/kidletime
+Rules-Requires-Root: no
+
+Package: libkf6idletime-dev
+Section: libdevel
+Architecture: any
+Depends: libkf6idletime6 (= ${binary:Version}),
+         qt6-base-dev (>= 6.9.0~),
+         ${misc:Depends},
+Recommends: libkf6idletime-doc (= ${source:Version}),
+Description: development files for KIdleTime
+ KIdleTime provides information about user activity and inactivity.
+ .
+ This package contains development files for KIdleTime.
+
+Package: libkf6idletime-doc
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+Description: KIdleTime documentation compatibility package
+ This package preserves the Debian-family KIdleTime documentation package name
+ for package compatibility.
+ .
+ The current SupraLINUX build profile does not ship QCH documentation files.
+Section: doc
+
+Package: libkf6idletime6
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: library to provide information about idle time
+ KIdleTime allows applications to observe user activity and inactivity and to
+ receive idle-time notifications.

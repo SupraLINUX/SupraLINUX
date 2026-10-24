@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "scope": "Private offline KVM diagnostic, not package build or transition admission",
+  "vm_name": "supralinux-offline-diagnostic-20261011t161218z-3902689",
+  "vm_uuid": "1c8b0ad3-f4b1-4d7b-8e27-f8c420e86cfb",
+  "guest_entry": "run.py",
+  "package_attempt_consumed": false,
+  "canonical_effect": "none",
+  "network_interfaces_requested": 0,
+  "github_runner_created": false,
+  "golden_image": "/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2",
+  "golden_image_sha256": "a0b88447d9a9ecd9785087390cf499abaf9416291864fe1be4d63d9a334b2acd",
+  "payload_iso_sha256": "41946d41ff70d0ef13e5bc34325cf3460111e6be1ddc595e291849c300e9f4f7",
+  "exact_payload_iso_retained": true,
+  "diagnostic_exit_code": 0,
+  "guest_results_exported": true,
+  "state": "PASS",
+  "cleanup_verified": true,
+  "vm_absent": true,
+  "overlay_absent": true,
+  "golden_preserved": true,
+  "finished_at": "2026-10-11T16:13:41.923873+00:00"
+}

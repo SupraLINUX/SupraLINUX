@@ -1,0 +1,165 @@
+dpkg-gensymbols: warning: some new symbols appeared in the symbols file: see diff output below
+dpkg-gensymbols: error: some symbols or patterns disappeared in the symbols file: see diff output below
+dpkg-gensymbols: warning: debian/libkglobalacceld0/DEBIAN/symbols does not match completely debian/libkglobalacceld0.symbols
+--- debian/libkglobalacceld0.symbols (libkglobalacceld0_6.7.5-0supralinux1_amd64)
++++ dpkg-gensymbolsGDPrNA	2026-10-09 09:55:17.301487461 +0000
+@@ -1,10 +1,12 @@
+ libKGlobalAccelD.so.0 libkglobalacceld0 #MINVER#
+ * Build-Depends-Package: libkglobalacceld-dev
++ _ZGVZN9QMetaType21registerConverterImplI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.7.5-0supralinux1
+  _ZGVZN9QMetaType21registerConverterImplI5QListI12QKeySequenceE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.5
+  _ZGVZN9QMetaType21registerConverterImplI5QListI15QDBusObjectPathE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.5
+  _ZGVZN9QMetaType21registerConverterImplI5QListI19KGlobalShortcutInfoE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.5
+  _ZGVZN9QMetaType21registerConverterImplI5QListIS1_I7QStringEE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.5
+  _ZGVZN9QMetaType21registerConverterImplI5QListIiE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.5
++ _ZGVZN9QMetaType23registerMutableViewImplI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS8_EES_S_E10unregister@Base 6.7.5-0supralinux1
+  _ZGVZN9QMetaType23registerMutableViewImplI5QListI12QKeySequenceE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS8_EES_S_E10unregister@Base 6.0.5
+  _ZGVZN9QMetaType23registerMutableViewImplI5QListI15QDBusObjectPathE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS8_EES_S_E10unregister@Base 6.0.5
+  _ZGVZN9QMetaType23registerMutableViewImplI5QListI19KGlobalShortcutInfoE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS8_EES_S_E10unregister@Base 6.0.5
+@@ -17,12 +19,15 @@
+  _ZN13KGlobalAccelD11qt_metacastEPKc@Base 6.0.5
+  _ZN13KGlobalAccelD11setInactiveERK5QListI7QStringE@Base 6.0.5
+  _ZN13KGlobalAccelD11setShortcutERK5QListI7QStringERKS0_IiEj@Base 6.0.5
+- _ZN13KGlobalAccelD15setShortcutKeysERK5QListI7QStringERKS0_I12QKeySequenceEj@Base 6.0.5
++ _ZN13KGlobalAccelD15setShortcutKeysERK5QListI7QStringERK4QSetI12QKeySequenceEj@Base 6.7.5-0supralinux1
++#MISSING: 6.7.5-0supralinux1# _ZN13KGlobalAccelD15setShortcutKeysERK5QListI7QStringERKS0_I12QKeySequenceEj@Base 6.0.5
+  _ZN13KGlobalAccelD16staticMetaObjectE@Base 6.0.5
+  _ZN13KGlobalAccelD18setForeignShortcutERK5QListI7QStringERKS0_IiE@Base 6.0.5
+  _ZN13KGlobalAccelD20blockGlobalShortcutsEb@Base 6.0.5
+- _ZN13KGlobalAccelD20yourShortcutsChangedERK5QListI7QStringERKS0_I12QKeySequenceE@Base 6.0.5
+- _ZN13KGlobalAccelD22setForeignShortcutKeysERK5QListI7QStringERKS0_I12QKeySequenceE@Base 6.0.5
++ _ZN13KGlobalAccelD20yourShortcutsChangedERK5QListI7QStringERK4QSetI12QKeySequenceE@Base 6.7.5-0supralinux1
++#MISSING: 6.7.5-0supralinux1# _ZN13KGlobalAccelD20yourShortcutsChangedERK5QListI7QStringERKS0_I12QKeySequenceE@Base 6.0.5
++ _ZN13KGlobalAccelD22setForeignShortcutKeysERK5QListI7QStringERK4QSetI12QKeySequenceE@Base 6.7.5-0supralinux1
++#MISSING: 6.7.5-0supralinux1# _ZN13KGlobalAccelD22setForeignShortcutKeysERK5QListI7QStringERKS0_I12QKeySequenceE@Base 6.0.5
+  _ZN13KGlobalAccelD22yourShortcutGotChangedERK5QListI7QStringERKS0_IiE@Base 6.0.5
+  _ZN13KGlobalAccelD29activateGlobalShortcutContextERK7QStringS2_@Base 6.0.5
+  _ZN13KGlobalAccelD4initEv@Base 6.0.5
+@@ -31,6 +36,7 @@
+  _ZN13KGlobalAccelDD0Ev@Base 6.0.5
+  _ZN13KGlobalAccelDD1Ev@Base 6.0.5
+  _ZN13KGlobalAccelDD2Ev@Base 6.0.5
++ _ZN13QMetaSequence12MetaSequenceI4QSetI12QKeySequenceEE5valueE@Base 6.7.5-0supralinux1
+  _ZN13QMetaSequence12MetaSequenceI5QListI12QKeySequenceEE5valueE@Base 6.0.5
+  _ZN13QMetaSequence12MetaSequenceI5QListI15QDBusObjectPathEE5valueE@Base 6.0.5
+  _ZN13QMetaSequence12MetaSequenceI5QListI19KGlobalShortcutInfoEE5valueE@Base 6.0.5
+@@ -51,6 +57,7 @@
+  _ZN21KGlobalAccelInterfaceD0Ev@Base 6.0.5
+  _ZN21KGlobalAccelInterfaceD1Ev@Base 6.0.5
+  _ZN21KGlobalAccelInterfaceD2Ev@Base 6.0.5
++ _ZN23GlobalShortcutsRegistry10nextSerialEv@Base 6.7.5-0supralinux1
+  _ZN23GlobalShortcutsRegistry10processKeyEi16ShortcutKeyState@Base 6.4.90
+  _ZN23GlobalShortcutsRegistry10ungrabKeysEv@Base 6.0.5
+  _ZN23GlobalShortcutsRegistry11qt_metacallEN11QMetaObject4CallEiPPv@Base 6.0.5
+@@ -72,6 +79,7 @@
+  _ZN23GlobalShortcutsRegistry17registerComponentESt10unique_ptrI9ComponentPFvPS1_EE@Base 6.0.5
+  _ZN23GlobalShortcutsRegistry19deactivateShortcutsEb@Base 6.0.5
+  _ZN23GlobalShortcutsRegistry19unregisterComponentEP9Component@Base 6.0.5
++ _ZN23GlobalShortcutsRegistry20getOrCreateComponentERK7QStringS2_@Base 6.7.5-0supralinux1
+  (arch=!amd64v3)_ZN23GlobalShortcutsRegistry21loadAllowListSettingsEv@Base 6.6.0
+  _ZN23GlobalShortcutsRegistry23detectAppsWithShortcutsEv@Base 6.0.5
+  _ZN23GlobalShortcutsRegistry23scheduleRefreshServicesEv@Base 6.0.5
+@@ -80,25 +88,30 @@
+  _ZN23GlobalShortcutsRegistry5clearEv@Base 6.0.5
+  _ZN23GlobalShortcutsRegistry8grabKeysEv@Base 6.0.5
+  _ZN23GlobalShortcutsRegistry8keyEventEi16ShortcutKeyState@Base 6.4.90
++ _ZN23GlobalShortcutsRegistry9needsSaveEv@Base 6.7.5-0supralinux1
+  _ZN23GlobalShortcutsRegistryC1Ev@Base 6.0.5
+  _ZN23GlobalShortcutsRegistryC2Ev@Base 6.0.5
+  _ZN23GlobalShortcutsRegistryD0Ev@Base 6.0.5
+  _ZN23GlobalShortcutsRegistryD1Ev@Base 6.0.5
+  _ZN23GlobalShortcutsRegistryD2Ev@Base 6.0.5
+  _ZN5Utils10reverseKeyERK12QKeySequence@Base 6.0.5
+- _ZN5Utils14matchSequencesERK12QKeySequenceRK5QListIS0_E@Base 6.0.5
++ _ZN5Utils14matchSequencesERK12QKeySequenceRK4QSetIS0_E@Base 6.7.5-0supralinux1
++#MISSING: 6.7.5-0supralinux1# _ZN5Utils14matchSequencesERK12QKeySequenceRK5QListIS0_E@Base 6.0.5
+  _ZN5Utils17normalizeSequenceERK12QKeySequence@Base 6.0.90
+  _ZN5Utils7cropKeyERK12QKeySequencei@Base 6.0.5
+  (arch=!amd64v3)_ZN9Component11qt_metacallEN11QMetaObject4CallEiPPv@Base 6.6.0
+  (arch=!amd64v3)_ZN9Component11qt_metacastEPKc@Base 6.6.0
+- (arch=!amd64v3)_ZN9Component12loadSettingsERK12KConfigGroup@Base 6.6.0
++#MISSING: 6.7.5-0supralinux1# (arch=!amd64v3)_ZN9Component12loadSettingsERK12KConfigGroup@Base 6.6.0
++ _ZN9Component12loadSettingsERK12KConfigGroupS2_@Base 6.7.5-0supralinux1
+  (arch=!amd64v3)_ZN9Component14currentContextEv@Base 6.6.0
+  (arch=!amd64v3)_ZN9Component14invokeShortcutERK7QStringS2_@Base 6.6.0
+  (arch=!amd64v3)_ZN9Component14keysFromStringERK7QString@Base 6.6.0
+- (arch=!amd64v3)_ZN9Component14stringFromKeysERK5QListI12QKeySequenceE@Base 6.6.0
++ _ZN9Component14stringFromKeysERK4QSetI12QKeySequenceE@Base 6.7.5-0supralinux1
++#MISSING: 6.7.5-0supralinux1# (arch=!amd64v3)_ZN9Component14stringFromKeysERK5QListI12QKeySequenceE@Base 6.6.0
+  (arch=!amd64v3)_ZN9Component15setFriendlyNameERK7QString@Base 6.6.0
+  (arch=!amd64v3)_ZN9Component15shortcutContextERK7QString@Base 6.6.0
+- (arch=!amd64v3)_ZN9Component16registerShortcutERK7QStringS2_S2_S2_@Base 6.6.0
++#MISSING: 6.7.5-0supralinux1# (arch=!amd64v3)_ZN9Component16registerShortcutERK7QStringS2_S2_S2_@Base 6.6.0
++ _ZN9Component16registerShortcutERK7QStringS2_S2_S2_m@Base 6.7.5-0supralinux1
+  (arch=!amd64v3)_ZN9Component16staticMetaObjectE@Base 6.6.0
+  (arch=!amd64v3)_ZN9Component17activateShortcutsEv@Base 6.6.0
+  (arch=!amd64v3)_ZN9Component18unregisterShortcutERK7QString@Base 6.6.0
+@@ -137,10 +150,11 @@
+  _ZNK13KGlobalAccelD9interfaceEv@Base 6.4.90
+  _ZNK21KGlobalAccelInterface10metaObjectEv@Base 6.0.5
+  _ZNK23GlobalShortcutsRegistry10metaObjectEv@Base 6.0.5
+- _ZNK23GlobalShortcutsRegistry16getShortcutByKeyERK12QKeySequenceN12KGlobalAccel9MatchTypeE@Base 6.0.5
++#MISSING: 6.7.5-0supralinux1# _ZNK23GlobalShortcutsRegistry16getShortcutByKeyERK12QKeySequenceN12KGlobalAccel9MatchTypeE@Base 6.0.5
+  _ZNK23GlobalShortcutsRegistry17allComponentNamesEv@Base 6.0.5
+  _ZNK23GlobalShortcutsRegistry17getShortcutsByKeyERK12QKeySequenceN12KGlobalAccel9MatchTypeE@Base 6.0.5
+  (arch=!amd64v3)_ZNK23GlobalShortcutsRegistry17isShortcutAllowedEPK14GlobalShortcut@Base 6.6.0
++ _ZNK23GlobalShortcutsRegistry19activeShortcutByKeyERK12QKeySequence@Base 6.7.5-0supralinux1
+  _ZNK23GlobalShortcutsRegistry19componentsDbusPathsEv@Base 6.0.5
+  _ZNK23GlobalShortcutsRegistry19isShortcutAvailableERK12QKeySequenceRK7QStringS5_@Base 6.0.5
+  _ZNK23GlobalShortcutsRegistry8dbusPathEv@Base 6.0.5
+@@ -150,10 +164,11 @@
+  (arch=!amd64v3)_ZNK9Component12allShortcutsERK7QString@Base 6.6.0
+  (arch=!amd64v3)_ZNK9Component12friendlyNameEv@Base 6.6.0
+  (arch=!amd64v3)_ZNK9Component13shortcutNamesERK7QString@Base 6.6.0
+- (arch=!amd64v3)_ZNK9Component13writeSettingsER12KConfigGroup@Base 6.6.0
++#MISSING: 6.7.5-0supralinux1# (arch=!amd64v3)_ZNK9Component13writeSettingsER12KConfigGroup@Base 6.6.0
++ _ZNK9Component13writeSettingsER12KConfigGroupS1_@Base 6.7.5-0supralinux1
+  (arch=!amd64v3)_ZNK9Component15shortcutContextERK7QString@Base 6.6.0
+  (arch=!amd64v3)_ZNK9Component16allShortcutInfosERK7QString@Base 6.6.0
+- (arch=!amd64v3)_ZNK9Component16getShortcutByKeyERK12QKeySequenceN12KGlobalAccel9MatchTypeE@Base 6.6.0
++#MISSING: 6.7.5-0supralinux1# (arch=!amd64v3)_ZNK9Component16getShortcutByKeyERK12QKeySequenceN12KGlobalAccel9MatchTypeE@Base 6.6.0
+  (arch=!amd64v3)_ZNK9Component17getShortcutByNameERK7QStringS2_@Base 6.6.0
+  (arch=!amd64v3)_ZNK9Component17getShortcutsByKeyERK12QKeySequenceN12KGlobalAccel9MatchTypeE@Base 6.6.0
+  (arch=!amd64v3)_ZNK9Component19getShortcutContextsEv@Base 6.6.0
+@@ -165,11 +180,13 @@
+  _ZTI21KGlobalAccelInterface@Base 6.0.5
+  _ZTI23GlobalShortcutsRegistry@Base 6.0.5
+  (arch=!amd64v3)_ZTI9Component@Base 6.6.0
++ _ZTIZN9QMetaType17registerConverterI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS3_EEEEbT1_EUlPKvPvE_@Base 6.7.5-0supralinux1
+  _ZTIZN9QMetaType17registerConverterI5QListI12QKeySequenceE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS3_EEEEbT1_EUlPKvPvE_@Base 6.0.5
+  _ZTIZN9QMetaType17registerConverterI5QListI15QDBusObjectPathE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS3_EEEEbT1_EUlPKvPvE_@Base 6.0.5
+  _ZTIZN9QMetaType17registerConverterI5QListI19KGlobalShortcutInfoE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS3_EEEEbT1_EUlPKvPvE_@Base 6.0.5
+  _ZTIZN9QMetaType17registerConverterI5QListIS1_I7QStringEE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS4_EEEEbT1_EUlPKvPvE_@Base 6.0.5
+  _ZTIZN9QMetaType17registerConverterI5QListIiE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS2_EEEEbT1_EUlPKvPvE_@Base 6.0.5
++ _ZTIZN9QMetaType19registerMutableViewI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS3_EEEEbT1_EUlPvSB_E_@Base 6.7.5-0supralinux1
+  _ZTIZN9QMetaType19registerMutableViewI5QListI12QKeySequenceE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS3_EEEEbT1_EUlPvSB_E_@Base 6.0.5
+  _ZTIZN9QMetaType19registerMutableViewI5QListI15QDBusObjectPathE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS3_EEEEbT1_EUlPvSB_E_@Base 6.0.5
+  _ZTIZN9QMetaType19registerMutableViewI5QListI19KGlobalShortcutInfoE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS3_EEEEbT1_EUlPvSB_E_@Base 6.0.5
+@@ -180,11 +197,13 @@
+  _ZTS21KGlobalAccelInterface@Base 6.0.5
+  _ZTS23GlobalShortcutsRegistry@Base 6.0.5
+  (arch=!amd64v3)_ZTS9Component@Base 6.6.0
++ _ZTSZN9QMetaType17registerConverterI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS3_EEEEbT1_EUlPKvPvE_@Base 6.7.5-0supralinux1
+  _ZTSZN9QMetaType17registerConverterI5QListI12QKeySequenceE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS3_EEEEbT1_EUlPKvPvE_@Base 6.0.5
+  _ZTSZN9QMetaType17registerConverterI5QListI15QDBusObjectPathE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS3_EEEEbT1_EUlPKvPvE_@Base 6.0.5
+  _ZTSZN9QMetaType17registerConverterI5QListI19KGlobalShortcutInfoE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS3_EEEEbT1_EUlPKvPvE_@Base 6.0.5
+  _ZTSZN9QMetaType17registerConverterI5QListIS1_I7QStringEE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS4_EEEEbT1_EUlPKvPvE_@Base 6.0.5
+  _ZTSZN9QMetaType17registerConverterI5QListIiE9QIterableI13QMetaSequenceEN9QtPrivate33QSequentialIterableConvertFunctorIS2_EEEEbT1_EUlPKvPvE_@Base 6.0.5
++ _ZTSZN9QMetaType19registerMutableViewI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS3_EEEEbT1_EUlPvSB_E_@Base 6.7.5-0supralinux1
+  _ZTSZN9QMetaType19registerMutableViewI5QListI12QKeySequenceE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS3_EEEEbT1_EUlPvSB_E_@Base 6.0.5
+  _ZTSZN9QMetaType19registerMutableViewI5QListI15QDBusObjectPathE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS3_EEEEbT1_EUlPvSB_E_@Base 6.0.5
+  _ZTSZN9QMetaType19registerMutableViewI5QListI19KGlobalShortcutInfoE9QIterableI13QMetaSequenceEN9QtPrivate37QSequentialIterableMutableViewFunctorIS3_EEEEbT1_EUlPvSB_E_@Base 6.0.5
+@@ -194,11 +213,13 @@
+  _ZTV21KGlobalAccelInterface@Base 6.0.5
+  _ZTV23GlobalShortcutsRegistry@Base 6.0.5
+  (arch=!amd64v3)_ZTV9Component@Base 6.6.0
++ _ZZN9QMetaType21registerConverterImplI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.7.5-0supralinux1
+  (optional=templinst)_ZZN9QMetaType21registerConverterImplI5QListI12QKeySequenceE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.5
+  (optional=templinst)_ZZN9QMetaType21registerConverterImplI5QListI15QDBusObjectPathE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.5
+  (optional=templinst)_ZZN9QMetaType21registerConverterImplI5QListI19KGlobalShortcutInfoE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.5
+  (optional=templinst)_ZZN9QMetaType21registerConverterImplI5QListIS1_I7QStringEE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.5
+  (optional=templinst)_ZZN9QMetaType21registerConverterImplI5QListIiE9QIterableI13QMetaSequenceEEEbSt8functionIFbPKvPvEES_S_E10unregister@Base 6.0.5
++ _ZZN9QMetaType23registerMutableViewImplI4QSetI12QKeySequenceE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS8_EES_S_E10unregister@Base 6.7.5-0supralinux1
+  (optional=templinst)_ZZN9QMetaType23registerMutableViewImplI5QListI12QKeySequenceE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS8_EES_S_E10unregister@Base 6.0.5
+  (optional=templinst)_ZZN9QMetaType23registerMutableViewImplI5QListI15QDBusObjectPathE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS8_EES_S_E10unregister@Base 6.0.5
+  (optional=templinst)_ZZN9QMetaType23registerMutableViewImplI5QListI19KGlobalShortcutInfoE9QIterableI13QMetaSequenceEEEbSt8functionIFbPvS8_EES_S_E10unregister@Base 6.0.5

@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "state": "STAGED CONSUMER GUARDS VERIFIED; INSTALLED PACKAGE TEST NOT RUN",
+  "scope": "Exact frozen original Ubuntu runtime consumers previously replayed against candidate KGlobalAccelD in zero-NIC KVM; baseline setup pins package versions and checks exact executable/library bytes before actual upgrade. No candidate admission or installed package certification.",
+  "supersedes_staged_packaging": ".work/kglobalacceld-private-sdk-packaging-evaluation-20261011/debian",
+  "prior_stage_seal": ".artifacts/plasma-frontier/kglobalacceld-staged-private-sdk-wrapper-kvm-certification-20261011/index.json",
+  "reviewed_consumers": [
+    {
+      "package": "kwin-wayland",
+      "version": "4:6.6.6-0ubuntu0.1",
+      "architecture": "amd64",
+      "installed_path": "/usr/bin/kwin_wayland",
+      "expected_sha256": "31858ca3969a93efff4909693db543444bd52286dd5f9eb945bc2df5b6d3dbf3",
+      "reviewed_payload_path": ".work/kglobalacceld-original-kwin-x11-runtime-control-20261011-v2/payload/project/.work/original-kwin-wayland/usr/bin/kwin_wayland"
+    },
+    {
+      "package": "kwin-x11",
+      "version": "4:6.6.4-0ubuntu1",
+      "architecture": "amd64",
+      "installed_path": "/usr/bin/kwin_x11",
+      "expected_sha256": "84ae0c7431ceff9f5ca48aee61b2c45bad590738330ca29daadcf7f48e53de93",
+      "reviewed_payload_path": ".work/kglobalacceld-original-kwin-x11-runtime-control-20261011-v2/payload/project/.work/kwin-x11-runtime/usr/bin/kwin_x11"
+    },
+    {
+      "package": "libkwin6",
+      "version": "4:6.6.6-0ubuntu0.1",
+      "architecture": "amd64",
+      "installed_path": "/usr/lib/x86_64-linux-gnu/libkwin.so.6",
+      "expected_sha256": "fb4f9611686fb9e898fd902c0fa579f9c5183952f30580854935ca4ec060775a",
+      "reviewed_payload_path": ".work/kglobalacceld-original-kwin-x11-runtime-control-20261011-v2/payload/project/.work/original-libkwin6/usr/lib/x86_64-linux-gnu/libkwin.so.6.6.6"
+    },
+    {
+      "package": "libkwin-x11-6",
+      "version": "4:6.6.4-0ubuntu1",
+      "architecture": "amd64",
+      "installed_path": "/usr/lib/x86_64-linux-gnu/libkwin-x11.so.6",
+      "expected_sha256": "f83c9e2755264124712fb74414ac131bbecae01898110b140a76bc16ab443f21",
+      "reviewed_payload_path": ".work/kglobalacceld-original-kwin-x11-runtime-control-20261011-v2/payload/project/.work/original-libkwin-x11/usr/lib/x86_64-linux-gnu/libkwin-x11.so.6.6.4"
+    }
+  ],
+  "new_fixture_files": {
+    "debian/tests/client/ubuntu-runtime-consumer-versions": "3b43993df715b49d5c2b3081ee39fbd343c5f4a8288e1b4ce7014e24e300739b",
+    "debian/tests/client/ubuntu-runtime-consumers.sha256": "7381705b1566f6c58c58f5f8147442cd59fd7f57ee7f81d2baf3f2196be5be7b"
+  },
+  "baseline_setup_sha256": "83023131f1b679e56c16052f7735d923d13d2d9cb7f2f9204fb45e47801f064e",
+  "unchanged_client_sources": {
+    "run-private.py": true,
+    "library.cpp": true,
+    "main.cpp": true,
+    "CMakeLists.txt": true
+  },
+  "original_runtime_replay_evidence_reused_for_exact_bytes_only": true,
+  "package_attempt_consumed": false,
+  "canonical_effect": "none"
+}

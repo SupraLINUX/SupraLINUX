@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+. /etc/os-release
+test "$ID" = ubuntu
+test "$VERSION_ID" = 26.04
+test "$VERSION_CODENAME" = resolute
+test "$(dpkg --print-architecture)" = amd64
+test "$(uname -m)" = x86_64
+dpkg-query -W ubuntu-keyring >/dev/null
+test -r /usr/share/keyrings/ubuntu-archive-keyring.gpg
+printf '%s\n' SUPRALINUX_UBUNTU26_KVM_DEP8_GUEST_OK

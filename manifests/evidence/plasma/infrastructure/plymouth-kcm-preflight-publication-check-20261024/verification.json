@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "plymouth-kcm-authoritative-preflight-evidence-publication-check",
+  "source_commit": "69871bd4da7346d4c0e5d4b8d3b4956e911b6a66",
+  "control": {
+    "router_run_id": 40086839758,
+    "host_job_id": 120851568642,
+    "artifact_id": 12557636368,
+    "artifact_digest": "sha256:ec682a47742d7ccdb39635fe3e86470af108a2b930eb4a66ffafe6402c170cb4",
+    "mode": "publish-evidence-check"
+  },
+  "package_evidence": {
+    "node": "plymouth-kcm",
+    "package_source_commit": "728ee9753afb55eef372cf726be8f1914f90494f",
+    "workflow_run_id": 40053868847,
+    "workflow_job_id": 120752366665,
+    "artifact_id": 12544242876,
+    "artifact_sha256": "985c9a23023ec26f913264eef14023c9605f1ece4e8a48cb003920ddd853dcac",
+    "host_evidence_manifest_sha256": "61cb74f24e121e775fd86a454a0d8ce864e1d4d41d09b5f7559913edfb8dffda",
+    "package_attempt_consumed": false
+  },
+  "result": {
+    "closure_kind": "preflight",
+    "canonical_update_file_count": 16,
+    "canonical_update_manifest_sha256": "c2ccd1450828a6e594a4b67f0135f3ec390ebce0a4d24895fe85f71bf8d75612",
+    "candidate_commit": "62ffafc79859e01e71e40d1af8e77ad765a7ca40",
+    "publish_dry_run": true,
+    "published": false,
+    "offline_restore_verified": true,
+    "requires_github_for_restore": false,
+    "vm_created": false,
+    "jit_invoked": false,
+    "package_attempt_effect": "none"
+  },
+  "mechanism_inputs": {
+    "scripts/host-close-package-evidence.py": "53e4f05779f29620732f32ceabd8850d5f648b53",
+    "scripts/supralinux-authoritative-host-broker.py": "f5f8debc24f794d604c99b14ba8b090942365040",
+    ".github/workflows/host-authoritative-control.yml": "46195f492661aa1f25baf5fa2bafda90fd469c0a",
+    ".github/workflows/pr-ci-router.yml": "a453ca773b6f92ba01189b2127e3fab28ec02eab",
+    "scripts/test-host-authoritative-control.py": "47ebc4164ee1f83f1681b32273715aa59ef000c2"
+  },
+  "conclusion": "The current host-side evidence publication path successfully replayed the exact authoritative Plymouth input-preflight PASS, validated the 16-file canonical update, created a local preflight closure commit, ran repository validators and completed a force-with-lease dry-run without changing the branch or consuming a package Attempt."
+}

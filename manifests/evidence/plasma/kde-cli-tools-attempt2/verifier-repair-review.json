@@ -1,0 +1,45 @@
+{
+  "state": "PASS",
+  "scope": "Generic predecessor verifier repair only; no package certification",
+  "node": "kde-cli-tools",
+  "version": "4:6.7.5-0supralinux2",
+  "upstream_and_packaging_unchanged": true,
+  "source_commit": "c60d9405d1b4b333a74fac2ec46e4fd305cf5c10",
+  "original_result_path": "manifests/evidence/plasma/kde-cli-tools-attempt2/result.json",
+  "original_result_sha256": "80c2db8a32793470183cfdfd26498e3021680ed3ed22fd6a69036afc1ada8fc4",
+  "original_state": "FAIL",
+  "classification": "INFRA_INVALID",
+  "corrected_original_buildinfo_result": "PASS",
+  "required_test_profile_predecessors": [
+    "libkf6kcmutils-bin",
+    "libkf6service-bin"
+  ],
+  "recorded_profiles": [
+    "derivative.ubuntu",
+    "noudeb"
+  ],
+  "checks_disabled_profile_rejected": true,
+  "missing_sdk_and_wrong_versions_rejected": true,
+  "unsupported_conditions_rejected": true,
+  "reviewed_contract_tests": 23,
+  "source_authorities": [
+    "https://www.debian.org/doc/debian-policy/ch-relationships.html#build-profile-restriction-formulas",
+    "https://manpages.debian.org/trixie/dpkg-dev/deb-buildinfo.5.en.html"
+  ],
+  "changed_execution_files": {
+    "scripts/verify-reviewed-build-predecessors.py": {
+      "previous_sha256": "ffdae9ff1a2505e014a2af2062a366321346606dcf65d7eba7bfbd83a5f44f11",
+      "current_sha256": "181f9f63f2dde4251a2628e533424b0d30c7dea3057789d5c55373fab0649324"
+    },
+    "scripts/record-plasma-package-failure.py": {
+      "previous_sha256": "9dc9d362cdbfd48df58eaae6879f05089e6fd84638790e165f2f3f2eada03190",
+      "current_sha256": "bce100ca7ff06df7e66dc1ed31cd4fdd3f634caf517db4640329f06593ca0f0a"
+    },
+    "scripts/test-reviewed-package-contract.py": {
+      "previous_sha256": "55d22f05be21ae9dd3350f0cb9878c790c1e19b944d898e577f16512b6f9fa97",
+      "current_sha256": "c70ba3b5a64175056c6884bc4fece58b54a89b3b9008c136f0c48f05129dbb72"
+    }
+  },
+  "next_gate": "Fresh authoritative input preflight, then complete clean package/lintian/installed compatibility gates",
+  "production_waits_or_source_patches_added": false
+}

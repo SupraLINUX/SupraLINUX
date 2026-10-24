@@ -1,0 +1,55 @@
+{
+  "scope": "packaging repair diagnosis, not candidate acceptance",
+  "attempt": 1,
+  "original_state": "FAIL",
+  "sbuild_result": "PASS",
+  "upstream_ctest_result": "PASS",
+  "lintian_result": "FAIL",
+  "autopkgtest_result": "not-run",
+  "source_commit": "39f57c304b8309b820824bc8ca028c2ce7f20372",
+  "artifact_sha256": "8dec54b9351c2b381359e4205a5972415022209e6651c6cb149e434def7835f0",
+  "offline_restore_verified": true,
+  "downstream_eligible": false,
+  "candidate_revision": "6.7.5-0supralinux2",
+  "new_symbols": {
+    "libkpipewire6": [
+      "_ZN18PipeWireSourceItem15setObjectSerialEy@Base 6.7.5",
+      " _ZN18PipeWireSourceItem19objectSerialChangedEv@Base 6.7.5",
+      " _ZN20PipeWireSourceStream12createStreamEyi@Base 6.7.5",
+      " _ZNK18PipeWireSourceItem12objectSerialEv@Base 6.7.5",
+      " (optional=templinst)_ZTSSt23_Sp_counted_ptr_inplaceI14QOpenGLTextureSaIvELN9__gnu_cxx12_Lock_policyE2EE@Base 6.7.5"
+    ],
+    "libkpipewirerecord6": [
+      "_ZN25PipeWireBaseEncodedStream15setObjectSerialEy@Base 6.7.5",
+      " _ZN25PipeWireBaseEncodedStream19objectSerialChangedEv@Base 6.7.5",
+      " _ZNK25PipeWireBaseEncodedStream12objectSerialEv@Base 6.7.5"
+    ]
+  },
+  "all_original_symbol_bytes_preserved": true,
+  "unchanged_test_inputs_sha256": {
+    "tests/baseline-setup": "b1e58fcf2f406124fe7b22f01c8c1237b42b94dae4f381ae8661e0a8810f5556",
+    "tests/client/CMakeLists.txt": "d101b5389d40130e886f1b35eeb94112a44f640b2e16f85b866844d1f584adb2",
+    "tests/client/client.conf": "64ddc09e4be561b49df18ac6909ca849db40482b801f2521c9227061d4a003e2",
+    "tests/client/main.cpp": "978a172186732bb1a5ad7f1acf7f6c68bafc28a656eb7e312a0e3bd05c2a4b59",
+    "tests/client/private-pipewire.conf": "95e50cd629ca8e4b2bc4f19ccf1189d7ef11bfebaffefa06ae6f8a1061c237ee",
+    "tests/client/run-private-video.py": "fd6b127188f3e6d1dc38612bc197e6400d5797721fc53dc6ec52217319ed4b82",
+    "tests/client/video-source.c": "6b5e5f03a6df35a782f7cc48b045d2dbb2f008462170dd387c90e6f06e55add4",
+    "tests/consumer": "94914848ce4015634d452a12b44fd5024483d5288ab1bacb428827d6365a7d62",
+    "tests/control": "9a1eda445b90b3a9c6a986c79f1dd96502f650aac596b4b56354482b32c70082",
+    "tests/ubuntu-abi-client": "99c9e567363d6f14a90435c67ca662a421dedb1927794890a8b413de1c790257",
+    "tests/upstream-session": "f4e81f2437e3e38f1c420e6f2d67f45c1631c8acb76413fa9d1e977c1c26e4e2"
+  },
+  "unchanged_upstream_and_dependency_inputs": true,
+  "host_dep5_and_symbols_parsers": "PASS",
+  "fresh_authoritative_preflight_required": true,
+  "files_sha256": {
+    "artifact-inspection.json": "5f28403bcd9cb695d0932710e2ae0314650e1dd506586d099efca47e9bfe338f",
+    "artifact-meta.json": "2273335907c5fc983062b5d70f77637f54cc3bd3dc02178ddc7c97ee6ce1129c",
+    "cleanup.json": "5e4809442525cdcd8be4cdeaecdad0c58a503a1e5a74238c865552b685bdde8d",
+    "libkpipewire6-original.symbols": "a6e05987f51e2a0af88dbcabf29e266dc0820dd7524243f5ebfd5ca53c9f1524",
+    "libkpipewirerecord6-original.symbols": "a8933a18ad7e0823ae6e6df4e44f03f1316f26ba32144723969cd0851b3bdf43",
+    "lintian.log": "35552e8606a35f5403f8c8ea2268379730dfa9a5004596030f189d294fb45a56",
+    "upstream-tests.json": "975261856332cef4bcdabfb1c3ef62dae7cac17ab55931b8e0b74aad53f299b5",
+    "workflow-job.json": "22748d57a52e5d25202de69aeda94f0bdb920a934396982ebc56d564cc5cae09"
+  }
+}

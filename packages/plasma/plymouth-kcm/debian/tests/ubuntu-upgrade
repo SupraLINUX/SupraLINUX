@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-plymouth-kcm-baseline
+source_dir="$(cd "$(dirname "$0")/.." && pwd)"
+expected="$(dpkg-parsechangelog -l "${source_dir}/changelog" -S Version)"
+installed="$(dpkg-query -W -f='${Version}' kde-config-plymouth)"
+[[ "${installed}" == "${expected}" ]]
+test -s "${BASE}/installed-files.txt"
+original="$(cat "${BASE}/ubuntu-version")"
+dpkg --compare-versions "${expected}" gt "${original}"
+apt-get check
+printf 'Real Ubuntu-to-SupraLINUX Plymouth KCM upgrade: PASS\n'

@@ -1,0 +1,15 @@
+{
+  "state": "PASS",
+  "expected_tests": [
+    "libkbolt-managertest",
+    "libkbolt-devicetest",
+    "kbolt-kded-kdedtest"
+  ],
+  "executed_tests": [
+    "appstreamtest",
+    "libkbolt-managertest",
+    "libkbolt-devicetest",
+    "kbolt-kded-kdedtest"
+  ],
+  "scope": "CTest suite executed during the clean package build"
+}
