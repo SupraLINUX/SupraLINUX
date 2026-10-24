@@ -1,11 +1,9 @@
 {
   "schema": 1,
   "role": "reviewed-plasma-package-build",
-  "state": "execution-authorized",
-  "authorized_nodes": [
-    "plymouth-kcm"
-  ],
-  "package_execution_authorized": true,
+  "state": "partial-PASS",
+  "authorized_nodes": [],
+  "package_execution_authorized": false,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "scope": "Per-node clean builds, upstream tests, package/Ubuntu upgrade and ABI client checks on KVM; graphical desktop and final distro integration remain later gates",
   "nodes": {
@@ -10065,7 +10063,7 @@
       }
     },
     "plymouth-kcm": {
-      "state": "build-pending",
+      "state": "PASS",
       "source_package": "plymouth-kcm",
       "version": "6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -11114,7 +11112,33 @@
           ]
         }
       },
-      "attempts": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 40087662878,
+          "workflow_job_id": 120853779635,
+          "source_commit": "743cc8c5814eac2b22ece0f7085a55fffc6b0f30",
+          "artifact_id": 12557933576,
+          "artifact_sha256": "4e8e9308c98c9f4dc28bb0a4b6cd42f41d024c13fdaa00c3de5902e98a89ac5b",
+          "result_path": "manifests/evidence/plasma/plymouth-kcm-attempt1/result.json",
+          "result_sha256": "3bb1645613b4cbe5921118fbc1ee95da5588b94f6040514cf654021fbf794c30",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261024t105020z-883180",
+          "host_evidence_manifest_sha256": "67cd069d54743bae3bbf535febfc594a1cefd247db4385c3f3165db24209298d",
+          "rootfs_admission_path": "manifests/evidence/plasma/plymouth-kcm-attempt1/rootfs-admission.json",
+          "rootfs_admission_sha256": "056192155e18da3853b6e775fb7f691a7995f3d8353cdfce69ae8210acc20a1f",
+          "baseline_preflight_path": "manifests/evidence/plasma/plymouth-kcm-attempt1/ubuntu-baseline-preflight.json",
+          "baseline_preflight_sha256": "c58a3ce6689b12fa425e1779367df60799bf04723ba7e8d89706fbd025f64c48",
+          "workflow_job_path": "manifests/evidence/plasma/plymouth-kcm-attempt1/workflow-job.json",
+          "workflow_job_sha256": "90279ced56e28a1ba81bc31e318f20f09c6f7b7f8cb2f5a5c03c48cd27df4322",
+          "host_result_path": "manifests/evidence/plasma/plymouth-kcm-attempt1/host-result.json",
+          "host_result_sha256": "855e1fba4b059adcc41accaaf62a24108d63c33e43c8f326c0000a743c194b42"
+        }
+      ],
       "review": {
         "upstream_changes": "Official signed KDE Plasma 6.7.5 source; no upstream code patches. The KCM, KAuth helper, KNewStuff installer metadata, policy and translations are preserved.",
         "packaging_changes": "Preserve the Ubuntu kde-config-plymouth binary/runtime layout and original Debian history; update ownership for SupraLINUX, bind exact eligible Frameworks 6.30 predecessors and retain Qt >= 6.10. No X11 session package is introduced.",
@@ -11149,6 +11173,44 @@
           "resolute-updates",
           "resolute-security"
         ]
+      },
+      "evidence": {
+        "workflow_run_id": 40087662878,
+        "workflow_job_id": 120853779635,
+        "source_commit": "743cc8c5814eac2b22ece0f7085a55fffc6b0f30",
+        "artifact_id": 12557933576,
+        "artifact_sha256": "4e8e9308c98c9f4dc28bb0a4b6cd42f41d024c13fdaa00c3de5902e98a89ac5b",
+        "result_path": "manifests/evidence/plasma/plymouth-kcm-attempt1/result.json",
+        "result_sha256": "3bb1645613b4cbe5921118fbc1ee95da5588b94f6040514cf654021fbf794c30",
+        "contract_path": "manifests/evidence/plasma/plymouth-kcm-attempt1/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261024t105020z-883180",
+        "host_evidence_manifest_sha256": "67cd069d54743bae3bbf535febfc594a1cefd247db4385c3f3165db24209298d",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/plymouth-kcm-attempt1",
+          "archive_index_sha256": "e9e094b4c324204524596e429e0ae003513aa861d5e533e7fe88cd04f2e7e810",
+          "plan_path": "manifests/evidence/plasma/plymouth-kcm-artifact-plan.json",
+          "plan_sha256": "b6324dc69de4cde517fa914becfeb0780af99e5f18ad20b81ba77ff4f5b4954e",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 2,
+          "binary_payload_file_count": 2,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/plymouth-kcm-attempt1/cache-probe-result.json",
+        "cache_probe_result_sha256": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+        "rootfs_admission_path": "manifests/evidence/plasma/plymouth-kcm-attempt1/rootfs-admission.json",
+        "rootfs_admission_sha256": "056192155e18da3853b6e775fb7f691a7995f3d8353cdfce69ae8210acc20a1f",
+        "baseline_preflight_path": "manifests/evidence/plasma/plymouth-kcm-attempt1/ubuntu-baseline-preflight.json",
+        "baseline_preflight_sha256": "c58a3ce6689b12fa425e1779367df60799bf04723ba7e8d89706fbd025f64c48",
+        "workflow_job_path": "manifests/evidence/plasma/plymouth-kcm-attempt1/workflow-job.json",
+        "workflow_job_sha256": "90279ced56e28a1ba81bc31e318f20f09c6f7b7f8cb2f5a5c03c48cd27df4322",
+        "host_result_path": "manifests/evidence/plasma/plymouth-kcm-attempt1/host-result.json",
+        "host_result_sha256": "855e1fba4b059adcc41accaaf62a24108d63c33e43c8f326c0000a743c194b42"
       }
     }
   },
@@ -11437,6 +11499,12 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/polkit-kde-agent-1-attempt1",
       "archive_index_sha256": "264c905c085b277841550f034122670a99e6b9a941d54b2ead87ea16e03c7e77"
+    },
+    {
+      "node": "plymouth-kcm",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/plymouth-kcm-attempt1",
+      "archive_index_sha256": "e9e094b4c324204524596e429e0ae003513aa861d5e533e7fe88cd04f2e7e810"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
