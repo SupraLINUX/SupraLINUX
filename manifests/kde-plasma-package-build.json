@@ -11602,7 +11602,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -11805,6 +11805,10 @@
     {
       "path": "manifests/evidence/package-revalidation/polkit-kde-agent-1-preflight46/verification.json",
       "sha256": "39292e1cbafb20eae3e5edaac9492f965c42ae2c221817a4bf01581e57cb3718"
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/plymouth-kcm-preflight47/verification.json",
+      "sha256": "68057b227e0aeb842a138f7e3d0d15974a66d39e6aa2eb1eb5b7751b42d6d856"
     }
   ],
   "package_input_incidents": [
