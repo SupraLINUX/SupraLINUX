@@ -12975,7 +12975,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -13188,6 +13188,10 @@
       "sha256": "cd2891c9324a18adcabb14a98f9b8c789f28d9521183a60e8a68392d7faca20a",
       "applicable": false,
       "inapplicability_reason": "Revision2 changes reviewed packaging/test-environment bytes after retained Discover Attempt1 FAIL. Preserve preflight48 PASS for revision1 inputs; certify revision2 bytes before Attempt2."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/discover-preflight49/verification.json",
+      "sha256": "2d810f86e5eb7e0b0c67ba245a7a8204bd1a59dcd6da0823a8fdcc407008d064"
     }
   ],
   "package_input_incidents": [
