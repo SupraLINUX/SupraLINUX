@@ -1,3 +1,13 @@
+plasma-discover (6.7.5-0supralinux3) resolute; urgency=medium
+
+  * Preserve failed revision2 and its retained authoritative evidence.
+  * Keep staging the unchanged upstream CMake install tree for KI18n catalogs.
+  * Run unchanged CategoriesTest directly with ctest so the staged
+    XDG_DATA_DIRS reaches the test instead of being sanitized by dh_auto_test.
+  * Keep Flatpak network integration deferred to controlled integration tests.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Sun, 25 Oct 2026 04:31:00 +0000
+
 plasma-discover (6.7.5-0supralinux2) resolute; urgency=medium
 
   * Preserve the failed revision1 package Attempt and unchanged upstream test.

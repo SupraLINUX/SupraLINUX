@@ -11218,7 +11218,7 @@
     "discover": {
       "state": "build-pending",
       "source_package": "plasma-discover",
-      "version": "6.7.5-0supralinux2",
+      "version": "6.7.5-0supralinux3",
       "upstream_version": "6.7.5",
       "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/discover-6.7.5.tar.xz",
       "upstream_sha256": "e9830fffebc54c781dcb076db4ab9462ee27ddd7fd3769403a211743636e1f67",
@@ -12482,18 +12482,38 @@
           "host_evidence_manifest_sha256": "b913c2ab7e648262181173be18d6add28333e621351d839d1838c7336616d92c",
           "cause": "Clean authoritative sbuild compiled Discover and reached the unchanged upstream CategoriesTest. CategoriesTest::testTranslations() failed because KLocalizedString found only the source language: the Debian test phase runs before dh_auto_install, while upstream ki18n_install(po) materializes libdiscover translation catalogs through the install step. Native totals were 2 passed, 1 failed; sbuild stopped at dh_auto_test, so lintian and installed package tests did not run.",
           "repair": "Preserve Attempt1 and its persistently retained raw artifact. Revision2 changes only packaging test setup: stage the unchanged upstream CMake install tree into a disposable DESTDIR, expose its usr/share via XDG_DATA_DIRS, and rerun the unchanged CategoriesTest. Do not patch KDE source/assertions or change Qt/Frameworks. Mark preflight48 inapplicable and obtain a fresh authoritative input preflight before Attempt2."
+        },
+        {
+          "attempt": 2,
+          "state": "FAIL",
+          "original_state": "FAIL",
+          "sbuild_result": "FAIL",
+          "lintian_result": "not-run",
+          "autopkgtest_result": "not-run",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 40158903682,
+          "workflow_job_id": 121066085578,
+          "source_commit": "3333ff4f8b7197ab0f39ee925cf29cc32a40a1ce",
+          "artifact_id": 12584669771,
+          "artifact_sha256": "07e2a09154b35a4456fd88282d64ebfc886a1b72331daff0b53f57d5a329215b",
+          "result_path": "manifests/evidence/plasma/discover-attempt2/observation.json",
+          "result_sha256": "02be09bc2dda42eec38a73828840964029d55134b97016c714f8170d338a5104",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261025t033544z-238771",
+          "host_evidence_manifest_sha256": "7ad6677e82a66124ed9dd239bbb1f5ae739dbe36bf7e1124f390c2da7a422279",
+          "cause": "Revision2 correctly staged the unchanged libdiscover translation catalogs, but XDG_DATA_DIRS was set only around dh_auto_test. The authoritative CategoriesTest process environment did not contain XDG_DATA_DIRS, so KLocalizedString still discovered only en_US and the unchanged languages.size() > 1 assertion failed.",
+          "repair": "Preserve Attempt2 and its persistently retained raw artifact. Revision3 changes only the packaging test invocation: keep the temporary CMake install tree but invoke the filtered unchanged CategoriesTest directly with ctest under XDG_DATA_DIRS and QT_QPA_PLATFORM. Do not patch KDE source/assertions or change Qt/Frameworks. Mark preflight49 inapplicable and obtain a fresh authoritative input preflight before Attempt3."
         }
       ],
       "review": {
         "source": "Unchanged signed stable KDE Plasma 6.7.5 Discover sources; the Ubuntu resolute 6.6.6-0ubuntu0.1 Debian tree is reference-only. Build-irrelevant Ubuntu CI/watch/key metadata is not copied into the SupraLINUX packaging overlay.",
-        "version": "No Ubuntu epoch; revision2 (6.7.5-0supralinux2) supersedes failed revision1 and remains newer than captured Ubuntu 6.6.6-0ubuntu0.1. Historical revision1 evidence remains immutable.",
+        "version": "No Ubuntu epoch; revision3 (6.7.5-0supralinux3) supersedes failed revision2 and remains newer than captured Ubuntu 6.6.6-0ubuntu0.1. Historical revisions1-2 evidence remains immutable.",
         "dependencies": "Exact eligible KDE Frameworks 6.30 binary closure, including repaired KConfig and retained KIO support inputs; direct KF6 WindowSystem and KItemModels QML requirements are explicit. Ubuntu Qt 6.10.2 is retained, upstream Kirigami Addons/AppStreamQt minimums are enforced, and PackageKit/Flatpak/Fwupd/Snap backends remain enabled.",
-        "tests": "Execute unchanged upstream CategoriesTest in the clean package build after staging the already-built upstream CMake install tree into a disposable DESTDIR so ki18n_install(po) catalogs are visible through XDG_DATA_DIRS. flatpaktest remains deferred because it contacts public Flathub and mutates Flatpak state. DEP-8 still verifies all seven installed binary payloads/linkage and a real seven-binary Ubuntu-to-SupraLINUX upgrade.",
+        "tests": "Execute unchanged upstream CategoriesTest directly with ctest in the clean package build after staging the already-built upstream CMake install tree into a disposable DESTDIR. Direct ctest preserves the staged XDG_DATA_DIRS for KI18n catalog discovery; flatpaktest remains deferred because it contacts public Flathub and mutates Flatpak state. DEP-8 still verifies all seven installed binary payloads/linkage and a real seven-binary Ubuntu-to-SupraLINUX upgrade.",
         "licensing": "Preserve the Ubuntu machine-readable GPL-2+3+KDEeV, LGPL and CC0 source inventory; the packaging adaptation retains the GPL-3+ Debian packaging terms.",
         "profile": "Discover is an explicit desktop-wayland core-session-test-image root. All Ubuntu backend packages are retained; no X11 session payload and no Dummy/Holo test-only backend is enabled."
       },
       "packaging_sha256": {
-        "changelog": "931f8e313f541e8d9477f807be9c17f72ebfe197b958dc24bee77a29c68edbad",
+        "changelog": "72200c0fdec4f0e9c0400e73b54ffaf5da397c5d3d929a9cdd22b304c4e1f949",
         "control": "c29eea737cdf9432032d60647aabf120b330815f602b9e9c10fdeb6b74aed641",
         "copyright": "228432b0f323d2731408ca1597054e9514718f7d2d845b6e1c23fbc4c507110e",
         "kde-config-updates.install": "2c50a67460f832ac7e8718dd33caef2a8910bc96766dac2f3d0f39239a8b03c3",
@@ -12510,7 +12530,7 @@
         "plasma-discover.qmlfiles": "f815ba18013d35e16ae9bc695da39fb028d4210d68da1bf6d0e0904ab34d2896",
         "qmldeps.optional": "e79b7c376d46a88cc65acba9d72c8d9676589247988848354af5769ccfa67747",
         "qmldeps.overrides": "5d426ab3236a193d909b1f32dbf6bdc56b19cbd649dc7d026dfbf512a562dad0",
-        "rules": "0aa8eae9ad6c07a457ececb9630434a9cc9a96988ce1724d3346ec40d6c7fb46",
+        "rules": "6a7ae2201d95f58b3b0cfbef37009aa4fb50cc0704077f8e13171a16c8052d5c",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
         "tests/baseline-setup": "bd4a70359658e42dfd2b189562e5aa63fcdcaeeb76c262b3270e96217d767d5f",
         "tests/control": "0a06ec471542f4e07e7c3c4ea81e42ad634dddf425c0d917d1cc05996673a1f8",
@@ -12975,7 +12995,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -13191,7 +13211,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/discover-preflight49/verification.json",
-      "sha256": "2d810f86e5eb7e0b0c67ba245a7a8204bd1a59dcd6da0823a8fdcc407008d064"
+      "sha256": "2d810f86e5eb7e0b0c67ba245a7a8204bd1a59dcd6da0823a8fdcc407008d064",
+      "applicable": false,
+      "inapplicability_reason": "Revision3 changes reviewed packaging/test-invocation bytes after retained Discover Attempt2 FAIL. Preserve preflight49 PASS for revision2 inputs; certify revision3 bytes before Attempt3."
     }
   ],
   "package_input_incidents": [

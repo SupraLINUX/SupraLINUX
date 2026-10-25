@@ -12,6 +12,8 @@ override_dh_auto_configure:
 # CategoriesTest inspects installed libdiscover translations. Stage the
 # unchanged upstream install tree in a disposable DESTDIR so ki18n_install(po)
 # has materialized those catalogs before the normal pre-install test phase.
+# Invoke ctest directly so the staged XDG_DATA_DIRS reaches CategoriesTest;
+# dh_auto_test sanitizes XDG_* before invoking the underlying build system.
 override_dh_auto_test:
 	set -e; \
 	test_root="$(CURDIR)/debian/test-root"; \
@@ -22,4 +24,4 @@ override_dh_auto_test:
 	DESTDIR="$$test_root" cmake --install "$$builddir" --prefix /usr; \
 	XDG_DATA_DIRS="$$test_root/usr/share:/usr/local/share:/usr/share" \
 	QT_QPA_PLATFORM=offscreen \
-	dh_auto_test -- ARGS="--output-on-failure --verbose -R ^CategoriesTest$$"
+	ctest --test-dir "$$builddir" --output-on-failure --verbose -R '^CategoriesTest$$'
