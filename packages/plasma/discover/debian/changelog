@@ -1,3 +1,13 @@
+plasma-discover (6.7.5-0supralinux5) resolute; urgency=medium
+
+  * Preserve failed revision4 and its retained authoritative evidence.
+  * Keep KDE source, compiled runtime payload, Qt, Frameworks and package split unchanged.
+  * Restrict DEP-8 linkage checks to exactly one ELF object per expected binary suffix,
+    so text files with colliding suffixes are not passed to ldd.
+  * Preserve the Discover private-library loader context and Ubuntu upgrade coverage.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Sun, 25 Oct 2026 09:46:00 +0000
+
 plasma-discover (6.7.5-0supralinux4) resolute; urgency=medium
 
   * Preserve failed revision3 and its retained authoritative evidence.

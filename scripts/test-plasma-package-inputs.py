@@ -437,13 +437,19 @@ class InputAdmission(unittest.TestCase):
     def test_discover_installed_payload_models_host_loader_context(self):
         payload = (ROOT / "packages/plasma/discover/debian/tests/installed-payload").read_text()
         self.assertIn("'plasma-discover': ['/plasma-discover', '/libDiscoverCommon.so'", payload)
-        self.assertIn("p.name == 'libDiscoverCommon.so' and p.is_file()", payload)
-        self.assertIn("discover_private_dir = private_matches[0].parent", payload)
+        self.assertIn("def is_elf(path):", payload)
+        self.assertIn("handle.read(4) == b'\\x7fELF'", payload)
+        self.assertIn("p.name == 'libDiscoverCommon.so' and is_elf(p)", payload)
+        self.assertIn("for suffix in sorted(binary_suffixes):", payload)
+        self.assertIn("if str(p).endswith(suffix) and is_elf(p)", payload)
+        self.assertIn("assert len(candidates) == 1", payload)
+        self.assertIn("assert len(checked) == len(binary_suffixes)", payload)
         self.assertIn("environment = None", payload)
         self.assertIn("if '/qt6/plugins/discover/' in str(path):", payload)
         self.assertIn("environment['LD_LIBRARY_PATH'] = str(discover_private_dir)", payload)
         self.assertIn("env=environment", payload)
         self.assertIn("assert plugin_checked", payload)
+        self.assertNotIn("if any(str(path).endswith(s) for s in binary_suffixes) and path.is_file():", payload)
 
     def test_changed_packaging_rejected(self):
         original = prepare.packaging_hashes

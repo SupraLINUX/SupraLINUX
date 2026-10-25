@@ -175,7 +175,7 @@
           "source": "https://packages.ubuntu.com/source/resolute-updates/plasma-discover"
         }
       },
-      "candidate_package_version": "6.7.5-0supralinux4",
+      "candidate_package_version": "6.7.5-0supralinux5",
       "package_execution_authorized": true,
       "materialization_result": "PASS",
       "ubuntu_reference_version": "6.6.6-0ubuntu0.1"
@@ -976,8 +976,8 @@
     }
   },
   "candidate_versions_evidence": {
-    "path": "manifests/evidence/kde-plasma-level0-candidate-versions-discover-revision4.json",
-    "sha256": "04a12d91c341a8eb23d36b31116e1aa85b334ce203a50af3015e5739d63907a0",
+    "path": "manifests/evidence/kde-plasma-level0-candidate-versions-discover-revision5.json",
+    "sha256": "afaf8d177bb04e537ee9b3665eadf32d9ab83d0558fcf4dc124c86bf5f9b73f2",
     "state": "PASS",
     "package_execution_started": false,
     "consumes_package_attempt": false

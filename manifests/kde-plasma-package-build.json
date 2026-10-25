@@ -11218,7 +11218,7 @@
     "discover": {
       "state": "build-pending",
       "source_package": "plasma-discover",
-      "version": "6.7.5-0supralinux4",
+      "version": "6.7.5-0supralinux5",
       "upstream_version": "6.7.5",
       "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/discover-6.7.5.tar.xz",
       "upstream_sha256": "e9830fffebc54c781dcb076db4ab9462ee27ddd7fd3769403a211743636e1f67",
@@ -12522,18 +12522,38 @@
           "host_evidence_manifest_sha256": "6cc86149edae3465f2188d2fbf34ba211b04dcd4f6ac77df33f2ea0e4d0091ea",
           "cause": "Authoritative revision3 sbuild and lintian passed. DEP-8 installed-payload then ran ldd on kns-backend.so as an isolated ELF object; that plugin needs private libDiscoverCommon.so but carries no private RUNPATH, so isolated ldd reported it not found. The plasma-discover host executable directly needs the same library, carries RUNPATH=/usr/lib/x86_64-linux-gnu/plasma-discover, and the library is present in the plasma-discover package. The real Ubuntu-to-SupraLINUX seven-binary upgrade test passed.",
           "repair": "Preserve Attempt3 and its persistently retained raw artifact. Revision4 changes only the installed-payload autopkgtest: require libDiscoverCommon.so explicitly, keep standalone ELF linkage checks unmodified, and run ldd for Discover backend plugins with only the Discover private library directory supplied as their loader context. Do not change KDE source, compiled runtime payload, Qt, Frameworks or package split. Mark preflight50 inapplicable and obtain a fresh authoritative input preflight before Attempt4."
+        },
+        {
+          "attempt": 4,
+          "state": "FAIL",
+          "original_state": "FAIL",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "FAIL",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 40175744687,
+          "workflow_job_id": 121115923055,
+          "source_commit": "3f0fda015398acf53585af94a924ea7bd8f9c4ee",
+          "artifact_id": 12592521285,
+          "artifact_sha256": "f4090877a38277e930a9b2b21ff3b7e80a60c2f242335a66abb99e9531d604a3",
+          "result_path": "manifests/evidence/plasma/discover-attempt4/observation.json",
+          "result_sha256": "6ed908c15bcfa7d9ae17af191a52be6d408bcbb7d24e08b8480ed772c44d48f0",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261025t081110z-1793791",
+          "host_evidence_manifest_sha256": "0f32824a9ffeaf31c6c2638f29092e7ad069b89edd483ad50f86b80a9839f138",
+          "cause": "Authoritative revision4 sbuild and lintian passed. DEP-8 installed-payload then selected every regular file whose path ended with an expected binary suffix; /plasma-discover matched both the real executable and /usr/share/lintian/overrides/plasma-discover. The latter is text, so ldd exited 1. The unchanged CategoriesTest and the real Ubuntu-to-SupraLINUX seven-binary upgrade passed.",
+          "repair": "Preserve Attempt4 and its persistently retained raw artifact. Revision5 changes only the installed-payload target selector: require exactly one ELF-magic file per expected binary suffix before ldd while preserving revision4 plugin loader context. Do not change KDE source, compiled runtime payload, Qt, Frameworks or package split. Mark preflight51 inapplicable and obtain a fresh authoritative input preflight before Attempt5."
         }
       ],
       "review": {
         "source": "Unchanged signed stable KDE Plasma 6.7.5 Discover sources; the Ubuntu resolute 6.6.6-0ubuntu0.1 Debian tree is reference-only. Build-irrelevant Ubuntu CI/watch/key metadata is not copied into the SupraLINUX packaging overlay.",
-        "version": "No Ubuntu epoch; revision4 (6.7.5-0supralinux4) supersedes failed revision3 and remains newer than captured Ubuntu 6.6.6-0ubuntu0.1. Historical revisions1-3 evidence remains immutable.",
+        "version": "No Ubuntu epoch; revision5 (6.7.5-0supralinux5) supersedes failed revision4 and remains newer than captured Ubuntu 6.6.6-0ubuntu0.1. Historical revisions1-4 evidence remains immutable.",
         "dependencies": "Exact eligible KDE Frameworks 6.30 binary closure, including repaired KConfig and retained KIO support inputs; direct KF6 WindowSystem and KItemModels QML requirements are explicit. Ubuntu Qt 6.10.2 is retained, upstream Kirigami Addons/AppStreamQt minimums are enforced, and PackageKit/Flatpak/Fwupd/Snap backends remain enabled.",
-        "tests": "Execute unchanged upstream CategoriesTest directly with ctest in the clean package build after staging the already-built upstream CMake install tree into a disposable DESTDIR. Direct ctest preserves the staged XDG_DATA_DIRS for KI18n catalog discovery; flatpaktest remains deferred because it contacts public Flathub and mutates Flatpak state. DEP-8 verifies all seven installed binary payloads, requires the private libDiscoverCommon.so explicitly, keeps standalone ELF linkage checks strict, validates Discover backend plugins in the host application's private-loader context, and performs a real seven-binary Ubuntu-to-SupraLINUX upgrade.",
+        "tests": "Execute unchanged upstream CategoriesTest directly with ctest in the clean package build after staging the already-built upstream CMake install tree into a disposable DESTDIR. Direct ctest preserves the staged XDG_DATA_DIRS for KI18n catalog discovery; flatpaktest remains deferred because it contacts public Flathub and mutates Flatpak state. DEP-8 verifies all seven installed binary payloads, requires exactly one ELF-magic target per expected binary suffix, keeps standalone ELF linkage checks strict, validates Discover backend plugins in the host application's private-loader context, and performs a real seven-binary Ubuntu-to-SupraLINUX upgrade.",
         "licensing": "Preserve the Ubuntu machine-readable GPL-2+3+KDEeV, LGPL and CC0 source inventory; the packaging adaptation retains the GPL-3+ Debian packaging terms.",
         "profile": "Discover is an explicit desktop-wayland core-session-test-image root. All Ubuntu backend packages are retained; no X11 session payload and no Dummy/Holo test-only backend is enabled."
       },
       "packaging_sha256": {
-        "changelog": "57754f761c8915d15eae282616c732913af1a2ab03b75df503559b88b4e64f8e",
+        "changelog": "8d80a9d382ceb41611bc8178a941bda40627913f23daae796a2f25d904cb96c2",
         "control": "c29eea737cdf9432032d60647aabf120b330815f602b9e9c10fdeb6b74aed641",
         "copyright": "228432b0f323d2731408ca1597054e9514718f7d2d845b6e1c23fbc4c507110e",
         "kde-config-updates.install": "2c50a67460f832ac7e8718dd33caef2a8910bc96766dac2f3d0f39239a8b03c3",
@@ -12554,7 +12574,7 @@
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
         "tests/baseline-setup": "bd4a70359658e42dfd2b189562e5aa63fcdcaeeb76c262b3270e96217d767d5f",
         "tests/control": "0a06ec471542f4e07e7c3c4ea81e42ad634dddf425c0d917d1cc05996673a1f8",
-        "tests/installed-payload": "4a13b1b553e4a9f1bbd5fc41b1765a3a4079c177a790ccda9d318109d87d14fb",
+        "tests/installed-payload": "f22ce9f790c718db177eaedbb9d9d9fc342691ee27141985a60621a900c35c28",
         "tests/ubuntu-upgrade": "43268650ae3b0a05b7ba95b043e1f0f3121b760560ddbdd4f04ad58b53bc7096"
       }
     }
@@ -13015,7 +13035,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "build",
+  "execution_mode": "preflight",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -13243,7 +13263,9 @@
     },
     {
       "path": "manifests/evidence/package-revalidation/discover-preflight51/verification.json",
-      "sha256": "502506cc70448f1f9717722b65bce9ba515fe58bdb5d047c6953e7fc913ee358"
+      "sha256": "502506cc70448f1f9717722b65bce9ba515fe58bdb5d047c6953e7fc913ee358",
+      "applicable": false,
+      "inapplicability_reason": "Revision5 changes reviewed DEP-8 installed-payload ELF-selection bytes after retained Discover Attempt4 FAIL. Preserve preflight51 PASS for revision4 inputs; certify revision5 bytes before Attempt5."
     }
   ],
   "package_input_incidents": [

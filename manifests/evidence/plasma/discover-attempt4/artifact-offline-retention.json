@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "discover-attempt4-failed-artifact-retention",
+  "source_commit": "ff0bbd4ccbec847e52b3cc9951ea99832bcee7d8",
+  "original_package": {
+    "workflow_run_id": 40175744687,
+    "workflow_job_id": 121115923055,
+    "source_commit": "3f0fda015398acf53585af94a924ea7bd8f9c4ee",
+    "artifact_id": 12592521285,
+    "artifact_sha256": "f4090877a38277e930a9b2b21ff3b7e80a60c2f242335a66abb99e9531d604a3",
+    "result_sha256": "5816d9b5addce1c91a428e57487c269b8e89610eaf935678decea0b6fed64895",
+    "package_attempt_consumed": true,
+    "original_state": "FAIL",
+    "stage": "autopkgtest-qemu"
+  },
+  "control": {
+    "router_run_id": 40181827506,
+    "host_job_id": 121134342710,
+    "control_artifact_id": 12594625800,
+    "control_artifact_digest": "sha256:3f781936ac7a24f95b64dbd2f8eb1fe20b3cc79207c5f9239e623f584fd7e6fa",
+    "exit_code": 3,
+    "expected_terminal_state": "DIAGNOSIS_REQUIRED",
+    "vm_created": false,
+    "jit_invoked": false,
+    "package_attempt_effect": "none"
+  },
+  "retained_raw_artifact": "/var/lib/supralinux/artifacts/raw/discover/40175744687/f4090877a38277e930a9b2b21ff3b7e80a60c2f242335a66abb99e9531d604a3.zip",
+  "canonical_update_created": false,
+  "conclusion": "The complete failed Attempt4 child artifact is retained persistently on the authoritative host with its original SHA-256. Exit 3 is the expected fail-closed diagnosis state and does not consume another package Attempt."
+}
