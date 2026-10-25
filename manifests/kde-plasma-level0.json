@@ -927,7 +927,7 @@
       "ubuntu_reference_version": "1:6.6.4-0ubuntu1"
     }
   },
-  "next_gate": "authoritative-plasma-package-input-preflight:discover",
+  "next_gate": "plasma-level0-authoritative-package-build",
   "execution_checkpoint": {
     "checkpoint_id": "frameworks-6.30-pass",
     "checkpoint_manifest": "manifests/execution-checkpoints.json",
