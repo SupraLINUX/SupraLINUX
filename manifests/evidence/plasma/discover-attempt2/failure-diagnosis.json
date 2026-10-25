@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "state": "FAIL",
+  "kind": "discover-categories-translation-test-environment-debhelper-xdg-reset",
+  "node": "discover",
+  "version": "6.7.5-0supralinux2",
+  "attempt": 2,
+  "source_commit": "3333ff4f8b7197ab0f39ee925cf29cc32a40a1ce",
+  "workflow_run_id": 40158903682,
+  "workflow_job_id": 121066085578,
+  "artifact_id": 12584669771,
+  "artifact_sha256": "07e2a09154b35a4456fd88282d64ebfc886a1b72331daff0b53f57d5a329215b",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261025t033544z-238771",
+  "host_evidence_manifest_sha256": "7ad6677e82a66124ed9dd239bbb1f5ae739dbe36bf7e1124f390c2da7a422279",
+  "observation": {
+    "stage": "sbuild",
+    "sbuild_result": "FAIL",
+    "lintian_result": "not-run",
+    "autopkgtest_result": "not-run",
+    "package_attempt_consumed": true,
+    "test": "CategoriesTest::testTranslations()",
+    "assertion": "languages.size() > 1",
+    "staged_translation_catalogs_present": true,
+    "test_process_environment_observed": [
+      "QT_PLUGIN_PATH"
+    ],
+    "xdg_data_dirs_observed_in_test_process": false,
+    "native_test_totals": {
+      "passed": 2,
+      "failed": 1
+    },
+    "failure_point": "dh_auto_test"
+  },
+  "root_cause": "Revision2 correctly materialized libdiscover .mo catalogs under debian/test-root/usr/share/locale, but it exported XDG_DATA_DIRS only around dh_auto_test. Under the active debhelper compatibility behavior, XDG_* is reset before the underlying build-system test invocation; the authoritative ctest log therefore showed no XDG_DATA_DIRS in the CategoriesTest environment and KLocalizedString still found only en_US.",
+  "repair_scope": "Packaging/test invocation only. Revision3 must keep the staged unchanged CMake install tree but invoke the filtered upstream CategoriesTest directly with ctest while XDG_DATA_DIRS and QT_QPA_PLATFORM are present. Do not patch KDE source/assertions or change Qt/Frameworks.",
+  "reentry": "Increment Debian revision to 6.7.5-0supralinux3, mark preflight49 inapplicable only for revision3 packaging bytes, add a cheap regression that rejects dh_auto_test for this override and requires direct filtered ctest under the staged XDG_DATA_DIRS, then obtain a fresh authoritative input preflight before Attempt3."
+}
