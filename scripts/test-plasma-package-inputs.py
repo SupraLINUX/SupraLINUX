@@ -434,6 +434,17 @@ class InputAdmission(unittest.TestCase):
         self.assertIn("trap 'rm -rf \"$$test_root\"' EXIT INT TERM", rules)
         self.assertNotIn('-R ^flatpaktest', rules)
 
+    def test_discover_installed_payload_models_host_loader_context(self):
+        payload = (ROOT / "packages/plasma/discover/debian/tests/installed-payload").read_text()
+        self.assertIn("'plasma-discover': ['/plasma-discover', '/libDiscoverCommon.so'", payload)
+        self.assertIn("p.name == 'libDiscoverCommon.so' and p.is_file()", payload)
+        self.assertIn("discover_private_dir = private_matches[0].parent", payload)
+        self.assertIn("environment = None", payload)
+        self.assertIn("if '/qt6/plugins/discover/' in str(path):", payload)
+        self.assertIn("environment['LD_LIBRARY_PATH'] = str(discover_private_dir)", payload)
+        self.assertIn("env=environment", payload)
+        self.assertIn("assert plugin_checked", payload)
+
     def test_changed_packaging_rejected(self):
         original = prepare.packaging_hashes
         try:

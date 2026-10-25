@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Validate the installed Discover suite without contacting software stores."""
 from pathlib import Path
+import os
 import subprocess
 
 packages = {
-    'plasma-discover': ['/plasma-discover', '/kns-backend.so', '/packagekit-backend.so'],
+    'plasma-discover': ['/plasma-discover', '/libDiscoverCommon.so', '/kns-backend.so', '/packagekit-backend.so'],
     'kde-config-updates': ['/kcm_updates.so', '/kcm_updates.desktop'],
     'plasma-discover-backend-flatpak': ['/flatpak-backend.so', '/org.kde.discover.flatpak.desktop'],
     'plasma-discover-backend-fwupd': ['/fwupd-backend.so'],
@@ -26,18 +27,32 @@ for pkg, suffixes in packages.items():
         assert matches, (pkg, suffix)
         assert any(p.exists() for p in matches), (pkg, suffix, matches)
 
+private_matches = [
+    p for p in all_files['plasma-discover']
+    if p.name == 'libDiscoverCommon.so' and p.is_file()
+]
+assert len(private_matches) == 1, private_matches
+discover_private_dir = private_matches[0].parent
+
 binary_suffixes = {
-    '/plasma-discover', '/kcm_updates.so', '/kns-backend.so', '/packagekit-backend.so',
+    '/plasma-discover', '/libDiscoverCommon.so', '/kcm_updates.so', '/kns-backend.so', '/packagekit-backend.so',
     '/flatpak-backend.so', '/fwupd-backend.so', '/snap-backend.so', '/SnapMacaroonDialog',
     '/libsnap_helper', '/DiscoverNotifier'
 }
 checked = []
+plugin_checked = []
 for files in all_files.values():
     for path in files:
         if any(str(path).endswith(s) for s in binary_suffixes) and path.is_file():
-            result = subprocess.run(['ldd', str(path)], check=True, capture_output=True, text=True)
+            environment = None
+            if '/qt6/plugins/discover/' in str(path):
+                environment = os.environ.copy()
+                environment['LD_LIBRARY_PATH'] = str(discover_private_dir)
+                plugin_checked.append(path)
+            result = subprocess.run(['ldd', str(path)], check=True, capture_output=True, text=True, env=environment)
             assert 'not found' not in result.stdout, (path, result.stdout)
             checked.append(path)
 assert checked
+assert plugin_checked
 assert any(p.suffix == '.mo' and '/locale/' in str(p) for p in all_files['plasma-discover-common']), 'translations missing'
-print(f'Discover seven-binary installed payload/linkage: PASS ({len(checked)} ELF targets)')
+print(f'Discover seven-binary installed payload/linkage: PASS ({len(checked)} ELF targets; {len(plugin_checked)} plugins in Discover loader context)')

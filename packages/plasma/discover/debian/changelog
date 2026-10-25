@@ -1,3 +1,13 @@
+plasma-discover (6.7.5-0supralinux4) resolute; urgency=medium
+
+  * Preserve failed revision3 and its retained authoritative evidence.
+  * Keep the KDE runtime payload and revision3 CategoriesTest adaptation unchanged.
+  * Require the private libDiscoverCommon.so payload explicitly and validate
+    Discover backend plugins in the host application's private-loader context.
+  * Keep standalone ELF linkage and Ubuntu-to-SupraLINUX upgrade checks strict.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Sun, 25 Oct 2026 06:55:00 +0000
+
 plasma-discover (6.7.5-0supralinux3) resolute; urgency=medium
 
   * Preserve failed revision2 and its retained authoritative evidence.

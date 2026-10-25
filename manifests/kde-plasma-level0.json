@@ -175,7 +175,7 @@
           "source": "https://packages.ubuntu.com/source/resolute-updates/plasma-discover"
         }
       },
-      "candidate_package_version": "6.7.5-0supralinux3",
+      "candidate_package_version": "6.7.5-0supralinux4",
       "package_execution_authorized": true,
       "materialization_result": "PASS",
       "ubuntu_reference_version": "6.6.6-0ubuntu0.1"
@@ -927,7 +927,7 @@
       "ubuntu_reference_version": "1:6.6.4-0ubuntu1"
     }
   },
-  "next_gate": "plasma-level0-authoritative-package-build",
+  "next_gate": "authoritative-plasma-package-input-preflight:discover",
   "execution_checkpoint": {
     "checkpoint_id": "frameworks-6.30-pass",
     "checkpoint_manifest": "manifests/execution-checkpoints.json",
@@ -976,8 +976,8 @@
     }
   },
   "candidate_versions_evidence": {
-    "path": "manifests/evidence/kde-plasma-level0-candidate-versions-discover-revision3.json",
-    "sha256": "b46899e0ad13ddadbbb5cdcfa84aec0326a690a87c2a45f4d6f83740543041dd",
+    "path": "manifests/evidence/kde-plasma-level0-candidate-versions-discover-revision4.json",
+    "sha256": "04a12d91c341a8eb23d36b31116e1aa85b334ce203a50af3015e5739d63907a0",
     "state": "PASS",
     "package_execution_started": false,
     "consumes_package_attempt": false
