@@ -1,12 +1,6 @@
 {
   "schema": 1,
-  "mode": "publish-evidence",
+  "mode": "execute",
   "gate": "plasma-package-build",
-  "runner_group_id": 3,
-  "evidence_node": "discover",
-  "evidence_package_run_id": 40223180105,
-  "evidence_package_job_id": 121258962256,
-  "evidence_package_artifact_id": 12609898746,
-  "evidence_package_artifact_sha256": "ef4e230bacfdabb2b71c133b9afb01223dd40e97d58e4adfc15ad4aac5a4b46d",
-  "evidence_host_manifest_sha256": "a7bfe1efeb42bb44b9753d842a334c6c7d7d0462bea500f0f0f2a4f415f6740e"
+  "runner_group_id": 3
 }
