@@ -13703,7 +13703,7 @@
         "licensing": "Ubuntu machine-readable copyright is retained and extended for the upstream 6.7.5 GPL-3+KDEeV and CC0-1.0 files; added debian/tests remain covered by the existing debian/* GPL-2+ packaging license."
       },
       "packaging_sha256": {
-        "changelog": "228536cd82d349dbce4f04a3e9ddbe6045c25e9e447ba5fd443e155d22ce0270",
+        "changelog": "767be8e00f7bc06513c939130607b359daffa9261283e50e0b500c2f75776785",
         "control": "c08e58a17e3edd3f7502d0a135aef0bb8ae3b0700834962e1fb4903f521ff5cb",
         "copyright": "ea94a0965498a61e3f60fd6b7605280c018cb2ec38e2d4d0d777b7ac06b11bec",
         "kde-config-sddm.lintian-overrides": "c660e9fbe1e7ebf9a92a5d66da4961707c2618effbd39d96311c79c29c2b9f00",
