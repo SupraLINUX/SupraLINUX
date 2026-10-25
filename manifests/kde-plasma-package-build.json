@@ -13015,7 +13015,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
@@ -13240,6 +13240,10 @@
       "sha256": "0282c467b938c15d4077e8840bc215a69b965585e1dc2e00a55830d5da25f872",
       "applicable": false,
       "inapplicability_reason": "Revision4 changes reviewed DEP-8 installed-payload bytes after retained Discover Attempt3 FAIL. Preserve preflight50 PASS for revision3 inputs; certify revision4 bytes before Attempt4."
+    },
+    {
+      "path": "manifests/evidence/package-revalidation/discover-preflight51/verification.json",
+      "sha256": "502506cc70448f1f9717722b65bce9ba515fe58bdb5d047c6953e7fc913ee358"
     }
   ],
   "package_input_incidents": [
