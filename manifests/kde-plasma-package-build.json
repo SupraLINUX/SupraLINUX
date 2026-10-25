@@ -1,11 +1,9 @@
 {
   "schema": 1,
   "role": "reviewed-plasma-package-build",
-  "state": "execution-authorized",
-  "authorized_nodes": [
-    "discover"
-  ],
-  "package_execution_authorized": true,
+  "state": "partial-PASS",
+  "authorized_nodes": [],
+  "package_execution_authorized": false,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "scope": "Per-node clean builds, upstream tests, package/Ubuntu upgrade and ABI client checks on KVM; graphical desktop and final distro integration remain later gates",
   "nodes": {
@@ -11216,7 +11214,7 @@
       }
     },
     "discover": {
-      "state": "build-pending",
+      "state": "PASS",
       "source_package": "plasma-discover",
       "version": "6.7.5-0supralinux5",
       "upstream_version": "6.7.5",
@@ -12542,6 +12540,31 @@
           "host_evidence_manifest_sha256": "0f32824a9ffeaf31c6c2638f29092e7ad069b89edd483ad50f86b80a9839f138",
           "cause": "Authoritative revision4 sbuild and lintian passed. DEP-8 installed-payload then selected every regular file whose path ended with an expected binary suffix; /plasma-discover matched both the real executable and /usr/share/lintian/overrides/plasma-discover. The latter is text, so ldd exited 1. The unchanged CategoriesTest and the real Ubuntu-to-SupraLINUX seven-binary upgrade passed.",
           "repair": "Preserve Attempt4 and its persistently retained raw artifact. Revision5 changes only the installed-payload target selector: require exactly one ELF-magic file per expected binary suffix before ldd while preserving revision4 plugin loader context. Do not change KDE source, compiled runtime payload, Qt, Frameworks or package split. Mark preflight51 inapplicable and obtain a fresh authoritative input preflight before Attempt5."
+        },
+        {
+          "attempt": 5,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 40226240809,
+          "workflow_job_id": 121268111523,
+          "source_commit": "3b7a245e6cf242d9b2324e2212b8a35198b591c7",
+          "artifact_id": 12611946453,
+          "artifact_sha256": "15f9c054e5ea77dec836b8cf8b60eaeb8a13380d5c3845d6123c247d1fb580eb",
+          "result_path": "manifests/evidence/plasma/discover-attempt5/result.json",
+          "result_sha256": "25055a642c14226e6f6edea01359dbf9ba63190b63c0b0c075d21248e6b45ff0",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261025t192714z-1319145",
+          "host_evidence_manifest_sha256": "c24e60426c9ed1a1230289808d4e17cf34b910e0c8320e77f9b8337496fdf856",
+          "rootfs_admission_path": "manifests/evidence/plasma/discover-attempt5/rootfs-admission.json",
+          "rootfs_admission_sha256": "e852b8d2de6a6a256cdf61773d3aa4a7abf5fd35e50c7988d8741581bc2eb16b",
+          "baseline_preflight_path": "manifests/evidence/plasma/discover-attempt5/ubuntu-baseline-preflight.json",
+          "baseline_preflight_sha256": "d562b8d138bdbf809f53ff49de63abccf695e097d9ea623cac73e69d4942a257",
+          "workflow_job_path": "manifests/evidence/plasma/discover-attempt5/workflow-job.json",
+          "workflow_job_sha256": "aeffeabe347381c974b4a0d08c0a4f385a6877887f4e53bcf3d835ddd722e5e2",
+          "host_result_path": "manifests/evidence/plasma/discover-attempt5/host-result.json",
+          "host_result_sha256": "c2d8256b83ddfb8fe8e754a1d44870aaa7558f0e00ebafded4bc2a5056e142bc"
         }
       ],
       "review": {
@@ -12576,6 +12599,46 @@
         "tests/control": "0a06ec471542f4e07e7c3c4ea81e42ad634dddf425c0d917d1cc05996673a1f8",
         "tests/installed-payload": "f22ce9f790c718db177eaedbb9d9d9fc342691ee27141985a60621a900c35c28",
         "tests/ubuntu-upgrade": "43268650ae3b0a05b7ba95b043e1f0f3121b760560ddbdd4f04ad58b53bc7096"
+      },
+      "evidence": {
+        "workflow_run_id": 40226240809,
+        "workflow_job_id": 121268111523,
+        "source_commit": "3b7a245e6cf242d9b2324e2212b8a35198b591c7",
+        "artifact_id": 12611946453,
+        "artifact_sha256": "15f9c054e5ea77dec836b8cf8b60eaeb8a13380d5c3845d6123c247d1fb580eb",
+        "result_path": "manifests/evidence/plasma/discover-attempt5/result.json",
+        "result_sha256": "25055a642c14226e6f6edea01359dbf9ba63190b63c0b0c075d21248e6b45ff0",
+        "contract_path": "manifests/evidence/plasma/discover-attempt5/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261025t192714z-1319145",
+        "host_evidence_manifest_sha256": "c24e60426c9ed1a1230289808d4e17cf34b910e0c8320e77f9b8337496fdf856",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/discover-attempt5",
+          "archive_index_sha256": "c90e14e7aa037d7654c72b53c8d1f64e7f8a777797e29b2b3a9daa5b90e78aaf",
+          "plan_path": "manifests/evidence/plasma/discover-artifact-plan.json",
+          "plan_sha256": "9f2a65a0407d78d3622a238c4a9b83c1bd22ff7cf67c7eb61732376b3ac6d427",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 13,
+          "binary_payload_file_count": 13,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/discover-attempt5/cache-probe-result.json",
+        "cache_probe_result_sha256": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+        "upstream_tests_path": "manifests/evidence/plasma/discover-attempt5/upstream-tests.json",
+        "upstream_tests_sha256": "bb4dcde17cd83396f1484472428c3a4faf61f29dfed56de2722609ad0a594826",
+        "rootfs_admission_path": "manifests/evidence/plasma/discover-attempt5/rootfs-admission.json",
+        "rootfs_admission_sha256": "e852b8d2de6a6a256cdf61773d3aa4a7abf5fd35e50c7988d8741581bc2eb16b",
+        "baseline_preflight_path": "manifests/evidence/plasma/discover-attempt5/ubuntu-baseline-preflight.json",
+        "baseline_preflight_sha256": "d562b8d138bdbf809f53ff49de63abccf695e097d9ea623cac73e69d4942a257",
+        "workflow_job_path": "manifests/evidence/plasma/discover-attempt5/workflow-job.json",
+        "workflow_job_sha256": "aeffeabe347381c974b4a0d08c0a4f385a6877887f4e53bcf3d835ddd722e5e2",
+        "host_result_path": "manifests/evidence/plasma/discover-attempt5/host-result.json",
+        "host_result_sha256": "c2d8256b83ddfb8fe8e754a1d44870aaa7558f0e00ebafded4bc2a5056e142bc"
       }
     }
   },
@@ -12870,6 +12933,12 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/plymouth-kcm-attempt1",
       "archive_index_sha256": "e9e094b4c324204524596e429e0ae003513aa861d5e533e7fe88cd04f2e7e810"
+    },
+    {
+      "node": "discover",
+      "attempt": 5,
+      "archive_root": ".artifacts/plasma-6.7.5/discover-attempt5",
+      "archive_index_sha256": "c90e14e7aa037d7654c72b53c8d1f64e7f8a777797e29b2b3a9daa5b90e78aaf"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",

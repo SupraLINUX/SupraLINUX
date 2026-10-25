@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "discover",
+      "package_version": "6.7.5-0supralinux5",
+      "artifact_id": 12611946453,
+      "workflow_run_id": 40226240809,
+      "artifact_sha256": "15f9c054e5ea77dec836b8cf8b60eaeb8a13380d5c3845d6123c247d1fb580eb",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

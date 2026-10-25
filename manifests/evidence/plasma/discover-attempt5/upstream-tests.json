@@ -1,0 +1,10 @@
+{
+  "state": "PASS",
+  "expected_tests": [
+    "CategoriesTest"
+  ],
+  "executed_tests": [
+    "CategoriesTest"
+  ],
+  "scope": "CTest suite executed during the clean package build"
+}
