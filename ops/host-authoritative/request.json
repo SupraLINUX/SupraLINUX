@@ -1,6 +1,12 @@
 {
   "schema": 1,
-  "mode": "execute",
+  "mode": "publish-evidence-check",
   "gate": "plasma-package-build",
-  "runner_group_id": 3
+  "runner_group_id": 3,
+  "evidence_node": "sddm-kcm",
+  "evidence_package_run_id": 40243307402,
+  "evidence_package_job_id": 121319534833,
+  "evidence_package_artifact_id": 12618206454,
+  "evidence_package_artifact_sha256": "7b0b5b1c4d3461e64f0600af262984530b38a0cc1ad7f645fe1d2716cdd24f28",
+  "evidence_host_manifest_sha256": "4deaf35b3b15e56d436eb7c56e9e27f93ff790a0047d45e9af974ea5fa201d15"
 }
