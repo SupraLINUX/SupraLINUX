@@ -98,6 +98,7 @@ required_commands=(
     sha256sum
     ethtool
     virsh
+    virt-cat
     virt-copy-out
     virt-install
     wc
@@ -481,6 +482,25 @@ PY
             ;;
         *) printf 'Unsupported execution checkpoint: %s\n' "${EXECUTION_CHECKPOINT}" >&2; exit 1 ;;
     esac
+fi
+
+if [[ ( "${GATE}" == "plasma-package-build" || "${GATE}" == "package-revalidation" ) && "${EXECUTION_CHECKPOINT}" == "frameworks-6.30-pass" ]]; then
+    FAST_INPUT_NODE="$(python3 - "${ROOT}/${CACHE_CAMPAIGN}" <<'PY'
+import json, sys
+campaign = json.load(open(sys.argv[1]))
+authorized = campaign.get("authorized_nodes", [])
+assert len(authorized) == 1, "Fast rejection requires exactly one authorized node per VM"
+print(authorized[0])
+PY
+)"
+    FAST_PACKAGES="${EVIDENCE_DIR}/frameworks-Packages"
+    "${ROOT}/scripts/with-libguestfs-runtime.sh" virt-cat \
+        -a "${BASE_IMAGE}" /var/lib/supralinux/milestones/frameworks-6.30/repo/Packages \
+        > "${FAST_PACKAGES}"
+    python3 "${ROOT}/scripts/verify-reviewed-binary-closure.py" "${FAST_INPUT_NODE}" \
+        --campaign "${ROOT}/${CACHE_CAMPAIGN}" \
+        --packages "${FAST_PACKAGES}" \
+        --output "${EVIDENCE_DIR}/pre-vm-input-closure.json"
 fi
 
 printf 'Checking for stale/active authoritative workflow runs before creating a runner...\n'

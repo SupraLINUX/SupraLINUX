@@ -131,6 +131,7 @@ jobs:
           PY
           else
             python3 scripts/test-host-authoritative-control.py
+            python3 scripts/test-reviewed-binary-closure.py
             python3 - <<'PY'
           import json
           from pathlib import Path
