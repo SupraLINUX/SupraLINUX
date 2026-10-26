@@ -138,6 +138,34 @@ def support_providers(root: Path, support_manifest: dict):
     return providers
 
 
+def repair_providers(root: Path, repairs_manifest: dict):
+    providers = {}
+    for node, record in sorted(repairs_manifest.get("nodes", {}).items()):
+        if record.get("state") != "PASS":
+            continue
+        assert record.get("downstream_eligible") is True
+        evidence = record["evidence"]
+        proof_path = root / evidence["path"]
+        assert proof_path.is_file(), proof_path
+        assert sha256(proof_path) == evidence["sha256"], f"Repair proof drift: {node}"
+        proof = json.loads(proof_path.read_text())
+        assert proof["state"] == "PASS" and proof["node"] == node
+        assert proof["offline_restore_verified"] is True
+        for binary in record["binaries"]:
+            package = binary["package"]
+            previous = providers.setdefault(
+                package,
+                {
+                    "node": node,
+                    "source_package": record["source_package"],
+                    "version": binary["version"],
+                    "architecture": binary["architecture"],
+                },
+            )
+            assert previous["node"] == node, f"Ambiguous repair provider: {package}"
+    return providers
+
+
 def selected_inputs(record):
     selected = {}
     for node, predecessor in record.get("frameworks_predecessors", {}).items():
@@ -153,7 +181,15 @@ def selected_inputs(record):
     return selected
 
 
-def verify(root: Path, campaign: dict, node: str, packages_text: str, dag: dict, support: dict):
+def verify(
+    root: Path,
+    campaign: dict,
+    node: str,
+    packages_text: str,
+    dag: dict,
+    support: dict,
+    repairs: dict,
+):
     assert node in campaign["nodes"], f"Unknown package node: {node}"
     record = campaign["nodes"][node]
     selected = selected_inputs(record)
@@ -174,7 +210,11 @@ def verify(root: Path, campaign: dict, node: str, packages_text: str, dag: dict,
         milestone_source.setdefault(package, source_name(stanza))
 
     support_by_package = support_providers(root, support)
-    local_names = milestone_names | set(support_by_package)
+    repair_by_package = repair_providers(root, repairs)
+    overlap = set(support_by_package) & set(repair_by_package)
+    assert not overlap, f"Ambiguous retained/revalidated providers: {sorted(overlap)!r}"
+    external_by_package = {**support_by_package, **repair_by_package}
+    local_names = milestone_names | set(external_by_package)
     node_by_source = {}
     for dag_node, dag_record in dag.get("nodes", {}).items():
         source = dag_record.get("source_package")
@@ -184,7 +224,15 @@ def verify(root: Path, campaign: dict, node: str, packages_text: str, dag: dict,
     missing_metadata = []
     selected_stanzas = []
     for package, item in sorted(selected.items()):
-        if package in support_by_package:
+        if package in external_by_package:
+            provider = external_by_package[package]
+            assert provider["node"] == item["node"], (
+                f"Selected external provider mismatch: {package}: "
+                f"{provider['node']} != {item['node']}"
+            )
+            assert provider["source_package"] == item["source_package"]
+            assert provider["version"] == item["version"]
+            assert provider["architecture"] == item["architecture"]
             continue
         key = (package, item["version"], item["architecture"])
         stanza = by_identity.get(key)
@@ -228,8 +276,8 @@ def verify(root: Path, campaign: dict, node: str, packages_text: str, dag: dict,
                     continue
                 providers = []
                 for package in local_alternatives:
-                    if package in support_by_package:
-                        provider = support_by_package[package]
+                    if package in external_by_package:
+                        provider = external_by_package[package]
                         providers.append(
                             {
                                 "package": package,
@@ -267,6 +315,9 @@ def verify(root: Path, campaign: dict, node: str, packages_text: str, dag: dict,
         "packages_index_sha256": hashlib.sha256(packages_text.encode()).hexdigest(),
         "selected_binary_count": len(selected),
         "selected_packages": sorted(selected),
+        "external_selected_packages": sorted(
+            package for package in selected if package in external_by_package
+        ),
         "missing_selected_metadata": missing_metadata,
         "missing_local_relations": missing_relations,
     }
@@ -284,6 +335,11 @@ def main():
         type=Path,
         default=ROOT / "manifests/frameworks-support-inputs.json",
     )
+    parser.add_argument(
+        "--repairs",
+        type=Path,
+        default=ROOT / "manifests/package-revalidation.json",
+    )
     args = parser.parse_args()
     campaign_bytes = args.campaign.read_bytes()
     result = verify(
@@ -293,6 +349,7 @@ def main():
         args.packages.read_text(),
         json.loads(args.dag.read_text()),
         json.loads(args.support.read_text()),
+        json.loads(args.repairs.read_text()),
     )
     result["source_commit"] = subprocess.check_output(
         ["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True
@@ -301,6 +358,14 @@ def main():
     result["campaign_manifest_sha256"] = hashlib.sha256(campaign_bytes).hexdigest()
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     if result["state"] != "PASS":
+        for missing in result["missing_selected_metadata"]:
+            print(
+                f"BLOCKED: selected reviewed input is absent from both the milestone "
+                f"and retained/revalidated providers: {missing['package']} "
+                f"{missing['version']} {missing['architecture']} "
+                f"({missing['provider_node']})",
+                file=__import__("sys").stderr,
+            )
         for missing in result["missing_local_relations"]:
             providers = ", ".join(
                 f"{item['package']} ({item.get('provider_node') or item['source_package']})"

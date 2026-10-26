@@ -497,10 +497,19 @@ PY
     "${ROOT}/scripts/with-libguestfs-runtime.sh" virt-cat \
         -a "${BASE_IMAGE}" /var/lib/supralinux/milestones/frameworks-6.30/repo/Packages \
         > "${FAST_PACKAGES}"
+    set +e
     python3 "${ROOT}/scripts/verify-reviewed-binary-closure.py" "${FAST_INPUT_NODE}" \
         --campaign "${ROOT}/${CACHE_CAMPAIGN}" \
         --packages "${FAST_PACKAGES}" \
         --output "${EVIDENCE_DIR}/pre-vm-input-closure.json"
+    FAST_CLOSURE_RC=$?
+    set -e
+    if (( FAST_CLOSURE_RC != 0 )); then
+        printf 'Pre-VM reviewed binary closure result:\n' >&2
+        cat "${EVIDENCE_DIR}/pre-vm-input-closure.json" >&2 || true
+        printf 'Pre-VM reviewed binary closure blocked before VM creation (exit=%s).\n' "${FAST_CLOSURE_RC}" >&2
+        exit "${FAST_CLOSURE_RC}"
+    fi
 fi
 
 printf 'Checking for stale/active authoritative workflow runs before creating a runner...\n'

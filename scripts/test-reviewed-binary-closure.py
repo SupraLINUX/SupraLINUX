@@ -51,9 +51,39 @@ with tempfile.TemporaryDirectory() as directory:
             }
         }
     }
+    repair_proof = {
+        "node": "kconfig",
+        "state": "PASS",
+        "offline_restore_verified": True,
+    }
+    repair_proof_path = proof_dir / "kconfig-verification.json"
+    repair_proof_path.write_text(json.dumps(repair_proof))
+    repairs = {
+        "nodes": {
+            "kconfig": {
+                "state": "PASS",
+                "downstream_eligible": True,
+                "source_package": "kf6-kconfig",
+                "version": "6.30.0-0supralinux5",
+                "evidence": {
+                    "path": str(repair_proof_path.relative_to(root)),
+                    "sha256": digest(repair_proof_path),
+                },
+                "binaries": [
+                    {
+                        "package": "libkf6configcore6",
+                        "version": "6.30.0-0supralinux5",
+                        "architecture": "amd64",
+                        "sha256": "3" * 64,
+                    }
+                ],
+            }
+        }
+    }
     dag = {
         "nodes": {
             "kiconthemes": {"source_package": "kf6-kiconthemes"},
+            "kconfig": {"source_package": "kf6-kconfig"},
         }
     }
     packages = """Package: libkf6iconthemes6
@@ -80,7 +110,7 @@ Depends: libc6 (>= 2.38), libkf6breezeicons6 (>= 4:6.30.0~)
         },
     }
     campaign = {"nodes": {"example": base_record}}
-    result = module.verify(root, campaign, "example", packages, dag, support)
+    result = module.verify(root, campaign, "example", packages, dag, support, repairs)
     assert result["state"] == "BLOCKED"
     assert result["package_attempt_consumed"] is False
     assert result["vm_created"] is False
@@ -98,13 +128,30 @@ Depends: libc6 (>= 2.38), libkf6breezeicons6 (>= 4:6.30.0~)
             }
         ],
     }
-    result = module.verify(root, fixed, "example", packages, dag, support)
+    result = module.verify(root, fixed, "example", packages, dag, support, repairs)
     assert result["state"] == "PASS"
     assert not result["missing_local_relations"]
 
+    repaired = json.loads(json.dumps(fixed))
+    repaired["nodes"]["example"]["frameworks_predecessors"]["kconfig"] = {
+        "source_package": "kf6-kconfig",
+        "version": "6.30.0-0supralinux5",
+        "binaries": [
+            {
+                "package": "libkf6configcore6",
+                "architecture": "amd64",
+                "sha256": "3" * 64,
+            }
+        ],
+    }
+    result = module.verify(root, repaired, "example", packages, dag, support, repairs)
+    assert result["state"] == "PASS"
+    assert "libkf6configcore6" in result["external_selected_packages"]
+    assert not result["missing_selected_metadata"]
+
     wrong = json.loads(json.dumps(fixed))
     wrong["nodes"]["example"]["frameworks_predecessors"]["breeze-icons"]["version"] = "4:6.29.0-0supralinux1"
-    result = module.verify(root, wrong, "example", packages, dag, support)
+    result = module.verify(root, wrong, "example", packages, dag, support, repairs)
     assert result["state"] == "BLOCKED"
 
     parsed = module.parse_relation(
