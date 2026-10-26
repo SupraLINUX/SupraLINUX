@@ -14585,7 +14585,28 @@
           ]
         }
       },
-      "attempts": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "FAIL",
+          "original_state": "FAIL",
+          "sbuild_result": "FAIL",
+          "lintian_result": "not-run",
+          "autopkgtest_result": "not-run",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 40349442015,
+          "workflow_job_id": 121665154462,
+          "source_commit": "183e52e8da58ccfe8c5ad45b9ded00568438c7e5",
+          "artifact_id": 12663083319,
+          "artifact_sha256": "65c23d79b6ef7bf5e2d390944173afbab01e20cc5a93d0ee0ec26518c82ff0ed",
+          "result_path": "manifests/evidence/plasma/drkonqi-attempt1/result.json",
+          "result_sha256": "5ec002f1b1a31d6ad65e00e3216ac83b3b0cb871d9d2d611df1e3e08e47fda65",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261026t152458z-3725856",
+          "host_evidence_manifest_sha256": "3ccb989a2b56591ee48c195d340af29af6a9a3ba75179986081796b5cdb4929e",
+          "cause": "DrKonqi 6.7.5 upstream connectiontest::testDefaultRoot performs a live request to bugstest.kde.org. The authoritative package build intentionally has no external network dependency for upstream tests, so the live Bugzilla lookup failed after the guarded preflight had passed and sbuild had begun. All other observed upstream tests passed; this is a non-hermetic upstream test, not an infrastructure failure.",
+          "repair": "Preserve upstream source unchanged and adapt only SupraLINUX packaging test execution so the package build runs the hermetic connectiontest cases while excluding only testDefaultRoot, whose upstream source explicitly documents that it talks directly to Bugzilla and is inherently flaky. Keep the remaining upstream CTest suite required and record the packaging adaptation in the next Debian revision."
+        }
+      ],
       "review": {
         "upstream_changes": "Official signed KDE Plasma 6.7.5 source; no upstream code patches. The reviewed release keeps the DrKonqi crash handler/coredump pipeline and includes upstream bug fixes that avoid processing crashes from DrKonqi's own binaries and correct launcher service session management.",
         "packaging_changes": "Preserve the Ubuntu 26.04 single-binary drkonqi runtime contract and Debian systemd template maintscripts; update the candidate to 6.7.5-0supralinux1, bind exact eligible Frameworks 6.30 predecessors and Qt >= 6.10, and add deterministic DEP-8 payload/upgrade checks. No X11 session package is introduced.",
@@ -14925,6 +14946,12 @@
       "attempt": 1,
       "archive_root": ".artifacts/plasma-6.7.5/sddm-kcm-attempt1",
       "archive_index_sha256": "9f9f7b1a4ddbfbfc0de7d5286a9a456febb47a496dd98769d82ba77d641f778d"
+    },
+    {
+      "node": "drkonqi",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/drkonqi-attempt1",
+      "archive_index_sha256": "d474043d0391a39b5ac56653856012749f68c245929f533391c2f923dd18ca2b"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",
