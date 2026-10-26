@@ -1145,7 +1145,11 @@ try:
         output_dir=auto_root / "check-output",
         log_path=result_dir / "auto-close-check.log",
     )
-    shutil.copytree(check_output, result_dir / "auto-close-check")
+    check_destination = result_dir / "auto-close-check"
+    shutil.copytree(check_output, check_destination)
+    for path in [check_destination, *check_destination.rglob("*")]:
+        os.chown(path, runner_pw.pw_uid, runner_pw.pw_gid)
+        os.chmod(path, 0o700 if path.is_dir() else 0o600)
 
     if not PERSISTENT_ARTIFACT_ROOT.exists():
         PERSISTENT_ARTIFACT_ROOT.mkdir(parents=True, mode=0o700)
@@ -1165,7 +1169,11 @@ try:
         output_dir=auto_root / "publish-output",
         log_path=result_dir / "auto-close-publish.log",
     )
-    shutil.copytree(publish_output, result_dir / "auto-close-publish")
+    publish_destination = result_dir / "auto-close-publish"
+    shutil.copytree(publish_output, publish_destination)
+    for path in [publish_destination, *publish_destination.rglob("*")]:
+        os.chown(path, runner_pw.pw_uid, runner_pw.pw_gid)
+        os.chmod(path, 0o700 if path.is_dir() else 0o600)
     write_result(
         "auto-close-result.txt",
         "\n".join(
