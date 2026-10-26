@@ -53,7 +53,8 @@ jobs:
           evidence_keys = {
               "evidence_node", "evidence_package_run_id", "evidence_package_job_id",
               "evidence_package_artifact_id", "evidence_package_artifact_sha256",
-              "evidence_host_manifest_sha256",
+              "evidence_host_manifest_sha256", "evidence_incident_cause",
+              "evidence_incident_repair",
           }
           assert not (set(request) - base_keys - evidence_keys)
           assert request.get("schema") == 1
@@ -80,6 +81,13 @@ jobs:
                   assert isinstance(request.get(key), int) and request[key] > 0
               for key in ["evidence_package_artifact_sha256", "evidence_host_manifest_sha256"]:
                   assert isinstance(request.get(key), str) and re.fullmatch(r"[0-9a-f]{64}", request[key])
+              incident = (request.get("evidence_incident_cause"), request.get("evidence_incident_repair"))
+              assert (incident[0] is None) == (incident[1] is None)
+              for value in incident:
+                  assert value is None or (
+                      isinstance(value, str) and value.strip() == value
+                      and 0 < len(value) <= 4000 and "\x00" not in value
+                  )
           else:
               assert all(request.get(key) is None for key in evidence_keys)
           assert re.fullmatch(r"[0-9a-f]{40}", os.environ["PR_HEAD_SHA"])

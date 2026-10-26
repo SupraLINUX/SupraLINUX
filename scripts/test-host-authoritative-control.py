@@ -38,6 +38,8 @@ required_broker = [
     '"mode", "gate", "runner_group_id", "cancel_run_id"',
     '"evidence_node"',
     '"evidence_package_artifact_sha256"',
+    '"evidence_incident_cause"',
+    '"evidence_incident_repair"',
     '"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"',
     'PERSISTENT_ARTIFACT_ROOT = Path("/var/lib/supralinux/artifacts")',
     'CLOSE_EVIDENCE_HELPER = Path("/usr/local/libexec/supralinux-host-close-package-evidence")',
@@ -107,6 +109,10 @@ required_helper = [
     '"--recover-hidden-files"',
     "subprocess.CalledProcessError",
     '"DIAGNOSIS_REQUIRED"',
+    '"preflight-incident"',
+    '"--incident-cause"',
+    '"--incident-repair"',
+    '"Canonical input incident lacks diagnosis."',
     '"canonical-update-manifest.json"',
     '"offline_restore_verified": True',
     '"requires_github_for_restore": False',
@@ -142,6 +148,23 @@ if close_module.publication_commit_message(
     preflight_campaign, "example", "preflight"
 ) != "evidence: close example input preflight":
     raise SystemExit("preflight publication commit message regression")
+
+incident_campaign = {
+    "execution_mode": "preflight",
+    "package_input_incidents": [
+        {
+            "path": "proof.json",
+            "sha256": "b" * 64,
+            "cause": "reviewed input closure incomplete",
+            "repair": "supply the exact retained support closure",
+        }
+    ],
+    "nodes": {"example": {"state": "build-pending", "attempts": []}},
+}
+if close_module.publication_commit_message(
+    incident_campaign, "example", "preflight-incident"
+) != "evidence: close example input incident":
+    raise SystemExit("input incident publication commit message regression")
 
 attempt_campaign = {
     "execution_mode": "complete",
@@ -214,6 +237,8 @@ evidence_request_keys = {
     "evidence_package_artifact_id",
     "evidence_package_artifact_sha256",
     "evidence_host_manifest_sha256",
+    "evidence_incident_cause",
+    "evidence_incident_repair",
 }
 unknown_request_keys = set(request) - base_request_keys - evidence_request_keys
 if unknown_request_keys:

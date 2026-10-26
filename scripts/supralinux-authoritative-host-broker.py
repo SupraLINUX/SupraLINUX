@@ -38,7 +38,8 @@ allowed_keys = {
     "cancel_run_head_sha", "source_commit", "control_run_id",
     "evidence_node", "evidence_package_run_id", "evidence_package_job_id",
     "evidence_package_artifact_id", "evidence_package_artifact_sha256",
-    "evidence_host_manifest_sha256",
+    "evidence_host_manifest_sha256", "evidence_incident_cause",
+    "evidence_incident_repair",
 }
 unknown = set(request) - allowed_keys
 if unknown:
@@ -65,6 +66,8 @@ evidence_package_job_id = request.get("evidence_package_job_id")
 evidence_package_artifact_id = request.get("evidence_package_artifact_id")
 evidence_package_artifact_sha256 = request.get("evidence_package_artifact_sha256")
 evidence_host_manifest_sha256 = request.get("evidence_host_manifest_sha256")
+evidence_incident_cause = request.get("evidence_incident_cause")
+evidence_incident_repair = request.get("evidence_incident_repair")
 if not isinstance(source_commit, str) or len(source_commit) != 40 or any(c not in "0123456789abcdef" for c in source_commit):
     raise SystemExit("Invalid source commit.")
 if not isinstance(control_run_id, str) or not control_run_id.isdigit():
@@ -91,6 +94,8 @@ close_values = (
     evidence_package_artifact_id,
     evidence_package_artifact_sha256,
     evidence_host_manifest_sha256,
+    evidence_incident_cause,
+    evidence_incident_repair,
 )
 if request["mode"] in close_modes:
     if not isinstance(evidence_node, str) or not evidence_node or len(evidence_node) > 64:
@@ -116,6 +121,21 @@ if request["mode"] in close_modes:
             or any(ch not in "0123456789abcdef" for ch in value)
         ):
             raise SystemExit(f"Invalid evidence {label} SHA-256.")
+    incident_values = (evidence_incident_cause, evidence_incident_repair)
+    if (incident_values[0] is None) != (incident_values[1] is None):
+        raise SystemExit("Evidence incident cause and repair must be supplied together.")
+    for label, value in (
+        ("incident cause", evidence_incident_cause),
+        ("incident repair", evidence_incident_repair),
+    ):
+        if value is not None and (
+            not isinstance(value, str)
+            or not value.strip()
+            or value != value.strip()
+            or len(value) > 4000
+            or "\x00" in value
+        ):
+            raise SystemExit(f"Invalid evidence {label}.")
 else:
     if any(value is not None for value in close_values):
         raise SystemExit("Evidence closure fields are valid only for evidence closure modes.")
@@ -306,23 +326,31 @@ if request["mode"] in {"close-evidence-check", "close-evidence", "publish-eviden
     close_log = result_dir / "close-evidence.log"
     close_rc = 125
     try:
+        close_command = [
+            str(CLOSE_EVIDENCE_HELPER),
+            "--mode", helper_mode,
+            "--source-commit", source_commit,
+            "--control-run-id", control_run_id,
+            "--node", evidence_node,
+            "--package-run-id", str(evidence_package_run_id),
+            "--package-job-id", str(evidence_package_job_id),
+            "--package-artifact-id", str(evidence_package_artifact_id),
+            "--package-artifact-sha256", evidence_package_artifact_sha256,
+            "--host-manifest-sha256", evidence_host_manifest_sha256,
+            "--host-evidence-root", str(HOST_EVIDENCE_ROOT),
+            "--artifact-root", str(artifact_root),
+            "--work-root", str(close_work),
+            "--output-dir", str(close_output),
+        ]
+        if evidence_incident_cause is not None:
+            close_command.extend(
+                [
+                    "--incident-cause", evidence_incident_cause,
+                    "--incident-repair", evidence_incident_repair,
+                ]
+            )
         close_rc = stream_as_operator(
-            [
-                str(CLOSE_EVIDENCE_HELPER),
-                "--mode", helper_mode,
-                "--source-commit", source_commit,
-                "--control-run-id", control_run_id,
-                "--node", evidence_node,
-                "--package-run-id", str(evidence_package_run_id),
-                "--package-job-id", str(evidence_package_job_id),
-                "--package-artifact-id", str(evidence_package_artifact_id),
-                "--package-artifact-sha256", evidence_package_artifact_sha256,
-                "--host-manifest-sha256", evidence_host_manifest_sha256,
-                "--host-evidence-root", str(HOST_EVIDENCE_ROOT),
-                "--artifact-root", str(artifact_root),
-                "--work-root", str(close_work),
-                "--output-dir", str(close_output),
-            ],
+            close_command,
             close_log,
         )
         if close_output.exists():

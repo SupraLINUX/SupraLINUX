@@ -216,6 +216,17 @@ def publication_commit_message(closed_campaign, node, closure_kind):
         if certifications[-1].get("applicable") is False:
             raise SystemExit("Canonical preflight publish certification is not applicable.")
         return f"evidence: close {node} input preflight"
+    if closure_kind == "preflight-incident":
+        if closed_campaign.get("execution_mode") != "preflight":
+            raise SystemExit("Input incident unexpectedly changed execution mode.")
+        if record.get("state") != "build-pending":
+            raise SystemExit("Input incident unexpectedly changed package state.")
+        incidents = closed_campaign.get("package_input_incidents", [])
+        if not incidents or not isinstance(incidents[-1], dict):
+            raise SystemExit("Canonical input incident is missing.")
+        if not incidents[-1].get("cause") or not incidents[-1].get("repair"):
+            raise SystemExit("Canonical input incident lacks diagnosis.")
+        return f"evidence: close {node} input incident"
     if closure_kind == "package-attempt-pass":
         attempts = record.get("attempts", [])
         if not attempts or attempts[-1].get("state") != "PASS":
@@ -240,6 +251,8 @@ def main():
     parser.add_argument("--package-artifact-id", type=int, required=True)
     parser.add_argument("--package-artifact-sha256", required=True)
     parser.add_argument("--host-manifest-sha256", required=True)
+    parser.add_argument("--incident-cause")
+    parser.add_argument("--incident-repair")
     parser.add_argument("--host-evidence-root", type=Path, required=True)
     parser.add_argument("--artifact-root", type=Path, required=True)
     parser.add_argument("--work-root", type=Path, required=True)
@@ -332,7 +345,29 @@ def main():
     if result.get("workflow_run_id") != str(args.package_run_id):
         raise SystemExit("Package result workflow run mismatch.")
 
-    if result.get("state") != "PASS":
+    infra_preflight = (
+        result.get("state") == "INFRA_INVALID"
+        and result.get("package_attempt_consumed") is False
+    )
+    if infra_preflight:
+        for label, value in (
+            ("incident cause", args.incident_cause),
+            ("incident repair", args.incident_repair),
+        ):
+            if (
+                not isinstance(value, str)
+                or not value.strip()
+                or value != value.strip()
+                or len(value) > 4000
+                or "\x00" in value
+            ):
+                raise SystemExit(f"Invalid {label}.")
+    elif args.incident_cause is not None or args.incident_repair is not None:
+        raise SystemExit(
+            "Incident diagnosis fields are valid only for an INFRA_INVALID preflight."
+        )
+
+    if result.get("state") != "PASS" and not infra_preflight:
         raw = (
             args.artifact_root
             / "raw"
@@ -379,7 +414,12 @@ def main():
     host_result = json.loads(
         (host_dir / "host-result.json").read_text()
     )
-    if host_result.get("exit_code") != 0:
+    if infra_preflight:
+        if host_result.get("exit_code") == 0:
+            raise SystemExit(
+                "INFRA_INVALID preflight is paired with a successful sealed host result."
+            )
+    elif host_result.get("exit_code") != 0:
         raise SystemExit(
             "Successful package artifact is not paired with a "
             "successful sealed host result."
@@ -412,7 +452,9 @@ def main():
                 "--host-dir",
                 str(host_dir),
             ]
-            closure_kind = "preflight"
+            closure_kind = (
+                "preflight-incident" if infra_preflight else "preflight"
+            )
         elif result.get("package_attempt_consumed") is True:
             close_cmd = [
                 "python3",
@@ -440,6 +482,19 @@ def main():
     finally:
         if logical_artifacts.is_symlink():
             logical_artifacts.unlink()
+
+    if closure_kind == "preflight-incident":
+        closed_path = replay_checkout / CAMPAIGN
+        closed_campaign = json.loads(closed_path.read_text())
+        incidents = closed_campaign.get("package_input_incidents", [])
+        if not incidents or not isinstance(incidents[-1], dict):
+            raise SystemExit("INFRA_INVALID closure did not create an input incident.")
+        incident = incidents[-1]
+        if incident.get("cause") is not None or incident.get("repair") is not None:
+            raise SystemExit("INFRA_INVALID closure unexpectedly pre-populated diagnosis.")
+        incident["cause"] = args.incident_cause
+        incident["repair"] = args.incident_repair
+        closed_path.write_text(json.dumps(closed_campaign, indent=2) + "\n")
 
     run(
         ["python3", "scripts/render-project-status.py"],
