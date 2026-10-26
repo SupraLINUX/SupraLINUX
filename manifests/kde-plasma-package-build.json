@@ -14529,6 +14529,17 @@
               "sha256": "cb2314577549d417e292bd89dd51cb6848778b7a18ebd35869df35afad45aceb"
             }
           ]
+        },
+        "breeze-icons": {
+          "source_package": "kf6-breeze-icons",
+          "version": "4:6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "libkf6breezeicons6",
+              "architecture": "amd64",
+              "sha256": "39843417452315f82dda133b09d1b588a5d23d44095ff821e63ee7943075b232"
+            }
+          ]
         }
       },
       "attempts": [],
@@ -15036,7 +15047,7 @@
       "applicable": false
     }
   ],
-  "execution_mode": "preflight",
+  "execution_mode": "guarded-build",
   "package_input_certifications": [
     {
       "path": "manifests/evidence/package-revalidation/plasma-activities-preflight1/verification.json",
