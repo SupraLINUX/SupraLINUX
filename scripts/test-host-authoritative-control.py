@@ -125,6 +125,8 @@ required_helper = [
     'choices=["check", "close", "publish-check", "publish"]',
     '"scripts/close-package-revalidation-evidence.py"',
     '"scripts/close-plasma-package-evidence.py"',
+    '"scripts/record-plasma-package-failure.py"',
+    '"package-attempt-nonpass"',
     '"--workflow-job-meta"',
     '"--recover-hidden-files"',
     "subprocess.CalledProcessError",
@@ -194,6 +196,50 @@ if close_module.publication_commit_message(
     attempt_campaign, "example", "package-attempt-pass"
 ) != "evidence: close example Attempt 3":
     raise SystemExit("package publication commit message regression")
+
+failed_attempt_campaign = {
+    "execution_mode": "guarded-build",
+    "nodes": {
+        "example": {
+            "state": "build-pending",
+            "attempts": [{
+                "attempt": 4,
+                "state": "FAIL",
+                "package_attempt_consumed": True,
+                "cause": "network-dependent upstream test",
+                "repair": "run only hermetic test cases during package build",
+            }],
+        }
+    },
+}
+if close_module.publication_commit_message(
+    failed_attempt_campaign, "example", "package-attempt-nonpass"
+) != "evidence: close example Attempt 4 FAIL":
+    raise SystemExit("non-PASS package publication commit message regression")
+
+invalid_failed_attempt = {
+    "execution_mode": "guarded-build",
+    "nodes": {
+        "example": {
+            "state": "build-pending",
+            "attempts": [{
+                "attempt": 4,
+                "state": "FAIL",
+                "package_attempt_consumed": True,
+                "cause": "",
+                "repair": "",
+            }],
+        }
+    },
+}
+try:
+    close_module.publication_commit_message(
+        invalid_failed_attempt, "example", "package-attempt-nonpass"
+    )
+except SystemExit:
+    pass
+else:
+    raise SystemExit("undiagnosed non-PASS Attempt publication was accepted")
 
 invalid_preflight = {
     "execution_mode": "preflight",

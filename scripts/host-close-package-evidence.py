@@ -232,6 +232,19 @@ def publication_commit_message(closed_campaign, node, closure_kind):
         if not attempts or attempts[-1].get("state") != "PASS":
             raise SystemExit("Canonical publish lacks a final PASS Attempt.")
         return f"evidence: close {node} Attempt {attempts[-1]['attempt']}"
+    if closure_kind == "package-attempt-nonpass":
+        attempts = record.get("attempts", [])
+        if not attempts or attempts[-1].get("state") not in {"FAIL", "INFRA_INVALID"}:
+            raise SystemExit("Canonical publish lacks a final non-PASS Attempt.")
+        attempt = attempts[-1]
+        if attempt.get("package_attempt_consumed") is not True:
+            raise SystemExit("Canonical non-PASS Attempt did not consume an Attempt.")
+        if not attempt.get("cause") or not attempt.get("repair"):
+            raise SystemExit("Canonical non-PASS Attempt lacks diagnosis.")
+        return (
+            f"evidence: close {node} Attempt {attempt['attempt']} "
+            f"{attempt['state']}"
+        )
     raise SystemExit(f"Unsupported canonical publication closure kind: {closure_kind}")
 
 
@@ -349,10 +362,15 @@ def main():
         result.get("state") == "INFRA_INVALID"
         and result.get("package_attempt_consumed") is False
     )
-    if infra_preflight:
+    attempt_nonpass = (
+        result.get("state") in {"FAIL", "INFRA_INVALID"}
+        and result.get("package_attempt_consumed") is True
+    )
+    diagnosed_nonpass = infra_preflight or attempt_nonpass
+    if diagnosed_nonpass:
         for label, value in (
-            ("incident cause", args.incident_cause),
-            ("incident repair", args.incident_repair),
+            ("evidence cause", args.incident_cause),
+            ("evidence repair", args.incident_repair),
         ):
             if (
                 not isinstance(value, str)
@@ -364,10 +382,10 @@ def main():
                 raise SystemExit(f"Invalid {label}.")
     elif args.incident_cause is not None or args.incident_repair is not None:
         raise SystemExit(
-            "Incident diagnosis fields are valid only for an INFRA_INVALID preflight."
+            "Diagnosis fields are valid only for a closable non-PASS result."
         )
 
-    if result.get("state") != "PASS" and not infra_preflight:
+    if result.get("state") != "PASS" and not diagnosed_nonpass:
         raw = (
             args.artifact_root
             / "raw"
@@ -414,10 +432,10 @@ def main():
     host_result = json.loads(
         (host_dir / "host-result.json").read_text()
     )
-    if infra_preflight:
+    if diagnosed_nonpass:
         if host_result.get("exit_code") == 0:
             raise SystemExit(
-                "INFRA_INVALID preflight is paired with a successful sealed host result."
+                "Non-PASS package evidence is paired with a successful sealed host result."
             )
     elif host_result.get("exit_code") != 0:
         raise SystemExit(
@@ -456,23 +474,47 @@ def main():
                 "preflight-incident" if infra_preflight else "preflight"
             )
         elif result.get("package_attempt_consumed") is True:
-            close_cmd = [
-                "python3",
-                "scripts/close-plasma-package-evidence.py",
-                args.node,
-                "--zip",
-                str(artifact_zip),
-                "--artifact-meta",
-                str(artifact_meta),
-                "--workflow-job-meta",
-                str(job_json),
-                "--host-dir",
-                str(host_dir),
-                "--job-id",
-                str(args.package_job_id),
-                "--recover-hidden-files",
-            ]
-            closure_kind = "package-attempt-pass"
+            if result.get("state") == "PASS":
+                close_cmd = [
+                    "python3",
+                    "scripts/close-plasma-package-evidence.py",
+                    args.node,
+                    "--zip",
+                    str(artifact_zip),
+                    "--artifact-meta",
+                    str(artifact_meta),
+                    "--workflow-job-meta",
+                    str(job_json),
+                    "--host-dir",
+                    str(host_dir),
+                    "--job-id",
+                    str(args.package_job_id),
+                    "--recover-hidden-files",
+                ]
+                closure_kind = "package-attempt-pass"
+            elif attempt_nonpass:
+                close_cmd = [
+                    "python3",
+                    "scripts/record-plasma-package-failure.py",
+                    args.node,
+                    "--zip",
+                    str(artifact_zip),
+                    "--artifact-meta",
+                    str(artifact_meta),
+                    "--host-dir",
+                    str(host_dir),
+                    "--job-id",
+                    str(args.package_job_id),
+                    "--cause",
+                    args.incident_cause,
+                    "--repair",
+                    args.incident_repair,
+                ]
+                closure_kind = "package-attempt-nonpass"
+            else:
+                raise SystemExit(
+                    "Consumed package Attempt has unsupported result state."
+                )
         else:
             raise SystemExit(
                 "Package result lacks an explicit "
