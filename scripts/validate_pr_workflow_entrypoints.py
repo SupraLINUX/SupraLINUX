@@ -119,6 +119,7 @@ expected_authoritative_modes = {
     "preflight",
     "rebuild-golden",
     "execute",
+    "execute-and-publish-pass",
     "close-evidence-check",
     "close-evidence",
     "publish-evidence-check",
