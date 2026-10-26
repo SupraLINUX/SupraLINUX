@@ -112,9 +112,10 @@ for token in required_broker:
 
 required_jit_core = [
     'GATE_RECEIPT_PATH="${SUPRALINUX_GATE_RECEIPT_PATH:-}"',
-    '"host_manifest_sha256"',
-    '"workflow_run_id"',
-    '"evidence_dir"',
+    '--arg host_manifest_sha256 "${evidence_manifest_sha256}"',
+    '--argjson workflow_run_id "${WORKFLOW_RUN_ID:-0}"',
+    '--arg evidence_dir "${EVIDENCE_DIR}"',
+    '--arg source_commit "${PR_HEAD_SHA:-}"',
 ]
 for token in required_jit_core:
     if token not in jit_core:
