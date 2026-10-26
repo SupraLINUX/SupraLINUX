@@ -479,7 +479,7 @@ class InputAdmission(unittest.TestCase):
         rules = (ROOT / "packages/plasma/drkonqi/debian/rules").read_text()
         record = prepare.load_campaign()["nodes"]["drkonqi"]
         self.assertIn("-E ^connectiontest$", rules)
-        self.assertIn('test -x "$builddir/bin/connectiontest"', rules)
+        self.assertIn('test -x "$$builddir/bin/connectiontest"', rules)
         self.assertIn("testGet testGetJsonError testPut", rules)
         self.assertIn("SUPRALINUX_UPSTREAM_TEST_EXCLUSION Bugzilla::ConnectionTest::testDefaultRoot()", rules)
         self.assertNotIn("connectiontest", record["upstream_tests"])
