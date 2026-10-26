@@ -251,6 +251,14 @@ class InputAdmission(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, "Invalid PNG CRC"):
             resources.resource_hash(bytes(damaged), "test.png")
 
+    def test_new_admissions_default_to_guarded_build(self):
+        admission_source = (ROOT / "scripts/admit-reviewed-plasma-level0-package.py").read_text()
+        request = json.loads((ROOT / "ops/host-authoritative/request.json").read_text())
+        self.assertIn("execution_mode='guarded-build'", admission_source)
+        self.assertNotIn("execution_mode='preflight'", admission_source)
+        self.assertIn("authoritative-supplementary-package-build", admission_source)
+        self.assertEqual(request["mode"], "execute-and-publish-pass")
+
     def test_guarded_build_preserves_inline_preflight_before_attempt_boundary(self):
         runner = (ROOT / "scripts/run-authoritative-plasma-package.sh").read_text()
         validator = (ROOT / "scripts/validate_plasma_package_build.py").read_text()

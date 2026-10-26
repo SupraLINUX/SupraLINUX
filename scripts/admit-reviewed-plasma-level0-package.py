@@ -79,14 +79,14 @@ def main():
     shutil.copytree(args.packaging,destination,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
     campaign['nodes'][args.node] = record
     campaign.update(state='execution-authorized',authorized_nodes=[args.node],package_execution_authorized=True,
-                    execution_mode='preflight')
+                    execution_mode='guarded-build')
     if record.get('source_scope') == 'plasma-supplementary-provider':
         path = ROOT/'manifests/kde-plasma-supplementary-providers.json'
         providers = json.loads(path.read_text())
         provider = providers['nodes'][args.node]
         assert provider['state'] == 'packaging-preparation-pending' and not provider['package_execution_authorized']
         provider.update(state='package-build-pending',package_record=args.node,
-                        package_execution_authorized=True,next_gate='authoritative-supplementary-package-input-preflight')
+                        package_execution_authorized=True,next_gate='authoritative-supplementary-package-build')
         provider['candidate_provider']['package_gate'] = 'execution-authorized'
         for path,data in [(paths[0],campaign),(path,providers)]:path.write_text(json.dumps(data,indent=2)+'\n')
         print(f'{args.node} supplementary provider admitted; Level 0 scope unchanged; no package Attempt')
