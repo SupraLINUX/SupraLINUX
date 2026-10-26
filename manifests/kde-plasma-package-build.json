@@ -14540,6 +14540,49 @@
               "sha256": "39843417452315f82dda133b09d1b588a5d23d44095ff821e63ee7943075b232"
             }
           ]
+        },
+        "kded": {
+          "source_package": "kf6-kded",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "kded6",
+              "architecture": "amd64",
+              "sha256": "bb93a73c8f3056405cad73b56b618e7dac58d446104d3178eba91fd51ec4de1a"
+            }
+          ]
+        },
+        "kdoctools": {
+          "source_package": "kf6-kdoctools",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "libkf6doctools6",
+              "architecture": "amd64",
+              "sha256": "db37d679c86ac997a8731062e3fa4bc13a87958321569d98bb10014ad37f45fe"
+            }
+          ]
+        },
+        "kconfigwidgets": {
+          "source_package": "kf6-kconfigwidgets",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "libkf6configwidgets-data",
+              "architecture": "all",
+              "sha256": "8af50dec68b880fa51e1c5c6f0d75a795ae03f82d4debf3e93fd5198f27a4a8d"
+            },
+            {
+              "package": "libkf6configwidgets-dev",
+              "architecture": "amd64",
+              "sha256": "fbaaa2745f68c4eda6f68933404b99b5bc677445d7bc36b1725cf399b30c059d"
+            },
+            {
+              "package": "libkf6configwidgets6",
+              "architecture": "amd64",
+              "sha256": "7ac4d31c198b0a01b79aea2c3f521d6db039d800fd9b6d90a3379006721fb4e3"
+            }
+          ]
         }
       },
       "attempts": [],
