@@ -92,6 +92,12 @@ import json, sys
 print(json.load(open(sys.argv[1])).get("execution_checkpoint", "none"))
 PY
 )"
+MODE="$(python3 - "${EVIDENCE}/build-contract.json" <<'PY'
+import json, sys
+print(json.load(open(sys.argv[1])).get('execution_mode', 'build'))
+PY
+)"
+[[ "${MODE}" == preflight || "${MODE}" == build || "${MODE}" == guarded-build ]]
 EXTRA_ARGS=()
 EXTRA_PATHS=()
 
@@ -115,6 +121,17 @@ unshare --user --map-auto true
     printf 'rootfs_created_at=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 } > "${EVIDENCE}/environment.txt"
 sha256sum "${TEST_IMAGE}" > "${EVIDENCE}/test-image-sha256.txt"
+
+STAGE="reviewed-ubuntu-baseline-preflight"
+set +e
+SBUILD_MIRROR="${MIRROR}" python3 "${ROOT}/scripts/probe-reviewed-ubuntu-baseline.py"
+BASELINE_RC=$?
+set -e
+BASELINE_EVIDENCE="${ROOT}/evidence/runner-contract/reviewed-ubuntu-baseline"
+if [[ -d "${BASELINE_EVIDENCE}" ]]; then
+    mv "${BASELINE_EVIDENCE}" "${EVIDENCE}/ubuntu-baseline-preflight"
+fi
+[[ ${BASELINE_RC} == 0 ]] || exit "${BASELINE_RC}"
 
 if [[ "${EXECUTION_CHECKPOINT}" != "none" ]]; then
     STAGE="predecessor-cache-admission"
@@ -193,21 +210,15 @@ fi
 sha256sum "${CHROOT}" > "${EVIDENCE}/rootfs-sha256.txt"
 
 if [[ "${EXECUTION_CHECKPOINT}" != "none" ]]; then
-    STAGE="predecessor-transport-probe"
-    "${ROOT}/scripts/probe-frameworks-build-inputs.sh" "${EVIDENCE}/predecessor-inputs.json" \
-        "${WORK}/cache-probe" "${EVIDENCE}/cache-probe" --apt-update --apt-distupgrade
+    if [[ "${MODE}" == guarded-build ]]; then
+        STAGE="predecessor-transport-static-admission"
+        printf 'Guarded build: pre-VM reviewed binary closure replaces duplicate synthetic sbuild probe\n'
+    else
+        STAGE="predecessor-transport-probe"
+        "${ROOT}/scripts/probe-frameworks-build-inputs.sh" "${EVIDENCE}/predecessor-inputs.json" \
+            "${WORK}/cache-probe" "${EVIDENCE}/cache-probe" --apt-update --apt-distupgrade
+    fi
 fi
-
-STAGE="reviewed-ubuntu-baseline-preflight"
-set +e
-SBUILD_MIRROR="${MIRROR}" python3 "${ROOT}/scripts/probe-reviewed-ubuntu-baseline.py"
-BASELINE_RC=$?
-set -e
-BASELINE_EVIDENCE="${ROOT}/evidence/runner-contract/reviewed-ubuntu-baseline"
-if [[ -d "${BASELINE_EVIDENCE}" ]]; then
-    mv "${BASELINE_EVIDENCE}" "${EVIDENCE}/ubuntu-baseline-preflight"
-fi
-[[ ${BASELINE_RC} == 0 ]] || exit "${BASELINE_RC}"
 
 STAGE="reviewed-build-predecessor-verifier"
 python3 "${ROOT}/scripts/test-reviewed-package-contract.py" |& tee "${EVIDENCE}/build-predecessor-verifier-tests.log"
@@ -217,12 +228,6 @@ if [[ "${CAMPAIGN}" == manifests/package-revalidation.json ]]; then
     python3 "${ROOT}/scripts/prepare-retained-package-inputs.py" "${NODE}" --output "${WORK}/retained-upgrade" \
         --evidence "${EVIDENCE}/retained-upgrade-inputs.json"
 fi
-MODE="$(python3 - "${EVIDENCE}/build-contract.json" <<'PY'
-import json, sys
-print(json.load(open(sys.argv[1])).get('execution_mode', 'build'))
-PY
-)"
-[[ "${MODE}" == preflight || "${MODE}" == build || "${MODE}" == guarded-build ]]
 PREFLIGHT_RESULT="PASS"
 python3 - "${EVIDENCE}" "${NODE}" "${MODE}" <<'PY'
 import hashlib, json, subprocess, sys

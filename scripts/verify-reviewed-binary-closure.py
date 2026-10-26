@@ -285,14 +285,20 @@ def main():
         default=ROOT / "manifests/frameworks-support-inputs.json",
     )
     args = parser.parse_args()
+    campaign_bytes = args.campaign.read_bytes()
     result = verify(
         ROOT,
-        json.loads(args.campaign.read_text()),
+        json.loads(campaign_bytes),
         args.node,
         args.packages.read_text(),
         json.loads(args.dag.read_text()),
         json.loads(args.support.read_text()),
     )
+    result["source_commit"] = subprocess.check_output(
+        ["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True
+    ).strip()
+    result["campaign_manifest"] = str(args.campaign.resolve().relative_to(ROOT.resolve()))
+    result["campaign_manifest_sha256"] = hashlib.sha256(campaign_bytes).hexdigest()
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     if result["state"] != "PASS":
         for missing in result["missing_local_relations"]:

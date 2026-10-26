@@ -131,6 +131,8 @@ def main():
             assert upstream['state'] == 'PASS' and upstream['expected_tests'] == record['upstream_tests']
         contract_bytes = archive.read('build-contract.json')
         frozen = json.loads(contract_bytes)
+        execution_mode = frozen.get('execution_mode', 'build')
+        assert execution_mode in {'build', 'guarded-build'}
         if 'campaign_manifest_sha256' in frozen:
             assert job_bytes is not None, 'New execution contracts require the original workflow job metadata'
             assert frozen['campaign_manifest'] == 'manifests/kde-plasma-package-build.json'
@@ -162,7 +164,21 @@ def main():
         summary_bytes = archive.read('autopkgtest/summary')
         summary = summary_bytes.decode()
         assert all(re.search(r'^'+re.escape(test)+r'\s+PASS\s*$', summary, re.M) for test in tests), summary
-        if record.get('frameworks_predecessors'):
+        fast_closure_bytes = None
+        if record.get('frameworks_predecessors') and execution_mode == 'guarded-build':
+            fast_path = a.host_dir / 'pre-vm-input-closure.json'
+            assert fast_path.is_file(), 'Guarded build lacks pre-VM binary closure evidence'
+            fast_closure_bytes = fast_path.read_bytes()
+            fast_closure = json.loads(fast_closure_bytes)
+            assert fast_closure['kind'] == 'reviewed-binary-closure-fast-rejection'
+            assert fast_closure['state'] == 'PASS' and fast_closure['node'] == a.node
+            assert fast_closure['package_attempt_consumed'] is False
+            assert fast_closure['vm_created'] is False
+            assert fast_closure['source_commit'] == source_commit
+            assert fast_closure['campaign_manifest'] == 'manifests/kde-plasma-package-build.json'
+            assert fast_closure['campaign_manifest_sha256'] == frozen['campaign_manifest_sha256']
+            probe_bytes = None
+        elif record.get('frameworks_predecessors'):
             probe_bytes = archive.read('cache-probe/result.json')
             probe = json.loads(probe_bytes)
             assert probe['state'] == 'PASS' and probe['consumes_package_attempt'] is False
@@ -207,6 +223,8 @@ def main():
     (historical/'summary').write_bytes(summary_bytes)
     if probe_bytes is not None:
         (historical/'cache-probe-result.json').write_bytes(probe_bytes)
+    if fast_closure_bytes is not None:
+        (historical/'pre-vm-input-closure.json').write_bytes(fast_closure_bytes)
     if upstream_bytes is not None:
         (historical/'upstream-tests.json').write_bytes(upstream_bytes)
     if rootfs_bytes is not None:
@@ -259,6 +277,9 @@ def main():
     if probe_bytes is not None:
         evidence['cache_probe_result_path'] = str(relative/'cache-probe-result.json')
         evidence['cache_probe_result_sha256'] = sha(historical/'cache-probe-result.json')
+    if fast_closure_bytes is not None:
+        evidence['pre_vm_input_closure_path'] = str(relative/'pre-vm-input-closure.json')
+        evidence['pre_vm_input_closure_sha256'] = sha(historical/'pre-vm-input-closure.json')
     if upstream_bytes is not None:
         evidence['upstream_tests_path'] = str(relative/'upstream-tests.json')
         evidence['upstream_tests_sha256'] = sha(historical/'upstream-tests.json')

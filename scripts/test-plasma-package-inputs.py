@@ -260,9 +260,12 @@ class InputAdmission(unittest.TestCase):
         self.assertIn("inline-reviewed-package-input-preflight", runner)
         self.assertIn("input_preflight_result", runner)
         self.assertIn("Inline reviewed input preflight: PASS; crossing Package Attempt boundary now", runner)
+        self.assertIn("Guarded build: pre-VM reviewed binary closure replaces duplicate synthetic sbuild probe", runner)
+        self.assertLess(runner.index('STAGE="reviewed-ubuntu-baseline-preflight"'), runner.index('STAGE="verified-source"'))
         self.assertLess(runner.index('PREFLIGHT_RESULT="PASS"'), runner.index('ATTEMPT=true'))
         self.assertLess(runner.index('input-preflight.json'), runner.index('ATTEMPT=true'))
         self.assertIn("archive.read('input-preflight.json')", closer)
+        self.assertIn("pre-vm-input-closure.json", closer)
         self.assertIn("package_attempt_consumed'] is False", closer)
         self.assertIn("package_execution_started'] is False", closer)
 
