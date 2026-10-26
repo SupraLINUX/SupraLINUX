@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "mode": "execute-and-publish-pass",
+  "mode": "diagnose",
   "gate": "plasma-package-build",
   "runner_group_id": 3
 }
