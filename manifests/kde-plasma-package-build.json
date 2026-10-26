@@ -1,11 +1,9 @@
 {
   "schema": 1,
   "role": "reviewed-plasma-package-build",
-  "state": "execution-authorized",
-  "authorized_nodes": [
-    "sddm-kcm"
-  ],
-  "package_execution_authorized": true,
+  "state": "partial-PASS",
+  "authorized_nodes": [],
+  "package_execution_authorized": false,
   "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
   "scope": "Per-node clean builds, upstream tests, package/Ubuntu upgrade and ABI client checks on KVM; graphical desktop and final distro integration remain later gates",
   "nodes": {
@@ -12644,7 +12642,7 @@
       }
     },
     "sddm-kcm": {
-      "state": "build-pending",
+      "state": "PASS",
       "source_package": "sddm-kcm",
       "version": "4:6.7.5-0supralinux1",
       "upstream_version": "6.7.5",
@@ -13693,7 +13691,33 @@
           ]
         }
       },
-      "attempts": [],
+      "attempts": [
+        {
+          "attempt": 1,
+          "state": "PASS",
+          "sbuild_result": "PASS",
+          "lintian_result": "PASS",
+          "autopkgtest_result": "PASS",
+          "package_attempt_consumed": true,
+          "workflow_run_id": 40243307402,
+          "workflow_job_id": 121319534833,
+          "source_commit": "be94b707c7d5a79ce346f61ef96ac53a13951734",
+          "artifact_id": 12618206454,
+          "artifact_sha256": "7b0b5b1c4d3461e64f0600af262984530b38a0cc1ad7f645fe1d2716cdd24f28",
+          "result_path": "manifests/evidence/plasma/sddm-kcm-attempt1/result.json",
+          "result_sha256": "82e133d83413a68dcbffff0dd8837e2e7a80acd5e6103be7cabefcfeeddfa0de",
+          "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261025t230515z-2525618",
+          "host_evidence_manifest_sha256": "4deaf35b3b15e56d436eb7c56e9e27f93ff790a0047d45e9af974ea5fa201d15",
+          "rootfs_admission_path": "manifests/evidence/plasma/sddm-kcm-attempt1/rootfs-admission.json",
+          "rootfs_admission_sha256": "c5a3c4f1a7889c62aa4ef340b30572d8ad344c2356b3251b91bc28f94627796e",
+          "baseline_preflight_path": "manifests/evidence/plasma/sddm-kcm-attempt1/ubuntu-baseline-preflight.json",
+          "baseline_preflight_sha256": "850171886bbb336d01a3a4256a5ed5c9eae41bf611638f09670b076c018a6201",
+          "workflow_job_path": "manifests/evidence/plasma/sddm-kcm-attempt1/workflow-job.json",
+          "workflow_job_sha256": "46d1ba12675f75d6ecab5a04e65d25113abe22ddd883ebb146ea65e42b94c1d3",
+          "host_result_path": "manifests/evidence/plasma/sddm-kcm-attempt1/host-result.json",
+          "host_result_sha256": "d447ecc8124c75edd12e9c5bd540bc08ec3e7ab192b9b0a798795f5fd2104c9d"
+        }
+      ],
       "review": {
         "upstream_changes": "Official signed KDE Plasma 6.7.5 source; no upstream code patches. The SDDM KCM, KAuth helper, theme installer, KNewStuff metadata, policy, QML UI and translations are preserved.",
         "packaging_changes": "Preserve the Ubuntu kde-config-sddm binary/runtime layout and Debian history; update ownership for SupraLINUX, bind exact eligible Frameworks 6.30 predecessors and retain Qt >= 6.10. Update DEP-5 coverage for files whose upstream 6.7.5 licensing is GPL-3+KDEeV or CC0-1.0. No X11 session package is introduced.",
@@ -13728,6 +13752,44 @@
           "resolute-updates",
           "resolute-security"
         ]
+      },
+      "evidence": {
+        "workflow_run_id": 40243307402,
+        "workflow_job_id": 121319534833,
+        "source_commit": "be94b707c7d5a79ce346f61ef96ac53a13951734",
+        "artifact_id": 12618206454,
+        "artifact_sha256": "7b0b5b1c4d3461e64f0600af262984530b38a0cc1ad7f645fe1d2716cdd24f28",
+        "result_path": "manifests/evidence/plasma/sddm-kcm-attempt1/result.json",
+        "result_sha256": "82e133d83413a68dcbffff0dd8837e2e7a80acd5e6103be7cabefcfeeddfa0de",
+        "contract_path": "manifests/evidence/plasma/sddm-kcm-attempt1/build-contract.json",
+        "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261025t230515z-2525618",
+        "host_evidence_manifest_sha256": "4deaf35b3b15e56d436eb7c56e9e27f93ff790a0047d45e9af974ea5fa201d15",
+        "local_retention": {
+          "archive_root": ".artifacts/plasma-6.7.5/sddm-kcm-attempt1",
+          "archive_index_sha256": "9f9f7b1a4ddbfbfc0de7d5286a9a456febb47a496dd98769d82ba77d641f778d",
+          "plan_path": "manifests/evidence/plasma/sddm-kcm-artifact-plan.json",
+          "plan_sha256": "17473c8d7bbf698f1aec466b2ad580a4cea0dda3b6f7ec2cb65a31e65feb1fd1",
+          "source_complete": true,
+          "changes_complete": true,
+          "buildinfo_verified": true,
+          "artifact_zip_sha256_verified": true,
+          "offline_restore_verified": true,
+          "requires_github_for_restore": false,
+          "off_host_backup_verified": false,
+          "unique_binary_package_count": 2,
+          "binary_payload_file_count": 2,
+          "payload_prefix": "packages/"
+        },
+        "cache_probe_result_path": "manifests/evidence/plasma/sddm-kcm-attempt1/cache-probe-result.json",
+        "cache_probe_result_sha256": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+        "rootfs_admission_path": "manifests/evidence/plasma/sddm-kcm-attempt1/rootfs-admission.json",
+        "rootfs_admission_sha256": "c5a3c4f1a7889c62aa4ef340b30572d8ad344c2356b3251b91bc28f94627796e",
+        "baseline_preflight_path": "manifests/evidence/plasma/sddm-kcm-attempt1/ubuntu-baseline-preflight.json",
+        "baseline_preflight_sha256": "850171886bbb336d01a3a4256a5ed5c9eae41bf611638f09670b076c018a6201",
+        "workflow_job_path": "manifests/evidence/plasma/sddm-kcm-attempt1/workflow-job.json",
+        "workflow_job_sha256": "46d1ba12675f75d6ecab5a04e65d25113abe22ddd883ebb146ea65e42b94c1d3",
+        "host_result_path": "manifests/evidence/plasma/sddm-kcm-attempt1/host-result.json",
+        "host_result_sha256": "d447ecc8124c75edd12e9c5bd540bc08ec3e7ab192b9b0a798795f5fd2104c9d"
       }
     }
   },
@@ -14028,6 +14090,12 @@
       "attempt": 5,
       "archive_root": ".artifacts/plasma-6.7.5/discover-attempt5",
       "archive_index_sha256": "c90e14e7aa037d7654c72b53c8d1f64e7f8a777797e29b2b3a9daa5b90e78aaf"
+    },
+    {
+      "node": "sddm-kcm",
+      "attempt": 1,
+      "archive_root": ".artifacts/plasma-6.7.5/sddm-kcm-attempt1",
+      "archive_index_sha256": "9f9f7b1a4ddbfbfc0de7d5286a9a456febb47a496dd98769d82ba77d641f778d"
     }
   ],
   "execution_checkpoint": "frameworks-6.30-pass",

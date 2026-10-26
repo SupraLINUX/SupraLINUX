@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "sddm-kcm",
+      "package_version": "4:6.7.5-0supralinux1",
+      "artifact_id": 12618206454,
+      "workflow_run_id": 40243307402,
+      "artifact_sha256": "7b0b5b1c4d3461e64f0600af262984530b38a0cc1ad7f645fe1d2716cdd24f28",
+      "payload_prefix": "packages/"
+    }
+  ]
+}
