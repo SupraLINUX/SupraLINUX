@@ -226,13 +226,22 @@ def verify(
     for package, item in sorted(selected.items()):
         if package in external_by_package:
             provider = external_by_package[package]
-            assert provider["node"] == item["node"], (
-                f"Selected external provider mismatch: {package}: "
-                f"{provider['node']} != {item['node']}"
+            if (
+                provider["node"] == item["node"]
+                and provider["source_package"] == item["source_package"]
+                and provider["version"] == item["version"]
+                and provider["architecture"] == item["architecture"]
+            ):
+                continue
+            missing_metadata.append(
+                {
+                    "package": package,
+                    "version": item["version"],
+                    "architecture": item["architecture"],
+                    "provider_node": item["node"],
+                    "available_external_provider": provider,
+                }
             )
-            assert provider["source_package"] == item["source_package"]
-            assert provider["version"] == item["version"]
-            assert provider["architecture"] == item["architecture"]
             continue
         key = (package, item["version"], item["architecture"])
         stanza = by_identity.get(key)
