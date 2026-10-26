@@ -17,6 +17,7 @@ ATTEMPT=false
 BUILD_RESULT="not-run"
 TEST_RESULT="not-run"
 LINTIAN_RESULT="not-run"
+PREFLIGHT_RESULT="not-run"
 STARTED="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 NODE=""
 PACKAGE_VERSION=""
@@ -27,10 +28,10 @@ finish() {
     local rc=$?
     trap - EXIT
     python3 - "${EVIDENCE}" "${STATE}" "${STAGE}" "${ATTEMPT}" "${BUILD_RESULT}" \
-        "${TEST_RESULT}" "${LINTIAN_RESULT}" "${STARTED}" "${NODE}" "${PACKAGE_VERSION}" "${rc}" <<'PY'
+        "${TEST_RESULT}" "${LINTIAN_RESULT}" "${PREFLIGHT_RESULT}" "${STARTED}" "${NODE}" "${PACKAGE_VERSION}" "${rc}" <<'PY'
 import datetime, hashlib, json, os, subprocess, sys
 from pathlib import Path
-path, state, stage, attempt, build, tests, lintian, started, node, version, rc = sys.argv[1:]
+path, state, stage, attempt, build, tests, lintian, preflight, started, node, version, rc = sys.argv[1:]
 root = Path(path)
 payload = {
     "schema": 1, "node": node, "version": version, "state": state,
@@ -41,6 +42,7 @@ payload = {
     "authoritative": True, "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
     "package_attempt_consumed": attempt == "true", "sbuild_result": build,
     "lintian_result": lintian, "autopkgtest_result": tests,
+    "input_preflight_result": preflight,
     "sbuild_backend": "unshare", "system_test_backend": "autopkgtest-qemu",
     "system_test_acceleration": "kvm-required", "release_publication": False,
     "files_sha256": {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
@@ -220,13 +222,46 @@ import json, sys
 print(json.load(open(sys.argv[1])).get('execution_mode', 'build'))
 PY
 )"
+[[ "${MODE}" == preflight || "${MODE}" == build || "${MODE}" == guarded-build ]]
+PREFLIGHT_RESULT="PASS"
+python3 - "${EVIDENCE}" "${NODE}" "${MODE}" <<'PY'
+import hashlib, json, subprocess, sys
+from pathlib import Path
+evidence, node, mode = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
+files = {}
+for relative in [
+    'build-contract.json',
+    'predecessor-inputs.json',
+    'cache-probe/result.json',
+    'cache-probe/installed-predecessor-contract.json',
+    'ubuntu-baseline-preflight/result.json',
+    'rootfs-admission.json',
+    'build-predecessor-verifier-tests.log',
+]:
+    path = evidence / relative
+    if path.is_file():
+        files[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
+payload = {
+    'schema': 1,
+    'kind': 'inline-reviewed-package-input-preflight',
+    'state': 'PASS',
+    'node': node,
+    'execution_mode': mode,
+    'source_commit': subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip(),
+    'package_attempt_consumed': False,
+    'package_execution_started': False,
+    'files_sha256': files,
+}
+(evidence/'input-preflight.json').write_text(json.dumps(payload, indent=2, sort_keys=True) + '\n')
+PY
 if [[ "${MODE}" == preflight ]]; then
     STATE="PASS"
     STAGE="reviewed-package-preflight-complete"
     printf 'Reviewed package infrastructure preflight: PASS; no package Attempt consumed\n'
     exit 0
 fi
-[[ "${MODE}" == build ]]
+[[ "${MODE}" == build || "${MODE}" == guarded-build ]]
+printf 'Inline reviewed input preflight: PASS; crossing Package Attempt boundary now (%s)\n' "${MODE}"
 
 STAGE="sbuild"
 STATE="FAIL"

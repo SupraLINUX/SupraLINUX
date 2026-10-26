@@ -44,7 +44,10 @@ def validate():
     assert campaign["package_execution_authorized"] is bool(scope)
     assert campaign["runner_class"] == "supralinux-kvm-ubuntu-26.04-ephemeral"
     assert set(campaign["nodes"]) <= set(level["selected_nodes"]) | set(providers)
-    assert campaign.get('execution_mode', 'build') in {'preflight', 'build'}
+    mode = campaign.get('execution_mode', 'build')
+    assert mode in {'preflight', 'build', 'guarded-build'}
+    if mode == 'guarded-build':
+        assert scope, 'Guarded build requires one authorized package node'
     effective = repairs.effective_nodes(json.loads((ROOT/'manifests/kde-dag.json').read_text()))
     historical = repairs.effective_nodes(json.loads((ROOT/'manifests/kde-dag.json').read_text()), historical=True)
     if scope:

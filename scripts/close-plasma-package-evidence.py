@@ -111,6 +111,17 @@ def main():
         assert meta['workflow_run']['id'] == int(result['workflow_run_id'])
         assert result['authoritative'] is True and result['package_attempt_consumed'] is True
         assert all(result[k] == 'PASS' for k in ['sbuild_result','lintian_result','autopkgtest_result'])
+        assert result.get('input_preflight_result') == 'PASS'
+        input_preflight_bytes = archive.read('input-preflight.json')
+        input_preflight = json.loads(input_preflight_bytes)
+        assert input_preflight['kind'] == 'inline-reviewed-package-input-preflight'
+        assert input_preflight['state'] == 'PASS' and input_preflight['node'] == a.node
+        assert input_preflight['execution_mode'] in {'build', 'guarded-build'}
+        assert input_preflight['source_commit'] == source_commit
+        assert input_preflight['package_attempt_consumed'] is False
+        assert input_preflight['package_execution_started'] is False
+        for name, digest in input_preflight['files_sha256'].items():
+            assert result['files_sha256'][name] == digest
         exporter = importlib.machinery.SourceFileLoader('exporter', str(ROOT/'scripts/plasma-evidence-export.py')).load_module()
         recovered = exporter.verify_export(archive, result, a.host_dir if a.recover_hidden_files else None)
         upstream_bytes = None
@@ -192,6 +203,7 @@ def main():
     historical.mkdir(parents=True)
     (historical/'result.json').write_bytes(result_bytes)
     (historical/'build-contract.json').write_bytes(contract_bytes)
+    (historical/'input-preflight.json').write_bytes(input_preflight_bytes)
     (historical/'summary').write_bytes(summary_bytes)
     if probe_bytes is not None:
         (historical/'cache-probe-result.json').write_bytes(probe_bytes)
@@ -231,7 +243,10 @@ def main():
     evidence = {'workflow_run_id':int(result['workflow_run_id']), 'workflow_job_id':a.job_id,
                 'source_commit':source_commit, 'artifact_id':meta['id'], 'artifact_sha256':artifact_sha,
                 'result_path':str(relative/'result.json'), 'result_sha256':sha(historical/'result.json'),
-                'contract_path':str(relative/'build-contract.json'), 'host_evidence_dir':str(a.host_dir),
+                'contract_path':str(relative/'build-contract.json'),
+                'input_preflight_path':str(relative/'input-preflight.json'),
+                'input_preflight_sha256':sha(historical/'input-preflight.json'),
+                'host_evidence_dir':str(a.host_dir),
                 'host_evidence_manifest_sha256':sha(a.host_dir/'evidence-sha256.txt'),
                 'local_retention':{'archive_root':str(archive_root.relative_to(ROOT)),
                                    'archive_index_sha256':sha(archive_root/'index.json'),

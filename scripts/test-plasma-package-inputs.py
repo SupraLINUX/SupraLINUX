@@ -251,6 +251,21 @@ class InputAdmission(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, "Invalid PNG CRC"):
             resources.resource_hash(bytes(damaged), "test.png")
 
+    def test_guarded_build_preserves_inline_preflight_before_attempt_boundary(self):
+        runner = (ROOT / "scripts/run-authoritative-plasma-package.sh").read_text()
+        validator = (ROOT / "scripts/validate_plasma_package_build.py").read_text()
+        closer = (ROOT / "scripts/close-plasma-package-evidence.py").read_text()
+        self.assertIn("'guarded-build'", validator)
+        self.assertIn("input-preflight.json", runner)
+        self.assertIn("inline-reviewed-package-input-preflight", runner)
+        self.assertIn("input_preflight_result", runner)
+        self.assertIn("Inline reviewed input preflight: PASS; crossing Package Attempt boundary now", runner)
+        self.assertLess(runner.index('PREFLIGHT_RESULT="PASS"'), runner.index('ATTEMPT=true'))
+        self.assertLess(runner.index('input-preflight.json'), runner.index('ATTEMPT=true'))
+        self.assertIn("archive.read('input-preflight.json')", closer)
+        self.assertIn("package_attempt_consumed'] is False", closer)
+        self.assertIn("package_execution_started'] is False", closer)
+
     def test_upgrade_setup_keeps_reviewed_candidate(self):
         record = json.loads((ROOT / "manifests/kde-plasma-package-build.json").read_text())["nodes"]["breeze-grub"]
         output = testing.setup_commands(ROOT, record)
