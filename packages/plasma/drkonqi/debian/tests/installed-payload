@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+"""Validate installed DrKonqi payload without triggering a crash or activating units."""
+import os
+import pathlib
+import subprocess
+
+pkg = 'drkonqi'
+files = [pathlib.Path(x) for x in subprocess.check_output(['dpkg-query', '-L', pkg], text=True).splitlines()]
+assert files
+
+def one_suffix(suffix, *, executable=False):
+    matches = [p for p in files if str(p).endswith(suffix)]
+    assert len(matches) == 1, (suffix, matches)
+    path = matches[0]
+    assert path.exists(), path
+    if executable:
+        assert path.is_file(), path
+        assert os.access(path, os.X_OK), path
+    return path
+
+elf_suffixes = (
+    '/usr/bin/drkonqi-coredump-gui',
+    '/usr/bin/drkonqi-sentry-data',
+    '/libexec/drkonqi',
+    '/libexec/drkonqi-coredump-cleanup',
+    '/libexec/drkonqi-coredump-launcher',
+    '/libexec/drkonqi-coredump-processor',
+    '/libexec/drkonqi-sentry-postman',
+    '/libexec/kf6/drkonqi-polkit-helper',
+)
+checked = []
+for suffix in elf_suffixes:
+    binary = one_suffix(suffix, executable=True)
+    with binary.open('rb') as stream:
+        assert stream.read(4) == b'\x7fELF', binary
+    linkage = subprocess.run(['ldd', str(binary)], check=True, capture_output=True, text=True)
+    assert 'not found' not in linkage.stdout, (binary, linkage.stdout)
+    checked.append(binary)
+
+for suffix in (
+    '/system/drkonqi-coredump-processor@.service',
+    '/user/drkonqi-coredump-cleanup.service',
+    '/user/drkonqi-coredump-cleanup.timer',
+    '/user/drkonqi-coredump-launcher.socket',
+    '/user/drkonqi-coredump-launcher@.service',
+    '/user/drkonqi-coredump-pickup.service',
+    '/user/drkonqi-sentry-postman.path',
+    '/user/drkonqi-sentry-postman.service',
+    '/user/drkonqi-sentry-postman.timer',
+    '/applications/org.kde.drkonqi.coredump.gui.desktop',
+    '/applications/org.kde.drkonqi.desktop',
+    '/dbus-1/system-services/org.kde.drkonqi.service',
+    '/dbus-1/system.d/org.kde.drkonqi.conf',
+    '/polkit-1/actions/org.kde.drkonqi.policy',
+    '/drkonqi/mappings',
+    '/knotifications6/drkonqi-coredump-launcher.notifyrc',
+):
+    one_suffix(suffix)
+
+assert any(str(p).endswith('/drkonqi/gdb/python/gdb_preamble/preamble.py') and p.is_file() for p in files)
+assert any(p.suffix == '.mo' and '/locale/' in str(p) for p in files), 'Translations not installed'
+assert len(checked) == len(elf_suffixes)
+print(f'Installed DrKonqi payload/linkage: PASS ({len(checked)} ELF targets; systemd/DBus/PolicyKit/QML-data contract present)')

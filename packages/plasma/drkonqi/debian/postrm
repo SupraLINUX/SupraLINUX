@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+#DEBHELPER#
+
+if [ "$1" = "purge" ]; then
+	if [ -x /usr/bin/deb-systemd-helper ]; then
+		deb-systemd-helper purge 'drkonqi-coredump-processor@.service' >/dev/null || true
+	fi
+fi

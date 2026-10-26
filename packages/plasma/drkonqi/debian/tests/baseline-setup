@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-drkonqi-baseline
+mkdir -p -- "${BASE}"
+actual="$(dpkg-query -W -f='${Version}' drkonqi)"
+expected="$(cat /var/tmp/supralinux-ubuntu-package-version)"
+[[ "${actual}" == "${expected}" ]]
+printf '%s\n' "${actual}" > "${BASE}/ubuntu-version"
+dpkg-query -L drkonqi > "${BASE}/installed-files.txt"
+grep -F '/libexec/drkonqi' "${BASE}/installed-files.txt" >/dev/null
+grep -F '/drkonqi-coredump-processor@.service' "${BASE}/installed-files.txt" >/dev/null
+grep -F '/drkonqi-coredump-launcher.socket' "${BASE}/installed-files.txt" >/dev/null
+grep -F '/org.kde.drkonqi.desktop' "${BASE}/installed-files.txt" >/dev/null
+printf 'Reviewed Ubuntu DrKonqi baseline: PASS\n'

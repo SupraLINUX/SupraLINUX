@@ -1,0 +1,195 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: drkonqi
+Source: https://invent.kde.org/plasma/drkonqi
+Upstream-Contact: plasma-devel@kde.org
+Comment:
+ This reviewed summary follows the Debian DrKonqi 6.7.4 DEP-5 classification.
+ The 6.7.5 upstream change is a bugfix-only release; source files retain their
+ SPDX notices and the upstream LICENSES directory remains authoritative for
+ per-file license texts.
+
+Files: *
+Copyright: KDE contributors, as identified by source SPDX notices and headers
+License: GPL-2.0-or-later
+
+Files: cmake/Findeu-unstrip.cmake
+ cmake/Findflatpak-coredumpctl.cmake
+ cmake/FindGDB.cmake
+ cmake/SystemctlEnable.cmake
+ src/backtracegenerator.cpp
+ src/backtracegenerator.h
+ src/core/CMakeLists.txt
+ src/coredump/dumpexcavator/CMakeLists.txt
+ src/coredump/polkit/CMakeLists.txt
+ src/main.cpp
+ src/sentry/CMakeLists.txt
+ src/sentry/data/CMakeLists.txt
+ src/sentry/lib/CMakeLists.txt
+ src/sentry/postman/CMakeLists.txt
+ src/settings.kcfg
+ src/settings.kcfgc
+ src/systemd/CMakeLists.txt
+ src/tests/crashtest/crashtest.cpp
+Copyright: KDE contributors, as identified by source headers
+License: BSD-2-Clause
+
+Files: cmake/Findcoredumpctl.cmake
+ cmake/FindPythonModule.cmake
+ cmake/FindPythonModule.cmake.in
+ cmake/FindSystemd.cmake
+ src/coredump/cleanup/autotests/CMakeLists.txt
+ src/coredump/cleanup/CMakeLists.txt
+ src/coredump/CMakeLists.txt
+ src/coredump/gui/CMakeLists.txt
+ src/coredump/launcher/CMakeLists.txt
+ src/coredump/processor/CMakeLists.txt
+ src/Messages.sh
+Copyright: KDE contributors, as identified by source headers
+License: BSD-3-Clause
+
+Files: .git-blame-ignore-revs
+ .gitignore
+ .gitlab-ci.yml
+ .kateconfig
+ .kde-ci.yml
+ README.md
+ Testing.md
+ src/coredump/gui/org.kde.drkonqi.coredump.gui.desktop
+ src/coredump/gui/qml/qml.qrc
+ src/coredump/launcher/drkonqi-coredump-launcher.notifyrc
+ src/coredump/polkit/org.kde.drkonqi.conf
+ src/coredump/polkit/org.kde.drkonqi.policy
+ src/coredump/polkit/org.kde.drkonqi.service.in
+ src/data/mappings
+ src/qml/qmldir
+ src/qml/qml.qrc
+ src/systemd/org.freedesktop.DBus.Properties.xml
+ src/systemd/org.freedesktop.systemd1.Manager.xml
+ src/systemd/org.freedesktop.systemd1.Unit.xml
+ src/tests/data/*
+Copyright: KDE contributors, as identified by source SPDX notices
+License: CC0-1.0
+
+Files: src/coredump/cleanup/autotests/cleanuptest.cpp
+ src/coredump/cleanup/drkonqi-coredump-cleanup.service.cmake
+ src/coredump/cleanup/drkonqi-coredump-cleanup.timer
+ src/coredump/dumpexcavator/*
+ src/coredump/gui/*.cpp
+ src/coredump/gui/*.h
+ src/coredump/gui/qml/*.qml
+ src/coredump/launcher/*
+ src/coredump/polkit/main.cpp
+ src/coredump/processor/*.cmake
+ src/drkonqi_globals.cpp
+ src/qml/*.qml
+ src/qmlextensions/*
+ src/safe_strerror.h
+ src/sentry/*
+ src/systemd/memoryfence.*
+ src/systemd/memorypressure.*
+ src/tests/integration/*
+Copyright: KDE contributors, as identified by source SPDX notices
+License: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+
+Files: src/core/drkonqipaths.*
+ src/core/metadata.*
+ src/coredump/cleanup/main.cpp
+ src/coredump/coredump.*
+ src/coredump/coredumpwatcher.*
+ src/coredump/memory.h
+ src/coredump/processor/main.cpp
+ src/coredump/socket.h
+ src/data/gdb_preamble/*
+ src/tests/python/gdb/*
+Copyright: KDE contributors, as identified by source SPDX notices
+License: GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+
+Files: src/systemd/dbustypes.h
+Copyright: KDE contributors, as identified by source SPDX notices
+License: LGPL-2.0-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+
+Files: src/bugzillaintegration/*
+ src/coredump/gui/PatientModel.*
+ src/tests/gdbbacktracelinetest.cpp
+ src/tests/linuxprocmapsparsertest.cpp
+ src/tests/lsb_release_double.c
+ src/tests/sentrytest/*
+ src/tests/statusnotifier_activationclosetimertest.cpp
+ src/tests/systeminformationtest.cpp
+ po/ca/*
+ po/ca@valencia/*
+ po/uk/*
+Copyright: KDE contributors, as identified by source SPDX notices
+License: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+
+Files: logo.png
+Copyright: 2016 Andreas Kainz <kainz.a@gmail.com>
+License: LGPL-3.0-or-later
+
+Files: debian/*
+Copyright: 2024-2026 Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+           2017 Jonathan Riddell <jr@jriddell.org>
+           2026 SupraLINUX Developers <dev@supralinux.org>
+License: GPL-2.0-or-later
+
+License: BSD-2-Clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that source redistributions retain the
+ copyright notice and disclaimer, and binary redistributions reproduce them
+ in the documentation and/or other materials.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ WITHOUT WARRANTY OF ANY KIND.
+
+License: BSD-3-Clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that source and binary redistributions
+ retain the copyright notice and disclaimer, and neither the copyright holder
+ nor contributor names are used to endorse derived products without specific
+ prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ WITHOUT WARRANTY OF ANY KIND.
+
+License: CC0-1.0
+ To the extent possible under law, the authors have dedicated all copyright
+ and related rights to the public domain worldwide. On Debian systems the
+ complete text is in /usr/share/common-licenses/CC0-1.0.
+
+License: GPL-2.0-only
+ On Debian systems the complete GNU General Public License version 2 is in
+ /usr/share/common-licenses/GPL-2.
+
+License: GPL-2.0-or-later
+ On Debian systems the complete GNU General Public License version 2 is in
+ /usr/share/common-licenses/GPL-2.
+
+License: GPL-3.0-only
+ On Debian systems the complete GNU General Public License version 3 is in
+ /usr/share/common-licenses/GPL-3.
+
+License: LGPL-2.0-only
+ On Debian systems the complete GNU Library General Public License version 2
+ is in /usr/share/common-licenses/LGPL-2.
+
+License: LGPL-2.1-only
+ On Debian systems the complete GNU Lesser General Public License version 2.1
+ is in /usr/share/common-licenses/LGPL-2.1.
+
+License: LGPL-3.0-only
+ On Debian systems the complete GNU Lesser General Public License version 3
+ is in /usr/share/common-licenses/LGPL-3.
+
+License: LGPL-3.0-or-later
+ On Debian systems the complete GNU Lesser General Public License version 3
+ is in /usr/share/common-licenses/LGPL-3.
+
+License: LicenseRef-KDE-Accepted-GPL
+ This program may be redistributed and/or modified under GNU GPL version 3 or,
+ at your option, any later version accepted by the membership of KDE e.V. as
+ proxy under section 14 of GPLv3.
+
+License: LicenseRef-KDE-Accepted-LGPL
+ This library may be redistributed and/or modified under GNU LGPL version 3
+ or, at your option, any later version accepted by the membership of KDE e.V.
+ as proxy under section 6 of LGPLv3.

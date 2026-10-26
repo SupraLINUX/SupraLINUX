@@ -1,0 +1,54 @@
+Source: drkonqi
+Section: kde
+Priority: optional
+Maintainer: SupraLINUX Developers <dev@supralinux.org>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Uploaders: Aurélien COUDERC <coucouf@debian.org>,
+           Patrick Franz <deltaone@debian.org>,
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               dh-sequence-kf6,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               gettext,
+               libkf6config-dev (= 6.30.0-0supralinux5),
+               libkf6coreaddons-dev (= 6.30.0-0supralinux4),
+               libkf6crash-dev (= 6.30.0-0supralinux1),
+               libkf6i18n-dev (= 6.30.0-0supralinux1),
+               libkf6idletime-dev (= 6.30.0-0supralinux1),
+               libkf6jobwidgets-dev (= 6.30.0-0supralinux4),
+               libkf6kio-dev (= 6.30.0-0supralinux10),
+               libkf6notifications-dev (= 6.30.0-0supralinux1),
+               libkf6service-dev (= 6.30.0-0supralinux1),
+               libkf6statusnotifieritem-dev (= 6.30.0-0supralinux2),
+               libkf6syntaxhighlighting-dev (= 6.30.0-0supralinux2),
+               libkf6wallet-dev (= 6.30.0-0supralinux4),
+               libkf6widgetsaddons-dev (= 6.30.0-0supralinux7),
+               libkf6windowsystem-dev (= 6.30.0-0supralinux4),
+               libpolkit-qt6-1-dev,
+               libsystemd-dev [linux-any],
+               pkgconf,
+               qt6-base-dev (>= 6.10.0~),
+               qt6-declarative-dev (>= 6.10.0~),
+               zlib1g-dev,
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/drkonqi
+Vcs-Browser: https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/drkonqi
+Vcs-Git: https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/drkonqi
+Rules-Requires-Root: no
+
+Package: drkonqi
+Architecture: any
+Depends: elfutils,
+         kio6,
+         kwallet6,
+         qml6-module-org-kde-kirigami,
+         qml6-module-org-kde-kitemmodels,
+         qml6-module-org-kde-syntaxhighlighting,
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: python3-psutil,
+            python3-sentry-sdk,
+            systemd-coredump [linux-any],
+Description: Crash handler for Qt applications
+ DrKonqi shows a dialog for dealing with application crashes and can integrate
+ with systemd-coredump for crash collection and reporting.

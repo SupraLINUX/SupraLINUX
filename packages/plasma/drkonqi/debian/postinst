@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+#DEBHELPER#
+
+# Keep the processor template enabled without trying to start an instance.
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ]; then
+	if deb-systemd-helper --quiet was-enabled 'drkonqi-coredump-processor@.service'; then
+		deb-systemd-helper enable 'drkonqi-coredump-processor@.service' >/dev/null || true
+	else
+		deb-systemd-helper update-state 'drkonqi-coredump-processor@.service' >/dev/null || true
+	fi
+fi
+
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ]; then
+	if [ -d /run/systemd/system ]; then
+		systemctl --system daemon-reload >/dev/null || true
+	fi
+fi
