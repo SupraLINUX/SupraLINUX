@@ -152,19 +152,33 @@ def upstream_test_result(record, log):
     if backend == 'meson':
         return meson_test_result(record, log)
     expected = record.get('upstream_tests', [])
+    expected_cases = record.get('upstream_test_cases', [])
+    exclusions = record.get('upstream_test_exclusions', [])
     assert len(set(expected)) == len(expected), 'Duplicate upstream test names'
+    assert len(set(expected_cases)) == len(expected_cases), 'Duplicate upstream test cases'
     for name in expected:
-        assert re.search(r'Test\s+#\d+:\s+' + re.escape(name) + r'\s+\.+\s+Passed\s+', log), f'Upstream test did not pass: {name}'
-    executed = re.findall(r'Test\s+#\d+:\s+(\S+)\s+\.+\s+Passed\s+', log)
+        assert re.search(r'Test\\s+#\\d+:\\s+' + re.escape(name) + r'\\s+\\.+\\s+Passed\\s+', log), f'Upstream test did not pass: {name}'
+    executed = re.findall(r'Test\\s+#\\d+:\\s+(\\S+)\\s+\\.+\\s+Passed\\s+', log)
     if expected:
-        assert len(executed) == len(re.findall(r'Test\s+#\d+:\s+\S+\s+\.+\s+', log)), 'Some executed upstream tests did not pass'
+        assert len(executed) == len(re.findall(r'Test\\s+#\\d+:\\s+\\S+\\s+\\.+\\s+', log)), 'Some executed upstream tests did not pass'
         assert len(executed) == len(set(executed)), 'Duplicate upstream test executions'
         assert set(expected) <= set(executed)
-        # ECM may add integration tests (for example AppStream). Every executed
-        # test must pass, and the summary must account for all recorded entries.
-        assert re.search(r'100% tests passed, 0 tests failed out of ' + str(len(executed)) + r'\b', log), 'Upstream suite count/result mismatch'
-    return {'state': 'PASS' if expected else 'not-applicable', 'expected_tests': expected,
-            'executed_tests': executed, 'scope': 'CTest suite executed during the clean package build'}
+        assert re.search(r'100% tests passed, 0 tests failed out of ' + str(len(executed)) + r'\\b', log), 'Upstream suite count/result mismatch'
+    for case in expected_cases:
+        assert re.search(r'PASS\\s+:\\s+' + re.escape(case), log), f'Upstream test case did not pass: {case}'
+    excluded_cases = []
+    for exclusion in exclusions:
+        assert set(exclusion) == {'test', 'reason', 'marker'}, 'Invalid upstream test exclusion contract'
+        name = exclusion['test']
+        assert name and exclusion['reason'] and exclusion['marker']
+        assert exclusion['marker'] in log, f'Upstream exclusion marker missing: {name}'
+        assert not re.search(r'(?:PASS|FAIL!|XFAIL|XPASS)\\s+:\\s+' + re.escape(name), log), f'Excluded upstream test case executed: {name}'
+        excluded_cases.append(name)
+    assert not (set(expected_cases) & set(excluded_cases)), 'Upstream test case both required and excluded'
+    return {'state': 'PASS' if expected or expected_cases else 'not-applicable',
+            'expected_tests': expected, 'executed_tests': executed,
+            'expected_cases': expected_cases, 'excluded_cases': excluded_cases,
+            'scope': 'CTest suite plus reviewed hermetic QtTest cases executed during the clean package build'}
 
 
 def main():

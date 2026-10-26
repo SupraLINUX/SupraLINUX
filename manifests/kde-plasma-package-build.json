@@ -13797,7 +13797,7 @@
     "drkonqi": {
       "state": "build-pending",
       "source_package": "drkonqi",
-      "version": "6.7.5-0supralinux1",
+      "version": "6.7.5-0supralinux2",
       "upstream_version": "6.7.5",
       "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/drkonqi-6.7.5.tar.xz",
       "upstream_sha256": "9d02b9bd8534ac98dbb77a73248112654e2dee3ab1cf3cc59e69ba78027ab423",
@@ -13827,7 +13827,6 @@
         "bugfieldtest",
         "bugzillatest",
         "commenttest",
-        "connectiontest",
         "producttest",
         "systeminformationtest",
         "gdbbacktracelinetest",
@@ -14609,20 +14608,20 @@
       ],
       "review": {
         "upstream_changes": "Official signed KDE Plasma 6.7.5 source; no upstream code patches. The reviewed release keeps the DrKonqi crash handler/coredump pipeline and includes upstream bug fixes that avoid processing crashes from DrKonqi's own binaries and correct launcher service session management.",
-        "packaging_changes": "Preserve the Ubuntu 26.04 single-binary drkonqi runtime contract and Debian systemd template maintscripts; update the candidate to 6.7.5-0supralinux1, bind exact eligible Frameworks 6.30 predecessors and Qt >= 6.10, and add deterministic DEP-8 payload/upgrade checks. No X11 session package is introduced.",
+        "packaging_changes": "Revision2 preserves the Ubuntu 26.04 single-binary drkonqi runtime contract and unchanged signed KDE Plasma 6.7.5 source/runtime payload. It changes only clean-build test execution: the live Bugzilla testDefaultRoot case is excluded, while the three local connectiontest cases remain mandatory alongside the rest of the upstream CTest suite. Exact eligible Frameworks 6.30 predecessors and Qt >= 6.10 remain bound; no X11 session package is introduced.",
         "build_dependencies": "Direct Frameworks developer inputs are pinned to the currently admitted 6.30.0 artifacts (ECM, KConfig, KCoreAddons, KCrash, KI18n, KIdleTime, KJobWidgets, KIO, KNotifications, KService, KStatusNotifierItem, KSyntaxHighlighting, KWallet, KWidgetsAddons and KWindowSystem), with their complete reviewed source-DAG closure contracted. Ubuntu PolicyKit/systemd/pkgconf/zlib and Qt 6.10 remain platform inputs.",
-        "test_policy": "BUILD_TESTING is enabled. The package build requires the 16 deterministic CTest unit tests registered by the exact v6.7.5 source. The separate upstream integration suite is intentionally not enabled in sbuild because it requires Ruby+AT-SPI+Xvfb+GDB and actively generates crashes/UI/session activity; that behavior remains for a later graphical integration gate. DEP-8 validates installed ELF linkage, systemd/DBus/PolicyKit/data payload and a real Ubuntu-to-candidate upgrade.",
-        "activation_policy": "Package tests do not generate crashes, invoke the PolicyKit helper, start DrKonqi services or sockets, or contact Bugzilla/Sentry. Runtime crash capture, notification/UI and report submission remain later integration/user-action gates.",
+        "test_policy": "BUILD_TESTING remains enabled. The clean package build requires every hermetic CTest executable plus Bugzilla::ConnectionTest::testGet(), testGetJsonError() and testPut() run directly from the unchanged upstream binary. Only testDefaultRoot() is excluded because upstream v6.7.5 explicitly makes a live bugstest.kde.org request and calls that dependency inherently flaky. The separate graphical integration suite remains deferred because it requires Ruby+AT-SPI+Xvfb+GDB and actively generates crashes/UI/session activity. DEP-8 still validates installed ELF linkage, systemd/DBus/PolicyKit/data payload and a real Ubuntu-to-candidate upgrade.",
+        "activation_policy": "Package tests do not generate crashes, invoke the PolicyKit helper, start DrKonqi services or sockets, or contact external Bugzilla/Sentry services. The three retained connectiontest cases use only local loopback servers; the sole live Bugzilla case is explicitly excluded and audited. Runtime crash capture, notification/UI and report submission remain later integration/user-action gates.",
         "licensing": "The reviewed DEP-5 map follows the Debian-family DrKonqi license classifications for the corresponding 6.7 source layout; upstream SPDX notices and LICENSES remain authoritative. SupraLINUX adds no source-code license changes."
       },
       "packaging_sha256": {
-        "changelog": "41c1ed9ef53d5c3d6db35f4a1cd685c6ca01311f3628a8e58eb3e53117cf9636",
+        "changelog": "b307761f8126c8a370fe99c059917d8bc6556bfaa032580103533936b4969d08",
         "control": "a585f4d4ee8b2f19ead8c71de7f0e8a49a703783a4b078775602fa9173a459cc",
         "copyright": "cda593c61701923940e4f32b26481fa42515e95c57aa6b66e231eb2705e8ac04",
         "drkonqi.lintian-overrides": "242491c8f277d9281c65ce16bec7ed191fa175dc8dfd7adb5b98c9271c769f2e",
         "postinst": "329b758a4475dfcc15b895517be9e5cbf94b29b787b65ea5410b82715b35de2f",
         "postrm": "594606027b243f9463d4c17da90c7aaab032ac21b4347ea6da20273da9480c24",
-        "rules": "81493f5dd9de393ac74582993cbe56b675d0faf56f638ec860907d2324547796",
+        "rules": "90f05f9a6cb66708db3fdf94a6010ed6274cbf9338db59b71b38d01deb4640b3",
         "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
         "tests/baseline-setup": "bc51fecb6e543f55c258e5bcbbec9e5b40baf85a8c48c7b67a0dacbfb67bd923",
         "tests/control": "0a06ec471542f4e07e7c3c4ea81e42ad634dddf425c0d917d1cc05996673a1f8",
@@ -14640,7 +14639,19 @@
           "resolute-updates",
           "resolute-security"
         ]
-      }
+      },
+      "upstream_test_cases": [
+        "Bugzilla::ConnectionTest::testGet()",
+        "Bugzilla::ConnectionTest::testGetJsonError()",
+        "Bugzilla::ConnectionTest::testPut()"
+      ],
+      "upstream_test_exclusions": [
+        {
+          "test": "Bugzilla::ConnectionTest::testDefaultRoot()",
+          "reason": "KDE Plasma 6.7.5 upstream explicitly implements this case as a live request to bugstest.kde.org and documents it as inherently flaky; authoritative package builds must remain hermetic.",
+          "marker": "SUPRALINUX_UPSTREAM_TEST_EXCLUSION Bugzilla::ConnectionTest::testDefaultRoot() reason=live-bugzilla-network"
+        }
+      ]
     }
   },
   "retained_attempt_archives": [

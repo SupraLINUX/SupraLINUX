@@ -1,14 +1,6 @@
 {
   "schema": 1,
-  "mode": "publish-evidence",
+  "mode": "execute-and-publish-pass",
   "gate": "plasma-package-build",
-  "runner_group_id": 3,
-  "evidence_node": "drkonqi",
-  "evidence_package_run_id": 40349442015,
-  "evidence_package_job_id": 121665154462,
-  "evidence_package_artifact_id": 12663083319,
-  "evidence_package_artifact_sha256": "65c23d79b6ef7bf5e2d390944173afbab01e20cc5a93d0ee0ec26518c82ff0ed",
-  "evidence_host_manifest_sha256": "3ccb989a2b56591ee48c195d340af29af6a9a3ba75179986081796b5cdb4929e",
-  "evidence_incident_cause": "DrKonqi 6.7.5 upstream connectiontest::testDefaultRoot performs a live request to bugstest.kde.org. The authoritative package build intentionally has no external network dependency for upstream tests, so the live Bugzilla lookup failed after the guarded preflight had passed and sbuild had begun. All other observed upstream tests passed; this is a non-hermetic upstream test, not an infrastructure failure.",
-  "evidence_incident_repair": "Preserve upstream source unchanged and adapt only SupraLINUX packaging test execution so the package build runs the hermetic connectiontest cases while excluding only testDefaultRoot, whose upstream source explicitly documents that it talks directly to Bugzilla and is inherently flaky. Keep the remaining upstream CTest suite required and record the packaging adaptation in the next Debian revision."
+  "runner_group_id": 3
 }

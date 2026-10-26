@@ -1,3 +1,14 @@
+drkonqi (6.7.5-0supralinux2) resolute; urgency=medium
+
+  * Preserve failed revision1 and its retained authoritative evidence.
+  * Keep the signed KDE Plasma 6.7.5 source and runtime payload unchanged.
+  * Exclude only connectiontest::testDefaultRoot from the clean package build:
+    upstream documents that case as a live Bugzilla request and inherently flaky.
+  * Run the remaining three connectiontest cases explicitly and keep the rest
+    of the upstream CTest suite mandatory.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Mon, 26 Oct 2026 16:34:00 +0000
+
 drkonqi (6.7.5-0supralinux1) resolute; urgency=medium
 
   * SupraLINUX: build the official KDE Plasma 6.7.5 DrKonqi source.

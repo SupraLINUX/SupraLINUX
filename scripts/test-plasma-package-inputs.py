@@ -475,6 +475,24 @@ class InputAdmission(unittest.TestCase):
         self.assertIn("assert plugin_checked", payload)
         self.assertNotIn("if any(str(path).endswith(s) for s in binary_suffixes) and path.is_file():", payload)
 
+    def test_drkonqi_connectiontest_keeps_hermetic_cases(self):
+        rules = (ROOT / "packages/plasma/drkonqi/debian/rules").read_text()
+        record = prepare.load_campaign()["nodes"]["drkonqi"]
+        self.assertIn("-E ^connectiontest$", rules)
+        self.assertIn('test -x "$builddir/bin/connectiontest"', rules)
+        self.assertIn("testGet testGetJsonError testPut", rules)
+        self.assertIn("SUPRALINUX_UPSTREAM_TEST_EXCLUSION Bugzilla::ConnectionTest::testDefaultRoot()", rules)
+        self.assertNotIn("connectiontest", record["upstream_tests"])
+        self.assertEqual(record["upstream_test_cases"], [
+            "Bugzilla::ConnectionTest::testGet()",
+            "Bugzilla::ConnectionTest::testGetJsonError()",
+            "Bugzilla::ConnectionTest::testPut()",
+        ])
+        self.assertEqual(
+            [entry["test"] for entry in record["upstream_test_exclusions"]],
+            ["Bugzilla::ConnectionTest::testDefaultRoot()"],
+        )
+
     def test_changed_packaging_rejected(self):
         original = prepare.packaging_hashes
         try:

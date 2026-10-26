@@ -10,5 +10,16 @@ export QT_QPA_PLATFORM=offscreen
 override_dh_auto_configure:
 	dh_auto_configure -- -DBUILD_TESTING=ON -DWITH_GDB12=ON -DWITH_PYTHON_VENDORING=OFF
 
+# Upstream connectiontest::testDefaultRoot performs a live request to
+# bugstest.kde.org and explicitly documents that dependency as inherently
+# flaky. Keep the package build hermetic: run the complete CTest suite except
+# that executable, then run its three local-only cases directly.
 override_dh_auto_test:
-	QT_QPA_PLATFORM=offscreen dh_auto_test --no-parallel
+	set -e; \
+	QT_QPA_PLATFORM=offscreen dh_auto_test --no-parallel -- ARGS="--output-on-failure --verbose -E ^connectiontest$$"; \
+	builddir="obj-$$(dpkg-architecture -qDEB_HOST_GNU_TYPE)"; \
+	test -x "$$builddir/bin/connectiontest"; \
+	printf '%s\n' 'SUPRALINUX_UPSTREAM_TEST_EXCLUSION Bugzilla::ConnectionTest::testDefaultRoot() reason=live-bugzilla-network'; \
+	for case_name in testGet testGetJsonError testPut; do \
+		QT_PLUGIN_PATH="$$builddir/bin" QT_QPA_PLATFORM=offscreen "$$builddir/bin/connectiontest" "$$case_name"; \
+	done

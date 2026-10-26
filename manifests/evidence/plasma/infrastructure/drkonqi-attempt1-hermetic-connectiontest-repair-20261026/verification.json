@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "drkonqi-attempt1-hermetic-connectiontest-repair",
+  "repair_base_commit": "d43fc21d4021865bb2a89cf1f005c2e1b3734fd5",
+  "node": "drkonqi",
+  "old_version": "6.7.5-0supralinux1",
+  "new_version": "6.7.5-0supralinux2",
+  "attempt1": {
+    "state": "FAIL",
+    "workflow_run_id": 40349442015,
+    "workflow_job_id": 121665154462,
+    "artifact_id": 12663083319,
+    "artifact_sha256": "65c23d79b6ef7bf5e2d390944173afbab01e20cc5a93d0ee0ec26518c82ff0ed",
+    "result_sha256": "5ec002f1b1a31d6ad65e00e3216ac83b3b0cb871d9d2d611df1e3e08e47fda65",
+    "host_evidence_manifest_sha256": "3ccb989a2b56591ee48c195d340af29af6a9a3ba75179986081796b5cdb4929e"
+  },
+  "diagnosis": {
+    "failed_test": "Bugzilla::ConnectionTest::testDefaultRoot()",
+    "cause": "The unchanged KDE Plasma 6.7.5 test performs a live request to bugstest.kde.org. The authoritative clean sbuild intentionally does not depend on external network reachability; all other observed CTest entries and the remaining connectiontest cases passed."
+  },
+  "adaptation": {
+    "upstream_source_changed": false,
+    "runtime_payload_changed": false,
+    "qt_changed": false,
+    "frameworks_changed": false,
+    "package_split_changed": false,
+    "packaging_test_only": true,
+    "old_rules_sha256": "81493f5dd9de393ac74582993cbe56b675d0faf56f638ec860907d2324547796",
+    "new_rules_sha256": "90f05f9a6cb66708db3fdf94a6010ed6274cbf9338db59b71b38d01deb4640b3",
+    "old_changelog_sha256": "41c1ed9ef53d5c3d6db35f4a1cd685c6ca01311f3628a8e58eb3e53117cf9636",
+    "new_changelog_sha256": "b307761f8126c8a370fe99c059917d8bc6556bfaa032580103533936b4969d08",
+    "mechanism": "Exclude connectiontest from aggregate CTest, emit an explicit exclusion marker for testDefaultRoot, and invoke the unchanged connectiontest binary separately for testGet, testGetJsonError and testPut using only local loopback behavior."
+  },
+  "regression": {
+    "path": "scripts/test-plasma-package-inputs.py",
+    "checks": [
+      "aggregate CTest excludes only connectiontest",
+      "unchanged connectiontest executable is required",
+      "testGet, testGetJsonError and testPut remain mandatory",
+      "testDefaultRoot exclusion marker is explicit",
+      "manifest test-case contract matches packaging execution"
+    ]
+  },
+  "package_execution_started": false,
+  "consumes_package_attempt": false
+}
