@@ -23,6 +23,7 @@ ONLINE_TIMEOUT_SECONDS="${SUPRALINUX_ONLINE_TIMEOUT_SECONDS:-300}"
 BUSY_TIMEOUT_SECONDS="${SUPRALINUX_BUSY_TIMEOUT_SECONDS:-300}"
 JOB_TIMEOUT_SECONDS="${SUPRALINUX_JOB_TIMEOUT_SECONDS:-7200}"
 STARTUP_PREFLIGHT="${SUPRALINUX_JIT_STARTUP_PREFLIGHT:-0}"
+GATE_RECEIPT_PATH="${SUPRALINUX_GATE_RECEIPT_PATH:-}"
 API_VERSION="2026-03-10"
 HOST_GITHUB_TOKEN="${SUPRALINUX_GITHUB_TOKEN:-${GITHUB_TOKEN:-}}"
 RUNNER_CONTRACT_WORKFLOW="Authoritative runner contract"
@@ -81,6 +82,16 @@ fi
 if [[ "${STARTUP_PREFLIGHT}" == "1" && "${GATE}" != "runner-contract" ]]; then
     printf 'JIT startup preflight is valid only against the runner-contract infrastructure path.\n' >&2
     exit 1
+fi
+if [[ -n "${GATE_RECEIPT_PATH}" ]]; then
+    [[ "${GATE_RECEIPT_PATH}" == /* ]] || {
+        printf 'SUPRALINUX_GATE_RECEIPT_PATH must be absolute.\n' >&2
+        exit 2
+    }
+    [[ -d "$(dirname "${GATE_RECEIPT_PATH}")" && ! -e "${GATE_RECEIPT_PATH}" ]] || {
+        printf 'SUPRALINUX_GATE_RECEIPT_PATH parent must exist and target must be new.\n' >&2
+        exit 2
+    }
 fi
 
 required_commands=(
@@ -344,6 +355,27 @@ cleanup() {
         evidence_manifest_sha256="$(sha256sum "${EVIDENCE_DIR}/evidence-sha256.txt" | awk '{print $1}')"
         printf 'Host evidence bundle sealed: %s\n' "${evidence_manifest_sha256}"
         printf 'EVIDENCE_DIR=%s\n' "${EVIDENCE_DIR}"
+        if [[ -n "${GATE_RECEIPT_PATH}" ]]; then
+            receipt_tmp="${GATE_RECEIPT_PATH}.tmp"
+            jq -n \
+                --arg gate "${GATE}" \
+                --arg source_commit "${PR_HEAD_SHA:-}" \
+                --arg evidence_dir "${EVIDENCE_DIR}" \
+                --arg host_manifest_sha256 "${evidence_manifest_sha256}" \
+                --argjson exit_code "${rc}" \
+                --argjson workflow_run_id "${WORKFLOW_RUN_ID:-0}" \
+                '{
+                    schema:1,
+                    gate:$gate,
+                    source_commit:$source_commit,
+                    exit_code:$exit_code,
+                    workflow_run_id:$workflow_run_id,
+                    evidence_dir:$evidence_dir,
+                    host_manifest_sha256:$host_manifest_sha256
+                }' > "${receipt_tmp}"
+            chmod 0600 "${receipt_tmp}"
+            mv "${receipt_tmp}" "${GATE_RECEIPT_PATH}"
+        fi
     else
         [[ -n "${evidence_manifest_tmp:-}" ]] && rm -f "${evidence_manifest_tmp}"
         printf 'Host evidence bundle sealing failed with exit code %d.\n' "${seal_rc}" >&2

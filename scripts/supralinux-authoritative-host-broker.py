@@ -48,6 +48,7 @@ if request.get("schema") != 1:
     raise SystemExit("Unsupported request schema.")
 if request.get("mode") not in {
     "diagnose", "repair-host", "preflight", "rebuild-golden", "execute",
+    "execute-and-publish-pass",
     "close-evidence-check", "close-evidence",
     "publish-evidence-check", "publish-evidence",
 }:
@@ -141,7 +142,7 @@ else:
         raise SystemExit("Evidence closure fields are valid only for evidence closure modes.")
 
 if request["mode"] in {
-    "diagnose", "repair-host", "rebuild-golden", "execute",
+    "diagnose", "repair-host", "rebuild-golden", "execute", "execute-and-publish-pass",
     "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence",
 } and (
     cancel_run_id is not None or cancel_run_head_sha is not None
@@ -289,6 +290,44 @@ def stream_as_operator(args, log_path, *, cwd=None, extra_env=None, extra_groups
     os.chmod(log_path, 0o600)
     os.chown(log_path, runner_pw.pw_uid, runner_pw.pw_gid)
     return rc
+
+def run_package_closure(
+    *,
+    helper_mode,
+    node,
+    package_run_id,
+    package_job_id,
+    package_artifact_id,
+    package_artifact_sha256,
+    host_manifest_sha256,
+    artifact_root,
+    work_root,
+    output_dir,
+    log_path,
+):
+    output_dir.mkdir(parents=True, mode=0o700, exist_ok=False)
+    os.chown(output_dir, operator.pw_uid, operator.pw_gid)
+    command = [
+        str(CLOSE_EVIDENCE_HELPER),
+        "--mode", helper_mode,
+        "--source-commit", source_commit,
+        "--control-run-id", control_run_id,
+        "--node", node,
+        "--package-run-id", str(package_run_id),
+        "--package-job-id", str(package_job_id),
+        "--package-artifact-id", str(package_artifact_id),
+        "--package-artifact-sha256", package_artifact_sha256,
+        "--host-manifest-sha256", host_manifest_sha256,
+        "--host-evidence-root", str(HOST_EVIDENCE_ROOT),
+        "--artifact-root", str(artifact_root),
+        "--work-root", str(work_root),
+        "--output-dir", str(output_dir),
+    ]
+    rc = stream_as_operator(command, log_path)
+    if rc != 0:
+        raise SystemExit(rc)
+    return output_dir
+
 
 if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
     if not CLOSE_EVIDENCE_HELPER.is_file() or not os.access(CLOSE_EVIDENCE_HELPER, os.X_OK):
@@ -772,6 +811,18 @@ if cancel_run_id is not None:
             time.sleep(2)
     write_result("stale-run.txt", f"stale_run_cancelled={cancel_run_id}\n")
 
+host_control_label_present = any(
+    label.get("name") == "ci:host-workspace"
+    for label in pr.get("labels", [])
+    if isinstance(label, dict)
+)
+if host_control_label_present:
+    api(
+        "DELETE",
+        f"/repos/{REPOSITORY}/issues/{PR_NUMBER}/labels/ci%3Ahost-workspace",
+        allowed=(200, 204, 404),
+    )
+
 package_build_label_present = any(
     label.get("name") == "ci:plasma-package-build"
     for label in pr.get("labels", [])
@@ -955,6 +1006,7 @@ try:
         raise SystemExit(0)
 
     log_path = result_dir / "jit-gate.log"
+    gate_receipt = control_dir / "gate-receipt.json"
     gate_rc = stream_as_operator(
         ["scripts/run-kvm-jit-gate.sh", request["gate"]],
         log_path,
@@ -964,6 +1016,7 @@ try:
             "SUPRALINUX_RUNNER_GROUP_ID": str(runner_group_id),
             "SUPRALINUX_REPOSITORY": REPOSITORY,
             "SUPRALINUX_PR_NUMBER": str(PR_NUMBER),
+            "SUPRALINUX_GATE_RECEIPT_PATH": str(gate_receipt),
         },
         extra_groups=privileged_groups,
     )
@@ -979,7 +1032,160 @@ try:
             ]
         ),
     )
-    raise SystemExit(gate_rc)
+    if gate_rc != 0 or request["mode"] != "execute-and-publish-pass":
+        raise SystemExit(gate_rc)
+
+    if not gate_receipt.is_file() or gate_receipt.is_symlink():
+        raise SystemExit("Successful guarded execution did not return a regular gate receipt.")
+    receipt = json.loads(gate_receipt.read_text())
+    if not (
+        receipt.get("schema") == 1
+        and receipt.get("gate") == request["gate"]
+        and receipt.get("source_commit") == source_commit
+        and receipt.get("exit_code") == 0
+        and isinstance(receipt.get("workflow_run_id"), int)
+        and receipt["workflow_run_id"] > 0
+    ):
+        raise SystemExit("Invalid successful gate receipt.")
+    host_dir = Path(receipt.get("evidence_dir", ""))
+    try:
+        host_dir.resolve().relative_to(HOST_EVIDENCE_ROOT.resolve())
+    except (OSError, ValueError):
+        raise SystemExit("Gate receipt points outside the authoritative host evidence root.")
+    manifest_path = host_dir / "evidence-sha256.txt"
+    if not manifest_path.is_file() or manifest_path.is_symlink():
+        raise SystemExit("Gate receipt host evidence manifest is missing.")
+    host_manifest_sha = subprocess.check_output(
+        ["sha256sum", str(manifest_path)], text=True
+    ).split()[0]
+    if host_manifest_sha != receipt.get("host_manifest_sha256"):
+        raise SystemExit("Gate receipt host evidence manifest digest mismatch.")
+
+    campaign = json.loads((checkout / "manifests/kde-plasma-package-build.json").read_text())
+    authorized = campaign.get("authorized_nodes", [])
+    if (
+        campaign.get("execution_mode") != "guarded-build"
+        or len(authorized) != 1
+        or campaign["nodes"][authorized[0]].get("state") != "build-pending"
+    ):
+        raise SystemExit("Automatic PASS publication requires one guarded build-pending node.")
+    node = authorized[0]
+    child_run_id = receipt["workflow_run_id"]
+    child = api(
+        "GET",
+        f"/repos/{REPOSITORY}/actions/runs/{child_run_id}",
+        allowed=(200,),
+    )
+    if not (
+        child.get("name") == "KDE Plasma authoritative KVM package build"
+        and child.get("head_sha") == source_commit
+        and child.get("status") == "completed"
+        and child.get("conclusion") == "success"
+    ):
+        raise SystemExit("Gate receipt child workflow is not the exact successful package run.")
+    jobs = api(
+        "GET",
+        f"/repos/{REPOSITORY}/actions/runs/{child_run_id}/jobs?per_page=100",
+        allowed=(200,),
+    ).get("jobs", [])
+    package_jobs = [
+        job for job in jobs
+        if job.get("name") == "Reviewed Plasma package on KVM guest"
+        and job.get("status") == "completed"
+        and job.get("conclusion") == "success"
+    ]
+    if len(package_jobs) != 1:
+        raise SystemExit("Successful child run does not have exactly one package job.")
+    package_job_id = package_jobs[0]["id"]
+
+    artifacts = api(
+        "GET",
+        f"/repos/{REPOSITORY}/actions/runs/{child_run_id}/artifacts?per_page=100",
+        allowed=(200,),
+    ).get("artifacts", [])
+    expected_artifact_name = f"authoritative-plasma-package-{source_commit}"
+    package_artifacts = [
+        artifact for artifact in artifacts
+        if artifact.get("name") == expected_artifact_name
+        and artifact.get("expired") is False
+    ]
+    if len(package_artifacts) != 1:
+        raise SystemExit("Successful child run does not have exactly one package artifact.")
+    artifact = package_artifacts[0]
+    digest = artifact.get("digest", "")
+    if (
+        not isinstance(digest, str)
+        or not digest.startswith("sha256:")
+        or len(digest) != 71
+        or any(ch not in "0123456789abcdef" for ch in digest[7:])
+    ):
+        raise SystemExit("Package artifact lacks an authenticated SHA-256 digest.")
+    package_artifact_sha = digest[7:]
+    package_artifact_id = artifact["id"]
+
+    if not CLOSE_EVIDENCE_HELPER.is_file() or not os.access(CLOSE_EVIDENCE_HELPER, os.X_OK):
+        raise SystemExit("Installed authoritative evidence closure helper is missing.")
+    auto_root = control_dir / "auto-close"
+    auto_root.mkdir(mode=0o700)
+    os.chown(auto_root, operator.pw_uid, operator.pw_gid)
+
+    check_artifacts = auto_root / "check-artifacts"
+    check_artifacts.mkdir(mode=0o700)
+    os.chown(check_artifacts, operator.pw_uid, operator.pw_gid)
+    check_output = run_package_closure(
+        helper_mode="publish-check",
+        node=node,
+        package_run_id=child_run_id,
+        package_job_id=package_job_id,
+        package_artifact_id=package_artifact_id,
+        package_artifact_sha256=package_artifact_sha,
+        host_manifest_sha256=host_manifest_sha,
+        artifact_root=check_artifacts,
+        work_root=auto_root / "check-work",
+        output_dir=auto_root / "check-output",
+        log_path=result_dir / "auto-close-check.log",
+    )
+    shutil.copytree(check_output, result_dir / "auto-close-check")
+
+    if not PERSISTENT_ARTIFACT_ROOT.exists():
+        PERSISTENT_ARTIFACT_ROOT.mkdir(parents=True, mode=0o700)
+        os.chown(PERSISTENT_ARTIFACT_ROOT, operator.pw_uid, operator.pw_gid)
+    run_as_operator(["test", "-d", str(PERSISTENT_ARTIFACT_ROOT)])
+    run_as_operator(["test", "-w", str(PERSISTENT_ARTIFACT_ROOT)])
+    publish_output = run_package_closure(
+        helper_mode="publish",
+        node=node,
+        package_run_id=child_run_id,
+        package_job_id=package_job_id,
+        package_artifact_id=package_artifact_id,
+        package_artifact_sha256=package_artifact_sha,
+        host_manifest_sha256=host_manifest_sha,
+        artifact_root=PERSISTENT_ARTIFACT_ROOT,
+        work_root=auto_root / "publish-work",
+        output_dir=auto_root / "publish-output",
+        log_path=result_dir / "auto-close-publish.log",
+    )
+    shutil.copytree(publish_output, result_dir / "auto-close-publish")
+    write_result(
+        "auto-close-result.txt",
+        "\n".join(
+            [
+                "state=PASS",
+                "mode=execute-and-publish-pass",
+                f"node={node}",
+                f"package_run_id={child_run_id}",
+                f"package_job_id={package_job_id}",
+                f"package_artifact_id={package_artifact_id}",
+                f"package_artifact_sha256={package_artifact_sha}",
+                f"host_manifest_sha256={host_manifest_sha}",
+                "publish_check=PASS",
+                "publish=PASS",
+                "",
+            ]
+        ),
+    )
+    print("HOST_AUTHORITATIVE_EXECUTE_AND_PUBLISH_PASS=PASS")
+    raise SystemExit(0)
 finally:
     token = ""
     if control_dir.exists():

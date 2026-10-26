@@ -10,12 +10,14 @@ BROKER = ROOT / "scripts/supralinux-authoritative-host-broker.py"
 CLOSE_HELPER = ROOT / "scripts/host-close-package-evidence.py"
 WORKFLOW = ROOT / ".github/workflows/host-authoritative-control.yml"
 ROUTER = ROOT / ".github/workflows/pr-ci-router.yml"
+JIT_CORE = ROOT / "scripts/run-kvm-jit-gate-core.sh"
 REQUEST = ROOT / "ops/host-authoritative/request.json"
 
 broker = BROKER.read_text()
 close_helper = CLOSE_HELPER.read_text()
 workflow = WORKFLOW.read_text()
 router = ROUTER.read_text()
+jit_core = JIT_CORE.read_text()
 request = json.loads(REQUEST.read_text())
 
 close_spec = importlib.util.spec_from_file_location(
@@ -41,6 +43,11 @@ required_broker = [
     '"evidence_incident_cause"',
     '"evidence_incident_repair"',
     '"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"',
+    '"execute-and-publish-pass"',
+    '"SUPRALINUX_GATE_RECEIPT_PATH"',
+    '"auto-close-result.txt"',
+    '"/actions/runs/{child_run_id}/artifacts?per_page=100"',
+    '"HOST_AUTHORITATIVE_EXECUTE_AND_PUBLISH_PASS=PASS"',
     'PERSISTENT_ARTIFACT_ROOT = Path("/var/lib/supralinux/artifacts")',
     'CLOSE_EVIDENCE_HELPER = Path("/usr/local/libexec/supralinux-host-close-package-evidence")',
     'if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:',
@@ -100,6 +107,16 @@ required_broker = [
 for token in required_broker:
     if token not in broker:
         raise SystemExit(f"missing authoritative host broker contract: {token}")
+
+required_jit_core = [
+    'GATE_RECEIPT_PATH="${SUPRALINUX_GATE_RECEIPT_PATH:-}"',
+    '"host_manifest_sha256"',
+    '"workflow_run_id"',
+    '"evidence_dir"',
+]
+for token in required_jit_core:
+    if token not in jit_core:
+        raise SystemExit(f"missing JIT gate receipt contract: {token}")
 
 required_helper = [
     'choices=["check", "close", "publish-check", "publish"]',
@@ -208,6 +225,7 @@ required_workflow = [
     "/usr/local/libexec/supralinux-host-close-package-evidence",
     "Upload authoritative control result",
     '"close-evidence-check", "close-evidence"',
+    '"execute-and-publish-pass"',
 ]
 for token in required_workflow:
     if token not in workflow:
@@ -217,6 +235,7 @@ required_router = [
     "Host control admission",
     "python3 scripts/test-host-authoritative-control.py",
     '"publish-evidence-check", "publish-evidence"',
+    '"execute-and-publish-pass"',
 ]
 for token in required_router:
     if token not in router:
@@ -253,6 +272,7 @@ if request.get("mode") not in {
     "preflight",
     "rebuild-golden",
     "execute",
+    "execute-and-publish-pass",
     "close-evidence-check",
     "close-evidence",
     "publish-evidence-check",

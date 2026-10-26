@@ -60,6 +60,7 @@ jobs:
           assert request.get("schema") == 1
           assert request.get("mode") in {
               "diagnose", "repair-host", "preflight", "rebuild-golden", "execute",
+              "execute-and-publish-pass",
               "close-evidence-check", "close-evidence",
               "publish-evidence-check", "publish-evidence",
           }
@@ -72,7 +73,7 @@ jobs:
               assert cancel_head is None
           else:
               assert isinstance(cancel_head, str) and re.fullmatch(r"[0-9a-f]{40}", cancel_head)
-          if request["mode"] in {"diagnose", "repair-host", "rebuild-golden", "execute", "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
+          if request["mode"] in {"diagnose", "repair-host", "rebuild-golden", "execute", "execute-and-publish-pass", "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
               assert cancel is None and cancel_head is None
           if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
               assert isinstance(request.get("evidence_node"), str)
