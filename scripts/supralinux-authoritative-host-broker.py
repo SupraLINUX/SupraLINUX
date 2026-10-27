@@ -54,6 +54,7 @@ if request.get("mode") not in {
     "execute-and-publish-pass",
     "close-evidence-check", "close-evidence",
     "publish-evidence-check", "publish-evidence",
+    "repair-frameworks-retained-artifacts",
     "certify-proposed-content",
 }:
     raise SystemExit("Unsupported control mode.")
@@ -61,10 +62,10 @@ if request.get("gate") not in {"plasma-package-build", "runner-contract", "supra
     raise SystemExit("Unsupported authoritative gate.")
 if request.get("gate") == "runner-contract" and request.get("mode") not in {"preflight", "execute"}:
     raise SystemExit("Runner contract gate permits only preflight or execute mode.")
-if request.get("gate") == "supralinux-proposed" and request.get("mode") != "certify-proposed-content":
-    raise SystemExit("SupraLINUX-proposed gate permits only content certification mode.")
-if request.get("mode") == "certify-proposed-content" and request.get("gate") != "supralinux-proposed":
-    raise SystemExit("Content certification mode requires the SupraLINUX-proposed gate.")
+if request.get("gate") == "supralinux-proposed" and request.get("mode") not in {"repair-frameworks-retained-artifacts", "certify-proposed-content"}:
+    raise SystemExit("SupraLINUX-proposed gate permits only retained-artifact repair or content certification.")
+if request.get("mode") in {"repair-frameworks-retained-artifacts", "certify-proposed-content"} and request.get("gate") != "supralinux-proposed":
+    raise SystemExit("SupraLINUX-proposed repair/certification modes require the SupraLINUX-proposed gate.")
 
 source_commit = request.get("source_commit")
 control_run_id = request.get("control_run_id")
@@ -154,7 +155,7 @@ else:
 if request["mode"] in {
     "diagnose", "repair-host", "repair-libguestfs-runtime", "rebuild-golden", "execute", "execute-and-publish-pass",
     "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence",
-    "certify-proposed-content",
+    "repair-frameworks-retained-artifacts", "certify-proposed-content",
 } and (
     cancel_run_id is not None or cancel_run_head_sha is not None
 ):
@@ -379,6 +380,75 @@ def run_package_closure(
     if rc != 0:
         raise SystemExit(rc)
     return output_dir
+
+
+if request["mode"] == "repair-frameworks-retained-artifacts":
+    repair_root = WORK_ROOT / control_run_id
+    repair_checkout = repair_root / "repo"
+    repair_evidence = repair_root / "evidence"
+    if repair_root.exists():
+        raise SystemExit(f"Frameworks recovery work directory already exists: {repair_root}")
+    repair_root.mkdir(mode=0o700)
+    os.chown(repair_root, operator.pw_uid, operator.pw_gid)
+    repair_evidence.mkdir(mode=0o700)
+    os.chown(repair_evidence, operator.pw_uid, operator.pw_gid)
+
+    archive = PREFERRED_FRAMEWORKS_RETAINED_ARTIFACT_ROOT
+    archive.parent.mkdir(parents=True, mode=0o750, exist_ok=True)
+    if archive.exists() and (archive.is_symlink() or not archive.is_dir()):
+        raise SystemExit("Preferred retained Frameworks archive path is not a real directory.")
+    if not archive.exists():
+        archive.mkdir(mode=0o700)
+    os.chown(archive, operator.pw_uid, operator.pw_gid)
+
+    repair_log = result_dir / "frameworks-retained-artifact-repair.log"
+    repair_rc = 125
+    try:
+        prepare_control_checkout(repair_checkout)
+        repair_rc = stream_as_operator(
+            [
+                "python3",
+                "scripts/restore-frameworks-retained-artifacts.py",
+                "--checkout", str(repair_checkout),
+                "--archive", str(archive),
+                "--result", str(repair_evidence / "result.json"),
+            ],
+            repair_log,
+            cwd=repair_checkout,
+        )
+        result_json = repair_evidence / "result.json"
+        if result_json.is_file():
+            destination = result_dir / "frameworks-retained-artifact-repair.json"
+            shutil.copy2(result_json, destination)
+            os.chown(destination, runner_pw.pw_uid, runner_pw.pw_gid)
+            os.chmod(destination, 0o600)
+    finally:
+        if repair_root.exists():
+            shutil.rmtree(repair_root)
+
+    write_result(
+        "frameworks-retained-artifact-repair-control-result.txt",
+        "\n".join(
+            [
+                f"state={'PASS' if repair_rc == 0 else 'INFRA_INVALID'}",
+                f"exit_code={repair_rc}",
+                "mode=repair-frameworks-retained-artifacts",
+                "gate=supralinux-proposed",
+                f"source_commit={source_commit}",
+                "scope=frameworks-6.30-retained-artifact-recovery",
+                "stable_publication_authorized=no",
+                "vm_created=no",
+                "jit_invoked=no",
+                "sbuild_invoked=no",
+                "package_attempt_effect=none",
+                "",
+            ]
+        ),
+    )
+    if repair_rc != 0:
+        raise SystemExit(repair_rc)
+    print("HOST_FRAMEWORKS_RETAINED_ARTIFACT_REPAIR=PASS")
+    raise SystemExit(0)
 
 
 if request["mode"] == "certify-proposed-content":

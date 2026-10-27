@@ -53,9 +53,9 @@ prepare_calls = [
     and isinstance(node.func, ast.Name)
     and node.func.id == "prepare_control_checkout"
 ]
-if len(prepare_calls) != 3:
+if len(prepare_calls) != 4:
     raise SystemExit(
-        "prepare_control_checkout must be shared by diagnose, proposed certification, and normal control execution"
+        "prepare_control_checkout must be shared by diagnose, Frameworks repair, proposed certification, and normal control execution"
     )
 
 close_spec = importlib.util.spec_from_file_location(
@@ -101,8 +101,10 @@ required_broker = [
     '"evidence_incident_repair"',
     '"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"',
     '"execute-and-publish-pass"',
+    '"repair-frameworks-retained-artifacts"',
     '"certify-proposed-content"',
     '"supralinux-proposed"',
+    '"HOST_FRAMEWORKS_RETAINED_ARTIFACT_REPAIR=PASS"',
     '"HOST_SUPRALINUX_PROPOSED_CONTENT_CERTIFICATION=PASS"',
     '"scope=supralinux-proposed-content-certification"',
     '"repository_active=no"',
@@ -418,6 +420,7 @@ if request.get("mode") not in {
     "close-evidence",
     "publish-evidence-check",
     "publish-evidence",
+    "repair-frameworks-retained-artifacts",
     "certify-proposed-content",
 }:
     raise SystemExit(f"unexpected authoritative host request mode: {request!r}")
@@ -425,10 +428,10 @@ if request.get("gate") not in {"plasma-package-build", "runner-contract", "supra
     raise SystemExit(f"unexpected authoritative host request gate: {request!r}")
 if request.get("gate") == "runner-contract" and request.get("mode") not in {"preflight", "execute"}:
     raise SystemExit(f"invalid runner-contract request mode: {request!r}")
-if request.get("gate") == "supralinux-proposed" and request.get("mode") != "certify-proposed-content":
+if request.get("gate") == "supralinux-proposed" and request.get("mode") not in {"repair-frameworks-retained-artifacts", "certify-proposed-content"}:
     raise SystemExit(f"invalid supralinux-proposed request mode: {request!r}")
-if request.get("mode") == "certify-proposed-content" and request.get("gate") != "supralinux-proposed":
-    raise SystemExit(f"invalid proposed certification gate: {request!r}")
+if request.get("mode") in {"repair-frameworks-retained-artifacts", "certify-proposed-content"} and request.get("gate") != "supralinux-proposed":
+    raise SystemExit(f"invalid proposed repair/certification gate: {request!r}")
 if request.get("runner_group_id") != 3:
     raise SystemExit(f"unexpected authoritative host runner group: {request!r}")
 

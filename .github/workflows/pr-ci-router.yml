@@ -140,13 +140,13 @@ jobs:
           assert selector.get("schema") == 1
           assert selector.get("target") == "authoritative"
           assert request.get("schema") == 1
-          assert request.get("mode") in {"diagnose", "repair-host", "repair-libguestfs-runtime", "preflight", "rebuild-golden", "execute", "execute-and-publish-pass", "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence", "certify-proposed-content"}
+          assert request.get("mode") in {"diagnose", "repair-host", "repair-libguestfs-runtime", "preflight", "rebuild-golden", "execute", "execute-and-publish-pass", "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence", "repair-frameworks-retained-artifacts", "certify-proposed-content"}
           assert request.get("gate") in {"plasma-package-build", "runner-contract", "supralinux-proposed"}
           if request["gate"] == "runner-contract":
               assert request["mode"] in {"preflight", "execute"}
           if request["gate"] == "supralinux-proposed":
-              assert request["mode"] == "certify-proposed-content"
-          if request["mode"] == "certify-proposed-content":
+              assert request["mode"] in {"repair-frameworks-retained-artifacts", "certify-proposed-content"}
+          if request["mode"] in {"repair-frameworks-retained-artifacts", "certify-proposed-content"}:
               assert request["gate"] == "supralinux-proposed"
           print("Host authoritative admission: PASS")
           PY

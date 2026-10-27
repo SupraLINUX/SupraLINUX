@@ -125,6 +125,7 @@ expected_authoritative_modes = {
     "close-evidence",
     "publish-evidence-check",
     "publish-evidence",
+    "repair-frameworks-retained-artifacts",
     "certify-proposed-content",
 }
 admitted_authoritative_modes = (

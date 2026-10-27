@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "mode": "diagnose",
-  "gate": "plasma-package-build",
+  "mode": "repair-frameworks-retained-artifacts",
+  "gate": "supralinux-proposed",
   "runner_group_id": 3
 }
