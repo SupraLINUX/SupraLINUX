@@ -7,8 +7,6 @@ include <tunables/global>
 
 profile supralinux-autopkgtest-virt-unshare flags=(attach_disconnected mediate_deleted) {
   allow all,
-  @{exec_path} mrix,
-
   /usr/bin/autopkgtest-virt-unshare rix,
   /usr/bin/unshare ix,
 

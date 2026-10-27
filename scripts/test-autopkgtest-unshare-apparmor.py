@@ -13,7 +13,6 @@ for token in (
     "/usr/bin/autopkgtest-virt-unshare rix,",
     "flags=(attach_disconnected mediate_deleted)",
     "allow all,",
-    "@{exec_path} mrix,",
     "/usr/bin/unshare ix,",
     "userns,",
     "mount,",
