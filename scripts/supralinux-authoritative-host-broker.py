@@ -739,6 +739,35 @@ if request["mode"] == "diagnose":
         if carrier.is_file():
             sections.append(capture(f"host-{device}-carrier", ["cat", str(carrier)]))
     sections.append(capture("host-uptime-since", ["uptime", "-s"]))
+    sections.append(
+        capture(
+            "frameworks-retained-archive-search-var-lib",
+            [
+                "find",
+                "/var/lib/supralinux",
+                "-maxdepth", "7",
+                "-type", "f",
+                "-name", "index.json",
+                "-path", "*/frameworks-6.30/*",
+                "-print",
+            ],
+        )
+    )
+    sections.append(
+        capture(
+            "frameworks-retained-archive-search-operator-home",
+            [
+                "find",
+                operator.pw_dir,
+                "-maxdepth", "8",
+                "-type", "f",
+                "-name", "index.json",
+                "-path", "*/frameworks-6.30/*",
+                "-print",
+            ],
+            as_operator=True,
+        )
+    )
     kernel_release = os.uname().release
     runtime_dir = Path("/var/lib/supralinux/images/libguestfs-runtime") / kernel_release
     runtime_provenance = runtime_dir / "provenance.txt"
