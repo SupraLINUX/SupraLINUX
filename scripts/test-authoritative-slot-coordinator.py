@@ -31,7 +31,7 @@ with tempfile.TemporaryDirectory() as directory:
     for marker in markers:
         script = (
             f'printf "%s\\n" "$SUPRALINUX_AUTHORITATIVE_SLOT" > {marker}; '
-            'while :; do sleep 1; done'
+            'sleep 1'
         )
         workers.append(
             subprocess.Popen(
@@ -60,9 +60,7 @@ with tempfile.TemporaryDirectory() as directory:
     assert "blocked by active workers" in maintenance.stderr
 
     for worker in workers:
-        worker.terminate()
-    for worker in workers:
-        worker.wait(timeout=5)
+        assert worker.wait(timeout=5) == 0, worker.stderr.read()
 
     maintenance = run(
         "maintenance",
@@ -73,7 +71,7 @@ with tempfile.TemporaryDirectory() as directory:
 
     env["SUPRALINUX_AUTHORITATIVE_SLOTS"] = "1"
     first = subprocess.Popen(
-        [str(COORDINATOR), "worker", "--", "bash", "-c", "sleep 2"],
+        [str(COORDINATOR), "worker", "--", "bash", "-c", "sleep 1"],
         env=env,
         text=True,
         stdout=subprocess.PIPE,
@@ -82,8 +80,7 @@ with tempfile.TemporaryDirectory() as directory:
     time.sleep(0.2)
     second = run("worker", ["true"], env)
     assert second.returncode == 75
-    first.terminate()
-    first.wait(timeout=5)
+    assert first.wait(timeout=5) == 0, first.stderr.read()
 
     bad = env.copy()
     bad["SUPRALINUX_AUTHORITATIVE_SLOTS"] = "0"
