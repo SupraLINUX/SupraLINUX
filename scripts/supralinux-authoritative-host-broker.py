@@ -55,8 +55,10 @@ if request.get("mode") not in {
     "publish-evidence-check", "publish-evidence",
 }:
     raise SystemExit("Unsupported control mode.")
-if request.get("gate") != "plasma-package-build":
+if request.get("gate") not in {"plasma-package-build", "runner-contract"}:
     raise SystemExit("Unsupported authoritative gate.")
+if request.get("gate") == "runner-contract" and request.get("mode") not in {"preflight", "execute"}:
+    raise SystemExit("Runner contract gate permits only preflight or execute mode.")
 
 source_commit = request.get("source_commit")
 control_run_id = request.get("control_run_id")

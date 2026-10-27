@@ -92,7 +92,8 @@ required_broker = [
     'CLOSE_EVIDENCE_HELPER = Path("/usr/local/libexec/supralinux-host-close-package-evidence")',
     'if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:',
     '"package_attempt_effect=none"',
-    'request.get("gate") != "plasma-package-build"',
+    'request.get("gate") not in {"plasma-package-build", "runner-contract"}',
+    '"Runner contract gate permits only preflight or execute mode."',
     'run.get("status") == "queued"',
     'job.get("status") != "queued"',
     'make_demote(extra_groups=())',
@@ -326,6 +327,7 @@ required_workflow = [
     "Upload authoritative control result",
     '"close-evidence-check", "close-evidence"',
     '"execute-and-publish-pass"',
+    '"runner-contract"',
 ]
 for token in required_workflow:
     if token not in workflow:
@@ -336,6 +338,7 @@ required_router = [
     "python3 scripts/test-host-authoritative-control.py",
     '"publish-evidence-check", "publish-evidence"',
     '"execute-and-publish-pass"',
+    '"runner-contract"',
 ]
 for token in required_router:
     if token not in router:
@@ -380,8 +383,10 @@ if request.get("mode") not in {
     "publish-evidence",
 }:
     raise SystemExit(f"unexpected authoritative host request mode: {request!r}")
-if request.get("gate") != "plasma-package-build":
+if request.get("gate") not in {"plasma-package-build", "runner-contract"}:
     raise SystemExit(f"unexpected authoritative host request gate: {request!r}")
+if request.get("gate") == "runner-contract" and request.get("mode") not in {"preflight", "execute"}:
+    raise SystemExit(f"invalid runner-contract request mode: {request!r}")
 if request.get("runner_group_id") != 3:
     raise SystemExit(f"unexpected authoritative host runner group: {request!r}")
 

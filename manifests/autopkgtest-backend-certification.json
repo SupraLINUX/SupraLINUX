@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "state": "pending",
+  "authority": "SupraLINUX infrastructure mechanism certification",
+  "current_backend": "autopkgtest-qemu",
+  "candidate_backend": "autopkgtest-unshare",
+  "package_attempt_effect": "none",
+  "evidence_scope": "mechanism-only; does not certify any KDE package",
+  "requirements": {
+    "outer_runner": "Ubuntu 26.04 authoritative KVM",
+    "architecture": "amd64",
+    "qemu_reference_required": true,
+    "same_fixture_required": true,
+    "normalized_results_equal": true,
+    "required_fixture_tests": [
+      "installed-payload",
+      "needs-root"
+    ]
+  },
+  "backend_policy": {
+    "default_candidate": "unshare",
+    "qemu_fallback_restrictions": [
+      "isolation-machine",
+      "needs-reboot",
+      "needs-reboot-without-mark"
+    ],
+    "unknown_restriction_policy": "qemu"
+  },
+  "rollout": {
+    "production_default_changed": false,
+    "next_step": "authoritative-a-b-certification",
+    "after_pass": "one-real-package-canary"
+  }
+}

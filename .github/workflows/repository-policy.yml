@@ -155,6 +155,9 @@ jobs:
         shell: bash
         run: bash scripts/check-autopkgtest-qemu-argv-lifecycle.sh
 
+      - name: Test autopkgtest backend certification policy
+        run: python3 scripts/test-autopkgtest-unshare-certification.py
+
       - name: Test signed Ubuntu source-image verification
         shell: bash
         run: scripts/test-verify-ubuntu-cloud-image-provenance.sh

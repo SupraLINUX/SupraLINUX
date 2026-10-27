@@ -70,7 +70,9 @@ jobs:
               "close-evidence-check", "close-evidence",
               "publish-evidence-check", "publish-evidence",
           }
-          assert request.get("gate") == "plasma-package-build"
+          assert request.get("gate") in {"plasma-package-build", "runner-contract"}
+          if request["gate"] == "runner-contract":
+              assert request["mode"] in {"preflight", "execute"}
           assert isinstance(request.get("runner_group_id"), int) and request["runner_group_id"] > 0
           cancel = request.get("cancel_run_id")
           cancel_head = request.get("cancel_run_head_sha")

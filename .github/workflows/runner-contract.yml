@@ -16,7 +16,7 @@ jobs:
            github.event.pull_request.head.repo.full_name == github.repository) }}
     name: Verify disposable Ubuntu 26.04 KVM build runner
     runs-on: [self-hosted, linux, x64, supralinux, ubuntu-26.04, kvm, ephemeral]
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
@@ -54,8 +54,10 @@ jobs:
             dpkg-buildpackage
             autopkgtest
             autopkgtest-buildvm-ubuntu-cloud
+            autopkgtest-virt-unshare
             qemu-system-x86_64
             qemu-img
+            dpkg-deb
             aptly
             gpg
             git
@@ -85,6 +87,10 @@ jobs:
 
       - name: Verify reviewed setup transport through autopkgtest QEMU
         run: python3 scripts/probe-autopkgtest-baseline-transport.py
+
+      - name: Certify autopkgtest unshare backend equivalence
+        shell: bash
+        run: scripts/certify-autopkgtest-unshare-backend.sh
 
       - name: Execute current reviewed Ubuntu baseline before candidate build
         run: python3 scripts/probe-reviewed-ubuntu-baseline.py
