@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "mode": "execute",
-  "gate": "runner-contract",
+  "mode": "diagnose",
+  "gate": "plasma-package-build",
   "runner_group_id": 3
 }
