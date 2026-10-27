@@ -50,14 +50,12 @@ fi
 
 selected_slot=""
 selected_lock=""
-selected_fd=""
 for ((slot=1; slot<=SLOTS; slot++)); do
     candidate_lock="${LOCK_ROOT}/${SAFE_REPOSITORY}-authoritative-slot-${slot}.lock"
     exec {candidate_fd}>"${candidate_lock}"
     if flock -n -x "${candidate_fd}"; then
         selected_slot="${slot}"
         selected_lock="${candidate_lock}"
-        selected_fd="${candidate_fd}"
         break
     fi
     exec {candidate_fd}>&-
