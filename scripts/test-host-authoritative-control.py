@@ -418,6 +418,7 @@ if request.get("mode") not in {
     "close-evidence",
     "publish-evidence-check",
     "publish-evidence",
+    "certify-proposed-content",
 }:
     raise SystemExit(f"unexpected authoritative host request mode: {request!r}")
 if request.get("gate") not in {"plasma-package-build", "runner-contract", "supralinux-proposed"}:
