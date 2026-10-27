@@ -38,8 +38,11 @@ SOURCE_KERNEL_STAT="$(stat -c '%s:%Y:%Z:%i' "${SOURCE_KERNEL}")"
 SOURCE_KERNEL_SHA256="$("${PRIV[@]}" sha256sum "${SOURCE_KERNEL}" | awk '{print $1}')"
 MODULES_DEP_SHA256="$(sha256sum "${MODULES_PATH}/modules.dep" | awk '{print $1}')"
 
-KERNEL_TMP="${RUNTIME_DIR}/vmlinuz.tmp.$"
-trap '"${PRIV[@]}" rm -f "${KERNEL_TMP}"' EXIT
+KERNEL_TMP="${RUNTIME_DIR}/vmlinuz.tmp.${BASHPID}"
+cleanup_kernel_tmp() {
+    "${PRIV[@]}" rm -f "${KERNEL_TMP}"
+}
+trap cleanup_kernel_tmp EXIT
 "${PRIV[@]}" install -o "${TARGET_USER}" -g "${TARGET_GROUP}" -m 0600 "${SOURCE_KERNEL}" "${KERNEL_TMP}"
 COPY_SHA256="$(sha256sum "${KERNEL_TMP}" | awk '{print $1}')"
 [[ "${COPY_SHA256}" == "${SOURCE_KERNEL_SHA256}" ]] || { printf 'Private libguestfs kernel copy does not match the host kernel.\n' >&2; exit 1; }
