@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "mode": "repair-frameworks-retained-artifacts",
+  "mode": "certify-proposed-content",
   "gate": "supralinux-proposed",
   "runner_group_id": 3
 }
