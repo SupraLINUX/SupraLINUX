@@ -8,14 +8,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BROKER = ROOT / "scripts/supralinux-authoritative-host-broker.py"
-CLOSE_HELPER = ROOT / "scripts/host-close-package-evidence.py"
+CLOSE_HELPER = ROOT / "scripts/host-close-package-evidence.py"\nTOOLING_HELPER = ROOT / "scripts/ensure-authoritative-host-tools.sh"
 WORKFLOW = ROOT / ".github/workflows/host-authoritative-control.yml"
 ROUTER = ROOT / ".github/workflows/pr-ci-router.yml"
 JIT_CORE = ROOT / "scripts/run-kvm-jit-gate-core.sh"
 REQUEST = ROOT / "ops/host-authoritative/request.json"
 
 broker = BROKER.read_text()
-close_helper = CLOSE_HELPER.read_text()
+close_helper = CLOSE_HELPER.read_text()\ntooling_helper = TOOLING_HELPER.read_text()
 workflow = WORKFLOW.read_text()
 router = ROUTER.read_text()
 jit_core = JIT_CORE.read_text()
@@ -72,6 +72,22 @@ with tempfile.TemporaryDirectory() as directory:
         raise SystemExit("existing evidence output directory was not accepted")
 
 
+
+for token in (
+    '"apt-utils"',
+    '"apt-ftparchive"',
+    '"apt_update_invoked": False',
+    '"dist_upgrade_invoked": False',
+    '"package_attempt_effect": "none"',
+    '"vm_created": False',
+    '"jit_invoked": False',
+    'apt-get -y --no-install-recommends install apt-utils',
+):
+    if token not in tooling_helper:
+        raise SystemExit(f"missing authoritative host tooling contract: {token}")
+for forbidden in ("apt-get update", "dist-upgrade", "full-upgrade"):
+    if forbidden in tooling_helper:
+        raise SystemExit(f"forbidden authoritative host tooling operation: {forbidden}")
 
 prepare_helper = (ROOT / "scripts/prepare-libguestfs-runtime.sh").read_text()
 for token in (
@@ -179,6 +195,11 @@ required_broker = [
     'if request["mode"] == "repair-host":',
     'if request["mode"] == "repair-libguestfs-runtime":',
     'LIBGUESTFS_PREPARE_HELPER = Path("/usr/local/libexec/supralinux-prepare-libguestfs-runtime")',
+    'HOST_TOOLING_HELPER = Path("/usr/local/libexec/supralinux-ensure-authoritative-host-tools")',
+    '"HOST_AUTHORITATIVE_TOOLING_REPAIR=PASS"',
+    '"scope=host-network-and-authoritative-tooling-repair"',
+    '"host-tooling-repair.stdout"',
+
     'LIBGUESTFS_RUNTIME_HELPER = Path("/usr/local/libexec/supralinux-with-libguestfs-runtime")',
     '"HOST_LIBGUESTFS_RUNTIME_REPAIR=PASS"',
     'repair = subprocess.run(',
@@ -357,6 +378,8 @@ required_workflow = [
     "/usr/local/libexec/supralinux-host-close-package-evidence",
     "/usr/local/libexec/supralinux-prepare-libguestfs-runtime",
     "/usr/local/libexec/supralinux-with-libguestfs-runtime",
+    "/usr/local/libexec/supralinux-ensure-authoritative-host-tools",
+
     "Upload authoritative control result",
     '"close-evidence-check", "close-evidence"',
     '"execute-and-publish-pass"',

@@ -24,7 +24,7 @@ CLOSE_EVIDENCE_HELPER = Path("/usr/local/libexec/supralinux-host-close-package-e
 HOST_EVIDENCE_ROOT = Path("/var/lib/supralinux/evidence/host-kvm")
 PERSISTENT_ARTIFACT_ROOT = Path("/var/lib/supralinux/artifacts")
 LIBGUESTFS_PREPARE_HELPER = Path("/usr/local/libexec/supralinux-prepare-libguestfs-runtime")
-LIBGUESTFS_RUNTIME_HELPER = Path("/usr/local/libexec/supralinux-with-libguestfs-runtime")
+LIBGUESTFS_RUNTIME_HELPER = Path("/usr/local/libexec/supralinux-with-libguestfs-runtime")\nHOST_TOOLING_HELPER = Path("/usr/local/libexec/supralinux-ensure-authoritative-host-tools")
 
 if os.geteuid() != 0:
     raise SystemExit("Authoritative host broker must run through sudo.")
@@ -866,25 +866,91 @@ if request["mode"] == "repair-host":
     )
     write_result("host-network-repair.stdout", repair.stdout)
     write_result("host-network-repair.stderr", repair.stderr)
-    state = "PASS" if repair.returncode == 0 else "INFRA_INVALID"
-    if repair.returncode == 0:
-        payload = json.loads(repair.stdout)
+    if repair.returncode != 0:
+        write_result(
+            "repair-host-result.txt",
+            "\n".join(
+                [
+                    "state=INFRA_INVALID",
+                    f"exit_code={repair.returncode}",
+                    f"source_commit={source_commit}",
+                    "scope=host-network-and-authoritative-tooling-repair",
+                    "network_repair=INFRA_INVALID",
+                    "tooling_repair=not-run",
+                    "persistent_change=no",
+                    "github_token_requested=no",
+                    "github_api_mutation=no",
+                    "vm_created=no",
+                    "jit_invoked=no",
+                    "package_attempt_effect=none",
+                    "",
+                ]
+            ),
+        )
+        raise SystemExit(repair.returncode)
+
+    network_payload = json.loads(repair.stdout)
+    if not (
+        network_payload.get("state") == "PASS"
+        and network_payload.get("package_attempt_effect") == "none"
+        and network_payload.get("persistent_change") is False
+        and network_payload.get("vm_created") is False
+        and network_payload.get("jit_invoked") is False
+    ):
+        raise SystemExit("Host network repair returned an invalid PASS receipt.")
+
+    if not HOST_TOOLING_HELPER.is_file() or not os.access(HOST_TOOLING_HELPER, os.X_OK):
+        raise SystemExit("Installed authoritative host tooling helper is missing.")
+    tooling = subprocess.run(
+        [str(HOST_TOOLING_HELPER)],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    write_result("host-tooling-repair.stdout", tooling.stdout)
+    write_result("host-tooling-repair.stderr", tooling.stderr)
+    tooling_payload = None
+    if tooling.returncode == 0:
+        tooling_payload = json.loads(tooling.stdout)
         if not (
-            payload.get("state") == "PASS"
-            and payload.get("package_attempt_effect") == "none"
-            and payload.get("persistent_change") is False
-            and payload.get("vm_created") is False
-            and payload.get("jit_invoked") is False
+            tooling_payload.get("state") == "PASS"
+            and tooling_payload.get("kind") == "authoritative-host-tooling"
+            and isinstance(tooling_payload.get("packages", {}).get("apt-utils"), str)
+            and bool(tooling_payload.get("packages", {}).get("apt-utils"))
+            and tooling_payload.get("required_commands", {}).get("apt-ftparchive") == "/usr/bin/apt-ftparchive"
+            and isinstance(tooling_payload.get("package_manager_invoked"), bool)
+            and isinstance(tooling_payload.get("persistent_change"), bool)
+            and tooling_payload.get("apt_update_invoked") is False
+            and tooling_payload.get("dist_upgrade_invoked") is False
+            and tooling_payload.get("package_attempt_effect") == "none"
+            and tooling_payload.get("vm_created") is False
+            and tooling_payload.get("jit_invoked") is False
         ):
-            raise SystemExit("Host network repair returned an invalid PASS receipt.")
+            raise SystemExit("Authoritative host tooling repair returned an invalid PASS receipt.")
+
+    state = "PASS" if tooling.returncode == 0 else "INFRA_INVALID"
+    persistent_change = (
+        "yes"
+        if tooling_payload is not None and tooling_payload.get("persistent_change") is True
+        else "no"
+    )
+    apt_utils_version = (
+        tooling_payload.get("packages", {}).get("apt-utils", "unknown")
+        if tooling_payload is not None
+        else "unknown"
+    )
     write_result(
         "repair-host-result.txt",
         "\n".join(
             [
                 f"state={state}",
-                f"exit_code={repair.returncode}",
+                f"exit_code={tooling.returncode}",
                 f"source_commit={source_commit}",
-                "scope=e1000e-runtime-offload-safety-restore",
+                "scope=host-network-and-authoritative-tooling-repair",
+                "network_repair=PASS",
+                f"tooling_repair={'PASS' if tooling.returncode == 0 else 'INFRA_INVALID'}",
+                f"apt_utils_version={apt_utils_version}",
+                f"persistent_change={persistent_change}",
                 "github_token_requested=no",
                 "github_api_mutation=no",
                 "vm_created=no",
@@ -894,9 +960,10 @@ if request["mode"] == "repair-host":
             ]
         ),
     )
-    if repair.returncode != 0:
-        raise SystemExit(repair.returncode)
+    if tooling.returncode != 0:
+        raise SystemExit(tooling.returncode)
     print("HOST_NETWORK_SAFETY_REPAIR=PASS")
+    print("HOST_AUTHORITATIVE_TOOLING_REPAIR=PASS")
     raise SystemExit(0)
 run_as_operator(["gh", "auth", "status", "--hostname", "github.com"])
 token_result = run_as_operator(["gh", "auth", "token"])

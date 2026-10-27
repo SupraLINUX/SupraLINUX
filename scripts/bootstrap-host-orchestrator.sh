@@ -10,7 +10,7 @@ RUNNER_DIR="/opt/supralinux-host-runner"
 RUNNER_NAME="supralinux-host-orchestrator-$(hostname -s)"
 BROKER="/usr/local/libexec/supralinux-vm-workspace-broker"
 NETWORK_HELPER="/usr/local/libexec/supralinux-configure-kvm-guest-network.py"
-LIBGUESTFS_HELPER="/usr/local/libexec/supralinux-with-libguestfs-runtime"
+LIBGUESTFS_HELPER="/usr/local/libexec/supralinux-with-libguestfs-runtime"\nHOST_TOOLING_HELPER="/usr/local/libexec/supralinux-ensure-authoritative-host-tools"
 SUDOERS="/etc/sudoers.d/supralinux-host-orchestrator"
 EVIDENCE_ROOT="/var/lib/supralinux/evidence/host-orchestrator-bootstrap"
 RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-$$"
@@ -64,6 +64,10 @@ sudo install -o root -g root -m 0644 \
     "${ROOT}/scripts/configure-kvm-guest-network.py" "${NETWORK_HELPER}"
 sudo install -o root -g root -m 0755 \
     "${ROOT}/scripts/with-libguestfs-runtime.sh" "${LIBGUESTFS_HELPER}"
+sudo install -o root -g root -m 0755 \
+    "${ROOT}/scripts/ensure-authoritative-host-tools.sh" "${HOST_TOOLING_HELPER}"
+
+HOST_TOOLING_RECEIPT="$(sudo "${HOST_TOOLING_HELPER}")"
 
 SUDOERS_TMP="$(mktemp)"
 trap 'rm -f "${SUDOERS_TMP}"' EXIT
@@ -156,7 +160,8 @@ sudo install -d -o "${USER}" -g "$(id -gn)" -m 0700 "${EVIDENCE_DIR}"
     printf 'checkout_head=%s\n' "$(git rev-parse HEAD)"
 } > "${EVIDENCE_DIR}/result.txt"
 printf '%s\n' "${RUNNER_JSON}" > "${EVIDENCE_DIR}/runner.json"
-sha256sum "${BROKER}" "${NETWORK_HELPER}" "${LIBGUESTFS_HELPER}" \
+printf '%s\n' "${HOST_TOOLING_RECEIPT}" > "${EVIDENCE_DIR}/host-tooling.json"
+sha256sum "${BROKER}" "${NETWORK_HELPER}" "${LIBGUESTFS_HELPER}" "${HOST_TOOLING_HELPER}" \
     > "${EVIDENCE_DIR}/installed-files.sha256"
 
 printf '\nHOST_ORCHESTRATOR_BOOTSTRAP=PASS\n'
