@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "mode": "rebuild-golden",
-  "gate": "plasma-package-build",
+  "mode": "execute",
+  "gate": "runner-contract",
   "runner_group_id": 3
 }
