@@ -73,6 +73,22 @@ with tempfile.TemporaryDirectory() as directory:
 
 
 
+prepare_helper = (ROOT / "scripts/prepare-libguestfs-runtime.sh").read_text()
+for token in (
+    'PRIV=()',
+    'if [[ "${EUID}" -ne 0 ]]',
+    'PRIV=(sudo -n)',
+    '"${PRIV[@]}" install -d -o "${TARGET_USER}" -g "${TARGET_GROUP}" -m 0700',
+    '"${PRIV[@]}" sha256sum "${SOURCE_KERNEL}"',
+    '"${PRIV[@]}" install -o "${TARGET_USER}" -g "${TARGET_GROUP}" -m 0600',
+    '"${PRIV[@]}" chown "${TARGET_USER}:${TARGET_GROUP}" "${PROVENANCE_TMP}"',
+):
+    if token not in prepare_helper:
+        raise SystemExit(f"missing libguestfs prepare privilege contract: {token}")
+for forbidden in ("sudo sha256sum", "sudo install "):
+    if forbidden in prepare_helper:
+        raise SystemExit(f"interactive libguestfs prepare privilege escalation remains: {forbidden}")
+
 required_broker = [
     'os.environ.get("SUDO_USER") != RUNNER_USER',
     '"mode", "gate", "runner_group_id", "cancel_run_id"',
@@ -150,6 +166,8 @@ required_broker = [
     'LIBGUESTFS_PREPARE_HELPER = Path("/usr/local/libexec/supralinux-prepare-libguestfs-runtime")',
     'LIBGUESTFS_RUNTIME_HELPER = Path("/usr/local/libexec/supralinux-with-libguestfs-runtime")',
     '"HOST_LIBGUESTFS_RUNTIME_REPAIR=PASS"',
+    'repair = subprocess.run(',
+    'env=operator_environment({"SUPRALINUX_HOST_USER": operator.pw_name})',
     '"scope=libguestfs-private-kernel-runtime-refresh"',
     '"persistent_change=true"',
     '"/usr/local/libexec/supralinux-restore-kvm-host-network-safety"',

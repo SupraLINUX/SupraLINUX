@@ -18,22 +18,29 @@ fi
 id "${TARGET_USER}" >/dev/null 2>&1 || { printf 'Host orchestration user does not exist: %s\n' "${TARGET_USER}" >&2; exit 1; }
 TARGET_GROUP="$(id -gn "${TARGET_USER}")"
 
-for command_name in id install sha256sum stat sudo; do
+for command_name in id install sha256sum stat; do
     command -v "${command_name}" >/dev/null 2>&1 || { printf 'Missing host command: %s\n' "${command_name}" >&2; exit 1; }
 done
+
+PRIV=()
+if [[ "${EUID}" -ne 0 ]]; then
+    command -v sudo >/dev/null 2>&1 || { printf 'Missing host command: sudo\n' >&2; exit 1; }
+    PRIV=(sudo -n)
+fi
 
 [[ -f "${SOURCE_KERNEL}" ]] || { printf 'Current host kernel image is missing: %s\n' "${SOURCE_KERNEL}" >&2; exit 1; }
 [[ -d "${MODULES_PATH}" && -f "${MODULES_PATH}/modules.dep" ]] || { printf 'Current host kernel modules are incomplete: %s\n' "${MODULES_PATH}" >&2; exit 1; }
 
-install -d -m 0700 "${RUNTIME_ROOT}" "${RUNTIME_DIR}" "${CACHE_DIR}"
+"${PRIV[@]}" install -d -o "${TARGET_USER}" -g "${TARGET_GROUP}" -m 0700 \
+    "${RUNTIME_ROOT}" "${RUNTIME_DIR}" "${CACHE_DIR}"
 
 SOURCE_KERNEL_STAT="$(stat -c '%s:%Y:%Z:%i' "${SOURCE_KERNEL}")"
-SOURCE_KERNEL_SHA256="$(sudo sha256sum "${SOURCE_KERNEL}" | awk '{print $1}')"
+SOURCE_KERNEL_SHA256="$("${PRIV[@]}" sha256sum "${SOURCE_KERNEL}" | awk '{print $1}')"
 MODULES_DEP_SHA256="$(sha256sum "${MODULES_PATH}/modules.dep" | awk '{print $1}')"
 
-KERNEL_TMP="${RUNTIME_DIR}/vmlinuz.tmp.$$"
-trap 'rm -f "${KERNEL_TMP}"' EXIT
-sudo install -o "${TARGET_USER}" -g "${TARGET_GROUP}" -m 0600 "${SOURCE_KERNEL}" "${KERNEL_TMP}"
+KERNEL_TMP="${RUNTIME_DIR}/vmlinuz.tmp.$"
+trap '"${PRIV[@]}" rm -f "${KERNEL_TMP}"' EXIT
+"${PRIV[@]}" install -o "${TARGET_USER}" -g "${TARGET_GROUP}" -m 0600 "${SOURCE_KERNEL}" "${KERNEL_TMP}"
 COPY_SHA256="$(sha256sum "${KERNEL_TMP}" | awk '{print $1}')"
 [[ "${COPY_SHA256}" == "${SOURCE_KERNEL_SHA256}" ]] || { printf 'Private libguestfs kernel copy does not match the host kernel.\n' >&2; exit 1; }
 mv -f "${KERNEL_TMP}" "${KERNEL_COPY}"
@@ -53,6 +60,7 @@ PROVENANCE_TMP="${RUNTIME_DIR}/provenance.tmp.$$"
     printf 'cache_dir=%s\n' "${CACHE_DIR}"
 } > "${PROVENANCE_TMP}"
 chmod 0600 "${PROVENANCE_TMP}"
+"${PRIV[@]}" chown "${TARGET_USER}:${TARGET_GROUP}" "${PROVENANCE_TMP}"
 mv -f "${PROVENANCE_TMP}" "${PROVENANCE}"
 
 printf 'Prepared private libguestfs kernel runtime: %s\n' "${RUNTIME_DIR}"

@@ -739,11 +739,12 @@ write_result(
     json.dumps(kvm_runtime_result, indent=2, sort_keys=True) + "\n",
 )
 if request["mode"] == "repair-libguestfs-runtime":
-    repair = run_as_operator(
+    repair = subprocess.run(
         [str(LIBGUESTFS_PREPARE_HELPER)],
-        extra_env={"SUPRALINUX_HOST_USER": operator.pw_name},
+        env=operator_environment({"SUPRALINUX_HOST_USER": operator.pw_name}),
         check=False,
         capture_output=True,
+        text=True,
     )
     write_result("libguestfs-runtime-repair.stdout", repair.stdout)
     write_result("libguestfs-runtime-repair.stderr", repair.stderr)
