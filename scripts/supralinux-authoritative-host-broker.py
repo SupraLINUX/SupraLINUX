@@ -944,13 +944,51 @@ try:
     prepare_control_checkout(checkout)
 
     preflight_log = []
+    preflight_failure = None
     for command in (
         ["scripts/check-kvm-host.sh"],
         ["scripts/with-libguestfs-runtime.sh", "true"],
     ):
-        proc = run_as_operator(command, cwd=checkout, extra_groups=privileged_groups)
-        preflight_log.append(proc.stdout)
-        preflight_log.append(proc.stderr)
+        proc = run_as_operator(
+            command,
+            cwd=checkout,
+            extra_groups=privileged_groups,
+            check=False,
+        )
+        preflight_log.extend(
+            [
+                f"$ {' '.join(command)}\\n",
+                proc.stdout,
+                proc.stderr,
+                f"exit_code={proc.returncode}\\n",
+            ]
+        )
+        if proc.returncode != 0:
+            preflight_failure = (command, proc.returncode)
+            break
+
+    if preflight_failure is not None:
+        command, returncode = preflight_failure
+        write_result("host-preflight.log", "".join(preflight_log))
+        write_result(
+            "preflight-result.txt",
+            "\\n".join(
+                [
+                    "state=INFRA_INVALID",
+                    f"exit_code={returncode}",
+                    f"failed_command={' '.join(command)}",
+                    f"mode={request['mode']}",
+                    f"gate={request['gate']}",
+                    f"source_commit={source_commit}",
+                    f"operator_user={operator.pw_name}",
+                    "vm_created=no",
+                    "jit_invoked=no",
+                    "package_attempt_effect=none",
+                    "",
+                ]
+            ),
+        )
+        raise SystemExit(returncode)
 
     if request["mode"] == "rebuild-golden":
         write_result("host-preflight.log", "".join(preflight_log))
