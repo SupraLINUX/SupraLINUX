@@ -53,9 +53,9 @@ prepare_calls = [
     and isinstance(node.func, ast.Name)
     and node.func.id == "prepare_control_checkout"
 ]
-if len(prepare_calls) != 2:
+if len(prepare_calls) != 3:
     raise SystemExit(
-        "prepare_control_checkout must be shared by diagnose and normal control execution"
+        "prepare_control_checkout must be shared by diagnose, proposed certification, and normal control execution"
     )
 
 close_spec = importlib.util.spec_from_file_location(
@@ -101,6 +101,12 @@ required_broker = [
     '"evidence_incident_repair"',
     '"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"',
     '"execute-and-publish-pass"',
+    '"certify-proposed-content"',
+    '"supralinux-proposed"',
+    '"HOST_SUPRALINUX_PROPOSED_CONTENT_CERTIFICATION=PASS"',
+    '"scope=supralinux-proposed-content-certification"',
+    '"repository_active=no"',
+    '"sbuild_invoked=no"',
     '"SUPRALINUX_GATE_RECEIPT_PATH"',
     '"auto-close-result.txt"',
     'f"/repos/{REPOSITORY}/actions/runs/{child_run_id}/artifacts?per_page=100"',
@@ -111,7 +117,7 @@ required_broker = [
     'CLOSE_EVIDENCE_HELPER = Path("/usr/local/libexec/supralinux-host-close-package-evidence")',
     'if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:',
     '"package_attempt_effect=none"',
-    'request.get("gate") not in {"plasma-package-build", "runner-contract"}',
+    'request.get("gate") not in {"plasma-package-build", "runner-contract", "supralinux-proposed"}',
     '"Runner contract gate permits only preflight or execute mode."',
     'run.get("status") == "queued"',
     'job.get("status") != "queued"',
@@ -355,6 +361,8 @@ required_workflow = [
     '"close-evidence-check", "close-evidence"',
     '"execute-and-publish-pass"',
     '"runner-contract"',
+    '"certify-proposed-content"',
+    '"supralinux-proposed"',
 ]
 for token in required_workflow:
     if token not in workflow:
@@ -366,6 +374,8 @@ required_router = [
     '"publish-evidence-check", "publish-evidence"',
     '"execute-and-publish-pass"',
     '"runner-contract"',
+    '"certify-proposed-content"',
+    '"supralinux-proposed"',
 ]
 for token in required_router:
     if token not in router:
@@ -410,10 +420,14 @@ if request.get("mode") not in {
     "publish-evidence",
 }:
     raise SystemExit(f"unexpected authoritative host request mode: {request!r}")
-if request.get("gate") not in {"plasma-package-build", "runner-contract"}:
+if request.get("gate") not in {"plasma-package-build", "runner-contract", "supralinux-proposed"}:
     raise SystemExit(f"unexpected authoritative host request gate: {request!r}")
 if request.get("gate") == "runner-contract" and request.get("mode") not in {"preflight", "execute"}:
     raise SystemExit(f"invalid runner-contract request mode: {request!r}")
+if request.get("gate") == "supralinux-proposed" and request.get("mode") != "certify-proposed-content":
+    raise SystemExit(f"invalid supralinux-proposed request mode: {request!r}")
+if request.get("mode") == "certify-proposed-content" and request.get("gate") != "supralinux-proposed":
+    raise SystemExit(f"invalid proposed certification gate: {request!r}")
 if request.get("runner_group_id") != 3:
     raise SystemExit(f"unexpected authoritative host runner group: {request!r}")
 

@@ -186,6 +186,9 @@ jobs:
       - name: Test SupraLINUX-proposed integration repository contract
         run: python3 scripts/test-supralinux-proposed.py
 
+      - name: Test SupraLINUX-proposed persistent content certification contract
+        run: python3 scripts/test-supralinux-proposed-content-certification.py
+
       - name: Test FAST package preflight contract
         run: python3 scripts/test-fast-package-preflight.py
 

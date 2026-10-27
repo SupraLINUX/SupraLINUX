@@ -53,12 +53,17 @@ if request.get("mode") not in {
     "execute-and-publish-pass",
     "close-evidence-check", "close-evidence",
     "publish-evidence-check", "publish-evidence",
+    "certify-proposed-content",
 }:
     raise SystemExit("Unsupported control mode.")
-if request.get("gate") not in {"plasma-package-build", "runner-contract"}:
+if request.get("gate") not in {"plasma-package-build", "runner-contract", "supralinux-proposed"}:
     raise SystemExit("Unsupported authoritative gate.")
 if request.get("gate") == "runner-contract" and request.get("mode") not in {"preflight", "execute"}:
     raise SystemExit("Runner contract gate permits only preflight or execute mode.")
+if request.get("gate") == "supralinux-proposed" and request.get("mode") != "certify-proposed-content":
+    raise SystemExit("SupraLINUX-proposed gate permits only content certification mode.")
+if request.get("mode") == "certify-proposed-content" and request.get("gate") != "supralinux-proposed":
+    raise SystemExit("Content certification mode requires the SupraLINUX-proposed gate.")
 
 source_commit = request.get("source_commit")
 control_run_id = request.get("control_run_id")
@@ -148,6 +153,7 @@ else:
 if request["mode"] in {
     "diagnose", "repair-host", "repair-libguestfs-runtime", "rebuild-golden", "execute", "execute-and-publish-pass",
     "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence",
+    "certify-proposed-content",
 } and (
     cancel_run_id is not None or cancel_run_head_sha is not None
 ):
@@ -350,6 +356,74 @@ def run_package_closure(
     if rc != 0:
         raise SystemExit(rc)
     return output_dir
+
+
+if request["mode"] == "certify-proposed-content":
+    proposed_root = WORK_ROOT / control_run_id
+    proposed_checkout = proposed_root / "repo"
+    proposed_work = proposed_root / "work"
+    proposed_evidence = proposed_root / "evidence"
+    if proposed_root.exists():
+        raise SystemExit(f"Proposed certification work directory already exists: {proposed_root}")
+    proposed_root.mkdir(mode=0o700)
+    os.chown(proposed_root, operator.pw_uid, operator.pw_gid)
+
+    proposed_log = result_dir / "proposed-content-certification.log"
+    proposed_rc = 125
+    try:
+        prepare_control_checkout(proposed_checkout)
+        run_as_operator(["test", "-d", str(PERSISTENT_ARTIFACT_ROOT)])
+        run_as_operator(["test", "-r", str(PERSISTENT_ARTIFACT_ROOT)])
+        proposed_rc = stream_as_operator(
+            [
+                "python3",
+                "scripts/certify-supralinux-proposed-content.py",
+                "--checkout", str(proposed_checkout),
+                "--artifact-root", str(PERSISTENT_ARTIFACT_ROOT),
+                "--work-dir", str(proposed_work),
+                "--evidence-dir", str(proposed_evidence),
+                "--source-commit", source_commit,
+            ],
+            proposed_log,
+            cwd=proposed_checkout,
+        )
+        if proposed_evidence.exists():
+            if any(path.is_symlink() for path in proposed_evidence.rglob("*")):
+                raise SystemExit("Proposed certification evidence contains a symlink.")
+            destination = result_dir / "proposed-content-certification"
+            shutil.copytree(proposed_evidence, destination)
+            for path in [destination, *destination.rglob("*")]:
+                os.chown(path, runner_pw.pw_uid, runner_pw.pw_gid)
+                os.chmod(path, 0o700 if path.is_dir() else 0o600)
+    finally:
+        if proposed_root.exists():
+            shutil.rmtree(proposed_root)
+
+    write_result(
+        "proposed-content-control-result.txt",
+        "\n".join(
+            [
+                f"state={'PASS' if proposed_rc == 0 else 'INFRA_INVALID'}",
+                f"exit_code={proposed_rc}",
+                "mode=certify-proposed-content",
+                "gate=supralinux-proposed",
+                f"source_commit={source_commit}",
+                "scope=supralinux-proposed-content-certification",
+                "github_api_mutation=no",
+                "repository_active=no",
+                "stable_publication_authorized=no",
+                "vm_created=no",
+                "jit_invoked=no",
+                "sbuild_invoked=no",
+                "package_attempt_effect=none",
+                "",
+            ]
+        ),
+    )
+    if proposed_rc != 0:
+        raise SystemExit(proposed_rc)
+    print("HOST_SUPRALINUX_PROPOSED_CONTENT_CERTIFICATION=PASS")
+    raise SystemExit(0)
 
 
 if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
