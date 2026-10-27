@@ -52,8 +52,11 @@ for token in (
     '"sbuild_invoked=no"',
     '"package_attempt_effect=none"',
     'PERSISTENT_ARTIFACT_ROOT',
-    'FRAMEWORKS_RETAINED_ARTIFACT_ROOT = Path("/var/lib/supralinux/milestone-cache/frameworks-6.30/retained-artifacts")',
-    '"--frameworks-archive", str(FRAMEWORKS_RETAINED_ARTIFACT_ROOT)',
+    'PREFERRED_FRAMEWORKS_RETAINED_ARTIFACT_ROOT = Path("/var/lib/supralinux/milestone-cache/frameworks-6.30/retained-artifacts")',
+    'Path(operator.pw_dir) / "src/SupraLINUX/.artifacts/frameworks-6.30"',
+    'def resolve_frameworks_retained_artifact_root() -> Path:',
+    'frameworks_archive = resolve_frameworks_retained_artifact_root()',
+    '"--frameworks-archive", str(frameworks_archive)',
     'prepare_control_checkout(proposed_checkout)',
 ):
     if token not in broker:

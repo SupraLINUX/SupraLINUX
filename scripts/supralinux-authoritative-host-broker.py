@@ -23,7 +23,7 @@ API_VERSION = "2026-03-10"
 CLOSE_EVIDENCE_HELPER = Path("/usr/local/libexec/supralinux-host-close-package-evidence")
 HOST_EVIDENCE_ROOT = Path("/var/lib/supralinux/evidence/host-kvm")
 PERSISTENT_ARTIFACT_ROOT = Path("/var/lib/supralinux/artifacts")
-FRAMEWORKS_RETAINED_ARTIFACT_ROOT = Path("/var/lib/supralinux/milestone-cache/frameworks-6.30/retained-artifacts")
+PREFERRED_FRAMEWORKS_RETAINED_ARTIFACT_ROOT = Path("/var/lib/supralinux/milestone-cache/frameworks-6.30/retained-artifacts")
 LIBGUESTFS_PREPARE_HELPER = Path("/usr/local/libexec/supralinux-prepare-libguestfs-runtime")
 LIBGUESTFS_RUNTIME_HELPER = Path("/usr/local/libexec/supralinux-with-libguestfs-runtime")
 
@@ -247,6 +247,28 @@ def resolve_operator() -> pwd.struct_passwd:
 
 operator = resolve_operator()
 
+def resolve_frameworks_retained_artifact_root() -> Path:
+    candidates = [
+        PREFERRED_FRAMEWORKS_RETAINED_ARTIFACT_ROOT,
+        Path(operator.pw_dir) / "src/SupraLINUX/.artifacts/frameworks-6.30",
+    ]
+    checked = []
+    for candidate in candidates:
+        checked.append(str(candidate))
+        try:
+            resolved = candidate.resolve(strict=True)
+        except FileNotFoundError:
+            continue
+        if candidate.is_symlink() or not resolved.is_dir():
+            continue
+        index = resolved / "index.json"
+        if index.is_file() and not index.is_symlink() and os.access(index, os.R_OK):
+            return resolved
+    raise SystemExit(
+        "No readable retained Frameworks archive was found; checked: "
+        + ", ".join(checked)
+    )
+
 def make_demote(extra_groups=()):
     def demote():
         os.initgroups(operator.pw_name, operator.pw_gid)
@@ -375,15 +397,16 @@ if request["mode"] == "certify-proposed-content":
         prepare_control_checkout(proposed_checkout)
         run_as_operator(["test", "-d", str(PERSISTENT_ARTIFACT_ROOT)])
         run_as_operator(["test", "-r", str(PERSISTENT_ARTIFACT_ROOT)])
-        run_as_operator(["test", "-d", str(FRAMEWORKS_RETAINED_ARTIFACT_ROOT)])
-        run_as_operator(["test", "-r", str(FRAMEWORKS_RETAINED_ARTIFACT_ROOT / "index.json")])
+        frameworks_archive = resolve_frameworks_retained_artifact_root()
+        run_as_operator(["test", "-d", str(frameworks_archive)])
+        run_as_operator(["test", "-r", str(frameworks_archive / "index.json")])
         proposed_rc = stream_as_operator(
             [
                 "python3",
                 "scripts/certify-supralinux-proposed-content.py",
                 "--checkout", str(proposed_checkout),
                 "--artifact-root", str(PERSISTENT_ARTIFACT_ROOT),
-                "--frameworks-archive", str(FRAMEWORKS_RETAINED_ARTIFACT_ROOT),
+                "--frameworks-archive", str(frameworks_archive),
                 "--work-dir", str(proposed_work),
                 "--evidence-dir", str(proposed_evidence),
                 "--source-commit", source_commit,
