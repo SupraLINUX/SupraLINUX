@@ -82,6 +82,9 @@ for token in (
     '"${PRIV[@]}" sha256sum "${SOURCE_KERNEL}"',
     '"${PRIV[@]}" install -o "${TARGET_USER}" -g "${TARGET_GROUP}" -m 0600',
     '"${PRIV[@]}" chown "${TARGET_USER}:${TARGET_GROUP}" "${PROVENANCE_TMP}"',
+    'KERNEL_TMP="${RUNTIME_DIR}/vmlinuz.tmp.${BASHPID}"',
+    'cleanup_kernel_tmp()',
+    'trap cleanup_kernel_tmp EXIT',
 ):
     if token not in prepare_helper:
         raise SystemExit(f"missing libguestfs prepare privilege contract: {token}")
