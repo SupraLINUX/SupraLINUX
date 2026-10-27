@@ -22,8 +22,8 @@ for token in (
     '"canonical_package_state_effect": "none"',
     '"apt-ftparchive"',
     '"dpkg-deb"',
-    '"plan-supralinux-proposed.py"',
-    '"build-supralinux-proposed.py"',
+    "scripts/plan-supralinux-proposed.py",
+    "scripts/build-supralinux-proposed.py",
     'if built != planned:',
 ):
     if token not in helper:
