@@ -183,6 +183,9 @@ jobs:
       - name: Test exact predecessor APT-view mechanism
         run: python3 scripts/test-reviewed-predecessor-apt-view.py
 
+      - name: Test SupraLINUX-proposed integration repository contract
+        run: python3 scripts/test-supralinux-proposed.py
+
       - name: Test FAST package preflight contract
         run: python3 scripts/test-fast-package-preflight.py
 

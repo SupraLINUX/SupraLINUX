@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "state": "prepared-inactive",
+  "role": "internal-integration-repository",
+  "name": "SupraLINUX-proposed",
+  "suite": "resolute-supralinux-proposed",
+  "component": "main",
+  "architectures": [
+    "amd64"
+  ],
+  "active": false,
+  "current_plasma_campaign_unchanged": true,
+  "apt_stack": [
+    "Ubuntu Resolute campaign inputs",
+    "admitted Frameworks 6.30 milestone repository",
+    "SupraLINUX-proposed Plasma overlay"
+  ],
+  "candidate_policy": {
+    "source_manifest": "manifests/kde-plasma-package-build.json",
+    "require_node_state": "PASS",
+    "require_pass_attempt": true,
+    "require_canonical_evidence_match": true,
+    "reject_compatibility_hold": true,
+    "reject_pending_or_failed": true,
+    "exact_artifact_sha256": true,
+    "exact_source_version_architecture": true
+  },
+  "repository_policy": {
+    "include_binary_indices": true,
+    "include_source_indices": true,
+    "release_metadata": true,
+    "signed_before_activation": true,
+    "unsigned_mode": "certification-only",
+    "stable_publication_authorized": false
+  },
+  "integration_gates": [
+    "apt_solvability",
+    "clean_install",
+    "upgrade_from_ubuntu",
+    "dependency_closure",
+    "abi_and_plugins",
+    "representative_apps",
+    "wayland_session",
+    "integration_image"
+  ],
+  "promotion": {
+    "proposed_to_campaign_milestone": "automatic only after all integration gates PASS",
+    "proposed_to_stable": "never automatic",
+    "stable_publication_requires_explicit_confirmation": true
+  },
+  "rollout": {
+    "phase_1": "plan current historical PASS set",
+    "phase_2": "build unsigned local certification repo",
+    "phase_3": "sign ephemeral certification repo with dedicated test key",
+    "phase_4": "APT solver/install/upgrade/integration-image certification",
+    "phase_5": "activate as pipeline target for new PASS packages"
+  }
+}
