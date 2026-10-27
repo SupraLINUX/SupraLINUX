@@ -37,6 +37,26 @@ with tempfile.TemporaryDirectory() as directory:
     assert result["backend"] == "qemu"
     assert result["qemu_required_restrictions"] == ["isolation-machine"]
 
+    container = root / "container.control"
+    container.write_text(
+        "Tests: service-manager\n"
+        "Depends: @\n"
+        "Restrictions: isolation-container\n"
+    )
+    result = module.classify(container)
+    assert result["backend"] == "qemu"
+    assert result["qemu_required_restrictions"] == ["isolation-container"]
+
+    destructive = root / "breaks.control"
+    destructive.write_text(
+        "Tests: destructive\n"
+        "Depends: @\n"
+        "Restrictions: breaks-testbed\n"
+    )
+    result = module.classify(destructive)
+    assert result["backend"] == "qemu"
+    assert result["qemu_required_restrictions"] == ["breaks-testbed"]
+
     unknown = root / "unknown.control"
     unknown.write_text(
         "Tests: future\n"

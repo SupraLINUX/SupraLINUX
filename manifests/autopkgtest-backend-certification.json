@@ -20,6 +20,8 @@
   "backend_policy": {
     "default_candidate": "unshare",
     "qemu_fallback_restrictions": [
+      "breaks-testbed",
+      "isolation-container",
       "isolation-machine",
       "needs-reboot",
       "needs-reboot-without-mark"

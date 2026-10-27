@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 QEMU_ONLY_RESTRICTIONS = {
+    "breaks-testbed",
     "isolation-machine",
     "needs-reboot",
     "needs-reboot-without-mark",
