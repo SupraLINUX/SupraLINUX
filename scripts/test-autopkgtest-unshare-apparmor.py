@@ -15,6 +15,9 @@ for token in (
     "@{exec_path} mrix,",
     "/usr/bin/unshare ix,",
     "userns,",
+    "mount,",
+    "umount,",
+    "pivot_root,",
 ):
     assert token in profile, f"missing AppArmor contract: {token}"
 for forbidden in (
