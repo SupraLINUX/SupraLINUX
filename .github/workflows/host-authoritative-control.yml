@@ -34,6 +34,12 @@ jobs:
           sudo -n install -o root -g root -m 0755 \
             scripts/host-close-package-evidence.py \
             /usr/local/libexec/supralinux-host-close-package-evidence
+          sudo -n install -o root -g root -m 0755 \
+            scripts/prepare-libguestfs-runtime.sh \
+            /usr/local/libexec/supralinux-prepare-libguestfs-runtime
+          sudo -n install -o root -g root -m 0755 \
+            scripts/with-libguestfs-runtime.sh \
+            /usr/local/libexec/supralinux-with-libguestfs-runtime
 
       - name: Validate authoritative control request
         shell: bash
@@ -59,7 +65,7 @@ jobs:
           assert not (set(request) - base_keys - evidence_keys)
           assert request.get("schema") == 1
           assert request.get("mode") in {
-              "diagnose", "repair-host", "preflight", "rebuild-golden", "execute",
+              "diagnose", "repair-host", "repair-libguestfs-runtime", "preflight", "rebuild-golden", "execute",
               "execute-and-publish-pass",
               "close-evidence-check", "close-evidence",
               "publish-evidence-check", "publish-evidence",
@@ -73,7 +79,7 @@ jobs:
               assert cancel_head is None
           else:
               assert isinstance(cancel_head, str) and re.fullmatch(r"[0-9a-f]{40}", cancel_head)
-          if request["mode"] in {"diagnose", "repair-host", "rebuild-golden", "execute", "execute-and-publish-pass", "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
+          if request["mode"] in {"diagnose", "repair-host", "repair-libguestfs-runtime", "rebuild-golden", "execute", "execute-and-publish-pass", "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
               assert cancel is None and cancel_head is None
           if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
               assert isinstance(request.get("evidence_node"), str)

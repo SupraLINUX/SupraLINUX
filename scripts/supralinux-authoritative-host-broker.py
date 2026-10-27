@@ -23,6 +23,8 @@ API_VERSION = "2026-03-10"
 CLOSE_EVIDENCE_HELPER = Path("/usr/local/libexec/supralinux-host-close-package-evidence")
 HOST_EVIDENCE_ROOT = Path("/var/lib/supralinux/evidence/host-kvm")
 PERSISTENT_ARTIFACT_ROOT = Path("/var/lib/supralinux/artifacts")
+LIBGUESTFS_PREPARE_HELPER = Path("/usr/local/libexec/supralinux-prepare-libguestfs-runtime")
+LIBGUESTFS_RUNTIME_HELPER = Path("/usr/local/libexec/supralinux-with-libguestfs-runtime")
 
 if os.geteuid() != 0:
     raise SystemExit("Authoritative host broker must run through sudo.")
@@ -47,7 +49,7 @@ if unknown:
 if request.get("schema") != 1:
     raise SystemExit("Unsupported request schema.")
 if request.get("mode") not in {
-    "diagnose", "repair-host", "preflight", "rebuild-golden", "execute",
+    "diagnose", "repair-host", "repair-libguestfs-runtime", "preflight", "rebuild-golden", "execute",
     "execute-and-publish-pass",
     "close-evidence-check", "close-evidence",
     "publish-evidence-check", "publish-evidence",
@@ -142,7 +144,7 @@ else:
         raise SystemExit("Evidence closure fields are valid only for evidence closure modes.")
 
 if request["mode"] in {
-    "diagnose", "repair-host", "rebuild-golden", "execute", "execute-and-publish-pass",
+    "diagnose", "repair-host", "repair-libguestfs-runtime", "rebuild-golden", "execute", "execute-and-publish-pass",
     "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence",
 } and (
     cancel_run_id is not None or cancel_run_head_sha is not None
@@ -734,6 +736,50 @@ write_result(
     "kvm-runtime-admission.json",
     json.dumps(kvm_runtime_result, indent=2, sort_keys=True) + "\n",
 )
+if request["mode"] == "repair-libguestfs-runtime":
+    repair = run_as_operator(
+        [str(LIBGUESTFS_PREPARE_HELPER)],
+        extra_env={"SUPRALINUX_HOST_USER": operator.pw_name},
+        check=False,
+        capture_output=True,
+    )
+    write_result("libguestfs-runtime-repair.stdout", repair.stdout)
+    write_result("libguestfs-runtime-repair.stderr", repair.stderr)
+    verify = run_as_operator(
+        [str(LIBGUESTFS_RUNTIME_HELPER), "--describe"],
+        check=False,
+        capture_output=True,
+    )
+    write_result("libguestfs-runtime-verify.stdout", verify.stdout)
+    write_result("libguestfs-runtime-verify.stderr", verify.stderr)
+    state = "PASS" if repair.returncode == 0 and verify.returncode == 0 else "INFRA_INVALID"
+    write_result(
+        "repair-libguestfs-runtime-result.txt",
+        "\n".join(
+            [
+                f"state={state}",
+                f"repair_exit_code={repair.returncode}",
+                f"verify_exit_code={verify.returncode}",
+                f"source_commit={source_commit}",
+                f"operator_user={operator.pw_name}",
+                "scope=libguestfs-private-kernel-runtime-refresh",
+                "github_token_requested=no",
+                "github_api_mutation=no",
+                "persistent_change=true",
+                "vm_created=no",
+                "jit_invoked=no",
+                "package_attempt_effect=none",
+                "",
+            ]
+        ),
+    )
+    if repair.returncode != 0:
+        raise SystemExit(repair.returncode)
+    if verify.returncode != 0:
+        raise SystemExit(verify.returncode)
+    print("HOST_LIBGUESTFS_RUNTIME_REPAIR=PASS")
+    raise SystemExit(0)
+
 if request["mode"] == "repair-host":
     repair = subprocess.run(
         ["/usr/local/libexec/supralinux-restore-kvm-host-network-safety"],
