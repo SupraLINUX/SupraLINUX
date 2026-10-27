@@ -22,7 +22,7 @@ test -f "${QEMU_IMAGE}"
 test "$(systemd-detect-virt --vm)" = "kvm"
 
 mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --components=main,universe \
-    --skip=output/mknod --format=tar resolute "${ROOTFS}" \
+    --skip=output/mknod --skip=cleanup/apt/lists --format=tar resolute "${ROOTFS}" \
     "deb ${MIRROR} resolute main universe" \
     "deb ${MIRROR} resolute-updates main universe" \
     "deb ${MIRROR} resolute-security main universe" \
