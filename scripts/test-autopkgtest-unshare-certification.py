@@ -89,16 +89,19 @@ for token in (
     '"production_backend_changed": False',
     'one-real-package-canary-before-default-rollout',
     'unshare-security-contract.txt',
-    'unshare-mount-preflight-result.txt',
     'backend-exit-codes.txt',
     'kernel-security-events.txt',
-    'unshare --user --map-auto --map-root-user --mount -- true',
+    'profile_attachment=/usr/bin/autopkgtest-virt-unshare',
+    'profile_mode=unconfined-with-userns-exception',
 ):
     assert token in certifier, f"missing certification contract: {token}"
 for forbidden in (
     "run-authoritative-plasma-package.sh",
     "sbuild --",
     "execute-and-publish-pass",
+    "aa-exec",
+    "unshare-mount-preflight",
+    "unshare --user --map-auto --map-root-user --mount -- true",
 ):
     assert forbidden not in certifier, f"certifier crosses package boundary: {forbidden}"
 
