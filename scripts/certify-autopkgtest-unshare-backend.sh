@@ -10,6 +10,8 @@ DEB="${WORK}/supralinux-autopkgtest-backend-fixture_1.0_all.deb"
 ROOTFS="${WORK}/resolute-amd64.tar"
 QEMU_IMAGE="${AUTOPKGTEST_QEMU_IMAGE:-/var/lib/supralinux/autopkgtest/resolute-amd64.img}"
 MIRROR="${SBUILD_MIRROR:-https://archive.ubuntu.com/ubuntu}"
+UNSHARE_PRIVATE_DIR="/usr/local/libexec/supralinux-autopkgtest"
+UNSHARE_PRIVATE="${UNSHARE_PRIVATE_DIR}/unshare"
 
 rm -rf "${WORK}" "${EVIDENCE}"
 mkdir -p "${FIXTURE}/debian/tests" "${PKGROOT}/DEBIAN"     "${PKGROOT}/usr/share/supralinux-autopkgtest-backend-fixture" "${EVIDENCE}"
@@ -18,6 +20,8 @@ for command_name in autopkgtest autopkgtest-virt-unshare dpkg-deb mmdebstrap pyt
     command -v "${command_name}" >/dev/null
 done
 unshare --user --map-auto true
+test -x "${UNSHARE_PRIVATE}"
+test "$(PATH="${UNSHARE_PRIVATE_DIR}:${PATH}" command -v unshare)" = "${UNSHARE_PRIVATE}"
 test -f "${QEMU_IMAGE}"
 test "$(systemd-detect-virt --vm)" = "kvm"
 
@@ -31,8 +35,11 @@ test "$(systemd-detect-virt --vm)" = "kvm"
     echo "newgidmap=$(command -v newgidmap)"
     grep -E "^$(id -un):" /etc/subuid /etc/subgid || true
     sudo -n aa-status 2>&1 | grep -F 'supralinux-autopkgtest-virt-unshare' || true
-    printf 'profile_attachment=/usr/bin/autopkgtest-virt-unshare\n'
-    printf 'profile_mode=unconfined-with-userns-exception\n'
+    printf 'profile_attachment=%s\n' "${UNSHARE_PRIVATE}"
+    printf 'profile_mode=private-unshare-unconfined-with-userns-exception\n'
+    printf 'system_unshare=%s\n' "$(command -v unshare)"
+    printf 'private_unshare=%s\n' "${UNSHARE_PRIVATE}"
+    sha256sum /usr/bin/unshare "${UNSHARE_PRIVATE}"
     sha256sum /etc/apparmor.d/supralinux-autopkgtest-virt-unshare 2>/dev/null || true
 } > "${EVIDENCE}/unshare-security-contract.txt"
 
@@ -137,7 +144,8 @@ run_backend() {
         autopkgtest "${FIXTURE}/" "${DEB}"             --output-dir="${output}" --             qemu --qemu-command="${ROOT}/scripts/qemu-kvm-required.sh"             --qemu-architecture=x86_64 --cpus=2 --ram-size=2048 "${QEMU_IMAGE}"             > "${EVIDENCE}/qemu.log" 2>&1
         rc=$?
     else
-        autopkgtest "${FIXTURE}/" "${DEB}" \
+        PATH="${UNSHARE_PRIVATE_DIR}:${PATH}" \
+            autopkgtest "${FIXTURE}/" "${DEB}" \
             --output-dir="${output}" -- \
             unshare --arch amd64 --tarball "${ROOTFS}" \
             > "${EVIDENCE}/unshare.log" 2>&1

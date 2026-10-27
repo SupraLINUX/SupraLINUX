@@ -85,6 +85,15 @@ PY
 command -v newuidmap >/dev/null
 command -v newgidmap >/dev/null
 
+UNSHARE_SOURCE="$(command -v unshare)"
+UNSHARE_PRIVATE_DIR="/usr/local/libexec/supralinux-autopkgtest"
+UNSHARE_PRIVATE="${UNSHARE_PRIVATE_DIR}/unshare"
+test "${UNSHARE_SOURCE}" = "/usr/bin/unshare"
+sudo install -d -o root -g root -m 0755 "${UNSHARE_PRIVATE_DIR}"
+sudo install -o root -g root -m 0755 "${UNSHARE_SOURCE}" "${UNSHARE_PRIVATE}"
+test "$(sha256sum "${UNSHARE_SOURCE}" | awk '{print $1}')" = \
+     "$(sha256sum "${UNSHARE_PRIVATE}" | awk '{print $1}')"
+
 APPARMOR_PROFILE_SOURCE="${ROOT}/ops/apparmor/supralinux-autopkgtest-virt-unshare"
 APPARMOR_PROFILE_TARGET="/etc/apparmor.d/supralinux-autopkgtest-virt-unshare"
 test -f "${APPARMOR_PROFILE_SOURCE}"
@@ -128,6 +137,11 @@ SUPRALINUX_RUNNER_USER="${TARGET_USER}" "${ROOT}/scripts/install-actions-runner.
         qemu-system-x86 qemu-utils qt6-base-dev sbuild uidmap ubuntu-keyring
     printf '\nsubordinate_ids:\n'
     grep -E "^${TARGET_USER}:" /etc/subuid /etc/subgid
+    printf '\nautopkgtest_unshare_private_binary:\n'
+    printf 'source=%s\n' "${UNSHARE_SOURCE}"
+    printf 'private=%s\n' "${UNSHARE_PRIVATE}"
+    sha256sum "${UNSHARE_SOURCE}" "${UNSHARE_PRIVATE}"
+    dpkg-query -S "${UNSHARE_SOURCE}" || true
     printf '\nautopkgtest_unshare_apparmor:\n'
     sha256sum "${APPARMOR_PROFILE_TARGET}"
     aa-status | grep -F 'supralinux-autopkgtest-virt-unshare' || true

@@ -6,6 +6,8 @@ EVIDENCE="${ROOT}/evidence/runner-contract/autopkgtest-unshare-real-canary"
 WORK="${ROOT}/.work/autopkgtest-unshare-real-canary"
 ROOTFS="${ROOT}/.work/autopkgtest-unshare-certification/resolute-amd64.tar"
 QEMU_IMAGE="${AUTOPKGTEST_QEMU_IMAGE:-/var/lib/supralinux/autopkgtest/resolute-amd64.img}"
+UNSHARE_PRIVATE_DIR="/usr/local/libexec/supralinux-autopkgtest"
+UNSHARE_PRIVATE="${UNSHARE_PRIVATE_DIR}/unshare"
 NODE="ocean-sound-theme"
 VERSION="6.7.5-0supralinux1"
 ARTIFACT_ID="11317894456"
@@ -23,6 +25,8 @@ for command_name in autopkgtest curl python3 sha256sum; do
     command -v "${command_name}" >/dev/null
 done
 test -f "${ROOTFS}"
+test -x "${UNSHARE_PRIVATE}"
+test "$(PATH="${UNSHARE_PRIVATE_DIR}:${PATH}" command -v unshare)" = "${UNSHARE_PRIVATE}"
 test -f "${QEMU_IMAGE}"
 test "$(systemd-detect-virt --vm)" = "kvm"
 
@@ -145,7 +149,8 @@ run_backend() {
             > "${EVIDENCE}/qemu.log" 2>&1
         rc=$?
     else
-        autopkgtest "${DSC}" "${DEB}" \
+        PATH="${UNSHARE_PRIVATE_DIR}:${PATH}" \
+            autopkgtest "${DSC}" "${DEB}" \
             --setup-commands="${SETUP}" \
             --output-dir="${output}" -- \
             unshare --arch amd64 --tarball "${ROOTFS}" \

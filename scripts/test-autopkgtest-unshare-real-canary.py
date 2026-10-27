@@ -24,6 +24,8 @@ for token in (
     'expected = {"sound-resources", "ubuntu-upgrade"}',
     'run_backend qemu',
     'run_backend unshare',
+    'UNSHARE_PRIVATE_DIR="/usr/local/libexec/supralinux-autopkgtest"',
+    'PATH="${UNSHARE_PRIVATE_DIR}:${PATH}"',
 ):
     assert token in script, f"real canary missing contract: {token}"
 

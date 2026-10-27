@@ -83,6 +83,9 @@ for token in (
     'run_backend qemu',
     'run_backend unshare',
     'unshare --arch amd64 --tarball',
+    'UNSHARE_PRIVATE_DIR="/usr/local/libexec/supralinux-autopkgtest"',
+    'PATH="${UNSHARE_PRIVATE_DIR}:${PATH}"',
+    'sha256sum /usr/bin/unshare "${UNSHARE_PRIVATE}"',
     '"normalized_results_equal": True',
     '"package_attempt_consumed": False',
     '"sbuild_invoked": False',
@@ -91,8 +94,8 @@ for token in (
     'unshare-security-contract.txt',
     'backend-exit-codes.txt',
     'kernel-security-events.txt',
-    'profile_attachment=/usr/bin/autopkgtest-virt-unshare',
-    'profile_mode=unconfined-with-userns-exception',
+    'profile_attachment=%s',
+    'profile_mode=private-unshare-unconfined-with-userns-exception',
 ):
     assert token in certifier, f"missing certification contract: {token}"
 for forbidden in (

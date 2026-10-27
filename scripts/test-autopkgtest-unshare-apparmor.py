@@ -9,7 +9,7 @@ DIGEST = ROOT / "scripts/golden-image-input-digest.sh"
 profile = PROFILE.read_text()
 for token in (
     "abi <abi/5.0>,",
-    "profile supralinux-autopkgtest-virt-unshare /usr/bin/autopkgtest-virt-unshare flags=(unconfined)",
+    "profile supralinux-autopkgtest-virt-unshare /usr/local/libexec/supralinux-autopkgtest/unshare flags=(unconfined)",
     "userns,",
 ):
     assert token in profile, f"missing AppArmor contract: {token}"
@@ -17,6 +17,7 @@ for forbidden in (
     "deny userns",
     "kernel.apparmor_restrict_unprivileged_userns=0",
     "profile supralinux-autopkgtest-virt-unshare /usr/bin/unshare",
+    "profile supralinux-autopkgtest-virt-unshare /usr/bin/autopkgtest-virt-unshare",
     "/usr/bin/unshare ix,",
     "mount,",
     "pivot_root,",
@@ -41,6 +42,10 @@ for token in (
     'sudo apparmor_parser -r "${APPARMOR_PROFILE_TARGET}"',
     'test "$(cat /proc/sys/kernel/apparmor_restrict_unprivileged_userns)" = "1"',
     "sudo aa-status | grep -Fq \'supralinux-autopkgtest-virt-unshare\'",
+    'UNSHARE_PRIVATE_DIR="/usr/local/libexec/supralinux-autopkgtest"',
+    'UNSHARE_PRIVATE="${UNSHARE_PRIVATE_DIR}/unshare"',
+    'sudo install -o root -g root -m 0755 "${UNSHARE_SOURCE}" "${UNSHARE_PRIVATE}"',
+    'test "$(sha256sum "${UNSHARE_SOURCE}" | awk',
 ):
     assert token in provision, f"golden provisioning misses userns contract: {token}"
 assert "kernel.apparmor_restrict_unprivileged_userns=0" not in provision
@@ -49,8 +54,11 @@ assert "sysctl -w kernel.apparmor_restrict_unprivileged_userns=0" not in provisi
 certifier = (ROOT / "scripts/certify-autopkgtest-unshare-backend.sh").read_text()
 for token in (
     "unshare --arch amd64 --tarball",
-    "profile_attachment=/usr/bin/autopkgtest-virt-unshare",
-    "profile_mode=unconfined-with-userns-exception",
+    'UNSHARE_PRIVATE_DIR="/usr/local/libexec/supralinux-autopkgtest"',
+    'PATH="${UNSHARE_PRIVATE_DIR}:${PATH}"',
+    'sha256sum /usr/bin/unshare "${UNSHARE_PRIVATE}"',
+    "profile_attachment=%s",
+    "profile_mode=private-unshare-unconfined-with-userns-exception",
 ):
     assert token in certifier, f"certifier misses path-attached AppArmor contract: {token}"
 for forbidden in (
