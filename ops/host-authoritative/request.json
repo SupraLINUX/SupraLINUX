@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "mode": "repair-host",
-  "gate": "plasma-package-build",
+  "mode": "certify-proposed-content",
+  "gate": "supralinux-proposed",
   "runner_group_id": 3
 }

@@ -40,9 +40,6 @@ jobs:
           sudo -n install -o root -g root -m 0755 \
             scripts/with-libguestfs-runtime.sh \
             /usr/local/libexec/supralinux-with-libguestfs-runtime
-          sudo -n install -o root -g root -m 0755 \
-            scripts/ensure-authoritative-host-tools.sh \
-            /usr/local/libexec/supralinux-ensure-authoritative-host-tools
 
       - name: Validate authoritative control request
         shell: bash
