@@ -20,6 +20,22 @@ def latest_pass(record: dict) -> dict | None:
     return max(passes, key=lambda item: int(item["attempt"]))
 
 
+def has_verified_offline_artifact(record: dict, attempt: dict) -> bool:
+    evidence = record.get("evidence") or {}
+    local = evidence.get("local_retention") or {}
+    return (
+        attempt.get("artifact_origin") == "sealed-host-package-export"
+        and bool(attempt.get("artifact_sha256"))
+        and bool(local.get("archive_root"))
+        and local.get("source_complete") is True
+        and local.get("changes_complete") is True
+        and local.get("buildinfo_verified") is True
+        and local.get("artifact_zip_sha256_verified") is True
+        and local.get("offline_restore_verified") is True
+        and local.get("requires_github_for_restore") is False
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -58,7 +74,6 @@ def main() -> None:
         evidence = record.get("evidence") or {}
         if attempt is not None:
             for key in (
-                "artifact_id",
                 "artifact_sha256",
                 "result_path",
                 "result_sha256",
@@ -68,6 +83,15 @@ def main() -> None:
                     reasons.append(f"attempt_missing_{key}")
                 if evidence.get(key) != attempt.get(key):
                     reasons.append(f"evidence_attempt_{key}_mismatch")
+
+            artifact_id = attempt.get("artifact_id")
+            if evidence.get("artifact_id") != artifact_id:
+                reasons.append("evidence_attempt_artifact_id_mismatch")
+            if artifact_id is None:
+                if not has_verified_offline_artifact(record, attempt):
+                    reasons.append("no_verified_artifact_locator")
+            elif not isinstance(artifact_id, int) or artifact_id <= 0:
+                reasons.append("invalid_artifact_id")
         binaries = record.get("binary_packages") or {}
         if not binaries:
             reasons.append("no_binary_packages")
@@ -85,7 +109,11 @@ def main() -> None:
                 "architecture": "amd64",
                 "binary_packages": dict(sorted(binaries.items())),
                 "attempt": int(attempt["attempt"]),
-                "artifact_id": int(attempt["artifact_id"]),
+                "artifact_id": (
+                    int(attempt["artifact_id"])
+                    if attempt.get("artifact_id") is not None
+                    else None
+                ),
                 "artifact_sha256": attempt["artifact_sha256"],
                 "result_path": attempt["result_path"],
                 "result_sha256": attempt["result_sha256"],

@@ -32,6 +32,16 @@ with tempfile.TemporaryDirectory() as td:
     }
     actual = {item["node"] for item in payload["candidates"]}
     assert actual == expected, (sorted(expected - actual), sorted(actual - expected))
+
+    candidates = {item["node"]: item for item in payload["candidates"]}
+    for retained_only in ("kactivitymanagerd", "plasma-workspace-wallpapers"):
+        candidate = candidates[retained_only]
+        assert candidate["artifact_id"] is None
+        assert candidate["artifact_sha256"]
+        assert candidate["retention"]["artifact_zip_sha256_verified"] is True
+        assert candidate["retention"]["offline_restore_verified"] is True
+        assert candidate["retention"]["requires_github_for_restore"] is False
+
     assert "drkonqi" not in actual
     assert "kglobalacceld" not in actual
     assert "libksysguard" not in actual
