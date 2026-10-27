@@ -356,7 +356,7 @@ require('for group_name in kvm libvirt "${LIBVIRT_QEMU_GROUP}"' in host_provisio
 libguestfs_prepare = read_required("scripts/prepare-libguestfs-runtime.sh")
 for token, message in (
     ("/boot/vmlinuz-", "libguestfs runtime preparation must bind the current host kernel"),
-    ("sudo sha256sum", "libguestfs runtime preparation must hash the root-only host kernel"),
+    ('"${PRIV[@]}" sha256sum "${SOURCE_KERNEL}"', "libguestfs runtime preparation must hash the root-only host kernel through the reviewed privilege wrapper"),
     ("modules.dep", "libguestfs runtime preparation must bind the matching module tree"),
     ("kernel_sha256=", "libguestfs runtime preparation must record kernel provenance"),
 ):
