@@ -281,8 +281,8 @@ def source_date_epoch() -> int:
 def build_indices(repo: Path, suite: str) -> tuple[Path, Path]:
     binary_dir = repo / "dists" / suite / "main" / "binary-amd64"
     source_dir = repo / "dists" / suite / "main" / "source"
-    binary_dir.mkdir(parents=True)
-    source_dir.mkdir(parents=True)
+    binary_dir.mkdir(parents=True, exist_ok=True)
+    source_dir.mkdir(parents=True, exist_ok=True)
 
     packages = render_binary_packages(repo)
     sources = render_sources(repo)
