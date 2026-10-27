@@ -1,19 +1,14 @@
 # SupraLINUX authoritative runner profile for autopkgtest-virt-unshare.
-# Keep Ubuntu's global unprivileged-userns restriction enabled; grant userns
-# only to this reviewed testbed launcher and make /usr/bin/unshare inherit it.
+# Ubuntu keeps kernel.apparmor_restrict_unprivileged_userns=1 globally.
+# This reviewed executable gets the narrow userns exception recommended by
+# Ubuntu; child processes inherit this named unconfined profile unless a
+# more-specific profile applies.
 
 abi <abi/5.0>,
 include <tunables/global>
 
-profile supralinux-autopkgtest-virt-unshare flags=(attach_disconnected mediate_deleted) {
-  allow all,
-  /usr/bin/autopkgtest-virt-unshare rix,
-  /usr/bin/unshare ix,
-
+profile supralinux-autopkgtest-virt-unshare /usr/bin/autopkgtest-virt-unshare flags=(unconfined) {
   userns,
-  mount,
-  umount,
-  pivot_root,
 
   include if exists <local/supralinux-autopkgtest-virt-unshare>
 }

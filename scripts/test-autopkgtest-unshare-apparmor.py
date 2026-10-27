@@ -9,21 +9,17 @@ DIGEST = ROOT / "scripts/golden-image-input-digest.sh"
 profile = PROFILE.read_text()
 for token in (
     "abi <abi/5.0>,",
-    "profile supralinux-autopkgtest-virt-unshare flags=(attach_disconnected mediate_deleted)",
-    "/usr/bin/autopkgtest-virt-unshare rix,",
-    "flags=(attach_disconnected mediate_deleted)",
-    "allow all,",
-    "/usr/bin/unshare ix,",
+    "profile supralinux-autopkgtest-virt-unshare /usr/bin/autopkgtest-virt-unshare flags=(unconfined)",
     "userns,",
-    "mount,",
-    "umount,",
-    "pivot_root,",
 ):
     assert token in profile, f"missing AppArmor contract: {token}"
 for forbidden in (
-    "flags=(unconfined)",
     "deny userns",
     "kernel.apparmor_restrict_unprivileged_userns=0",
+    "profile supralinux-autopkgtest-virt-unshare /usr/bin/unshare",
+    "/usr/bin/unshare ix,",
+    "mount,",
+    "pivot_root,",
 ):
     assert forbidden not in profile, f"unsafe AppArmor profile construct: {forbidden}"
 
@@ -52,12 +48,17 @@ assert "sysctl -w kernel.apparmor_restrict_unprivileged_userns=0" not in provisi
 
 certifier = (ROOT / "scripts/certify-autopkgtest-unshare-backend.sh").read_text()
 for token in (
-    "aa-exec -p supralinux-autopkgtest-virt-unshare --",
-    "/usr/bin/autopkgtest-virt-unshare --arch amd64 --tarball",
-    "active_profile_probe=",
+    "unshare --arch amd64 --tarball",
+    "profile_attachment=/usr/bin/autopkgtest-virt-unshare",
+    "profile_mode=unconfined-with-userns-exception",
 ):
-    assert token in certifier, f"certifier misses explicit AppArmor transition: {token}"
-assert " --             unshare --arch amd64 --tarball " not in certifier
+    assert token in certifier, f"certifier misses path-attached AppArmor contract: {token}"
+for forbidden in (
+    "aa-exec",
+    "active_profile_probe=",
+    "unshare-mount-preflight",
+):
+    assert forbidden not in certifier, f"stale explicit AppArmor transition remains: {forbidden}"
 
 digest = DIGEST.read_text()
 assert "ops/apparmor/supralinux-autopkgtest-virt-unshare" in digest
