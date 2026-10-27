@@ -17,6 +17,7 @@ INPUTS=(
     ops/golden-bootstrap/supralinux-golden-bootstrap-guard.service
     ops/golden-bootstrap/supralinux-golden-bootstrap-verify.service
     scripts/provision-authoritative-runner-guest.sh
+    ops/apparmor/supralinux-autopkgtest-virt-unshare
     scripts/install-actions-runner.sh
     scripts/check-autopkgtest-workspace.sh
     scripts/prepare-autopkgtest-qemu-image.sh

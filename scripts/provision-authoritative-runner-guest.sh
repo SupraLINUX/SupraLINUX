@@ -31,6 +31,7 @@ printf 'Provisioning SupraLINUX authoritative runner guest for user %s...\n' "${
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     aptly \
+    apparmor \
     autopkgtest \
     build-essential \
     ca-certificates \
@@ -63,6 +64,38 @@ if ! grep -q "^${TARGET_USER}:" /etc/subgid; then
     sudo usermod --add-subgids 100000-165535 "${TARGET_USER}"
 fi
 
+python3 - "${TARGET_USER}" <<'PY'
+import sys
+from pathlib import Path
+
+user = sys.argv[1]
+for database in ("/etc/subuid", "/etc/subgid"):
+    ranges = []
+    for raw in Path(database).read_text().splitlines():
+        fields = raw.split(":")
+        if len(fields) != 3 or fields[0] != user:
+            continue
+        start, count = map(int, fields[1:])
+        ranges.append((start, count))
+    assert ranges, f"{database}: no subordinate range for {user}"
+    assert any(count >= 65536 for _, count in ranges), (
+        f"{database}: {user} lacks a >=65536 subordinate ID range: {ranges}"
+    )
+PY
+command -v newuidmap >/dev/null
+command -v newgidmap >/dev/null
+
+APPARMOR_PROFILE_SOURCE="${ROOT}/ops/apparmor/supralinux-autopkgtest-virt-unshare"
+APPARMOR_PROFILE_TARGET="/etc/apparmor.d/supralinux-autopkgtest-virt-unshare"
+test -f "${APPARMOR_PROFILE_SOURCE}"
+sudo apparmor_parser -Q "${APPARMOR_PROFILE_SOURCE}"
+sudo install -o root -g root -m 0644 "${APPARMOR_PROFILE_SOURCE}" "${APPARMOR_PROFILE_TARGET}"
+sudo apparmor_parser -r "${APPARMOR_PROFILE_TARGET}"
+if [[ -r /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]]; then
+    test "$(cat /proc/sys/kernel/apparmor_restrict_unprivileged_userns)" = "1"
+fi
+sudo aa-status | grep -Fq 'supralinux-autopkgtest-virt-unshare'
+
 if getent group kvm >/dev/null 2>&1; then
     sudo usermod -aG kvm "${TARGET_USER}"
 else
@@ -90,9 +123,15 @@ SUPRALINUX_RUNNER_USER="${TARGET_USER}" "${ROOT}/scripts/install-actions-runner.
     uname -a
     printf '\npackages:\n'
     dpkg-query -W -f='${Package}\t${Version}\n' \
-        aptly autopkgtest build-essential ca-certificates curl debhelper devscripts \
+        apparmor aptly autopkgtest build-essential ca-certificates curl debhelper devscripts \
         cmake dpkg-dev git genisoimage gnupg jq lintian mmdebstrap ninja-build openssh-server python3 qemu-guest-agent \
         qemu-system-x86 qemu-utils qt6-base-dev sbuild uidmap ubuntu-keyring
+    printf '\nsubordinate_ids:\n'
+    grep -E "^${TARGET_USER}:" /etc/subuid /etc/subgid
+    printf '\nautopkgtest_unshare_apparmor:\n'
+    sha256sum "${APPARMOR_PROFILE_TARGET}"
+    aa-status | grep -F 'supralinux-autopkgtest-virt-unshare' || true
+    printf 'apparmor_restrict_unprivileged_userns=%s\n' "$(cat /proc/sys/kernel/apparmor_restrict_unprivileged_userns 2>/dev/null || echo unavailable)"
     printf '\nautopkgtest_work_root:\n'
     stat -c 'mode=%a owner=%U group=%G path=%n' /var/lib/supralinux/autopkgtest/work
 } | sudo tee /var/lib/supralinux/evidence/runner-guest-provisioning.txt >/dev/null
