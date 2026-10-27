@@ -9,7 +9,8 @@ DIGEST = ROOT / "scripts/golden-image-input-digest.sh"
 profile = PROFILE.read_text()
 for token in (
     "abi <abi/5.0>,",
-    "profile supralinux-autopkgtest-virt-unshare /usr/bin/autopkgtest-virt-unshare",
+    "profile supralinux-autopkgtest-virt-unshare flags=(attach_disconnected mediate_deleted)",
+    "/usr/bin/autopkgtest-virt-unshare rix,",
     "flags=(attach_disconnected mediate_deleted)",
     "allow all,",
     "@{exec_path} mrix,",
@@ -49,6 +50,15 @@ for token in (
     assert token in provision, f"golden provisioning misses userns contract: {token}"
 assert "kernel.apparmor_restrict_unprivileged_userns=0" not in provision
 assert "sysctl -w kernel.apparmor_restrict_unprivileged_userns=0" not in provision
+
+certifier = (ROOT / "scripts/certify-autopkgtest-unshare-backend.sh").read_text()
+for token in (
+    "aa-exec -p supralinux-autopkgtest-virt-unshare --",
+    "/usr/bin/autopkgtest-virt-unshare --arch amd64 --tarball",
+    "active_profile_probe=",
+):
+    assert token in certifier, f"certifier misses explicit AppArmor transition: {token}"
+assert " --             unshare --arch amd64 --tarball " not in certifier
 
 digest = DIGEST.read_text()
 assert "ops/apparmor/supralinux-autopkgtest-virt-unshare" in digest

@@ -14,7 +14,7 @@ MIRROR="${SBUILD_MIRROR:-https://archive.ubuntu.com/ubuntu}"
 rm -rf "${WORK}" "${EVIDENCE}"
 mkdir -p "${FIXTURE}/debian/tests" "${PKGROOT}/DEBIAN"     "${PKGROOT}/usr/share/supralinux-autopkgtest-backend-fixture" "${EVIDENCE}"
 
-for command_name in autopkgtest autopkgtest-virt-unshare dpkg-deb mmdebstrap python3 unshare; do
+for command_name in aa-exec autopkgtest autopkgtest-virt-unshare dpkg-deb mmdebstrap python3 unshare; do
     command -v "${command_name}" >/dev/null
 done
 unshare --user --map-auto true
@@ -30,12 +30,15 @@ test "$(systemd-detect-virt --vm)" = "kvm"
     echo "newuidmap=$(command -v newuidmap)"
     echo "newgidmap=$(command -v newgidmap)"
     grep -E "^$(id -un):" /etc/subuid /etc/subgid || true
-    aa-status 2>&1 || true
+    sudo -n aa-status 2>&1 | grep -F 'supralinux-autopkgtest-virt-unshare' || true
+    printf 'active_profile_probe='
+    aa-exec -p supralinux-autopkgtest-virt-unshare -- sh -c 'cat /proc/self/attr/current'
     sha256sum /etc/apparmor.d/supralinux-autopkgtest-virt-unshare 2>/dev/null || true
 } > "${EVIDENCE}/unshare-security-contract.txt"
 
 set +e
-unshare --user --map-auto --map-root-user --mount -- true \
+aa-exec -p supralinux-autopkgtest-virt-unshare -- \
+    unshare --user --map-auto --map-root-user --mount -- true \
     > "${EVIDENCE}/unshare-mount-preflight.stdout" \
     2> "${EVIDENCE}/unshare-mount-preflight.stderr"
 UNSHARE_MOUNT_PREFLIGHT_RC=$?
@@ -144,7 +147,11 @@ run_backend() {
         autopkgtest "${FIXTURE}/" "${DEB}"             --output-dir="${output}" --             qemu --qemu-command="${ROOT}/scripts/qemu-kvm-required.sh"             --qemu-architecture=x86_64 --cpus=2 --ram-size=2048 "${QEMU_IMAGE}"             > "${EVIDENCE}/qemu.log" 2>&1
         rc=$?
     else
-        autopkgtest "${FIXTURE}/" "${DEB}"             --output-dir="${output}" --             unshare --arch amd64 --tarball "${ROOTFS}"             > "${EVIDENCE}/unshare.log" 2>&1
+        autopkgtest "${FIXTURE}/" "${DEB}" \
+            --output-dir="${output}" -- \
+            /usr/bin/aa-exec -p supralinux-autopkgtest-virt-unshare -- \
+            /usr/bin/autopkgtest-virt-unshare --arch amd64 --tarball "${ROOTFS}" \
+            > "${EVIDENCE}/unshare.log" 2>&1
         rc=$?
     fi
     set -e
