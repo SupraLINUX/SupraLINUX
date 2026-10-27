@@ -157,7 +157,7 @@ require("ubuntu-26.04" in repository_policy, "repository policy must use explici
 require("python3 scripts/check-source-syntax.py" in repository_policy, "repository policy must syntax-check all Python, Bash and JSON before execution")
 require("python3 scripts/test-ci-preflight.py" in repository_policy, "repository policy must test syntax, routing and artifact identity regressions")
 require("shellcheck -e SC1091 scripts/*.sh" in repository_policy, "repository policy must lint all shell scripts with ShellCheck")
-require("--no-install-recommends gnupg" in repository_policy, "repository policy must install Ubuntu gnupg for signed-metadata tests")
+require(re.search(r"apt-get install[^\\n]*--no-install-recommends[^\\n]*\\bgnupg\\b", repository_policy) is not None, "repository policy must install Ubuntu gnupg for signed-metadata tests")
 require("--no-install-recommends shellcheck" in repository_policy, "repository policy must install Ubuntu ShellCheck")
 require("scripts/test-qemu-kvm-required.sh" in repository_policy, "repository policy must functionally test the KVM-only QEMU wrapper")
 require("scripts/test-verify-ubuntu-cloud-image-provenance.sh" in repository_policy, "repository policy must functionally test signed Ubuntu source-image verification")
