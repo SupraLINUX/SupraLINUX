@@ -292,7 +292,23 @@ def stream_as_operator(args, log_path, *, cwd=None, extra_env=None, extra_groups
     return rc
 
 def prepare_control_checkout(checkout: Path) -> None:
-    prepare_control_checkout(checkout)
+    run_as_operator(["git", "init", "-q", str(checkout)])
+    run_as_operator(
+        ["git", "-C", str(checkout), "remote", "add", "origin", f"https://github.com/{REPOSITORY}.git"]
+    )
+    run_as_operator(
+        ["git", "-C", str(checkout), "fetch", "-q", "--depth=1", "origin", f"refs/pull/{PR_NUMBER}/head"]
+    )
+    run_as_operator(["git", "-C", str(checkout), "checkout", "-q", "--detach", "FETCH_HEAD"])
+    resolved_head = run_as_operator(
+        ["git", "-C", str(checkout), "rev-parse", "HEAD"]
+    ).stdout.strip()
+    if resolved_head != source_commit:
+        raise SystemExit("Ephemeral control checkout does not match source commit.")
+    if run_as_operator(
+        ["git", "-C", str(checkout), "status", "--porcelain", "--untracked-files=normal"]
+    ).stdout:
+        raise SystemExit("Ephemeral control checkout is not clean.")
 
 def run_package_closure(
     *,
@@ -876,21 +892,7 @@ control_dir.mkdir(mode=0o700)
 os.chown(control_dir, operator.pw_uid, operator.pw_gid)
 
 try:
-    run_as_operator(["git", "init", "-q", str(checkout)])
-    run_as_operator(
-        ["git", "-C", str(checkout), "remote", "add", "origin", f"https://github.com/{REPOSITORY}.git"]
-    )
-    run_as_operator(
-        ["git", "-C", str(checkout), "fetch", "-q", "--depth=1", "origin", f"refs/pull/{PR_NUMBER}/head"]
-    )
-    run_as_operator(["git", "-C", str(checkout), "checkout", "-q", "--detach", "FETCH_HEAD"])
-    resolved_head = run_as_operator(["git", "-C", str(checkout), "rev-parse", "HEAD"]).stdout.strip()
-    if resolved_head != source_commit:
-        raise SystemExit("Ephemeral control checkout does not match source commit.")
-    if run_as_operator(
-        ["git", "-C", str(checkout), "status", "--porcelain", "--untracked-files=normal"]
-    ).stdout:
-        raise SystemExit("Ephemeral control checkout is not clean.")
+    prepare_control_checkout(checkout)
 
     preflight_log = []
     for command in (

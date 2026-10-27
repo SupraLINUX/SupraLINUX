@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import ast
 import importlib.util
 import json
 import re
@@ -19,6 +20,43 @@ workflow = WORKFLOW.read_text()
 router = ROUTER.read_text()
 jit_core = JIT_CORE.read_text()
 request = json.loads(REQUEST.read_text())
+
+broker_tree = ast.parse(broker)
+prepare_functions = [
+    node
+    for node in broker_tree.body
+    if isinstance(node, ast.FunctionDef)
+    and node.name == "prepare_control_checkout"
+]
+if len(prepare_functions) != 1:
+    raise SystemExit("authoritative host broker must define exactly one prepare_control_checkout")
+prepare_function = prepare_functions[0]
+if any(
+    isinstance(node, ast.Call)
+    and isinstance(node.func, ast.Name)
+    and node.func.id == "prepare_control_checkout"
+    for node in ast.walk(prepare_function)
+):
+    raise SystemExit("prepare_control_checkout must not call itself")
+prepare_source = ast.get_source_segment(broker, prepare_function) or ""
+for token in (
+    '["git", "init", "-q", str(checkout)]',
+    '"refs/pull/{PR_NUMBER}/head"',
+    '"status", "--porcelain", "--untracked-files=normal"',
+):
+    if token not in prepare_source:
+        raise SystemExit(f"prepare_control_checkout is missing exact checkout contract: {token}")
+prepare_calls = [
+    node
+    for node in ast.walk(broker_tree)
+    if isinstance(node, ast.Call)
+    and isinstance(node.func, ast.Name)
+    and node.func.id == "prepare_control_checkout"
+]
+if len(prepare_calls) != 2:
+    raise SystemExit(
+        "prepare_control_checkout must be shared by diagnose and normal control execution"
+    )
 
 close_spec = importlib.util.spec_from_file_location(
     "host_close_package_evidence_test", CLOSE_HELPER
