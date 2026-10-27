@@ -6,6 +6,7 @@ from pathlib import Path
 
 QEMU_ONLY_RESTRICTIONS = {
     "breaks-testbed",
+    "isolation-container",
     "isolation-machine",
     "needs-reboot",
     "needs-reboot-without-mark",
@@ -14,7 +15,6 @@ UNSHARE_ALLOWED_RESTRICTIONS = {
     "allow-stderr",
     "flaky",
     "hint-testsuite-triggers",
-    "isolation-container",
     "needs-internet",
     "needs-root",
     "rw-build-tree",
