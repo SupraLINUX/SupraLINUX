@@ -116,6 +116,7 @@ mode_match = re.search(r'request\.get\("mode"\) in \{([^}]*)\}', router_text)
 expected_authoritative_modes = {
     "diagnose",
     "repair-host",
+    "repair-libguestfs-runtime",
     "preflight",
     "rebuild-golden",
     "execute",
