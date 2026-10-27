@@ -168,6 +168,18 @@ jobs:
       - name: Test retained real-package unshare canary
         run: python3 scripts/test-autopkgtest-unshare-real-canary.py
 
+      - name: Test frozen Ubuntu campaign snapshot mechanism
+        run: python3 scripts/test-ubuntu-campaign-snapshot.py
+
+      - name: Test authoritative slot coordinator
+        run: python3 scripts/test-authoritative-slot-coordinator.py
+
+      - name: Test exact predecessor APT-view mechanism
+        run: python3 scripts/test-reviewed-predecessor-apt-view.py
+
+      - name: Test FAST package preflight contract
+        run: python3 scripts/test-fast-package-preflight.py
+
       - name: Test signed Ubuntu source-image verification
         shell: bash
         run: scripts/test-verify-ubuntu-cloud-image-provenance.sh

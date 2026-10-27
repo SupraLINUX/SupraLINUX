@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "state": "prepared-inactive",
+  "role": "fast-package-preflight",
+  "authoritative": false,
+  "package_attempt_effect": "none",
+  "kvm_required": false,
+  "checks": [
+    "repository-package-contract",
+    "upstream-source-hash-and-signature",
+    "source-package-materialization",
+    "dpkg-source-hooks",
+    "autopkgtest-control-validation",
+    "static-upstream-test-network-review"
+  ],
+  "explicit_non_goals": [
+    "package-build-certification",
+    "lintian-on-built-binaries",
+    "autopkgtest-execution",
+    "ABI-certification",
+    "release-evidence"
+  ],
+  "rollout": {
+    "production_changed": false,
+    "next_step": "hosted-workflow-certification",
+    "speculative_future_nodes_after_certification": true
+  }
+}
