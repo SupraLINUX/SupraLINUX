@@ -291,6 +291,9 @@ def stream_as_operator(args, log_path, *, cwd=None, extra_env=None, extra_groups
     os.chown(log_path, runner_pw.pw_uid, runner_pw.pw_gid)
     return rc
 
+def prepare_control_checkout(checkout: Path) -> None:
+    prepare_control_checkout(checkout)
+
 def run_package_closure(
     *,
     helper_mode,
@@ -454,11 +457,19 @@ write_result(
 )
 
 if request["mode"] == "diagnose":
-    def capture(label, args, *, as_operator=False, extra_groups=()):
+    diagnose_root = WORK_ROOT / control_run_id
+    diagnose_checkout = diagnose_root / "repo"
+    if diagnose_root.exists():
+        raise SystemExit(f"Diagnostic work directory already exists: {diagnose_root}")
+    diagnose_root.mkdir(mode=0o700)
+    os.chown(diagnose_root, operator.pw_uid, operator.pw_gid)
+
+    def capture(label, args, *, as_operator=False, extra_groups=(), cwd=None):
         try:
             if as_operator:
                 proc = run_as_operator(
                     args,
+                    cwd=cwd,
                     extra_groups=extra_groups,
                     check=False,
                     capture_output=True,
@@ -466,6 +477,7 @@ if request["mode"] == "diagnose":
             else:
                 proc = subprocess.run(
                     args,
+                    cwd=cwd,
                     check=False,
                     capture_output=True,
                     text=True,
@@ -492,7 +504,25 @@ if request["mode"] == "diagnose":
             )
 
 
+    prepare_control_checkout(diagnose_checkout)
+
     sections = []
+    sections.append(
+        capture(
+            "operator-diagnostic-checkout-head",
+            ["git", "rev-parse", "HEAD"],
+            as_operator=True,
+            cwd=diagnose_checkout,
+        )
+    )
+    sections.append(
+        capture(
+            "operator-diagnostic-checkout-status",
+            ["git", "status", "--porcelain", "--untracked-files=normal"],
+            as_operator=True,
+            cwd=diagnose_checkout,
+        )
+    )
     sections.append(capture("root-id", ["id", "-a"]))
     sections.append(capture("operator-id-normal", ["id", "-a"], as_operator=True))
     sections.append(
@@ -551,6 +581,7 @@ if request["mode"] == "diagnose":
             ["scripts/check-kvm-host.sh"],
             as_operator=True,
             extra_groups=privileged_groups,
+            cwd=diagnose_checkout,
         )
     )
     sections.append(
@@ -559,6 +590,7 @@ if request["mode"] == "diagnose":
             ["python3", "scripts/check-kvm-network.py", "--userspace"],
             as_operator=True,
             extra_groups=privileged_groups,
+            cwd=diagnose_checkout,
         )
     )
     sections.append(capture("host-default-routes", ["ip", "-json", "route", "show", "default"]))
@@ -647,6 +679,7 @@ if request["mode"] == "diagnose":
         )
 
     write_result("kvm-access-diagnostic.txt", "\n".join(sections))
+    shutil.rmtree(diagnose_root)
     write_result(
         "diagnose-result.txt",
         "\n".join(
