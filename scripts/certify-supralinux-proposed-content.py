@@ -23,6 +23,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkout", type=Path, required=True)
     parser.add_argument("--artifact-root", type=Path, required=True)
+    parser.add_argument("--frameworks-archive", type=Path, required=True)
     parser.add_argument("--work-dir", type=Path, required=True)
     parser.add_argument("--evidence-dir", type=Path, required=True)
     parser.add_argument("--source-commit", required=True)
@@ -57,9 +58,25 @@ def main() -> None:
         or archive_rel.parts[0] != ".artifacts"
         or any(part in {"", ".", ".."} for part in archive_rel.parts)
     ):
-        raise SystemExit("invalid retained Frameworks archive root")
-    frameworks_archive = args.artifact_root.joinpath(*archive_rel.parts[1:])
-    frameworks_index = frameworks_archive / retained["archive_index"]
+        raise SystemExit("invalid retained Frameworks logical archive root")
+
+    frameworks_archive = args.frameworks_archive
+    if (
+        not frameworks_archive.is_absolute()
+        or any(part in {"", ".", ".."} for part in frameworks_archive.parts)
+        or frameworks_archive.is_symlink()
+        or not frameworks_archive.is_dir()
+    ):
+        raise SystemExit("invalid retained Frameworks host archive root")
+    resolved_frameworks_archive = frameworks_archive.resolve()
+    if resolved_frameworks_archive != frameworks_archive:
+        raise SystemExit("retained Frameworks host archive root must not traverse symlinks")
+    frameworks_archive = resolved_frameworks_archive
+
+    archive_index = Path(retained["archive_index"])
+    if archive_index.parts != ("index.json",):
+        raise SystemExit("invalid retained Frameworks archive index path")
+    frameworks_index = frameworks_archive / archive_index
     if not frameworks_index.is_file() or frameworks_index.is_symlink():
         raise SystemExit("retained Frameworks archive index is missing")
     if sha256(frameworks_index) != retained["archive_index_sha256"]:
@@ -187,6 +204,8 @@ def main() -> None:
         "excluded_count": len(plan_payload.get("excluded", [])),
         "frameworks_pass_nodes": plan_payload["base_stack"]["frameworks_pass_nodes"],
         "frameworks_archive_index_sha256": sha256(frameworks_index),
+        "frameworks_archive_logical_root": retained["archive_root"],
+        "frameworks_archive_host_root": str(frameworks_archive),
         "frameworks_artifacts_verified": verified_frameworks,
         "frameworks_requires_github_for_restore": False,
         "plan_sha256": sha256(plan),

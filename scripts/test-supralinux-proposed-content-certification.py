@@ -11,6 +11,9 @@ broker = BROKER.read_text()
 for token in (
     '"--unsigned-certification"',
     '"artifact_root_persistent": True',
+    '"--frameworks-archive"',
+    '"frameworks_archive_host_root": str(frameworks_archive)',
+    '"frameworks_archive_logical_root": retained["archive_root"]',
     '"frameworks_artifacts_verified": verified_frameworks',
     '"frameworks_requires_github_for_restore": False',
     '"manifests/retained-package-artifacts.json"',
@@ -49,6 +52,8 @@ for token in (
     '"sbuild_invoked=no"',
     '"package_attempt_effect=none"',
     'PERSISTENT_ARTIFACT_ROOT',
+    'FRAMEWORKS_RETAINED_ARTIFACT_ROOT = Path("/var/lib/supralinux/milestone-cache/frameworks-6.30/retained-artifacts")',
+    '"--frameworks-archive", str(FRAMEWORKS_RETAINED_ARTIFACT_ROOT)',
     'prepare_control_checkout(proposed_checkout)',
 ):
     if token not in broker:

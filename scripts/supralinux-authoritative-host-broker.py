@@ -23,6 +23,7 @@ API_VERSION = "2026-03-10"
 CLOSE_EVIDENCE_HELPER = Path("/usr/local/libexec/supralinux-host-close-package-evidence")
 HOST_EVIDENCE_ROOT = Path("/var/lib/supralinux/evidence/host-kvm")
 PERSISTENT_ARTIFACT_ROOT = Path("/var/lib/supralinux/artifacts")
+FRAMEWORKS_RETAINED_ARTIFACT_ROOT = Path("/var/lib/supralinux/milestone-cache/frameworks-6.30/retained-artifacts")
 LIBGUESTFS_PREPARE_HELPER = Path("/usr/local/libexec/supralinux-prepare-libguestfs-runtime")
 LIBGUESTFS_RUNTIME_HELPER = Path("/usr/local/libexec/supralinux-with-libguestfs-runtime")
 
@@ -374,12 +375,15 @@ if request["mode"] == "certify-proposed-content":
         prepare_control_checkout(proposed_checkout)
         run_as_operator(["test", "-d", str(PERSISTENT_ARTIFACT_ROOT)])
         run_as_operator(["test", "-r", str(PERSISTENT_ARTIFACT_ROOT)])
+        run_as_operator(["test", "-d", str(FRAMEWORKS_RETAINED_ARTIFACT_ROOT)])
+        run_as_operator(["test", "-r", str(FRAMEWORKS_RETAINED_ARTIFACT_ROOT / "index.json")])
         proposed_rc = stream_as_operator(
             [
                 "python3",
                 "scripts/certify-supralinux-proposed-content.py",
                 "--checkout", str(proposed_checkout),
                 "--artifact-root", str(PERSISTENT_ARTIFACT_ROOT),
+                "--frameworks-archive", str(FRAMEWORKS_RETAINED_ARTIFACT_ROOT),
                 "--work-dir", str(proposed_work),
                 "--evidence-dir", str(proposed_evidence),
                 "--source-commit", source_commit,
