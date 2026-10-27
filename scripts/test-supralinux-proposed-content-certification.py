@@ -11,6 +11,11 @@ broker = BROKER.read_text()
 for token in (
     '"--unsigned-certification"',
     '"artifact_root_persistent": True',
+    '"frameworks_artifacts_verified": verified_frameworks',
+    '"frameworks_requires_github_for_restore": False',
+    '"manifests/retained-package-artifacts.json"',
+    'sha256(frameworks_index) != retained["archive_index_sha256"]',
+    'archive_path.parts != ("sha256", f"{digest}.zip")',
     '"network_required": False',
     '"package_attempt_consumed": False',
     '"sbuild_invoked": False',

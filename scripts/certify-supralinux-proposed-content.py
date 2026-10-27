@@ -50,6 +50,56 @@ def main() -> None:
     if dirty:
         raise SystemExit("proposed certification checkout is not clean")
 
+    retained = json.loads((args.checkout / "manifests/retained-package-artifacts.json").read_text())
+    archive_rel = Path(retained["archive_root"])
+    if (
+        not archive_rel.parts
+        or archive_rel.parts[0] != ".artifacts"
+        or any(part in {"", ".", ".."} for part in archive_rel.parts)
+    ):
+        raise SystemExit("invalid retained Frameworks archive root")
+    frameworks_archive = args.artifact_root.joinpath(*archive_rel.parts[1:])
+    frameworks_index = frameworks_archive / retained["archive_index"]
+    if not frameworks_index.is_file() or frameworks_index.is_symlink():
+        raise SystemExit("retained Frameworks archive index is missing")
+    if sha256(frameworks_index) != retained["archive_index_sha256"]:
+        raise SystemExit("retained Frameworks archive index digest mismatch")
+    frameworks_payload = json.loads(frameworks_index.read_text())
+    if not (
+        frameworks_payload.get("artifact_count") == retained.get("artifact_count") == 65
+        and frameworks_payload.get("binary_count") == retained.get("binary_count_including_debug")
+        and frameworks_payload.get("source_complete_artifact_count") == retained.get("source_complete_artifact_count")
+        and frameworks_payload.get("legacy_source_gaps") == retained.get("legacy_source_gaps")
+        and frameworks_payload.get("requires_github_for_restore") is False
+        and retained.get("requires_github_for_restore") is False
+        and len(frameworks_payload.get("items", [])) == retained.get("artifact_count")
+    ):
+        raise SystemExit("retained Frameworks archive contract mismatch")
+
+    verified_frameworks = 0
+    seen_framework_nodes = set()
+    for item in frameworks_payload["items"]:
+        node = item.get("node")
+        digest = item.get("artifact_sha256")
+        archive_path = Path(item.get("archive_path", ""))
+        if (
+            not isinstance(node, str)
+            or not node
+            or node in seen_framework_nodes
+            or not isinstance(digest, str)
+            or len(digest) != 64
+            or any(ch not in "0123456789abcdef" for ch in digest)
+            or archive_path.parts != ("sha256", f"{digest}.zip")
+        ):
+            raise SystemExit("invalid retained Frameworks artifact index entry")
+        artifact = frameworks_archive / archive_path
+        if not artifact.is_file() or artifact.is_symlink() or sha256(artifact) != digest:
+            raise SystemExit(f"retained Frameworks artifact verification failed: {node}")
+        seen_framework_nodes.add(node)
+        verified_frameworks += 1
+    if verified_frameworks != 65:
+        raise SystemExit("retained Frameworks artifact count verification mismatch")
+
     config = json.loads((args.checkout / "manifests/supralinux-proposed.json").read_text())
     if not (
         config.get("state") == "prepared-inactive"
@@ -136,6 +186,9 @@ def main() -> None:
         "candidate_count": plan_payload["candidate_count"],
         "excluded_count": len(plan_payload.get("excluded", [])),
         "frameworks_pass_nodes": plan_payload["base_stack"]["frameworks_pass_nodes"],
+        "frameworks_archive_index_sha256": sha256(frameworks_index),
+        "frameworks_artifacts_verified": verified_frameworks,
+        "frameworks_requires_github_for_restore": False,
         "plan_sha256": sha256(plan),
         "repository_manifest_sha256": sha256(repository_manifest),
         "packages_sha256": sha256(packages),
