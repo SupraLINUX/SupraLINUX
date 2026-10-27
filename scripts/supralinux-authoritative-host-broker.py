@@ -838,6 +838,18 @@ if request["mode"] == "diagnose":
             as_operator=True,
         )
     )
+    sections.append(
+        capture(
+            "supralinux-proposed-retained-artifacts",
+            [
+                "python3",
+                "scripts/diagnose-supralinux-proposed-artifacts.py",
+                "--artifact-root", str(PERSISTENT_ARTIFACT_ROOT),
+            ],
+            as_operator=True,
+            cwd=diagnose_checkout,
+        )
+    )
     kernel_release = os.uname().release
     runtime_dir = Path("/var/lib/supralinux/images/libguestfs-runtime") / kernel_release
     runtime_provenance = runtime_dir / "provenance.txt"
