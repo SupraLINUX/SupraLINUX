@@ -88,6 +88,11 @@ for token in (
     '"sbuild_invoked": False',
     '"production_backend_changed": False',
     'one-real-package-canary-before-default-rollout',
+    'unshare-security-contract.txt',
+    'unshare-mount-preflight-result.txt',
+    'backend-exit-codes.txt',
+    'kernel-security-events.txt',
+    'unshare --user --map-auto --map-root-user --mount -- true',
 ):
     assert token in certifier, f"missing certification contract: {token}"
 for forbidden in (

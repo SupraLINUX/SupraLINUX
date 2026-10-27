@@ -21,6 +21,28 @@ unshare --user --map-auto true
 test -f "${QEMU_IMAGE}"
 test "$(systemd-detect-virt --vm)" = "kvm"
 
+{
+    echo "uid=$(id -u)"
+    echo "user=$(id -un)"
+    echo "virtualization=$(systemd-detect-virt --vm)"
+    printf 'apparmor_restrict_unprivileged_userns='
+    cat /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+    echo "newuidmap=$(command -v newuidmap)"
+    echo "newgidmap=$(command -v newgidmap)"
+    grep -E "^$(id -un):" /etc/subuid /etc/subgid || true
+    aa-status 2>&1 || true
+    sha256sum /etc/apparmor.d/supralinux-autopkgtest-virt-unshare 2>/dev/null || true
+} > "${EVIDENCE}/unshare-security-contract.txt"
+
+set +e
+unshare --user --map-auto --map-root-user --mount -- true \
+    > "${EVIDENCE}/unshare-mount-preflight.stdout" \
+    2> "${EVIDENCE}/unshare-mount-preflight.stderr"
+UNSHARE_MOUNT_PREFLIGHT_RC=$?
+set -e
+printf 'exit_code=%s\n' "${UNSHARE_MOUNT_PREFLIGHT_RC}" \
+    > "${EVIDENCE}/unshare-mount-preflight-result.txt"
+
 mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --components=main,universe \
     --skip=output/mknod --skip=cleanup/apt/lists --format=tar resolute "${ROOTFS}" \
     "deb ${MIRROR} resolute main universe" \
@@ -131,8 +153,20 @@ run_backend() {
     return "${rc}"
 }
 
-run_backend qemu
-run_backend unshare
+QEMU_RC=0
+UNSHARE_RC=0
+run_backend qemu || QEMU_RC=$?
+run_backend unshare || UNSHARE_RC=$?
+printf 'qemu_exit_code=%s\nunshare_exit_code=%s\n' "${QEMU_RC}" "${UNSHARE_RC}" \
+    > "${EVIDENCE}/backend-exit-codes.txt"
+sudo -n journalctl -k --since '-10 minutes' --no-pager 2>/dev/null \
+    | grep -Ei 'apparmor|audit|denied|userns|mount' \
+    > "${EVIDENCE}/kernel-security-events.txt" || true
+if (( QEMU_RC != 0 || UNSHARE_RC != 0 )); then
+    printf 'autopkgtest backend certification failed: qemu=%s unshare=%s\n' \
+        "${QEMU_RC}" "${UNSHARE_RC}" >&2
+    exit 20
+fi
 
 python3 - "${EVIDENCE}" "${ROOTFS}" "${QEMU_IMAGE}" <<'PY'
 import hashlib
