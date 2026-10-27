@@ -165,6 +165,9 @@ jobs:
       - name: Test autopkgtest backend certification policy
         run: python3 scripts/test-autopkgtest-unshare-certification.py
 
+      - name: Test authoritative stale-run blocking contract
+        run: python3 scripts/test-authoritative-stale-run-blocking.py
+
       - name: Test retained real-package unshare canary
         run: python3 scripts/test-autopkgtest-unshare-real-canary.py
 

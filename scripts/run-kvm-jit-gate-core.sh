@@ -546,7 +546,7 @@ fi
 
 printf 'Checking for stale/active authoritative workflow runs before creating a runner...\n'
 ACTIVE_RUNS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs?event=pull_request&per_page=100")"
-ACTIVE_AUTHORITATIVE="$(jq -c \
+ACTIVE_AUTHORITATIVE_CANDIDATES="$(jq -c \
     --arg runner_contract "${RUNNER_CONTRACT_WORKFLOW}" \
     --arg package_proof "${PACKAGE_PROOF_WORKFLOW}" \
     --arg frameworks_sample "${FRAMEWORKS_SAMPLE_WORKFLOW}" \
@@ -554,6 +554,29 @@ ACTIVE_AUTHORITATIVE="$(jq -c \
     --arg package_revalidation "${PACKAGE_REVALIDATION_WORKFLOW}" \
     '[.workflow_runs[] | select((.name == $runner_contract or .name == $package_proof or .name == $frameworks_sample or .name == $plasma_package or .name == $package_revalidation) and .status != "completed")]' \
     <<<"${ACTIVE_RUNS_JSON}")"
+
+ACTIVE_AUTHORITATIVE='[]'
+IGNORED_STALE_RUNS='[]'
+while IFS= read -r candidate; do
+    [[ -n "${candidate}" ]] || continue
+    CANDIDATE_ID="$(jq -r '.id' <<<"${candidate}")"
+    CANDIDATE_STATUS="$(jq -r '.status' <<<"${candidate}")"
+    CANDIDATE_JOBS_JSON="$(api GET "/repos/${REPOSITORY}/actions/runs/${CANDIDATE_ID}/jobs?per_page=100")"
+    CANDIDATE_JOB_COUNT="$(jq '.jobs | length' <<<"${CANDIDATE_JOBS_JSON}")"
+    CANDIDATE_UNFINISHED_JOBS="$(jq '[.jobs[] | select(.status != "completed")] | length' <<<"${CANDIDATE_JOBS_JSON}")"
+
+    if [[ "${CANDIDATE_STATUS}" == "queued" ]] || (( CANDIDATE_JOB_COUNT == 0 )) || (( CANDIDATE_UNFINISHED_JOBS > 0 )); then
+        ACTIVE_AUTHORITATIVE="$(jq -c --argjson run "${candidate}" '. + [$run]' <<<"${ACTIVE_AUTHORITATIVE}")"
+    else
+        IGNORED_STALE_RUNS="$(jq -c --argjson run "${candidate}" '. + [$run]' <<<"${IGNORED_STALE_RUNS}")"
+    fi
+done < <(jq -c '.[]' <<<"${ACTIVE_AUTHORITATIVE_CANDIDATES}")
+
+if (( $(jq 'length' <<<"${IGNORED_STALE_RUNS}") > 0 )); then
+    printf 'Ignoring authoritative workflow runs whose jobs are already all completed despite stale run status:\n'
+    jq -r '.[] | "  id=\(.id) name=\(.name) status=\(.status) url=\(.html_url)"' <<<"${IGNORED_STALE_RUNS}"
+fi
+
 if (( $(jq 'length' <<<"${ACTIVE_AUTHORITATIVE}") > 0 )); then
     printf 'Refusing to create a JIT runner while another authoritative workflow is active or queued:\n' >&2
     jq -r '.[] | "  id=\(.id) name=\(.name) status=\(.status) url=\(.html_url)"' <<<"${ACTIVE_AUTHORITATIVE}" >&2
