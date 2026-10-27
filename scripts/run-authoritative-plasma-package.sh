@@ -10,6 +10,8 @@ WORK="${ROOT}/.work/${EVIDENCE_NAME}"
 EVIDENCE="${ROOT}/evidence/${EVIDENCE_NAME}"
 MIRROR="${SBUILD_MIRROR:-https://archive.ubuntu.com/ubuntu}"
 TEST_IMAGE="${AUTOPKGTEST_QEMU_IMAGE:-/var/lib/supralinux/autopkgtest/resolute-amd64.img}"
+UNSHARE_PRIVATE_DIR="/usr/local/libexec/supralinux-autopkgtest"
+UNSHARE_PRIVATE="${UNSHARE_PRIVATE_DIR}/unshare"
 CHROOT="${HOME}/.cache/sbuild/resolute-amd64.tar"
 STATE="INFRA_INVALID"
 STAGE="initialization"
@@ -18,6 +20,8 @@ BUILD_RESULT="not-run"
 TEST_RESULT="not-run"
 LINTIAN_RESULT="not-run"
 PREFLIGHT_RESULT="not-run"
+SYSTEM_TEST_BACKEND="autopkgtest-qemu"
+SYSTEM_TEST_ACCELERATION="nested-kvm"
 STARTED="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 NODE=""
 PACKAGE_VERSION=""
@@ -28,10 +32,11 @@ finish() {
     local rc=$?
     trap - EXIT
     python3 - "${EVIDENCE}" "${STATE}" "${STAGE}" "${ATTEMPT}" "${BUILD_RESULT}" \
-        "${TEST_RESULT}" "${LINTIAN_RESULT}" "${PREFLIGHT_RESULT}" "${STARTED}" "${NODE}" "${PACKAGE_VERSION}" "${rc}" <<'PY'
+        "${TEST_RESULT}" "${LINTIAN_RESULT}" "${PREFLIGHT_RESULT}" "${STARTED}" "${NODE}" "${PACKAGE_VERSION}" \
+        "${SYSTEM_TEST_BACKEND}" "${SYSTEM_TEST_ACCELERATION}" "${rc}" <<'PY'
 import datetime, hashlib, json, os, subprocess, sys
 from pathlib import Path
-path, state, stage, attempt, build, tests, lintian, preflight, started, node, version, rc = sys.argv[1:]
+path, state, stage, attempt, build, tests, lintian, preflight, started, node, version, system_test_backend, system_test_acceleration, rc = sys.argv[1:]
 root = Path(path)
 payload = {
     "schema": 1, "node": node, "version": version, "state": state,
@@ -43,8 +48,8 @@ payload = {
     "package_attempt_consumed": attempt == "true", "sbuild_result": build,
     "lintian_result": lintian, "autopkgtest_result": tests,
     "input_preflight_result": preflight,
-    "sbuild_backend": "unshare", "system_test_backend": "autopkgtest-qemu",
-    "system_test_acceleration": "kvm-required", "release_publication": False,
+    "sbuild_backend": "unshare", "system_test_backend": system_test_backend,
+    "system_test_acceleration": system_test_acceleration, "release_publication": False,
     "files_sha256": {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
                      for p in sorted(root.rglob("*")) if p.is_file() and str(p.relative_to(root)) not in {"result.json", "pipeline.log"}},
 }
@@ -315,7 +320,6 @@ LINTIAN_RESULT="FAIL"
 lintian --fail-on error "${DSCS[0]}" "${CHANGES[0]}" |& tee "${EVIDENCE}/lintian.log"
 LINTIAN_RESULT="PASS"
 
-STAGE="autopkgtest-qemu"
 STATE="INFRA_INVALID"
 SETUP_TRANSPORT_ARGS=()
 if [[ "${MIRROR}" == https://* ]]; then SETUP_TRANSPORT_ARGS+=(--https-transport); fi
@@ -324,11 +328,50 @@ TEST_ARGS=()
 if [[ "${CAMPAIGN}" == manifests/package-revalidation.json ]]; then
     TEST_ARGS+=(--test-name=ubuntu-abi-client --test-name=consumer)
 fi
+
+TEST_CONTROL="$(python3 - "${ROOT}" "${EVIDENCE}/build-contract.json" "${NODE}" <<'PY'
+import json, sys
+from pathlib import Path
+root = Path(sys.argv[1])
+record = json.load(open(sys.argv[2]))["nodes"][sys.argv[3]]
+print(root / record["packaging_path"] / "debian/tests/control")
+PY
+)"
+python3 "${ROOT}/scripts/autopkgtest-backend-policy.py" "${TEST_CONTROL}" \
+    > "${EVIDENCE}/autopkgtest-backend.json"
+AUTOPKGTEST_BACKEND="$(python3 - "${EVIDENCE}/autopkgtest-backend.json" <<'PY'
+import json, sys
+print(json.load(open(sys.argv[1]))["backend"])
+PY
+)"
+
 set +e
-autopkgtest "${DSCS[0]}" "${DEBS[@]}" "${EXTRA_PATHS[@]}" "${TEST_ARGS[@]}" --setup-commands="${SETUP}" --output-dir="${EVIDENCE}/autopkgtest" -- \
-    qemu --qemu-command="${ROOT}/scripts/qemu-kvm-required.sh" --qemu-architecture=x86_64 \
-    --cpus=2 --ram-size=2048 "${TEST_IMAGE}" |& tee "${EVIDENCE}/autopkgtest.log"
-PIPELINE_RC=("${PIPESTATUS[@]}")
+if [[ "${AUTOPKGTEST_BACKEND}" == "unshare" ]]; then
+    STAGE="autopkgtest-unshare"
+    SYSTEM_TEST_BACKEND="autopkgtest-unshare"
+    SYSTEM_TEST_ACCELERATION="outer-kvm-userns"
+    test -x "${UNSHARE_PRIVATE}" &&
+    test "$(PATH="${UNSHARE_PRIVATE_DIR}:${PATH}" command -v unshare)" = "${UNSHARE_PRIVATE}"
+    PREP_RC=$?
+    if (( PREP_RC == 0 )); then
+        PATH="${UNSHARE_PRIVATE_DIR}:${PATH}" \
+            autopkgtest "${DSCS[0]}" "${DEBS[@]}" "${EXTRA_PATHS[@]}" "${TEST_ARGS[@]}" \
+            --setup-commands="${SETUP}" --output-dir="${EVIDENCE}/autopkgtest" -- \
+            unshare --arch amd64 --tarball "${CHROOT}" |& tee "${EVIDENCE}/autopkgtest.log"
+        PIPELINE_RC=("${PIPESTATUS[@]}")
+    else
+        PIPELINE_RC=("${PREP_RC}" "0")
+    fi
+else
+    STAGE="autopkgtest-qemu"
+    SYSTEM_TEST_BACKEND="autopkgtest-qemu"
+    SYSTEM_TEST_ACCELERATION="nested-kvm"
+    autopkgtest "${DSCS[0]}" "${DEBS[@]}" "${EXTRA_PATHS[@]}" "${TEST_ARGS[@]}" \
+        --setup-commands="${SETUP}" --output-dir="${EVIDENCE}/autopkgtest" -- \
+        qemu --qemu-command="${ROOT}/scripts/qemu-kvm-required.sh" --qemu-architecture=x86_64 \
+        --cpus=2 --ram-size=2048 "${TEST_IMAGE}" |& tee "${EVIDENCE}/autopkgtest.log"
+    PIPELINE_RC=("${PIPESTATUS[@]}")
+fi
 set -e
 [[ ${PIPELINE_RC[1]} == 0 ]] || { TEST_RESULT="evidence-transport-failure"; exit 1; }
 case "${PIPELINE_RC[0]}" in

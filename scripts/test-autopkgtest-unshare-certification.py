@@ -121,12 +121,21 @@ for token in (
     assert token in workflow, f"runner contract misses certification hook: {token}"
 
 manifest = json.loads(MANIFEST.read_text())
-assert manifest["state"] == "pending"
-assert manifest["current_backend"] == "autopkgtest-qemu"
+assert manifest["state"] == "PASS"
+assert manifest["current_backend"] == "policy-selected"
+assert manifest["default_eligible_backend"] == "autopkgtest-unshare"
+assert manifest["fallback_backend"] == "autopkgtest-qemu"
 assert manifest["candidate_backend"] == "autopkgtest-unshare"
 assert manifest["package_attempt_effect"] == "none"
-assert manifest["rollout"]["production_default_changed"] is False
-assert manifest["rollout"]["next_step"] == "authoritative-a-b-certification"
+assert manifest["backend_policy"]["retained_upgrade_backend"] == "qemu"
+assert manifest["rollout"]["production_default_changed"] is True
+assert manifest["rollout"]["policy_selected"] is True
+assert manifest["certification"]["workflow_run_id"] == 40519740782
+assert manifest["certification"]["artifact_sha256"] == "96b4e6b6023df90304350eeedf4af83acdd2664613d6f3fec9055f9ee63f0824"
+assert manifest["measured_speedup"]["synthetic"]["qemu_seconds"] == 42
+assert manifest["measured_speedup"]["synthetic"]["unshare_seconds"] == 9
+assert manifest["measured_speedup"]["real_canary"]["qemu_seconds"] == 78
+assert manifest["measured_speedup"]["real_canary"]["unshare_seconds"] == 38
 
 print(
     "Autopkgtest backend certification policy: PASS; "
