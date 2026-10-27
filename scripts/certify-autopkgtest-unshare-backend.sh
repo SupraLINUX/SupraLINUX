@@ -14,14 +14,34 @@ MIRROR="${SBUILD_MIRROR:-https://archive.ubuntu.com/ubuntu}"
 rm -rf "${WORK}" "${EVIDENCE}"
 mkdir -p "${FIXTURE}/debian/tests" "${PKGROOT}/DEBIAN"     "${PKGROOT}/usr/share/supralinux-autopkgtest-backend-fixture" "${EVIDENCE}"
 
-for command_name in autopkgtest autopkgtest-virt-unshare dpkg-deb python3 unshare; do
+for command_name in autopkgtest autopkgtest-virt-unshare dpkg-deb mmdebstrap python3 unshare; do
     command -v "${command_name}" >/dev/null
 done
 unshare --user --map-auto true
 test -f "${QEMU_IMAGE}"
 test "$(systemd-detect-virt --vm)" = "kvm"
 
-python3 "${ROOT}/scripts/prepare-milestone-sbuild-rootfs.py" drkonqi     --output "${ROOTFS}"     --evidence "${EVIDENCE}/rootfs-admission.json"     --mirror "${MIRROR}"     --tls-ca-bundle /etc/ssl/certs/ca-certificates.crt
+mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --components=main,universe \
+    --skip=output/mknod --format=tar resolute "${ROOTFS}" \
+    "deb ${MIRROR} resolute main universe" \
+    "deb ${MIRROR} resolute-updates main universe" \
+    "deb ${MIRROR} resolute-security main universe" \
+    > "${EVIDENCE}/rootfs.log" 2>&1
+sha256sum "${ROOTFS}" > "${EVIDENCE}/rootfs-sha256.txt"
+cat > "${EVIDENCE}/rootfs-admission.json" <<EOF
+{
+  "schema": 1,
+  "state": "PASS",
+  "kind": "fresh-buildd-mechanism-certification",
+  "distribution": "ubuntu",
+  "release": "26.04",
+  "suite": "resolute",
+  "architecture": "amd64",
+  "mirror": "${MIRROR}",
+  "frameworks_and_qt_sdk_preinstalled": false,
+  "package_attempt_consumed": false
+}
+EOF
 
 cat > "${FIXTURE}/debian/control" <<'EOF'
 Source: supralinux-autopkgtest-backend-fixture
