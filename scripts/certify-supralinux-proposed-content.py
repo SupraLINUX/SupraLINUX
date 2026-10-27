@@ -32,7 +32,7 @@ def main() -> None:
         raise SystemExit("invalid source commit")
     if args.work_dir.exists() or args.evidence_dir.exists():
         raise SystemExit("refusing to reuse proposed certification output paths")
-    for command in ("python3", "apt-ftparchive", "dpkg-deb"):
+    for command in ("python3", "dpkg-deb", "git"):
         if shutil.which(command) is None:
             raise SystemExit(f"missing proposed certification command: {command}")
     if not args.artifact_root.is_dir():

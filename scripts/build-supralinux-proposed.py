@@ -11,12 +11,20 @@ import shutil
 import subprocess
 import tempfile
 import zipfile
+from email.utils import formatdate
 from pathlib import Path
 
 
-def sha256(path: Path) -> str:
+def file_digest(path: Path, algorithm: str) -> str:
+    digest = hashlib.new(algorithm)
     with path.open("rb") as stream:
-        return hashlib.file_digest(stream, "sha256").hexdigest()
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def sha256(path: Path) -> str:
+    return file_digest(path, "sha256")
 
 
 def deb_field(path: Path, field: str, optional: bool = False) -> str:
@@ -32,26 +40,82 @@ def deb_field(path: Path, field: str, optional: bool = False) -> str:
     return proc.stdout.strip()
 
 
-def dsc_fields(path: Path) -> dict:
-    result = {}
-    current = None
-    for raw in path.read_text(errors="strict").splitlines():
-        if raw.startswith((" ", "\t")) and current:
-            result[current] += "\n" + raw.strip()
+def dsc_payload(text: str) -> str:
+    lines = text.splitlines()
+    if not lines or lines[0] != "-----BEGIN PGP SIGNED MESSAGE-----":
+        return text.strip() + "\n"
+    index = 1
+    while index < len(lines) and lines[index]:
+        index += 1
+    if index >= len(lines):
+        raise SystemExit("invalid clearsigned .dsc header")
+    index += 1
+    payload = []
+    while index < len(lines) and lines[index] != "-----BEGIN PGP SIGNATURE-----":
+        line = lines[index]
+        if line.startswith("- "):
+            line = line[2:]
+        payload.append(line)
+        index += 1
+    if index >= len(lines):
+        raise SystemExit("invalid clearsigned .dsc signature")
+    return "\n".join(payload).strip() + "\n"
+
+
+def parse_deb822(text: str) -> list[tuple[str, list[str]]]:
+    fields: list[tuple[str, list[str]]] = []
+    current: list[str] | None = None
+    for raw in text.splitlines():
+        if not raw:
             continue
-        if ":" in raw:
-            current, value = raw.split(":", 1)
-            result[current] = value.strip()
-    return result
+        if raw.startswith((" ", "\t")):
+            if current is None:
+                raise SystemExit("invalid Deb822 continuation without a field")
+            current.append(raw)
+            continue
+        if ":" not in raw:
+            raise SystemExit(f"invalid Deb822 field line: {raw!r}")
+        name, value = raw.split(":", 1)
+        if not name or any(ch.isspace() for ch in name):
+            raise SystemExit(f"invalid Deb822 field name: {name!r}")
+        current = [value.lstrip()]
+        fields.append((name, current))
+    return fields
 
 
-def locate_artifact(root: Path, digest: str) -> Path:
+def dsc_fields(path: Path) -> dict[str, str]:
+    return {
+        name: "\n".join(line.strip() for line in values)
+        for name, values in parse_deb822(dsc_payload(path.read_text(errors="strict")))
+    }
+
+
+def locate_artifact(
+    root: Path,
+    digest: str,
+    archive_root: str | None = None,
+) -> Path:
+    if archive_root:
+        relative = Path(archive_root)
+        if (
+            not relative.parts
+            or relative.parts[0] != ".artifacts"
+            or any(part in {"", ".", ".."} for part in relative.parts)
+        ):
+            raise SystemExit(f"invalid retained artifact root: {archive_root}")
+        retained = root.joinpath(*relative.parts[1:]) / "sha256" / f"{digest}.zip"
+        if not retained.is_file() or retained.is_symlink():
+            raise SystemExit(f"retained artifact is missing: {retained}")
+        if sha256(retained) != digest:
+            raise SystemExit(f"retained artifact digest drift: {retained}")
+        return retained
+
     direct = root / "sha256" / f"{digest}.zip"
-    if direct.is_file() and sha256(direct) == digest:
+    if direct.is_file() and not direct.is_symlink() and sha256(direct) == digest:
         return direct
     matches = []
     for path in root.rglob("*.zip"):
-        if sha256(path) == digest:
+        if path.is_file() and not path.is_symlink() and sha256(path) == digest:
             matches.append(path)
     if len(matches) != 1:
         raise SystemExit(
@@ -74,48 +138,166 @@ def copy_verified(source: Path, target: Path, expected: str | None = None) -> st
     return digest
 
 
+def render_binary_packages(repo: Path) -> str:
+    stanzas = []
+    for deb in sorted(repo.glob("pool/**/*.deb")):
+        control = subprocess.check_output(
+            ["dpkg-deb", "--field", str(deb)],
+            text=True,
+        ).strip()
+        fields = {name for name, _values in parse_deb822(control)}
+        forbidden = {"Filename", "Size", "MD5sum", "SHA1", "SHA256"} & fields
+        if forbidden:
+            raise SystemExit(
+                f"binary control contains repository-owned fields: {sorted(forbidden)}"
+            )
+        relative = deb.relative_to(repo).as_posix()
+        stanza = [
+            control,
+            f"Filename: {relative}",
+            f"Size: {deb.stat().st_size}",
+            f"MD5sum: {file_digest(deb, 'md5')}",
+            f"SHA1: {file_digest(deb, 'sha1')}",
+            f"SHA256: {sha256(deb)}",
+        ]
+        stanzas.append("\n".join(stanza))
+    if not stanzas:
+        raise SystemExit("proposed repository contains no binary packages")
+    return "\n\n".join(stanzas) + "\n"
+
+
+def render_source_stanza(repo: Path, dsc: Path) -> str:
+    parsed = parse_deb822(dsc_payload(dsc.read_text(errors="strict")))
+    fields = {name: values for name, values in parsed}
+    source = fields.get("Source")
+    version = fields.get("Version")
+    if not source or not source[0] or not version or not version[0]:
+        raise SystemExit(f"source metadata missing Source/Version: {dsc}")
+    if "Directory" in fields:
+        raise SystemExit(f".dsc unexpectedly owns repository Directory field: {dsc}")
+
+    source_dir = dsc.parent
+    source_files = sorted(
+        path for path in source_dir.iterdir()
+        if path.is_file() and not path.is_symlink()
+    )
+    if dsc not in source_files:
+        raise SystemExit(f"source .dsc is not in its repository directory: {dsc}")
+
+    output = []
+    for name, values in parsed:
+        if name in {"Files", "Checksums-Sha1", "Checksums-Sha256", "Directory"}:
+            continue
+        rendered_name = "Package" if name == "Source" else name
+        output.append(f"{rendered_name}: {values[0]}")
+        output.extend(values[1:])
+
+    output.append(f"Directory: {source_dir.relative_to(repo).as_posix()}")
+    for label, algorithm in (
+        ("Files", "md5"),
+        ("Checksums-Sha1", "sha1"),
+        ("Checksums-Sha256", "sha256"),
+    ):
+        output.append(f"{label}:")
+        for path in source_files:
+            output.append(
+                f" {file_digest(path, algorithm)} {path.stat().st_size} {path.name}"
+            )
+    return "\n".join(output)
+
+
+def render_sources(repo: Path) -> str:
+    stanzas = [
+        render_source_stanza(repo, dsc)
+        for dsc in sorted(repo.glob("pool/**/*.dsc"))
+    ]
+    if not stanzas:
+        raise SystemExit("proposed repository contains no source packages")
+    identities = []
+    for stanza in stanzas:
+        fields = {
+            name: "\n".join(line.strip() for line in values)
+            for name, values in parse_deb822(stanza)
+        }
+        identities.append((fields.get("Package"), fields.get("Version")))
+    if len(set(identities)) != len(identities):
+        raise SystemExit("proposed repository contains duplicate source identities")
+    return "\n\n".join(stanzas) + "\n"
+
+
+def write_gzip(path: Path, content: str) -> None:
+    with path.open("wb") as raw:
+        with gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as stream:
+            stream.write(content.encode())
+
+
+def render_release(
+    release_dir: Path,
+    suite: str,
+    source_date_epoch: int = 0,
+) -> str:
+    indexed = sorted(
+        path for path in release_dir.rglob("*")
+        if path.is_file()
+        and path.name not in {"Release", "InRelease", "Release.gpg"}
+    )
+    if not indexed:
+        raise SystemExit("proposed repository release has no indices")
+    lines = [
+        "Origin: SupraLINUX",
+        "Label: SupraLINUX-proposed",
+        f"Suite: {suite}",
+        f"Codename: {suite}",
+        "Architectures: amd64",
+        "Components: main",
+        "Description: SupraLINUX proposed integration overlay",
+        f"Date: {formatdate(source_date_epoch, usegmt=True)}",
+    ]
+    for label, algorithm in (
+        ("MD5Sum", "md5"),
+        ("SHA1", "sha1"),
+        ("SHA256", "sha256"),
+    ):
+        lines.append(f"{label}:")
+        for path in indexed:
+            lines.append(
+                f" {file_digest(path, algorithm)} {path.stat().st_size} "
+                f"{path.relative_to(release_dir).as_posix()}"
+            )
+    return "\n".join(lines) + "\n"
+
+
+def source_date_epoch() -> int:
+    raw = os.environ.get("SOURCE_DATE_EPOCH", "0")
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise SystemExit(f"invalid SOURCE_DATE_EPOCH: {raw!r}") from exc
+    if value < 0:
+        raise SystemExit("SOURCE_DATE_EPOCH must be non-negative")
+    return value
+
+
 def build_indices(repo: Path, suite: str) -> tuple[Path, Path]:
     binary_dir = repo / "dists" / suite / "main" / "binary-amd64"
     source_dir = repo / "dists" / suite / "main" / "source"
     binary_dir.mkdir(parents=True)
     source_dir.mkdir(parents=True)
 
-    packages = subprocess.check_output(
-        ["apt-ftparchive", "packages", "pool"], cwd=repo, text=True
-    )
-    sources = subprocess.check_output(
-        ["apt-ftparchive", "sources", "pool"], cwd=repo, text=True
-    )
+    packages = render_binary_packages(repo)
+    sources = render_sources(repo)
     packages_path = binary_dir / "Packages"
     sources_path = source_dir / "Sources"
     packages_path.write_text(packages)
     sources_path.write_text(sources)
-    with (binary_dir / "Packages.gz").open("wb") as raw:
-        with gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as stream:
-            stream.write(packages.encode())
-    with (source_dir / "Sources.gz").open("wb") as raw:
-        with gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as stream:
-            stream.write(sources.encode())
+    write_gzip(binary_dir / "Packages.gz", packages)
+    write_gzip(source_dir / "Sources.gz", sources)
 
     release_dir = repo / "dists" / suite
-    release = subprocess.check_output(
-        [
-            "apt-ftparchive",
-            "-o", "APT::FTPArchive::Release::Origin=SupraLINUX",
-            "-o", "APT::FTPArchive::Release::Label=SupraLINUX-proposed",
-            "-o", f"APT::FTPArchive::Release::Suite={suite}",
-            "-o", f"APT::FTPArchive::Release::Codename={suite}",
-            "-o", "APT::FTPArchive::Release::Architectures=amd64",
-            "-o", "APT::FTPArchive::Release::Components=main",
-            "-o", "APT::FTPArchive::Release::Description=SupraLINUX proposed integration overlay",
-            "release",
-            ".",
-        ],
-        cwd=release_dir,
-        text=True,
-    )
     release_path = release_dir / "Release"
-    release_path.write_text(release)
+    release_path.write_text(
+        render_release(release_dir, suite, source_date_epoch())
+    )
     return packages_path, release_path
 
 
@@ -183,7 +365,12 @@ def main() -> None:
     with tempfile.TemporaryDirectory() as td:
         temp_root = Path(td)
         for candidate in plan["candidates"]:
-            artifact = locate_artifact(args.artifact_root, candidate["artifact_sha256"])
+            retention = candidate.get("retention") or {}
+            artifact = locate_artifact(
+                args.artifact_root,
+                candidate["artifact_sha256"],
+                retention.get("archive_root"),
+            )
             if sha256(artifact) != candidate["artifact_sha256"]:
                 raise SystemExit(f"artifact digest drift: {candidate['node']}")
             extracted = temp_root / candidate["node"]

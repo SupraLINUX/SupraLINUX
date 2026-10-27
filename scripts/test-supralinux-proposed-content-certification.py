@@ -25,8 +25,8 @@ for token in (
     '"repository_active": False',
     '"stable_publication_authorized": False',
     '"canonical_package_state_effect": "none"',
-    '"apt-ftparchive"',
     '"dpkg-deb"',
+    '"git"',
     "scripts/plan-supralinux-proposed.py",
     "scripts/build-supralinux-proposed.py",
     'if built != planned:',
@@ -34,7 +34,7 @@ for token in (
     if token not in helper:
         raise SystemExit(f"missing proposed content certification contract: {token}")
 
-for forbidden in ("curl", "wget", "gh api", "--signing-key"):
+for forbidden in ("apt-ftparchive", "curl", "wget", "gh api", "--signing-key"):
     if forbidden in helper:
         raise SystemExit(f"proposed content certification must remain offline/unsigned: {forbidden}")
 

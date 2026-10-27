@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import gzip
 import importlib.util
 import json
 import subprocess
@@ -57,7 +58,11 @@ for token in (
     "candidate source drift",
     "candidate binary set mismatch",
     "Checksums-Sha256",
-    "apt-ftparchive",
+    "render_binary_packages",
+    "render_sources",
+    "render_release",
+    "SOURCE_DATE_EPOCH",
+    "retained artifact digest drift",
     "Packages.gz",
     "Sources.gz",
     "InRelease",
@@ -66,7 +71,7 @@ for token in (
     '"stable_publication_authorized": False',
 ):
     assert token in builder, f"proposed builder missing contract: {token}"
-for forbidden in ("trusted=yes", "allow-unauthenticated"):
+for forbidden in ("apt-ftparchive", "trusted=yes", "allow-unauthenticated"):
     assert forbidden not in builder, f"unsafe proposed repository behavior: {forbidden}"
 
 for token in (
@@ -74,6 +79,101 @@ for token in (
     'gzip.GzipFile(fileobj=raw, mode="wb", mtime=0)',
 ):
     assert token in builder, f"proposed builder misses reproducible/parser contract: {token}"
+
+builder_spec = importlib.util.spec_from_file_location(
+    "supralinux_proposed_builder_test", BUILDER
+)
+builder_module = importlib.util.module_from_spec(builder_spec)
+builder_spec.loader.exec_module(builder_module)
+
+with tempfile.TemporaryDirectory() as td:
+    fixture = Path(td)
+    repo = fixture / "repo"
+    source_dir = repo / "pool/main/f/fixture"
+    source_dir.mkdir(parents=True)
+
+    deb_root = fixture / "deb"
+    (deb_root / "DEBIAN").mkdir(parents=True)
+    (deb_root / "DEBIAN/control").write_text(
+        "Package: fixture\n"
+        "Source: fixture\n"
+        "Version: 1.0\n"
+        "Architecture: all\n"
+        "Maintainer: Test <test@example.invalid>\n"
+        "Description: SupraLINUX proposed repository fixture\n"
+        " continuation line\n"
+    )
+    deb = repo / "pool/main/fixture_1.0_all.deb"
+    subprocess.run(
+        [
+            "dpkg-deb",
+            "--root-owner-group",
+            "--build",
+            str(deb_root),
+            str(deb),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    orig = source_dir / "fixture_1.0.orig.tar.xz"
+    debian_tar = source_dir / "fixture_1.0-1.debian.tar.xz"
+    orig.write_bytes(b"fixture-orig")
+    debian_tar.write_bytes(b"fixture-debian")
+    dsc = source_dir / "fixture_1.0-1.dsc"
+    dsc.write_text(
+        "Format: 3.0 (quilt)\n"
+        "Source: fixture\n"
+        "Binary: fixture\n"
+        "Architecture: all\n"
+        "Version: 1.0\n"
+        "Maintainer: Test <test@example.invalid>\n"
+        "Checksums-Sha256:\n"
+        f" {builder_module.sha256(orig)} {orig.stat().st_size} {orig.name}\n"
+        f" {builder_module.sha256(debian_tar)} {debian_tar.stat().st_size} {debian_tar.name}\n"
+    )
+
+    packages_path, release_path = builder_module.build_indices(
+        repo, "resolute-supralinux-proposed"
+    )
+    sources_path = (
+        repo
+        / "dists/resolute-supralinux-proposed/main/source/Sources"
+    )
+    packages_text = packages_path.read_text()
+    sources_text = sources_path.read_text()
+    release_text = release_path.read_text()
+
+    assert "Package: fixture" in packages_text
+    assert "Filename: pool/main/fixture_1.0_all.deb" in packages_text
+    assert f"SHA256: {builder_module.sha256(deb)}" in packages_text
+    assert "Package: fixture" in sources_text
+    assert "Directory: pool/main/f/fixture" in sources_text
+    assert "fixture_1.0-1.dsc" in sources_text
+    assert "SHA256:" in release_text
+    assert "main/binary-amd64/Packages" in release_text
+    assert "main/source/Sources" in release_text
+    assert "Date: " in release_text
+    assert gzip.decompress(
+        (packages_path.parent / "Packages.gz").read_bytes()
+    ).decode() == packages_text
+    assert gzip.decompress(
+        (sources_path.parent / "Sources.gz").read_bytes()
+    ).decode() == sources_text
+
+    first = (
+        builder_module.sha256(packages_path),
+        builder_module.sha256(sources_path),
+        builder_module.sha256(release_path),
+    )
+    builder_module.build_indices(repo, "resolute-supralinux-proposed")
+    second = (
+        builder_module.sha256(packages_path),
+        builder_module.sha256(sources_path),
+        builder_module.sha256(release_path),
+    )
+    assert second == first
 
 promoter = PROMOTER.read_text()
 for token in (
