@@ -82,6 +82,9 @@ certifier = CERTIFIER.read_text()
 for token in (
     'run_backend qemu',
     'run_backend unshare',
+    '--include=ca-certificates,apt-utils',
+    '"tls_ca_certificates_preinstalled": true',
+    '"autopkgtest_local_repo_tooling_preinstalled": true',
     'unshare --arch amd64 --tarball',
     'UNSHARE_PRIVATE_DIR="/usr/local/libexec/supralinux-autopkgtest"',
     'PATH="${UNSHARE_PRIVATE_DIR}:${PATH}"',

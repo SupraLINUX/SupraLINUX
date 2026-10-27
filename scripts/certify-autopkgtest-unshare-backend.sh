@@ -44,6 +44,7 @@ test "$(systemd-detect-virt --vm)" = "kvm"
 } > "${EVIDENCE}/unshare-security-contract.txt"
 
 mmdebstrap --mode=unshare --variant=buildd --architectures=amd64 --components=main,universe \
+    --include=ca-certificates,apt-utils \
     --skip=output/mknod --skip=cleanup/apt/lists --format=tar resolute "${ROOTFS}" \
     "deb ${MIRROR} resolute main universe" \
     "deb ${MIRROR} resolute-updates main universe" \
@@ -61,6 +62,8 @@ cat > "${EVIDENCE}/rootfs-admission.json" <<EOF
   "architecture": "amd64",
   "mirror": "${MIRROR}",
   "frameworks_and_qt_sdk_preinstalled": false,
+  "tls_ca_certificates_preinstalled": true,
+  "autopkgtest_local_repo_tooling_preinstalled": true,
   "package_attempt_consumed": false
 }
 EOF
