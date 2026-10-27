@@ -25,8 +25,15 @@ for forbidden in (
     assert forbidden not in profile, f"unsafe AppArmor profile construct: {forbidden}"
 
 provision = PROVISION.read_text()
+package_start = provision.index("sudo DEBIAN_FRONTEND=noninteractive apt-get install -y")
+package_end = provision.index("if ! grep -q", package_start)
+package_block = provision[package_start:package_end]
+assert any(
+    line.strip().rstrip("\\").strip() == "apparmor"
+    for line in package_block.splitlines()
+), "golden provisioning must install the AppArmor package"
+
 for token in (
-    "apparmor \\\\",
     "command -v newuidmap",
     "command -v newgidmap",
     "count >= 65536",
