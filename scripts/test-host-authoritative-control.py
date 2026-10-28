@@ -162,7 +162,7 @@ required_broker = [
     '"github_token_requested=no"',
     '["gh", "auth", "token", "--hostname", "github.com"]',
     '"github-auth-diagnostic.txt"',
-    '"token_stdout_present="',
+    'token_stdout_present=',
     '"XDG_RUNTIME_DIR"',
     '"DBUS_SESSION_BUS_ADDRESS"',
     'stat.S_ISSOCK',
