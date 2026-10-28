@@ -74,11 +74,13 @@ jobs:
               "certify-proposed-content",
               "certify-proposed-signing",
           }
-          assert request.get("gate") in {"plasma-package-build", "runner-contract", "supralinux-proposed"}
+          assert request.get("gate") in {"plasma-package-build", "runner-contract", "supralinux-proposed", "supralinux-proposed-integration"}
           if request["gate"] == "runner-contract":
               assert request["mode"] in {"preflight", "execute"}
           if request["gate"] == "supralinux-proposed":
               assert request["mode"] in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"}
+          if request["gate"] == "supralinux-proposed-integration":
+              assert request["mode"] == "execute"
           if request["mode"] in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"}:
               assert request["gate"] == "supralinux-proposed"
           assert isinstance(request.get("runner_group_id"), int) and request["runner_group_id"] > 0

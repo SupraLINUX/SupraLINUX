@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "state": "prepared-inactive",
+  "gate": "supralinux-proposed-integration",
+  "execution_environment": "authoritative Ubuntu 26.04 KVM",
+  "base_checkpoint": "frameworks-6.30-pass",
+  "proposed_candidates": 24,
+  "frameworks_pass_nodes": 65,
+  "repository_policy": {
+    "proposed_signed": true,
+    "frameworks_signed_for_certification": true,
+    "trusted_yes_forbidden": true,
+    "allow_unauthenticated_forbidden": true,
+    "production_activation_eligible": false,
+    "repository_active": false,
+    "stable_publication_authorized": false
+  },
+  "certification_scope": {
+    "apt_solvability": "pending",
+    "dependency_closure": "pending",
+    "clean_install": "pending",
+    "upgrade_from_ubuntu": "NOT_RUN",
+    "abi_and_plugins": "NOT_RUN",
+    "representative_apps": "NOT_RUN",
+    "wayland_session": "NOT_RUN",
+    "integration_image": "NOT_RUN"
+  },
+  "invariants": {
+    "package_attempt_consumed": false,
+    "sbuild_invoked": false,
+    "canonical_package_state_effect": "none",
+    "drkonqi_attempt_2_consumed": false
+  },
+  "promotion": {
+    "authorized": false,
+    "reason": "Only the first integration checkpoint is in scope; all required promotion gates must PASS before activation or milestone promotion."
+  }
+}

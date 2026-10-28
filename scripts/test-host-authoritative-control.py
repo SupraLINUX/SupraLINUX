@@ -127,7 +127,8 @@ required_broker = [
     'CLOSE_EVIDENCE_HELPER = Path("/usr/local/libexec/supralinux-host-close-package-evidence")',
     'if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:',
     '"package_attempt_effect=none"',
-    'request.get("gate") not in {"plasma-package-build", "runner-contract", "supralinux-proposed"}',
+    'request.get("gate") not in {"plasma-package-build", "runner-contract", "supralinux-proposed", "supralinux-proposed-integration"}',
+    '"SupraLINUX-proposed integration gate permits only execute mode."',
     '"Runner contract gate permits only preflight or execute mode."',
     'run.get("status") == "queued"',
     'job.get("status") != "queued"',
@@ -170,6 +171,7 @@ required_broker = [
     '"scripts/check-golden-image-provenance.sh"',
     '["scripts/run-kvm-jit-gate.sh", request["gate"]]',
     '"SUPRALINUX_GITHUB_TOKEN": token',
+    '"SUPRALINUX_PERSISTENT_ARTIFACT_ROOT": str(PERSISTENT_ARTIFACT_ROOT)',
     '"package_attempt_effect=none-before-execute"',
     'preflight_failure = None',
     'check=False',
@@ -209,6 +211,11 @@ required_jit_core = [
     '--argjson workflow_run_id "${WORKFLOW_RUN_ID:-0}"',
     '--arg evidence_dir "${EVIDENCE_DIR}"',
     '--arg source_commit "${PR_HEAD_SHA:-}"',
+    'supralinux-proposed-integration',
+    'ci:supralinux-proposed-integration',
+    'SUPRALINUX_PERSISTENT_ARTIFACT_ROOT',
+    'prepare-supralinux-proposed-integration-payload.py',
+    'virt-copy-in',
 ]
 for token in required_jit_core:
     if token not in jit_core:
@@ -375,6 +382,7 @@ required_workflow = [
     '"certify-proposed-content"',
     '"certify-proposed-signing"',
     '"supralinux-proposed"',
+    '"supralinux-proposed-integration"',
 ]
 for token in required_workflow:
     if token not in workflow:
@@ -390,6 +398,7 @@ required_router = [
     '"certify-proposed-content"',
     '"certify-proposed-signing"',
     '"supralinux-proposed"',
+    '"supralinux-proposed-integration"',
     "scripts/plan-host-control-trigger.py",
     "needs.repository-policy.result == 'success'",
     "needs.host-workspace-admission.outputs.requested == 'true'",
@@ -441,12 +450,14 @@ if request.get("mode") not in {
     "certify-proposed-signing",
 }:
     raise SystemExit(f"unexpected authoritative host request mode: {request!r}")
-if request.get("gate") not in {"plasma-package-build", "runner-contract", "supralinux-proposed"}:
+if request.get("gate") not in {"plasma-package-build", "runner-contract", "supralinux-proposed", "supralinux-proposed-integration"}:
     raise SystemExit(f"unexpected authoritative host request gate: {request!r}")
 if request.get("gate") == "runner-contract" and request.get("mode") not in {"preflight", "execute"}:
     raise SystemExit(f"invalid runner-contract request mode: {request!r}")
 if request.get("gate") == "supralinux-proposed" and request.get("mode") not in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"}:
     raise SystemExit(f"invalid supralinux-proposed request mode: {request!r}")
+if request.get("gate") == "supralinux-proposed-integration" and request.get("mode") != "execute":
+    raise SystemExit(f"invalid supralinux-proposed-integration request mode: {request!r}")
 if request.get("mode") in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"} and request.get("gate") != "supralinux-proposed":
     raise SystemExit(f"invalid proposed repair/certification gate: {request!r}")
 if request.get("runner_group_id") != 3:

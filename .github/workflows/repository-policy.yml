@@ -192,6 +192,9 @@ jobs:
       - name: Test SupraLINUX-proposed ephemeral signing certification contract
         run: python3 scripts/test-supralinux-proposed-signing-certification.py
 
+      - name: Test SupraLINUX-proposed authoritative integration contract
+        run: python3 scripts/test-supralinux-proposed-integration.py
+
       - name: Test SupraLINUX-proposed retained artifact recovery contract
         run: python3 scripts/test-proposed-retained-artifact-recovery.py
 

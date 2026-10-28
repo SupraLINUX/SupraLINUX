@@ -36,6 +36,7 @@ special = {
     "hosted-sbuild-userns-diagnostic.yml",
     "authoritative-package-revalidation.yml",
     "authoritative-plasma-package-build.yml",
+    "authoritative-supralinux-proposed-integration.yml",
     "authoritative-frameworks-sample-proof.yml",
     "authoritative-package-proof.yml",
     "runner-contract.yml",
@@ -144,6 +145,20 @@ admitted_authoritative_modes = (
 )
 req(admitted_authoritative_modes == expected_authoritative_modes,
     "host authoritative admission must expose exactly the reviewed fixed-control modes")
+
+gate_match = re.search(r'request\.get\("gate"\) in \{([^}]*)\}', router_text)
+expected_authoritative_gates = {
+    "plasma-package-build",
+    "runner-contract",
+    "supralinux-proposed",
+    "supralinux-proposed-integration",
+}
+admitted_authoritative_gates = (
+    set(re.findall(r'"([^"]+)"', gate_match.group(1)))
+    if gate_match is not None else set()
+)
+req(admitted_authoritative_gates == expected_authoritative_gates,
+    "host authoritative admission must expose exactly the reviewed fixed-control gates")
 
 historical = [
     p.name for p in files

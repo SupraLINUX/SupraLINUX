@@ -24,6 +24,7 @@ BUSY_TIMEOUT_SECONDS="${SUPRALINUX_BUSY_TIMEOUT_SECONDS:-300}"
 JOB_TIMEOUT_SECONDS="${SUPRALINUX_JOB_TIMEOUT_SECONDS:-7200}"
 STARTUP_PREFLIGHT="${SUPRALINUX_JIT_STARTUP_PREFLIGHT:-0}"
 GATE_RECEIPT_PATH="${SUPRALINUX_GATE_RECEIPT_PATH:-}"
+PERSISTENT_ARTIFACT_ROOT="${SUPRALINUX_PERSISTENT_ARTIFACT_ROOT:-}"
 API_VERSION="2026-03-10"
 HOST_GITHUB_TOKEN="${SUPRALINUX_GITHUB_TOKEN:-${GITHUB_TOKEN:-}}"
 RUNNER_CONTRACT_WORKFLOW="Authoritative runner contract"
@@ -31,6 +32,7 @@ PACKAGE_PROOF_WORKFLOW="Phase 1 authoritative KVM package proof"
 FRAMEWORKS_SAMPLE_WORKFLOW="KDE Frameworks authoritative KVM sample proof"
 PLASMA_PACKAGE_WORKFLOW="KDE Plasma authoritative KVM package build"
 PACKAGE_REVALIDATION_WORKFLOW="Reviewed package authoritative KVM revalidation"
+PROPOSED_INTEGRATION_WORKFLOW="SupraLINUX proposed authoritative KVM integration"
 
 case "${GATE}" in
     runner-contract)
@@ -52,6 +54,10 @@ case "${GATE}" in
     package-revalidation)
         GATE_LABEL="ci:package-revalidation"
         WORKFLOW_NAME="${PACKAGE_REVALIDATION_WORKFLOW}"
+        ;;
+    supralinux-proposed-integration)
+        GATE_LABEL="ci:supralinux-proposed-integration"
+        WORKFLOW_NAME="${PROPOSED_INTEGRATION_WORKFLOW}"
         ;;
     *)
         printf 'Usage: %s {runner-contract|authoritative-package-proof|frameworks-sample-proof|plasma-package-build|package-revalidation}\n' "$0" >&2
@@ -83,6 +89,13 @@ if [[ "${STARTUP_PREFLIGHT}" == "1" && "${GATE}" != "runner-contract" ]]; then
     printf 'JIT startup preflight is valid only against the runner-contract infrastructure path.\n' >&2
     exit 1
 fi
+if [[ "${GATE}" == "supralinux-proposed-integration" ]]; then
+    [[ "${PERSISTENT_ARTIFACT_ROOT}" == /* && -d "${PERSISTENT_ARTIFACT_ROOT}" && ! -L "${PERSISTENT_ARTIFACT_ROOT}" ]] || {
+        printf 'SUPRALINUX_PERSISTENT_ARTIFACT_ROOT must be an absolute regular directory for proposed integration.\n' >&2
+        exit 2
+    }
+fi
+
 if [[ -n "${GATE_RECEIPT_PATH}" ]]; then
     [[ "${GATE_RECEIPT_PATH}" == /* ]] || {
         printf 'SUPRALINUX_GATE_RECEIPT_PATH must be absolute.\n' >&2
@@ -110,6 +123,7 @@ required_commands=(
     ethtool
     virsh
     virt-cat
+    virt-copy-in
     virt-copy-out
     virt-install
     wc
@@ -256,6 +270,8 @@ RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-$$"
 VM_NAME="supralinux-${SAFE_GATE}-${RUN_ID,,}"
 RUN_DIR="${STATE_DIR}/${VM_NAME}"
 OVERLAY="${RUN_DIR}/disk.qcow2"
+INTEGRATION_WORK_DIR="${RUN_DIR}/proposed-integration-work"
+INTEGRATION_PAYLOAD_DIR="${RUN_DIR}/proposed-integration-payload"
 EVIDENCE_DIR="${EVIDENCE_ROOT}/${VM_NAME}"
 STARTED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 RUNNER_ID=""
@@ -328,6 +344,7 @@ cleanup() {
         sha256sum "${OVERLAY}" > "${EVIDENCE_DIR}/overlay-sha256.txt" 2>/dev/null || true
         rm -f "${OVERLAY}"
     fi
+    rm -rf "${INTEGRATION_WORK_DIR}" "${INTEGRATION_PAYLOAD_DIR}"
     rmdir "${RUN_DIR}" >/dev/null 2>&1 || true
 
     printf '{\n  "gate": %s,\n  "exit_code": %d,\n  "workflow_run_id": %s,\n  "finished_at": %s\n}\n' \
@@ -489,7 +506,10 @@ GOLDEN_INPUT_DIGEST="$(awk -F= '$1 == "golden_input_digest" {print $2; exit}' "$
 # changes the backing image, never the package evidence or sbuild isolation.
 BASE_IMAGE="${GOLDEN_IMAGE}"
 EXECUTION_CHECKPOINT="none"
-if [[ "${GATE}" == "plasma-package-build" || "${GATE}" == "package-revalidation" ]]; then
+CACHE_CAMPAIGN=""
+if [[ "${GATE}" == "supralinux-proposed-integration" ]]; then
+    EXECUTION_CHECKPOINT="frameworks-6.30-pass"
+elif [[ "${GATE}" == "plasma-package-build" || "${GATE}" == "package-revalidation" ]]; then
     CACHE_CAMPAIGN="manifests/kde-plasma-package-build.json"
     if [[ "${GATE}" == "package-revalidation" ]]; then CACHE_CAMPAIGN="manifests/package-revalidation.json"; fi
     EXECUTION_CHECKPOINT="$(python3 - "${ROOT}/${CACHE_CAMPAIGN}" <<'PY'
@@ -497,24 +517,24 @@ import json, sys
 print(json.load(open(sys.argv[1])).get("execution_checkpoint", "none"))
 PY
 )"
-    case "${EXECUTION_CHECKPOINT}" in
-        none) ;;
-        frameworks-6.30-pass)
-            BASE_IMAGE="$(python3 - "${ROOT}/manifests/execution-checkpoints.json" <<'PY'
+fi
+case "${EXECUTION_CHECKPOINT}" in
+    none) ;;
+    frameworks-6.30-pass)
+        BASE_IMAGE="$(python3 - "${ROOT}/manifests/execution-checkpoints.json" <<'PY'
 import json, sys
 record = json.load(open(sys.argv[1]))["checkpoints"]["frameworks-6.30-pass"]
 assert record["state"] == "PASS"
 print(record["host_path"])
 PY
 )"
-            "${ROOT}/scripts/check-frameworks-milestone-image.sh" "${BASE_IMAGE}" \
-                > "${EVIDENCE_DIR}/execution-cache-admission.txt"
-            python3 "${ROOT}/scripts/check-qemu-image-access.py" "${BASE_IMAGE}" --user "${LIBVIRT_QEMU_USER}" \
-                > "${EVIDENCE_DIR}/execution-cache-access.txt"
-            ;;
-        *) printf 'Unsupported execution checkpoint: %s\n' "${EXECUTION_CHECKPOINT}" >&2; exit 1 ;;
-    esac
-fi
+        "${ROOT}/scripts/check-frameworks-milestone-image.sh" "${BASE_IMAGE}" \
+            > "${EVIDENCE_DIR}/execution-cache-admission.txt"
+        python3 "${ROOT}/scripts/check-qemu-image-access.py" "${BASE_IMAGE}" --user "${LIBVIRT_QEMU_USER}" \
+            > "${EVIDENCE_DIR}/execution-cache-access.txt"
+        ;;
+    *) printf 'Unsupported execution checkpoint: %s\n' "${EXECUTION_CHECKPOINT}" >&2; exit 1 ;;
+esac
 
 if [[ ( "${GATE}" == "plasma-package-build" || "${GATE}" == "package-revalidation" ) && "${EXECUTION_CHECKPOINT}" == "frameworks-6.30-pass" ]]; then
     FAST_INPUT_NODE="$(python3 - "${ROOT}/${CACHE_CAMPAIGN}" <<'PY'
@@ -552,7 +572,8 @@ ACTIVE_AUTHORITATIVE_CANDIDATES="$(jq -c \
     --arg frameworks_sample "${FRAMEWORKS_SAMPLE_WORKFLOW}" \
     --arg plasma_package "${PLASMA_PACKAGE_WORKFLOW}" \
     --arg package_revalidation "${PACKAGE_REVALIDATION_WORKFLOW}" \
-    '[.workflow_runs[] | select((.name == $runner_contract or .name == $package_proof or .name == $frameworks_sample or .name == $plasma_package or .name == $package_revalidation) and .status != "completed")]' \
+    --arg proposed_integration "${PROPOSED_INTEGRATION_WORKFLOW}" \
+    '[.workflow_runs[] | select((.name == $runner_contract or .name == $package_proof or .name == $frameworks_sample or .name == $plasma_package or .name == $package_revalidation or .name == $proposed_integration) and .status != "completed")]' \
     <<<"${ACTIVE_RUNS_JSON}")"
 
 ACTIVE_AUTHORITATIVE='[]'
@@ -642,6 +663,24 @@ chgrp "${LIBVIRT_QEMU_GROUP}" "${OVERLAY}"
 chmod 0660 "${OVERLAY}"
 qemu-img info --output=json "${OVERLAY}" > "${EVIDENCE_DIR}/overlay-info-before-boot.json"
 "${ROOT}/scripts/with-libguestfs-runtime.sh" --describe > "${EVIDENCE_DIR}/libguestfs-runtime.txt"
+
+if [[ "${GATE}" == "supralinux-proposed-integration" ]]; then
+    printf 'Preparing exact signed SupraLINUX-proposed integration payload...\n'
+    python3 "${ROOT}/scripts/prepare-supralinux-proposed-integration-payload.py" \
+        --checkout "${ROOT}" \
+        --artifact-root "${PERSISTENT_ARTIFACT_ROOT}" \
+        --frameworks-image "${BASE_IMAGE}" \
+        --frameworks-provenance "${BASE_IMAGE}.provenance.txt" \
+        --work-dir "${INTEGRATION_WORK_DIR}" \
+        --output "${INTEGRATION_PAYLOAD_DIR}" \
+        --source-commit "${PR_HEAD_SHA}" \
+        | tee "${EVIDENCE_DIR}/integration-payload-preparation.log"
+    cp "${INTEGRATION_PAYLOAD_DIR}/payload.json" "${EVIDENCE_DIR}/integration-payload.json"
+    sha256sum "${INTEGRATION_PAYLOAD_DIR}/payload.json" > "${EVIDENCE_DIR}/integration-payload-sha256.txt"
+    "${ROOT}/scripts/with-libguestfs-runtime.sh" virt-copy-in \
+        -a "${OVERLAY}" "${INTEGRATION_PAYLOAD_DIR}" /var/lib/supralinux
+    rm -rf "${INTEGRATION_WORK_DIR}" "${INTEGRATION_PAYLOAD_DIR}"
+fi
 
 VM_CREATED=1
 virt-install \

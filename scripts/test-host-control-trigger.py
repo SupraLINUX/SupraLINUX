@@ -19,6 +19,7 @@ expected_auto = {
     ("supralinux-proposed", "repair-proposed-retained-artifacts"),
     ("supralinux-proposed", "certify-proposed-content"),
     ("supralinux-proposed", "certify-proposed-signing"),
+    ("supralinux-proposed-integration", "execute"),
 }
 if module.AUTO_SYNCHRONIZE_CONTROLS != expected_auto:
     raise SystemExit("automatic host-control scope drifted")
@@ -119,6 +120,36 @@ with tempfile.TemporaryDirectory() as directory:
     )
     if package_attempt["requested"] is not False:
         raise SystemExit("package execution request was auto-triggered")
+
+    request.write_text(
+        json.dumps(
+            {
+                "schema": 1,
+                "mode": "execute",
+                "gate": "supralinux-proposed-integration",
+                "runner_group_id": 3,
+            }
+        )
+        + "\n"
+    )
+    subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
+    subprocess.run(["git", "-C", str(repo), "commit", "-qm", "proposed integration execute"], check=True)
+    integration = subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+    integration_attempt = module.plan(
+        repo=repo,
+        event_action="synchronize",
+        before=package,
+        after=integration,
+        selector_path=selector,
+        authoritative_request_path=request,
+    )
+    if not (
+        integration_attempt["requested"] is True
+        and integration_attempt["automatic"] is True
+        and integration_attempt["gate"] == "supralinux-proposed-integration"
+        and integration_attempt["mode"] == "execute"
+    ):
+        raise SystemExit("reviewed proposed integration request did not auto-trigger")
 
     selector.write_text(json.dumps({"schema": 1, "target": "workspace"}) + "\n")
     explicit = module.plan(
