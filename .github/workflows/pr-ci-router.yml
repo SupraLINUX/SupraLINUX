@@ -72,38 +72,45 @@ jobs:
 
   host-workspace-admission:
     name: Host control admission
+    needs: [repository-policy]
     if: >-
-      ${{ github.event.action == 'labeled' &&
-          github.event.label.name == 'ci:host-workspace' &&
-          github.event.pull_request.head.repo.full_name == github.repository }}
+      ${{ always() &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          ((github.event.action == 'labeled' &&
+            github.event.label.name == 'ci:host-workspace' &&
+            needs.repository-policy.result == 'skipped') ||
+           (github.event.action == 'synchronize' &&
+            needs.repository-policy.result == 'success')) }}
     runs-on: ubuntu-26.04
     timeout-minutes: 10
     outputs:
       target: ${{ steps.target.outputs.target }}
+      requested: ${{ steps.target.outputs.requested }}
+      trigger: ${{ steps.target.outputs.trigger }}
     steps:
       - name: Checkout exact PR head
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
+          fetch-depth: 0
       - name: Select host control target
         id: target
         shell: bash
+        env:
+          EVENT_ACTION: ${{ github.event.action }}
+          EVENT_BEFORE: ${{ github.event.before }}
+          EVENT_AFTER: ${{ github.event.after }}
         run: |
           set -euo pipefail
-          target="$(python3 - <<'PY'
-          import json
-          from pathlib import Path
-          request = json.loads(Path("ops/host-workspace/request.json").read_text())
-          target = request.get("target", "workspace")
-          if target not in {"workspace", "authoritative"}:
-              raise SystemExit(f"unsupported host control target: {target!r}")
-          print(target)
-          PY
-          )"
-          echo "target=$target" >> "$GITHUB_OUTPUT"
-          echo "host_control_target=$target"
+          python3 scripts/plan-host-control-trigger.py \
+            --event-action "$EVENT_ACTION" \
+            --before "$EVENT_BEFORE" \
+            --after "$EVENT_AFTER" \
+            --selector ops/host-workspace/request.json \
+            --authoritative-request ops/host-authoritative/request.json \
+            --github-output "$GITHUB_OUTPUT"
       - name: Validate host control admission
+        if: steps.target.outputs.requested == 'true'
         shell: bash
         env:
           PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -157,9 +164,8 @@ jobs:
     needs: [host-workspace-admission]
     if: >-
       ${{ needs.host-workspace-admission.result == 'success' &&
+          needs.host-workspace-admission.outputs.requested == 'true' &&
           needs.host-workspace-admission.outputs.target == 'workspace' &&
-          github.event.action == 'labeled' &&
-          github.event.label.name == 'ci:host-workspace' &&
           github.event.pull_request.head.repo.full_name == github.repository }}
     uses: ./.github/workflows/host-workspace.yml
 
@@ -168,8 +174,7 @@ jobs:
     needs: [host-workspace-admission]
     if: >-
       ${{ needs.host-workspace-admission.result == 'success' &&
+          needs.host-workspace-admission.outputs.requested == 'true' &&
           needs.host-workspace-admission.outputs.target == 'authoritative' &&
-          github.event.action == 'labeled' &&
-          github.event.label.name == 'ci:host-workspace' &&
           github.event.pull_request.head.repo.full_name == github.repository }}
     uses: ./.github/workflows/host-authoritative-control.yml

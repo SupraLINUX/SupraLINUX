@@ -89,6 +89,14 @@ req("github.event.label.name == 'ci:host-workspace'" in router_text,
     "PR router must require the exact host-control opt-in label")
 req("host-workspace-admission:" in router_text,
     "PR router must expose a cheap hosted admission gate for host control")
+req("scripts/plan-host-control-trigger.py" in router_text,
+    "PR router must use the reviewed host-control trigger planner")
+req("needs: [repository-policy]" in router_text and
+    "needs.repository-policy.result == 'success'" in router_text and
+    "needs.repository-policy.result == 'skipped'" in router_text,
+    "automatic host maintenance must be gated by repository policy while explicit labels remain usable")
+req("needs.host-workspace-admission.outputs.requested == 'true'" in router_text,
+    "host execution must require an affirmative reviewed trigger plan")
 req("runs-on: ubuntu-26.04" in router_text,
     "host control admission must run on explicit hosted Ubuntu 26.04")
 req("scripts/test-host-orchestrator-service.sh" in router_text and

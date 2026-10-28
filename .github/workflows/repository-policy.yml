@@ -211,6 +211,9 @@ jobs:
         shell: bash
         run: scripts/test-host-workspace-libvirt-permissions.sh
 
+      - name: Test scoped automatic host-control trigger
+        run: python3 scripts/test-host-control-trigger.py
+
       - name: Test authoritative host control contract
         run: python3 scripts/test-host-authoritative-control.py
 
