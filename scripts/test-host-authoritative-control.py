@@ -388,6 +388,7 @@ required_router = [
     '"runner-contract"',
     '"repair-proposed-retained-artifacts"',
     '"certify-proposed-content"',
+    '"certify-proposed-signing"',
     '"supralinux-proposed"',
     "scripts/plan-host-control-trigger.py",
     "needs.repository-policy.result == 'success'",
