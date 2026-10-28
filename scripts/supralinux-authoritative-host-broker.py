@@ -55,6 +55,7 @@ if request.get("mode") not in {
     "close-evidence-check", "close-evidence",
     "publish-evidence-check", "publish-evidence",
     "repair-frameworks-retained-artifacts",
+    "repair-proposed-retained-artifacts",
     "certify-proposed-content",
 }:
     raise SystemExit("Unsupported control mode.")
@@ -62,9 +63,9 @@ if request.get("gate") not in {"plasma-package-build", "runner-contract", "supra
     raise SystemExit("Unsupported authoritative gate.")
 if request.get("gate") == "runner-contract" and request.get("mode") not in {"preflight", "execute"}:
     raise SystemExit("Runner contract gate permits only preflight or execute mode.")
-if request.get("gate") == "supralinux-proposed" and request.get("mode") not in {"repair-frameworks-retained-artifacts", "certify-proposed-content"}:
+if request.get("gate") == "supralinux-proposed" and request.get("mode") not in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content"}:
     raise SystemExit("SupraLINUX-proposed gate permits only retained-artifact repair or content certification.")
-if request.get("mode") in {"repair-frameworks-retained-artifacts", "certify-proposed-content"} and request.get("gate") != "supralinux-proposed":
+if request.get("mode") in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content"} and request.get("gate") != "supralinux-proposed":
     raise SystemExit("SupraLINUX-proposed repair/certification modes require the SupraLINUX-proposed gate.")
 
 source_commit = request.get("source_commit")
@@ -155,7 +156,7 @@ else:
 if request["mode"] in {
     "diagnose", "repair-host", "repair-libguestfs-runtime", "rebuild-golden", "execute", "execute-and-publish-pass",
     "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence",
-    "repair-frameworks-retained-artifacts", "certify-proposed-content",
+    "repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content",
 } and (
     cancel_run_id is not None or cancel_run_head_sha is not None
 ):
@@ -380,6 +381,94 @@ def run_package_closure(
     if rc != 0:
         raise SystemExit(rc)
     return output_dir
+
+
+
+if request["mode"] == "repair-proposed-retained-artifacts":
+    repair_root = WORK_ROOT / control_run_id
+    repair_checkout = repair_root / "repo"
+    repair_evidence = repair_root / "evidence"
+    if repair_root.exists():
+        raise SystemExit(f"Proposed retained-artifact recovery work directory already exists: {repair_root}")
+    repair_root.mkdir(mode=0o700)
+    os.chown(repair_root, operator.pw_uid, operator.pw_gid)
+    repair_evidence.mkdir(mode=0o700)
+    os.chown(repair_evidence, operator.pw_uid, operator.pw_gid)
+
+    if not PERSISTENT_ARTIFACT_ROOT.exists():
+        PERSISTENT_ARTIFACT_ROOT.mkdir(parents=True, mode=0o700)
+        os.chown(PERSISTENT_ARTIFACT_ROOT, operator.pw_uid, operator.pw_gid)
+    if PERSISTENT_ARTIFACT_ROOT.is_symlink() or not PERSISTENT_ARTIFACT_ROOT.is_dir():
+        raise SystemExit("Persistent Plasma artifact root is not a real directory.")
+    run_as_operator(["test", "-w", str(PERSISTENT_ARTIFACT_ROOT)])
+
+    repair_log = result_dir / "proposed-retained-artifact-repair.log"
+    repair_rc = 125
+    repair_state = "INFRA_INVALID"
+    try:
+        prepare_control_checkout(repair_checkout)
+        command = [
+            "python3",
+            "scripts/restore-proposed-retained-artifacts.py",
+            "--checkout", str(repair_checkout),
+            "--artifact-root", str(PERSISTENT_ARTIFACT_ROOT),
+            "--result", str(repair_evidence / "result.json"),
+        ]
+        legacy_roots = [
+            Path(operator.pw_dir) / "src/SupraLINUX/.artifacts",
+            HOST_EVIDENCE_ROOT,
+        ]
+        for legacy_root in legacy_roots:
+            try:
+                resolved_legacy = legacy_root.resolve(strict=True)
+            except FileNotFoundError:
+                continue
+            if legacy_root.is_symlink() or not resolved_legacy.is_dir():
+                continue
+            command.extend(["--legacy-search-root", str(resolved_legacy)])
+        repair_rc = stream_as_operator(
+            command,
+            repair_log,
+            cwd=repair_checkout,
+        )
+        result_json = repair_evidence / "result.json"
+        if result_json.is_file():
+            payload = json.loads(result_json.read_text())
+            repair_state = payload.get("state")
+            if repair_rc == 0 and repair_state not in {"PASS", "BLOCKED"}:
+                repair_rc = 2
+                repair_state = "INFRA_INVALID"
+            destination = result_dir / "proposed-retained-artifact-repair.json"
+            shutil.copy2(result_json, destination)
+            os.chown(destination, runner_pw.pw_uid, runner_pw.pw_gid)
+            os.chmod(destination, 0o600)
+    finally:
+        if repair_root.exists():
+            shutil.rmtree(repair_root)
+
+    write_result(
+        "proposed-retained-artifact-repair-control-result.txt",
+        "\n".join(
+            [
+                f"state={repair_state if repair_rc == 0 else 'INFRA_INVALID'}",
+                f"exit_code={repair_rc}",
+                "mode=repair-proposed-retained-artifacts",
+                "gate=supralinux-proposed",
+                f"source_commit={source_commit}",
+                "scope=supralinux-proposed-retained-artifact-recovery",
+                "stable_publication_authorized=no",
+                "vm_created=no",
+                "jit_invoked=no",
+                "sbuild_invoked=no",
+                "package_attempt_effect=none",
+                "",
+            ]
+        ),
+    )
+    if repair_rc != 0:
+        raise SystemExit(repair_rc)
+    print(f"HOST_PROPOSED_RETAINED_ARTIFACT_REPAIR={repair_state}")
+    raise SystemExit(0)
 
 
 if request["mode"] == "repair-frameworks-retained-artifacts":
