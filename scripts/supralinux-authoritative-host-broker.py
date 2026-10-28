@@ -1200,7 +1200,7 @@ if request["mode"] == "repair-host":
     print("HOST_NETWORK_SAFETY_REPAIR=PASS")
     raise SystemExit(0)
 run_as_operator(["gh", "auth", "status", "--hostname", "github.com"])
-token_result = run_as_operator(["gh", "auth", "token"])
+token_result = run_as_operator(["gh", "auth", "token", "--hostname", "github.com"])
 token = token_result.stdout.strip()
 if not token:
     raise SystemExit("Could not acquire host operator GitHub token.")

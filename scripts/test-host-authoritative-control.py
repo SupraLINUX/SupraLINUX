@@ -160,6 +160,7 @@ required_broker = [
     '"libguestfs-runtime-kernel-sha256"',
     '"libguestfs-modules-dep-sha256"',
     '"github_token_requested=no"',
+    '["gh", "auth", "token", "--hostname", "github.com"]',
     '"jit_invoked=no"',
     '/actions/runs/{cancel_run_id}/cancel',
     '/labels/ci%3Aplasma-package-build',
