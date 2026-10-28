@@ -1524,6 +1524,65 @@ try:
     ).stdout:
         raise SystemExit("Host preflight modified the exact control checkout.")
 
+    jit_api_preflight_state = "NOT_RUN"
+    if request["mode"] == "preflight" and request["gate"] == "supralinux-proposed-integration":
+        jit_api_evidence = control_dir / "jit-api-preflight"
+        jit_api_log = result_dir / "jit-api-preflight.log"
+        jit_api_rc = stream_as_operator(
+            ["scripts/check-jit-runner-api-lifecycle.sh"],
+            jit_api_log,
+            cwd=checkout,
+            extra_env={
+                "SUPRALINUX_GITHUB_TOKEN": token,
+                "SUPRALINUX_RUNNER_GROUP_ID": str(runner_group_id),
+                "SUPRALINUX_REPOSITORY": REPOSITORY,
+                "SUPRALINUX_JIT_PREFLIGHT_EVIDENCE_ROOT": str(jit_api_evidence),
+            },
+        )
+        retained_jit_evidence = result_dir / "jit-api-preflight-evidence"
+        if jit_api_evidence.exists():
+            shutil.copytree(jit_api_evidence, retained_jit_evidence)
+            for retained_path in [retained_jit_evidence, *retained_jit_evidence.rglob("*")]:
+                if retained_path.is_symlink():
+                    raise SystemExit(
+                        f"JIT API preflight evidence contains symlink: {retained_path}"
+                    )
+                os.chown(retained_path, runner_pw.pw_uid, runner_pw.pw_gid)
+                os.chmod(retained_path, 0o700 if retained_path.is_dir() else 0o600)
+        if jit_api_rc != 0:
+            write_result(
+                "jit-api-preflight-result.txt",
+                "\n".join(
+                    [
+                        "state=INFRA_INVALID",
+                        f"exit_code={jit_api_rc}",
+                        f"gate={request['gate']}",
+                        f"source_commit={source_commit}",
+                        "vm_created=no",
+                        "jit_runner_lifecycle=synthetic-only",
+                        "package_attempt_effect=none",
+                        "",
+                    ]
+                ),
+            )
+            raise SystemExit(jit_api_rc)
+        jit_api_preflight_state = "PASS"
+        write_result(
+            "jit-api-preflight-result.txt",
+            "\n".join(
+                [
+                    "state=PASS",
+                    "exit_code=0",
+                    f"gate={request['gate']}",
+                    f"source_commit={source_commit}",
+                    "vm_created=no",
+                    "jit_runner_lifecycle=create-delete-pass",
+                    "package_attempt_effect=none",
+                    "",
+                ]
+            ),
+        )
+
     write_result(
         "preflight-result.txt",
         "\n".join(
@@ -1535,6 +1594,7 @@ try:
                 f"source_commit={source_commit}",
                 f"operator_user={operator.pw_name}",
                 f"runner_group_id={runner_group_id}",
+                f"jit_api_lifecycle={jit_api_preflight_state}",
                 "package_attempt_effect=none-before-execute",
                 "",
             ]
