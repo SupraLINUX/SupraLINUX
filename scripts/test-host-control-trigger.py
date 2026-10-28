@@ -19,6 +19,7 @@ expected_auto = {
     ("supralinux-proposed", "repair-proposed-retained-artifacts"),
     ("supralinux-proposed", "certify-proposed-content"),
     ("supralinux-proposed", "certify-proposed-signing"),
+    ("supralinux-proposed-integration", "preflight"),
     ("supralinux-proposed-integration", "execute"),
 }
 if module.AUTO_SYNCHRONIZE_CONTROLS != expected_auto:
@@ -125,6 +126,36 @@ with tempfile.TemporaryDirectory() as directory:
         json.dumps(
             {
                 "schema": 1,
+                "mode": "preflight",
+                "gate": "supralinux-proposed-integration",
+                "runner_group_id": 3,
+            }
+        )
+        + "\n"
+    )
+    subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
+    subprocess.run(["git", "-C", str(repo), "commit", "-qm", "proposed integration preflight"], check=True)
+    integration_preflight = subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+    integration_preflight_plan = module.plan(
+        repo=repo,
+        event_action="synchronize",
+        before=package,
+        after=integration_preflight,
+        selector_path=selector,
+        authoritative_request_path=request,
+    )
+    if not (
+        integration_preflight_plan["requested"] is True
+        and integration_preflight_plan["automatic"] is True
+        and integration_preflight_plan["gate"] == "supralinux-proposed-integration"
+        and integration_preflight_plan["mode"] == "preflight"
+    ):
+        raise SystemExit("reviewed proposed integration preflight did not auto-trigger")
+
+    request.write_text(
+        json.dumps(
+            {
+                "schema": 1,
                 "mode": "execute",
                 "gate": "supralinux-proposed-integration",
                 "runner_group_id": 3,
@@ -138,7 +169,7 @@ with tempfile.TemporaryDirectory() as directory:
     integration_attempt = module.plan(
         repo=repo,
         event_action="synchronize",
-        before=package,
+        before=integration_preflight,
         after=integration,
         selector_path=selector,
         authoritative_request_path=request,

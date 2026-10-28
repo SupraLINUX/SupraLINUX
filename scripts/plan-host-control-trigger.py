@@ -13,6 +13,7 @@ AUTO_SYNCHRONIZE_CONTROLS = {
     ("supralinux-proposed", "repair-proposed-retained-artifacts"),
     ("supralinux-proposed", "certify-proposed-content"),
     ("supralinux-proposed", "certify-proposed-signing"),
+    ("supralinux-proposed-integration", "preflight"),
     ("supralinux-proposed-integration", "execute"),
 }
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")

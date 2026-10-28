@@ -4,6 +4,7 @@ import json
 import os
 import pwd
 import shutil
+import stat
 import subprocess
 import sys
 import time
@@ -66,8 +67,8 @@ if request.get("gate") == "runner-contract" and request.get("mode") not in {"pre
     raise SystemExit("Runner contract gate permits only preflight or execute mode.")
 if request.get("gate") == "supralinux-proposed" and request.get("mode") not in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"}:
     raise SystemExit("SupraLINUX-proposed gate permits only retained-artifact repair or content certification.")
-if request.get("gate") == "supralinux-proposed-integration" and request.get("mode") != "execute":
-    raise SystemExit("SupraLINUX-proposed integration gate permits only execute mode.")
+if request.get("gate") == "supralinux-proposed-integration" and request.get("mode") not in {"preflight", "execute"}:
+    raise SystemExit("SupraLINUX-proposed integration gate permits only preflight or execute mode.")
 if request.get("mode") in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"} and request.get("gate") != "supralinux-proposed":
     raise SystemExit("SupraLINUX-proposed repair/certification modes require the SupraLINUX-proposed gate.")
 
@@ -291,6 +292,18 @@ def operator_environment(extra_env=None):
         "USER": operator.pw_name,
         "LOGNAME": operator.pw_name,
     })
+    env.pop("XDG_RUNTIME_DIR", None)
+    env.pop("DBUS_SESSION_BUS_ADDRESS", None)
+    runtime_dir = Path("/run/user") / str(operator.pw_uid)
+    if runtime_dir.is_dir() and not runtime_dir.is_symlink():
+        runtime_stat = runtime_dir.stat()
+        if runtime_stat.st_uid == operator.pw_uid:
+            env["XDG_RUNTIME_DIR"] = str(runtime_dir)
+            session_bus = runtime_dir / "bus"
+            if session_bus.exists() and not session_bus.is_symlink():
+                bus_stat = session_bus.stat()
+                if bus_stat.st_uid == operator.pw_uid and stat.S_ISSOCK(bus_stat.st_mode):
+                    env["DBUS_SESSION_BUS_ADDRESS"] = f"unix:path={session_bus}"
     if extra_env:
         env.update(extra_env)
     return env
@@ -1199,11 +1212,41 @@ if request["mode"] == "repair-host":
         raise SystemExit(repair.returncode)
     print("HOST_NETWORK_SAFETY_REPAIR=PASS")
     raise SystemExit(0)
-run_as_operator(["gh", "auth", "status", "--hostname", "github.com"])
-token_result = run_as_operator(["gh", "auth", "token", "--hostname", "github.com"])
-token = token_result.stdout.strip()
-if not token:
-    raise SystemExit("Could not acquire host operator GitHub token.")
+auth_env = operator_environment()
+auth_status = run_as_operator(
+    ["gh", "auth", "status", "--hostname", "github.com"],
+    check=False,
+)
+token_result = run_as_operator(
+    ["gh", "auth", "token", "--hostname", "github.com"],
+    check=False,
+)
+token = token_result.stdout.strip() if token_result.returncode == 0 else ""
+write_result(
+    "github-auth-diagnostic.txt",
+    "\n".join(
+        [
+            f"operator_user={operator.pw_name}",
+            f"gh_auth_status_rc={auth_status.returncode}",
+            f"gh_auth_token_rc={token_result.returncode}",
+            f"token_stdout_present={'yes' if bool(token_result.stdout.strip()) else 'no'}",
+            f"xdg_runtime_dir_set={'yes' if bool(auth_env.get('XDG_RUNTIME_DIR')) else 'no'}",
+            f"dbus_session_bus_set={'yes' if bool(auth_env.get('DBUS_SESSION_BUS_ADDRESS')) else 'no'}",
+            "--- gh auth status stdout ---",
+            auth_status.stdout.rstrip(),
+            "--- gh auth status stderr ---",
+            auth_status.stderr.rstrip(),
+            "--- gh auth token stderr ---",
+            token_result.stderr.rstrip(),
+            "",
+        ]
+    ),
+)
+if auth_status.returncode != 0 or token_result.returncode != 0 or not token:
+    raise SystemExit(
+        "Host operator GitHub authentication is unavailable; "
+        "see github-auth-diagnostic.txt (token value is never retained)."
+    )
 
 def api(method: str, path: str, body=None, allowed=(200, 201, 202, 204)):
     data = None if body is None else json.dumps(body).encode()

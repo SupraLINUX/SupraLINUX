@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "mode": "execute",
+  "mode": "preflight",
   "gate": "supralinux-proposed-integration",
   "runner_group_id": 3
 }
