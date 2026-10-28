@@ -53,9 +53,9 @@ prepare_calls = [
     and isinstance(node.func, ast.Name)
     and node.func.id == "prepare_control_checkout"
 ]
-if len(prepare_calls) != 5:
+if len(prepare_calls) != 6:
     raise SystemExit(
-        "prepare_control_checkout must be shared by diagnose, Frameworks repair, proposed artifact repair, proposed certification, and normal control execution"
+        "prepare_control_checkout must be shared by diagnose, Frameworks repair, proposed artifact repair, proposed content certification, proposed signing certification, and normal control execution"
     )
 
 close_spec = importlib.util.spec_from_file_location(
