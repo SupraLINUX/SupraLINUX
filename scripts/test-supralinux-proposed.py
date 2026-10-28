@@ -134,6 +134,18 @@ with tempfile.TemporaryDirectory() as td:
         f" {builder_module.sha256(debian_tar)} {debian_tar.stat().st_size} {debian_tar.name}\n"
     )
 
+    checksum_entries = builder_module.dsc_sha256_entries(
+        builder_module.dsc_fields(dsc), "fixture"
+    )
+    assert checksum_entries == [
+        (builder_module.sha256(orig), str(orig.stat().st_size), orig.name),
+        (
+            builder_module.sha256(debian_tar),
+            str(debian_tar.stat().st_size),
+            debian_tar.name,
+        ),
+    ]
+
     packages_path, release_path = builder_module.build_indices(
         repo, "resolute-supralinux-proposed"
     )

@@ -90,6 +90,23 @@ def dsc_fields(path: Path) -> dict[str, str]:
     }
 
 
+def dsc_sha256_entries(
+    fields: dict[str, str],
+    node: str,
+) -> list[tuple[str, str, str]]:
+    entries: list[tuple[str, str, str]] = []
+    for line in fields.get("Checksums-Sha256", "").splitlines():
+        if not line.strip():
+            continue
+        parts = line.split()
+        if len(parts) != 3:
+            raise SystemExit(f"invalid .dsc checksum line: {line!r}")
+        entries.append((parts[0], parts[1], parts[2]))
+    if not entries:
+        raise SystemExit(f".dsc lacks Checksums-Sha256: {node}")
+    return entries
+
+
 def locate_artifact(
     root: Path,
     digest: str,
@@ -441,14 +458,9 @@ def main() -> None:
             source_dir.mkdir(parents=True, exist_ok=True)
             dsc_digest = copy_verified(dsc, source_dir / dsc.name)
             source_files = [{"file": str((source_dir / dsc.name).relative_to(args.output)), "sha256": dsc_digest}]
-            checksum_lines = fields.get("Checksums-Sha256", "").splitlines()
-            if not checksum_lines:
-                raise SystemExit(f".dsc lacks Checksums-Sha256: {candidate['node']}")
-            for line in checksum_lines:
-                parts = line.split()
-                if len(parts) != 3:
-                    raise SystemExit(f"invalid .dsc checksum line: {line!r}")
-                expected_sha, _size, filename = parts
+            for expected_sha, _size, filename in dsc_sha256_entries(
+                fields, candidate["node"]
+            ):
                 source_file = dsc.parent / filename
                 if not source_file.is_file():
                     matches = list(extracted.rglob(filename))
