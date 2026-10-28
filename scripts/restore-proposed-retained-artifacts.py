@@ -12,6 +12,7 @@ import tempfile
 import time
 import urllib.error
 import urllib.request
+import zipfile
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -296,6 +297,155 @@ def download_artifact(
     raise SystemExit(f"artifact {artifact_id} download failed: {last_error}")
 
 
+def allowed_legacy_directory(
+    roots: list[Path],
+    requested: Path,
+) -> Path | None:
+    try:
+        requested_resolved = requested.resolve(strict=True)
+    except (FileNotFoundError, OSError):
+        return None
+    if requested.is_symlink() or not requested_resolved.is_dir():
+        return None
+    for supplied_root in roots:
+        try:
+            root = real_root(supplied_root)
+        except (FileNotFoundError, OSError, SystemExit):
+            continue
+        if not (
+            requested_resolved == root
+            or requested_resolved.is_relative_to(root)
+        ):
+            continue
+        if has_symlink_between(root, requested):
+            continue
+        return requested_resolved
+    return None
+
+
+def rebuild_sealed_host_export(
+    roots: list[Path],
+    node: str,
+    candidate: dict,
+    record: dict,
+    destination: Path,
+) -> str:
+    evidence = record.get("evidence") or {}
+    if not (
+        evidence.get("artifact_origin") == "sealed-host-package-export"
+        and evidence.get("actions_export_complete") is False
+    ):
+        return "not-applicable"
+
+    host_dir_text = evidence.get("host_evidence_dir")
+    if not isinstance(host_dir_text, str) or not host_dir_text:
+        return "unavailable"
+    host_dir = allowed_legacy_directory(roots, Path(host_dir_text))
+    if host_dir is None:
+        return "unavailable"
+
+    manifest = host_dir / "evidence-sha256.txt"
+    expected_manifest_sha = evidence.get("host_evidence_manifest_sha256")
+    validate_digest(expected_manifest_sha)
+    if (
+        manifest.is_symlink()
+        or not manifest.is_file()
+        or sha256(manifest) != expected_manifest_sha
+    ):
+        raise SystemExit(f"{node}: sealed host evidence manifest integrity failure")
+    seal_check = subprocess.run(
+        ["sha256sum", "--check", "--quiet", manifest.name],
+        cwd=host_dir,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+    if seal_check.returncode != 0:
+        raise SystemExit(
+            f"{node}: sealed host evidence payload integrity failure:\n"
+            f"{seal_check.stdout[-4000:]}"
+        )
+
+    payload_dir = (
+        host_dir
+        / "guest-files"
+        / "workspace"
+        / "evidence"
+        / "authoritative-plasma-package"
+    )
+    try:
+        payload_real = payload_dir.resolve(strict=True)
+    except (FileNotFoundError, OSError):
+        return "unavailable"
+    if (
+        payload_dir.is_symlink()
+        or not payload_real.is_dir()
+        or not payload_real.is_relative_to(host_dir)
+    ):
+        raise SystemExit(f"{node}: sealed package payload path is unsafe")
+
+    result_path = payload_dir / "result.json"
+    if result_path.is_symlink() or not result_path.is_file():
+        return "unavailable"
+    original = json.loads(result_path.read_text())
+    expected_source_commit = evidence.get("source_commit")
+    expected_run_id = evidence.get("workflow_run_id")
+    if not (
+        original.get("node") == node
+        and original.get("version") == candidate.get("version")
+        and original.get("state") == "PASS"
+        and original.get("exit_code") == 0
+        and original.get("source_commit") == expected_source_commit
+        and original.get("workflow_run_id") == str(expected_run_id)
+        and original.get("package_attempt_consumed") is True
+    ):
+        raise SystemExit(f"{node}: sealed package result identity mismatch")
+
+    files_sha256 = original.get("files_sha256")
+    if not isinstance(files_sha256, dict) or not files_sha256:
+        raise SystemExit(f"{node}: sealed package result has no file manifest")
+    for name, digest in files_sha256.items():
+        validate_digest(digest)
+        relative = Path(name)
+        if (
+            relative.is_absolute()
+            or not relative.parts
+            or any(part in {"", ".", ".."} for part in relative.parts)
+        ):
+            raise SystemExit(f"{node}: unsafe sealed payload path: {name!r}")
+        path = payload_dir / relative
+        try:
+            resolved = path.resolve(strict=True)
+        except (FileNotFoundError, OSError):
+            raise SystemExit(f"{node}: sealed payload file is missing: {name}")
+        if not resolved.is_relative_to(payload_real) or not path.is_file():
+            raise SystemExit(f"{node}: sealed payload file escaped its root: {name}")
+        if sha256(path) != digest:
+            raise SystemExit(f"{node}: sealed payload digest mismatch: {name}")
+
+    destination.unlink(missing_ok=True)
+    with zipfile.ZipFile(
+        destination,
+        "w",
+        compression=zipfile.ZIP_DEFLATED,
+        strict_timestamps=False,
+    ) as archive:
+        for path in sorted(payload_dir.rglob("*")):
+            if not path.is_file():
+                continue
+            resolved = path.resolve(strict=True)
+            if not resolved.is_relative_to(payload_real):
+                raise SystemExit(f"{node}: sealed ZIP input escaped its root: {path}")
+            archive.write(path, str(path.relative_to(payload_dir)))
+
+    expected_artifact_sha = candidate.get("artifact_sha256")
+    validate_digest(expected_artifact_sha)
+    if sha256(destination) != expected_artifact_sha:
+        destination.unlink(missing_ok=True)
+        return "digest-mismatch"
+    return "restored"
+
+
 def write_plasma_identity_dag(
     path: Path,
     node: str,
@@ -426,7 +576,7 @@ def main() -> None:
     campaign = json.loads((checkout / "manifests/kde-plasma-package-build.json").read_text())
 
     rows = []
-    reused = restored_github = restored_legacy = 0
+    reused = restored_github = restored_legacy = restored_sealed_host = 0
     index_reused = index_restored_legacy = index_rebuilt = 0
     unresolved = []
     token: str | None = None
@@ -504,23 +654,54 @@ def main() -> None:
                     finally:
                         temporary.unlink(missing_ok=True)
                 else:
-                    unresolved.append(
-                        {
-                            "node": node,
-                            "reason": "offline-retained-artifact-not-found",
-                            "artifact_id": None,
-                            "artifact_sha256": digest,
-                        }
+                    fd, temp_name = tempfile.mkstemp(
+                        prefix=f"sealed-{node}.", suffix=".zip.tmp", dir=target.parent
                     )
-                    rows.append(
-                        {
-                            "node": node,
-                            "state": "BLOCKED",
-                            "artifact": "missing",
-                            "index": "not-checked",
-                        }
-                    )
-                    continue
+                    os.close(fd)
+                    temporary = Path(temp_name)
+                    try:
+                        sealed_status = rebuild_sealed_host_export(
+                            args.legacy_search_root,
+                            node,
+                            candidate,
+                            record,
+                            temporary,
+                        )
+                        if sealed_status == "restored":
+                            artifact = temporary
+                            action = "restored-sealed-host"
+                            index_bytes, generated_index_sha = verified_index_bytes(
+                                checkout, node, candidate, record, artifact
+                            )
+                            atomic_install(artifact, target, digest)
+                            artifact = target
+                            restored_sealed_host += 1
+                        else:
+                            reason = (
+                                "sealed-host-export-not-reproducible"
+                                if sealed_status == "digest-mismatch"
+                                else "offline-retained-artifact-not-found"
+                            )
+                            unresolved.append(
+                                {
+                                    "node": node,
+                                    "reason": reason,
+                                    "artifact_id": None,
+                                    "artifact_sha256": digest,
+                                    "sealed_host_rebuild_status": sealed_status,
+                                }
+                            )
+                            rows.append(
+                                {
+                                    "node": node,
+                                    "state": "BLOCKED",
+                                    "artifact": "missing",
+                                    "index": "not-checked",
+                                }
+                            )
+                            continue
+                    finally:
+                        temporary.unlink(missing_ok=True)
 
             if action != "restored-github":
                 index_bytes, generated_index_sha = verified_index_bytes(
@@ -589,6 +770,7 @@ def main() -> None:
         "reused": reused,
         "restored_from_github": restored_github,
         "restored_from_legacy": restored_legacy,
+        "restored_from_sealed_host": restored_sealed_host,
         "archive_indices_reused": index_reused,
         "archive_indices_restored_from_legacy": index_restored_legacy,
         "archive_indices_rebuilt_exactly": index_rebuilt,

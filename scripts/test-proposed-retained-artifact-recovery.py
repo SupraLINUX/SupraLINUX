@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import os
+import zipfile
 import tempfile
 from pathlib import Path
 
@@ -22,6 +23,9 @@ for token in (
     '"scripts/retain-package-artifacts.py"',
     '"--dag", str(dag_path)',
     'source_package != candidate.get("source_package")',
+    '"sealed-host-package-export"',
+    '"restored-sealed-host"',
+    '"restored_from_sealed_host"',
     '"archive_index_sha256"',
     '"package_attempt_consumed": False',
     '"canonical_package_state_effect": "none"',
@@ -109,6 +113,94 @@ with tempfile.TemporaryDirectory() as directory:
         pass
     else:
         raise SystemExit("mismatched Plasma source identity was accepted")
+
+    host_root = base / "host-evidence-root"
+    host_dir = host_root / "sealed-run"
+    payload_dir = (
+        host_dir
+        / "guest-files"
+        / "workspace"
+        / "evidence"
+        / "authoritative-plasma-package"
+    )
+    payload_dir.mkdir(parents=True)
+    package_file = payload_dir / "packages" / "example.deb"
+    package_file.parent.mkdir()
+    package_file.write_bytes(b"sealed-package-bytes")
+    package_digest = module.sha256(package_file)
+    result = {
+        "node": "example-node",
+        "version": "1.0-0supralinux1",
+        "state": "PASS",
+        "exit_code": 0,
+        "source_commit": "1" * 40,
+        "workflow_run_id": "123",
+        "package_attempt_consumed": True,
+        "files_sha256": {
+            "packages/example.deb": package_digest,
+        },
+    }
+    (payload_dir / "result.json").write_text(
+        module.json.dumps(result, indent=2, sort_keys=True) + "\n"
+    )
+    seal_lines = []
+    for sealed_file in sorted(
+        path for path in host_dir.rglob("*")
+        if path.is_file()
+    ):
+        seal_lines.append(
+            f"{module.sha256(sealed_file)}  ./{sealed_file.relative_to(host_dir)}"
+        )
+    manifest = host_dir / "evidence-sha256.txt"
+    manifest.write_text("\n".join(seal_lines) + "\n")
+
+    reference_zip = base / "reference-sealed-export.zip"
+    with zipfile.ZipFile(
+        reference_zip,
+        "w",
+        compression=zipfile.ZIP_DEFLATED,
+        strict_timestamps=False,
+    ) as archive:
+        for path in sorted(payload_dir.rglob("*")):
+            if path.is_file():
+                archive.write(path, str(path.relative_to(payload_dir)))
+    reference_digest = module.sha256(reference_zip)
+    rebuilt_zip = base / "rebuilt-sealed-export.zip"
+    sealed_record = {
+        "evidence": {
+            "artifact_origin": "sealed-host-package-export",
+            "actions_export_complete": False,
+            "host_evidence_dir": str(host_dir),
+            "host_evidence_manifest_sha256": module.sha256(manifest),
+            "source_commit": "1" * 40,
+            "workflow_run_id": 123,
+        }
+    }
+    sealed_candidate = {
+        "version": "1.0-0supralinux1",
+        "artifact_sha256": reference_digest,
+    }
+    if module.rebuild_sealed_host_export(
+        [host_root],
+        "example-node",
+        sealed_candidate,
+        sealed_record,
+        rebuilt_zip,
+    ) != "restored":
+        raise SystemExit("exact sealed host export was not rebuilt")
+    if module.sha256(rebuilt_zip) != reference_digest:
+        raise SystemExit("rebuilt sealed host export changed archive bytes")
+
+    wrong_candidate = dict(sealed_candidate)
+    wrong_candidate["artifact_sha256"] = "0" * 64
+    if module.rebuild_sealed_host_export(
+        [host_root],
+        "example-node",
+        wrong_candidate,
+        sealed_record,
+        rebuilt_zip,
+    ) != "digest-mismatch":
+        raise SystemExit("non-reproducible sealed host export was accepted")
 
     if hasattr(os, "symlink"):
         symlink_root = base / "symlink-root"
