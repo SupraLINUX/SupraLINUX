@@ -1,0 +1,9 @@
+{
+  "id": null,
+  "kind": "sealed-host-preflight-infra-result-export",
+  "digest": "sha256:c7b7950806b0ef92f9ed7c23633f9859265956b50ca0202e13d450e71e1de72f",
+  "workflow_run": {
+    "id": 38044498457,
+    "head_sha": "b36b21494518605bc6d62cb714a0fe77c86165f4"
+  }
+}

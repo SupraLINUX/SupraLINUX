@@ -1,0 +1,173 @@
+{
+  "schema": 1,
+  "scope": "failed-package-attempt-retention-verification",
+  "node": "libkscreen",
+  "version": "4:6.7.5-0supralinux3",
+  "source_commit": "5ed22e62b3bf79af751e6a47ac7181743d904aef",
+  "artifact_id": 11570009006,
+  "artifact_sha256": "0dae76b382490e85e1b16171a7c05f20478b248ffceb0e820a1142c1d6a04be4",
+  "archive_path": ".artifacts/plasma-6.7.5/libkscreen-attempt3/sha256/0dae76b382490e85e1b16171a7c05f20478b248ffceb0e820a1142c1d6a04be4.zip",
+  "source_payload_verified": true,
+  "raw_file_digest_closure_verified": true,
+  "offline_restore_verified": true,
+  "requires_github_for_restore": false,
+  "candidate_binaries_buildinfo_changes": "complete; identity/architecture/source/version and checksums verified after offline restore",
+  "outcomes": {
+    "sbuild": "PASS",
+    "native_upstream_tests": {
+      "state": "PASS",
+      "passed": [
+        "appstreamtest",
+        "kscreen-testscreenconfig",
+        "kscreen-testconfigserializer",
+        "kscreen-testconfigmonitor",
+        "kscreen-testinprocess",
+        "kscreen-testbackendloader",
+        "kscreen-testlog",
+        "kscreen-testmodelistchange",
+        "kscreen-testedid"
+      ],
+      "failed": []
+    },
+    "lintian": "PASS",
+    "installed_candidate_tests": "FAIL",
+    "baseline_ubuntu_client": "PASS",
+    "infrastructure_probe": "PASS",
+    "infrastructure_cleanup": "PASS",
+    "evidence_validation": "PASS"
+  },
+  "files_sha256": {
+    "artifact-meta.json": "e35968f1f0e2a40fb8d1f1f0691aa30f055f77f26865d16cf2867b787ef70659",
+    "autopkgtest/artifacts/consumer/rebuilt-fake/bus.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/artifacts/consumer/rebuilt-fake/client.log": "3041dad0097ac903e6dce84ed363239a42efe21a18a61730984f20ec3f856487",
+    "autopkgtest/artifacts/consumer/rebuilt-fake/launcher.log": "46807afeda02cd27f9742d5c58e8c2b9f85206db199a99ef3a545f05b7ad5553",
+    "autopkgtest/artifacts/consumer/rebuilt-fake/xvfb.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/artifacts/consumer/rebuilt-xrandr/bus.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/artifacts/consumer/rebuilt-xrandr/client.log": "106a4bfe6d5323a602eca669fd1c471d78ea99d3a9e66d3e256e7dbce7d6521f",
+    "autopkgtest/artifacts/consumer/rebuilt-xrandr/launcher.log": "d19824de1aeab91ed7d39c22c772d77a57eed5625afb39f99e258fa1dcf375ea",
+    "autopkgtest/artifacts/consumer/rebuilt-xrandr/xvfb.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/artifacts/ubuntu-abi-client/unchanged-ubuntu-fake/bus.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/artifacts/ubuntu-abi-client/unchanged-ubuntu-fake/client.log": "3041dad0097ac903e6dce84ed363239a42efe21a18a61730984f20ec3f856487",
+    "autopkgtest/artifacts/ubuntu-abi-client/unchanged-ubuntu-fake/launcher.log": "46807afeda02cd27f9742d5c58e8c2b9f85206db199a99ef3a545f05b7ad5553",
+    "autopkgtest/artifacts/ubuntu-abi-client/unchanged-ubuntu-fake/xvfb.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/artifacts/ubuntu-abi-client/unchanged-ubuntu-xrandr/bus.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/artifacts/ubuntu-abi-client/unchanged-ubuntu-xrandr/client.log": "106a4bfe6d5323a602eca669fd1c471d78ea99d3a9e66d3e256e7dbce7d6521f",
+    "autopkgtest/artifacts/ubuntu-abi-client/unchanged-ubuntu-xrandr/launcher.log": "d19824de1aeab91ed7d39c22c772d77a57eed5625afb39f99e258fa1dcf375ea",
+    "autopkgtest/artifacts/ubuntu-abi-client/unchanged-ubuntu-xrandr/xvfb.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "autopkgtest/binaries/extra-cmake-modules.deb": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f",
+    "autopkgtest/binaries/libkf6screen8.deb": "cac3c8b04fad8adc4557789f3548578a7a2aa62e7ce9b625c8bc6cf0620322aa",
+    "autopkgtest/binaries/libkf6screendpms8.deb": "391a919d1e848c1a85f629e762424fe0887d2cfd349788bada0132eb901624b8",
+    "autopkgtest/binaries/libkscreen-bin.deb": "2dd1de08709f4c9d2f4b0bbfc66d6ea7accee5bf0832d1a1530d862b241ccb1c",
+    "autopkgtest/binaries/libkscreen-data.deb": "26bfcb73457eadb2586599ac5e3b0e0e8424722b964a21a61ca8a001b1794abe",
+    "autopkgtest/binaries/libkscreen-dev.deb": "5b860b925beb2e1386ee99dca313a51c3de8d575e19e3355b0c1611f3fcf74ad",
+    "autopkgtest/binaries/libkscreen-doc.deb": "b4d63834339db3f9ccbaaf19cd3fe4a0a36668ceb7928a04d565263cb13e4a69",
+    "autopkgtest/binaries/plasma-wayland-protocols.deb": "85b989ff73b9b8d4e0797a4f326dbe17df3b14f8026a3ea59856b732110f26e7",
+    "autopkgtest/consumer-packages": "622a719b92fcb53789b3f56bbd9ce3350ca140cf7c498ddd24c0e72857f1ece4",
+    "autopkgtest/consumer-stdout": "08749218ce561f7f8b01b359034f9a7ab63fda61b36241d86e03d256d8ade7bd",
+    "autopkgtest/log": "3d8b64d1b916822fd47cf371d3e6045f70c12c66767aec6e66c80701dc762b60",
+    "autopkgtest/summary": "0acc93f3104d72d02ac3fba0ff6f76e3162471a94c0466a46693813c456ceea2",
+    "autopkgtest/testbed-packages": "0cf6e4db8b2f214312bba11b65e0fefc82949cb2396a194a958c278a012b386a",
+    "autopkgtest/testinfo.json": "92f4607e1b393552e0d84437d7ad822c8b4ae4d2b2e4a3174dddb6ab18865040",
+    "autopkgtest/testpkg-version": "31ee32410dd9ecbc8b22781af89c3b8a83388e9b5bd30433e404883a86575339",
+    "autopkgtest/ubuntu-abi-client-packages": "622a719b92fcb53789b3f56bbd9ce3350ca140cf7c498ddd24c0e72857f1ece4",
+    "autopkgtest/ubuntu-abi-client-stderr": "f259e78c303494db9a159ca07a9983e6ed3a9cfbb3d1ffee647f9b588325501d",
+    "autopkgtest/ubuntu-abi-client-stdout": "5cb503ae83517372376566d8f306c5ab8db89c226ad26473c3d887a1fefcdbae",
+    "build-contract.json": "ee77f7fc7879c400d829e1cd5cd3520e547a7973108aa7e764ab0043158a873a",
+    "cache-probe/result.json": "fceae502e4359741d2aadffd40b2fbda2f16899a4281a7c53cc010a07031c5ab",
+    "cleanup.json": "55b21604493267aedb01ede6ae54d795140a61285c7868d45890931978f34016",
+    "fixture-environment-review.json": "7d3700047189b036161537da7cdb5b03309c005ac5624240eb8c0a492d4c501f",
+    "fixture-review/negative-control.json": "c98f50677e4a9aa35664292af5161e2986ec55be40bfe3cf7e004312c2c9fa8a",
+    "fixture-review/original-no-display.stderr": "079676ee498eb298a117fa9955c08558a4f8ee5aee35da7b6191e1b0c08a7418",
+    "fixture-review/original-no-display.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fixture-review/original-ubuntu-doctor-help-with-cleanup/bus.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fixture-review/original-ubuntu-doctor-help-with-cleanup/client.log": "f90ed3fd98f17a8660fb0c59bab74133e39463e1b0d58160569f096a632cd2b3",
+    "fixture-review/original-ubuntu-doctor-help-with-cleanup/launcher.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fixture-review/original-ubuntu-doctor-help-with-cleanup/xvfb.log": "09af44186174436345e3e1e8877555c5d6aaa892a7414425cd9c2d8bfea148e7",
+    "fixture-review/original-ubuntu-doctor-help-with-cleanup.log": "b1d05249f0d051804799d5133448258a384a857d19450ce1fd8dc91b1a1be405",
+    "fixture-review/run-private.py": "1fd38dc7d1ba6078b33b68360ef18ce70a4a8b93b5e2981d77d5d15c1509fe1a",
+    "host-evidence-sha256.txt": "480d6c50cdaec4c947d437aa210fcf20a1d8941191b91e9a5016e820a020a233",
+    "host-result.json": "ac24dcd0053c2880f93cf0407f6c12c1ad726be01f9b5d4fe90f30dc08a67350",
+    "host-workflow-run.json": "21c8b17a75817ea204d9b58c3a752aeb783ec533a0c0b00d0369166d4ccfa988",
+    "lintian.log": "da2674ab984497bf33cf4a2cda5b253c551dedf8036fa54045ac9051dee23d3c",
+    "result.json": "a773435a3b30b673705786338e973903ae609a4f654a68fa7b305c9cf0884cf4",
+    "sbuild.log": "76a85c7f4f1e1baac1e15921af7358c66d09c6ed34234b7bfa73845247064286",
+    "ubuntu-baseline-preflight/result.json": "717a5bdfa11ad59d646fc58098b3984829d565cc069b3ac2981acf37388f6a6c",
+    "upstream-tests.json": "4bd42720088ef5e4762476e0ffabc79a3577733b36a31852153b3100791435c3",
+    "workflow-job.json": "3310b5a7a6dc8b30c5cda73503691041b8258fe1a0c4ea2e78105aefa442ea0f"
+  },
+  "offline_inspection": {
+    "node": "libkscreen",
+    "package_version": "4:6.7.5-0supralinux3",
+    "artifact_sha256": "0dae76b382490e85e1b16171a7c05f20478b248ffceb0e820a1142c1d6a04be4",
+    "payload_prefix": "packages/",
+    "source_package": "libkscreen",
+    "binaries": [
+      {
+        "package": "libkf6screen8-dbgsym",
+        "version": "4:6.7.5-0supralinux3",
+        "architecture": "amd64",
+        "file": "libkf6screen8-dbgsym_6.7.5-0supralinux3_amd64.ddeb"
+      },
+      {
+        "package": "libkf6screen8",
+        "version": "4:6.7.5-0supralinux3",
+        "architecture": "amd64",
+        "file": "libkf6screen8_6.7.5-0supralinux3_amd64.deb"
+      },
+      {
+        "package": "libkf6screendpms8-dbgsym",
+        "version": "4:6.7.5-0supralinux3",
+        "architecture": "amd64",
+        "file": "libkf6screendpms8-dbgsym_6.7.5-0supralinux3_amd64.ddeb"
+      },
+      {
+        "package": "libkf6screendpms8",
+        "version": "4:6.7.5-0supralinux3",
+        "architecture": "amd64",
+        "file": "libkf6screendpms8_6.7.5-0supralinux3_amd64.deb"
+      },
+      {
+        "package": "libkscreen-bin-dbgsym",
+        "version": "4:6.7.5-0supralinux3",
+        "architecture": "amd64",
+        "file": "libkscreen-bin-dbgsym_6.7.5-0supralinux3_amd64.ddeb"
+      },
+      {
+        "package": "libkscreen-bin",
+        "version": "4:6.7.5-0supralinux3",
+        "architecture": "amd64",
+        "file": "libkscreen-bin_6.7.5-0supralinux3_amd64.deb"
+      },
+      {
+        "package": "libkscreen-data",
+        "version": "4:6.7.5-0supralinux3",
+        "architecture": "all",
+        "file": "libkscreen-data_6.7.5-0supralinux3_all.deb"
+      },
+      {
+        "package": "libkscreen-dev",
+        "version": "4:6.7.5-0supralinux3",
+        "architecture": "amd64",
+        "file": "libkscreen-dev_6.7.5-0supralinux3_amd64.deb"
+      },
+      {
+        "package": "libkscreen-doc",
+        "version": "4:6.7.5-0supralinux3",
+        "architecture": "all",
+        "file": "libkscreen-doc_6.7.5-0supralinux3_all.deb"
+      }
+    ],
+    "source_payload_verified": true,
+    "buildinfo_verified": true,
+    "changes_payload_complete": true,
+    "missing_debug_packages": [],
+    "evidence_scope": "retained-build-evidence; not new authoritative certification"
+  },
+  "installed_test_diagnosis": {
+    "original_state": "FAIL",
+    "unchanged_ubuntu_functional_clients": "PASS before CLI smoke abort",
+    "rebuilt_consumer": "PASS",
+    "cli_smoke": "FAIL missing display; isolated original Ubuntu reproduction and repaired private display check retained",
+    "candidate_certification": false
+  }
+}

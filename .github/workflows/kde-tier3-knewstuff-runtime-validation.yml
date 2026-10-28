@@ -1,0 +1,32 @@
+name: KDE Frameworks Tier 3 KNewStuff runtime validation
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate:
+    name: KNewStuff 6.30 + KCMUtils 6.30 runtime integration
+    runs-on: ubuntu-26.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Validate runtime gate definition
+        run: python3 scripts/validate_kde_tier3_knewstuff_runtime_validation.py
+      - name: Run deferred runtime validation
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash scripts/run-kde-tier3-knewstuff-runtime-validation.sh
+      - name: Upload runtime-validation evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kde-tier3-knewstuff-runtime-validation-${{ github.sha }}
+          path: evidence/kde-tier3-knewstuff-runtime-validation/
+          if-no-files-found: error
+          retention-days: 90

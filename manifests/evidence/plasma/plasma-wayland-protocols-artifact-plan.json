@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "plasma-wayland-protocols",
+      "package_version": "1.22.0-0supralinux1",
+      "artifact_id": 11480891803,
+      "workflow_run_id": 37610942395,
+      "artifact_sha256": "2df8366c884296d8c07c0e4431f11fdefb1b62f2dde12c913e740a7fb8b945d1",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

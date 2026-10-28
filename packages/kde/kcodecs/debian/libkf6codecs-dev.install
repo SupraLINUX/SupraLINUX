@@ -1,0 +1,3 @@
+usr/include/KF6/KCodecs/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6Codecs/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6Codecs.so

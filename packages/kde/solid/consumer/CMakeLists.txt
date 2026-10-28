@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(solid-consumer LANGUAGES CXX)
+find_package(KF6Solid 6.30 REQUIRED)
+add_executable(solid-consumer main.cpp)
+target_compile_features(solid-consumer PRIVATE cxx_std_17)
+target_link_libraries(solid-consumer PRIVATE KF6::Solid ${CMAKE_DL_LIBS})

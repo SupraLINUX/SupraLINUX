@@ -1,0 +1,4 @@
+kpipewire_logging: Failed to query DMA-BUF formats.
+Frame format=12 QImage=18 pixel=68,40,0 stride=640
+ Actual pixel channels do not match the private BGRA pattern
+Actual synthetic-frame delivery failed

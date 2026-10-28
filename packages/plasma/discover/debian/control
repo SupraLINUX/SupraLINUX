@@ -1,0 +1,169 @@
+Source: plasma-discover
+Section: kde
+Priority: optional
+Maintainer: SupraLINUX Developers <dev@supralinux.org>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Uploaders: Aurélien COUDERC <coucouf@debian.org>,
+           Patrick Franz <deltaone@debian.org>,
+           Matthias Klumpp <mak@debian.org>,
+Build-Depends: cmake (>= 3.16~),
+               debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-qmldeps,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               gettext,
+               kirigami-addons-dev (>= 1.10.0~),
+               libappstreamqt-dev (>= 1.0.4~),
+               libcurl4-gnutls-dev,
+               libflatpak-dev (>= 0.11.8~) [linux-any],
+               libfwupd-dev (>= 1.9.4~) [linux-any],
+               libkf6archive-dev (= 6.30.0-0supralinux4),
+               libkf6attica-dev (= 6.30.0-0supralinux2),
+               libkf6auth-dev (= 6.30.0-0supralinux3),
+               libkf6config-dev (= 6.30.0-0supralinux5),
+               libkf6coreaddons-dev (= 6.30.0-0supralinux4),
+               libkf6crash-dev (= 6.30.0-0supralinux1),
+               libkf6dbusaddons-dev (= 6.30.0-0supralinux3),
+               libkf6i18n-dev (= 6.30.0-0supralinux1),
+               libkf6iconthemes-dev (= 6.30.0-0supralinux3),
+               libkf6idletime-dev (= 6.30.0-0supralinux1),
+               libkf6jobwidgets-dev (= 6.30.0-0supralinux4),
+               libkf6kcmutils-dev (= 6.30.0-0supralinux3),
+               libkf6kio-dev (= 6.30.0-0supralinux10),
+               libkf6newstuff-dev (= 6.30.0-0supralinux1),
+               libkf6notifications-dev (= 6.30.0-0supralinux1),
+               libkf6purpose-dev (= 6.30.0-0supralinux3),
+               libkf6statusnotifieritem-dev (= 6.30.0-0supralinux2),
+               libkf6userfeedback-dev (= 6.30.0-0supralinux5),
+               libkf6windowsystem-dev (= 6.30.0-0supralinux4),
+               libkf6xmlgui-dev (= 6.30.0-0supralinux5),
+               libkirigami-dev (= 6.30.0-0supralinux2),
+               libmarkdown2-dev,
+               libpackagekitqt6-dev (>= 1.1.3),
+               libsnapd-qt-dev (>= 1.65) [linux-any],
+               pkgconf,
+               qcoro-qt6-dev,
+               qml6-module-org-kde-kitemmodels (= 6.30.0-0supralinux1),
+               qml6-module-qt5compat-graphicaleffects,
+               qt6-base-dev (>= 6.10.0~),
+               qt6-declarative-dev (>= 6.10.0~),
+               qt6-webview-dev (>= 6.10.0~) [amd64 arm64 armhf i386],
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/discover
+Vcs-Browser: https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/discover
+Vcs-Git: https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/discover
+Rules-Requires-Root: no
+
+Package: plasma-discover
+Architecture: any
+Depends: appstream (>= 1.0),
+         apt-config-icons,
+         packagekit (>= 1.0),
+         plasma-discover-common (= ${source:Version}),
+         ${misc:Depends},
+         ${qml6:Depends},
+         ${shlibs:Depends},
+Recommends: apt-config-icons-hidpi,
+            apt-config-icons-large,
+            apt-config-icons-large-hidpi,
+            plasma-discover-backend-fwupd [linux-any],
+            plasma-discover-backend-snap,
+            plasma-discover-notifier,
+            software-properties-qt,
+Suggests: kde-config-updates, plasma-discover-backend-flatpak [linux-any],
+Description: Discover software management suite
+ Discover is a graphical software manager for the Plasma workspace.
+ It helps users easily and quickly find applications and other software
+ they might want to install.
+ .
+ By allowing to navigate a software library by search, categories, top lists
+ along with detailed application information that includes screenshots
+ and reviews, users can more quickly find applications that suit their needs.
+ .
+ Discover will also keep the system up to date by notifying about updates and
+ installing them.
+
+Package: kde-config-updates
+Architecture: any
+Depends: systemsettings, ${misc:Depends}, ${shlibs:Depends},
+Description: Unattended updates configuration
+ This package contains a configuration module for configuring
+ unattended updates for fleet administrators without the need to
+ use system updaters manually.
+ .
+ This package is part of Plasma Discover.
+
+Package: plasma-discover-backend-flatpak
+Architecture: linux-any
+Depends: flatpak,
+         plasma-discover (= ${binary:Version}),
+         xdg-desktop-portal-kde | xdg-desktop-portal-backend,
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Discover software management suite - Flatpak backend
+ Discover is a graphical software manager for the Plasma workspace.
+ It helps users easily and quickly find applications and other software
+ they might want to install.
+ .
+ This package contains a backend for the Flatpak application
+ bundling system.
+
+Package: plasma-discover-backend-fwupd
+Architecture: linux-any
+Depends: plasma-discover (= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: fwupd,
+Description: Discover software management suite - fwupd backend
+ Discover is a graphical software manager for the Plasma workspace.
+ It helps users easily and quickly find applications and other software
+ they might want to install.
+ .
+ This package contains a backend for the firmware update daemon.
+
+Package: plasma-discover-backend-snap
+Architecture: linux-any
+Depends: plasma-discover (= ${binary:Version}),
+         xdg-desktop-portal-kde | xdg-desktop-portal-backend,
+         ${misc:Depends},
+         ${shlibs:Depends},
+Recommends: snapd,
+Breaks: plasma-discover (<< 5.19.4-2~),
+Replaces: plasma-discover (<< 5.19.4-2~),
+Description: Discover software management suite - Snap backend
+ Discover is a graphical software manager for the Plasma workspace.
+ It helps users easily and quickly find applications and other software
+ they might want to install.
+ .
+ This package contains a backend for the Ubuntu Core Snappy application
+ bundling system.
+
+Package: plasma-discover-common
+Architecture: all
+Depends: ${misc:Depends},
+Description: Discover software manager suite (common data files)
+ Discover is a graphical software manager for the Plasma workspace.
+ .
+ This package contains data files shared by various parts of the
+ Discover suite.
+
+Package: plasma-discover-notifier
+Architecture: any
+Depends: plasma-discover (= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Breaks: plasma-discover (<< 5.26.90-0ubuntu2),
+Replaces: plasma-discover (<< 5.26.90-0ubuntu2),
+Description: Discover software management suite - Update Notifier
+ Discover is a graphical software manager for the Plasma workspace.
+ It helps users easily and quickly find applications and other software
+ they might want to install.
+ .
+ By allowing to navigate a software library by search, categories, top lists
+ along with detailed application information that includes screenshots
+ and reviews, users can more quickly find applications that suit their needs.
+ .
+ Discover will also keep the system up to date by notifying about updates and
+ installing them.
+ .
+ This package contains the update notifier and indicator.

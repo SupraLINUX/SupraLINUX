@@ -1,0 +1,271 @@
+{
+  "schema": 1,
+  "role": "reviewed-plasma-package-build",
+  "state": "execution-authorized",
+  "package_execution_authorized": true,
+  "authorized_nodes": [
+    "kwrited"
+  ],
+  "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
+  "execution_checkpoint": "frameworks-6.30-pass",
+  "execution_mode": "preflight",
+  "nodes": {
+    "kwrited": {
+      "state": "build-pending",
+      "source_package": "kwrited",
+      "version": "4:6.7.5-0supralinux1",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/kwrited-6.7.5.tar.xz",
+      "upstream_sha256": "f8aa905734d0ccde796884cfcb06b36084e441fb199ea5aab2bc92cfa4c0506d",
+      "signature_sha256": "6ca4b37a264d615d727bbab45a76a5a5a03e59de34b96d5bf6487a951c8c6d70",
+      "packaging_reference_version": "4:6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "055321f9cddb266eefb8031d7de59716aadf5320c4f304d05436d88336aa8c00",
+      "packaging_path": "packages/plasma/kwrited/debian",
+      "packaging_review": "PASS",
+      "binary_packages": {
+        "kwrited": "amd64"
+      },
+      "ubuntu_baseline_package": "kwrited",
+      "baseline_setup_script": "tests/baseline-setup",
+      "baseline_preflight_required": true,
+      "required_executable_files": [
+        "rules",
+        "tests/baseline-setup",
+        "tests/consumer",
+        "tests/ubuntu-abi-client"
+      ],
+      "upstream_tests": [],
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        },
+        "kconfig": {
+          "source_package": "kf6-kconfig",
+          "version": "6.30.0-0supralinux5",
+          "binaries": [
+            {
+              "package": "libkf6config-bin",
+              "architecture": "amd64",
+              "sha256": "e2ec5c0108ddec37acbe5aef9ba7ad415fcafbfb674a774ad5bc1f8e4460fd8a"
+            },
+            {
+              "package": "libkf6config-data",
+              "architecture": "all",
+              "sha256": "11383e2d047ef865e61a01b887b7b1fa72ab8ceca12e45779b99488fd18c1eb7"
+            },
+            {
+              "package": "libkf6config-dev",
+              "architecture": "amd64",
+              "sha256": "d92bf4fed918165562d93f2512d36298ef014fa9191f53a51eab3a64286ce3a9"
+            },
+            {
+              "package": "libkf6config-dev-bin",
+              "architecture": "amd64",
+              "sha256": "d7e10cf7629c68a93fa65a320ca868870e4f9f9446b580da70360233aebf8fe5"
+            },
+            {
+              "package": "libkf6configcore6",
+              "architecture": "amd64",
+              "sha256": "fd21f8ffec2c9a1092f4f1a823fc9ad117c8453a4cbd796d1997cb38bf9577c0"
+            },
+            {
+              "package": "libkf6configgui6",
+              "architecture": "amd64",
+              "sha256": "994d74a35f900487bce4b5ffa838fa428fd00fe7a713f6441b6659992c65c711"
+            },
+            {
+              "package": "libkf6configqml6",
+              "architecture": "amd64",
+              "sha256": "4a15fb6c5b9a95c49bc8910b81f5e7d14b1d5d125041a1b43e918c978241a949"
+            },
+            {
+              "package": "qml6-module-org-kde-config",
+              "architecture": "amd64",
+              "sha256": "ab1ce3ccf930a368faccdd7c5aca19acea87f355d888169d5f0cefa2524fd069"
+            }
+          ]
+        },
+        "kcoreaddons": {
+          "source_package": "kf6-kcoreaddons",
+          "version": "6.30.0-0supralinux4",
+          "binaries": [
+            {
+              "package": "libkf6coreaddons-data",
+              "architecture": "all",
+              "sha256": "f05f55e3c6486af9d3ff48aa38215784bbb347aae1cd5fb760f5513760364908"
+            },
+            {
+              "package": "libkf6coreaddons-dev",
+              "architecture": "amd64",
+              "sha256": "9f6fa1d04c303a2466322c86b14dee9a301a442a34c26dd77e99440f186c9636"
+            },
+            {
+              "package": "libkf6coreaddons6",
+              "architecture": "amd64",
+              "sha256": "015b8f19a909a2a7431b45235187f280c32790258052c8c08659e6ce510b11cb"
+            },
+            {
+              "package": "qml6-module-org-kde-coreaddons",
+              "architecture": "amd64",
+              "sha256": "8c6f82ac7c0de500b8bda6c88d912b3fd8cb6b254cece402227d38d1fb782345"
+            }
+          ]
+        },
+        "kdbusaddons": {
+          "source_package": "kf6-kdbusaddons",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "libkf6dbusaddons-data",
+              "architecture": "all",
+              "sha256": "279d4f563b0b9ee509d7aac09974c5a870973bc43808987add15ada15e4d1413"
+            },
+            {
+              "package": "libkf6dbusaddons-dev",
+              "architecture": "amd64",
+              "sha256": "1d2c9c54b56a9db028b513b66ff912d679c4762aa1003fa4fc89513c9267c91f"
+            },
+            {
+              "package": "libkf6dbusaddons6",
+              "architecture": "amd64",
+              "sha256": "c66f0b0fb84bf4f20c39a9b2fcf9aaae09c30dae31a3cfa54b48702b648f7a12"
+            }
+          ]
+        },
+        "ki18n": {
+          "source_package": "kf6-ki18n",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "libkf6i18n-data",
+              "architecture": "all",
+              "sha256": "3df2300d5aca640c8968859367ac3cd606a31a87e875ca207a71eeda6d03f45a"
+            },
+            {
+              "package": "libkf6i18n-dev",
+              "architecture": "amd64",
+              "sha256": "a9485f9fdb874cc6a61064a824d66567306122c39677ccf92f8adb3b0db14870"
+            },
+            {
+              "package": "libkf6i18n6",
+              "architecture": "amd64",
+              "sha256": "fa60bd16ffb35ae90eb1ab324386961d973a9b0dd31a4947351d3afc652b6e58"
+            },
+            {
+              "package": "libkf6i18nlocaledata6",
+              "architecture": "amd64",
+              "sha256": "19a6b680b3f85fe04901d53fa6193dd773d72fc02c9337387776ec779f5c285a"
+            },
+            {
+              "package": "libkf6i18nqml6",
+              "architecture": "amd64",
+              "sha256": "0297393117c5b4b0fd284d32aa9040c5afbe91aa0da73b2f83d1b181a812f91c"
+            },
+            {
+              "package": "qml6-module-org-kde-i18n-localedata",
+              "architecture": "amd64",
+              "sha256": "147a716c4794a50a63160928228afd25c406a02af2b3d00637bed289027f6001"
+            },
+            {
+              "package": "qml6-module-org-kde-ki18n",
+              "architecture": "amd64",
+              "sha256": "07960032b6582476f0844b72d4f74884240c592e55eb0613390f0191dbd98299"
+            }
+          ]
+        },
+        "knotifications": {
+          "source_package": "kf6-knotifications",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "libkf6notifications-data",
+              "architecture": "all",
+              "sha256": "dbe94829f9466ef434d65adc2228be94be81382eacaefd76057397f32c170e5c"
+            },
+            {
+              "package": "libkf6notifications-dev",
+              "architecture": "amd64",
+              "sha256": "3deceddfdd6ed328b8058045cd6c434aa7e676d8d9482320c80656686d493123"
+            },
+            {
+              "package": "libkf6notifications6",
+              "architecture": "amd64",
+              "sha256": "f8d481bda5882aa9f99a4c49229f42d2284103a5aecfb4f7c9e7722708c123fd"
+            },
+            {
+              "package": "qml6-module-org-kde-notifications",
+              "architecture": "amd64",
+              "sha256": "94d7221991aba9f74759ec50dc5daf248aef46facdc23b3f4b287b29a4979fe9"
+            }
+          ]
+        },
+        "kpty": {
+          "source_package": "kf6-kpty",
+          "version": "6.30.0-0supralinux1",
+          "binaries": [
+            {
+              "package": "libkf6pty-data",
+              "architecture": "all",
+              "sha256": "7d0d7e7afd8b94dfa8b3402b59959e564296f22b44a6ce98ba183321dd4bd295"
+            },
+            {
+              "package": "libkf6pty-dev",
+              "architecture": "amd64",
+              "sha256": "1ffe0ba695d95a0dd2fdd3642bc6c30dc728001ff85dd2544dcdd00284f91e1a"
+            },
+            {
+              "package": "libkf6pty6",
+              "architecture": "amd64",
+              "sha256": "56ba6fe643f292dcb484e8d3583559593f7e39313efd1b43732987661dac9830"
+            }
+          ]
+        }
+      },
+      "sbuild_rootfs_policy": {
+        "kind": "immutable-bare-milestone",
+        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+        "suites": [
+          "resolute",
+          "resolute-updates",
+          "resolute-security"
+        ]
+      },
+      "review": {
+        "source": "Official signed 6.7.5 source remains unmodified; verified Ubuntu packaging is advisory only.",
+        "version": "Preserve Ubuntu epoch 4; candidate exceeds captured Ubuntu references.",
+        "profile": "Preserve the ordinary KDED module profile with KPty libutempter support; no privileged executable fallback.",
+        "dependencies": "Exact eligible ECM, KConfig repair, KCoreAddons, KDBusAddons, KI18n, KNotifications and KPty closure; retain Ubuntu Qt.",
+        "tests": "No upstream CTest suite is defined. Run real installed-module/PTY/private notification tests with unchanged Ubuntu SDK binary and rebuilt consumer; real Plasma session integration remains separate.",
+        "compatibility": "Preserve module namespace and notifyrc, resolve ELF dependencies and normal APT upgrade, retain Ubuntu Qt; no app or library ABI transition inferred from compilation alone.",
+        "licensing": "Preserve GPL-2.0-or-later source terms and the explicit CC0-1.0 declaration for .gitlab-ci.yml, including its full text and Debian packaging attributions.",
+        "packaging": "Use SupraLINUX VCS metadata; remove inherited Debian Salsa configuration and its unused alternate APT repository. The original Ubuntu advisory tree remains retained unchanged."
+      },
+      "packaging_sha256": {
+        "README.source": "d3728c4c64e0f60a0ded5828d90044858a5246cb7e4503a89f62b8ff5f9f4cdc",
+        "changelog": "a3776530e96cf46b0d54b93281f3ff6e91df02bfaa97af52c97f1f8b54f882b9",
+        "control": "3e11d27718ee6d0281e686a2cd526577ed6bd2d5c9a1b569af4a58a8ac223c5d",
+        "copyright": "90f86b4d03fc9195d3ee25b6b19c4ba42a0df49a1942a90cf8b0329b78524272",
+        "rules": "178a56149300d0d28e491c7aecc2833fabce2e165bdff476e0859ee89c2b4a71",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/baseline-setup": "bdb7b7bc8b0975945ab1c5f5d6cb24b604199e2de3ad6c7eb9425293323737c9",
+        "tests/consumer": "a71b852ab59dcdda092c7fd0fe85dd311e1df39df154b5bd0ef619f9cb5b372c",
+        "tests/control": "b5f73de62e24116c9e29ad78d1ce970f82160c469e13043835eb516c0bc4e079",
+        "tests/ubuntu-abi-client": "709206f3cba88d47b137c72c0acbc677fdd130d53b0415f039041cb6a9570feb",
+        "upstream/metadata": "cf762b67ada7cefaf309e7deed8b9270ca8116608ac5626c9950e510e30c8314",
+        "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+      }
+    }
+  },
+  "next_package_attempt": 1,
+  "campaign_manifest": "manifests/kde-plasma-package-build.json",
+  "campaign_manifest_sha256": "0a431f1d7144552fd303d19246f774f8208d8c7fdc4525c57f58d09cb6f2097e"
+}

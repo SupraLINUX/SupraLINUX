@@ -1,0 +1,14 @@
+[  0%] Built target stats-server_autogen_timestamp_deps
+[ 20%] Automatic MOC for target stats-server
+[ 20%] Built target stats-server_autogen
+[ 60%] Building CXX object CMakeFiles/stats-server.dir/stats-server.cpp.o
+[ 60%] Building CXX object CMakeFiles/stats-server.dir/stats-server_autogen/mocs_compilation.cpp.o
+In file included from /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/source/libksysguard-6.7.5/systemstats/DBusInterface.h:9,
+                 from /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-provider-include-review/client/stats-server.cpp:8:
+/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/dependent-plasma-review/libksysguard/native-provider-include-review/candidate-generated/systemstats/org.kde.ksystemstats1.h:22:10: fatal error: SensorInfo.h: No such file or directory
+   22 | #include "SensorInfo.h"
+      |          ^~~~~~~~~~~~~~
+compilation terminated.
+gmake[2]: *** [CMakeFiles/stats-server.dir/build.make:99: CMakeFiles/stats-server.dir/stats-server.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:90: CMakeFiles/stats-server.dir/all] Error 2
+gmake: *** [Makefile:91: all] Error 2

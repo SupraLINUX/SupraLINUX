@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+"""Execute the unchanged Ubuntu C++/QML client after the six-binary upgrade."""
+import os
+import shutil
+import subprocess
+from pathlib import Path
+base=Path('/var/tmp/supralinux-activities-baseline')
+candidate='6.7.5-0supralinux1'
+baseline=(base/'ubuntu-dev-version').read_text().strip()
+subprocess.run(['dpkg','--compare-versions',candidate,'gt',baseline],check=True)
+subprocess.run(['sha256sum','--check','--strict',str(base/'binary-sha256.txt')],check=True)
+for package in ['plasma-activities-bin','libplasmaactivities-data','libplasmaactivities-dev','libplasmaactivities-qt6-doc','libplasmaactivities7','qml6-module-org-kde-activities']:
+    assert subprocess.check_output(['dpkg-query','-W','-f=${Version}',package],text=True).strip()==candidate
+for package,reference in [('libqt6core6t64','ubuntu-qt-core-version'),('kactivitymanagerd','ubuntu-daemon-version')]:
+    assert subprocess.check_output(['dpkg-query','-W','-f=${Version}',package],text=True).strip()==(base/reference).read_text().strip()
+library=Path('/usr/lib/x86_64-linux-gnu/libPlasmaActivities.so.7')
+assert library.resolve().name.endswith('.6.7.5')
+assert 'Library soname: [libPlasmaActivities.so.7]' in subprocess.check_output(['readelf','-d',str(library)],text=True)
+assert 'not found' not in subprocess.check_output(['ldd',str(library)],text=True)
+subprocess.run([str(base/'run-session'),str(base/'build/ubuntu-activities-client')],check=True)
+subprocess.run(['apt-get','check'],check=True)
+shutil.copytree(base,Path(os.environ['AUTOPKGTEST_ARTIFACTS'])/'ubuntu-compiled-client',dirs_exist_ok=True)
+print(f'Unchanged Ubuntu {baseline} client after complete SupraLINUX {candidate} C++/QML upgrade with the Ubuntu daemon/Qt: PASS')

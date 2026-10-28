@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "state": "DIAGNOSED",
+  "incident_run_id": 39262805828,
+  "incident_job_id": 118094672692,
+  "artifact_id": 12191773476,
+  "artifact_digest": "sha256:83a3497705ad8008f0b4d369ba00900afdd4847b958f74829a1f5c39b756d1a0",
+  "package_attempt_effect": "none",
+  "observations": {
+    "host_kvm_preflight": "PASS",
+    "userspace_network_admission": "PASS",
+    "verified_ubuntu_source_image": true,
+    "golden_network_preflight_vm_created": true,
+    "golden_slirp_link_initial_state": "down",
+    "qemu_guest_agent_ready": false,
+    "qemu_guest_agent_wait_seconds": 180,
+    "full_golden_rebuild_started": false,
+    "jit_invoked": false,
+    "sbuild_started": false
+  },
+  "diagnosis": "The new golden-network bootstrap introduced at 5746b4a00814350ec7ec615c869d1b2e367d9fe6 waits for qemu-guest-agent while the hypervisor SLIRP link is still down. qemu-guest-agent is installed later by provision-authoritative-runner-guest.sh, after network activation, so it is not an admissible prerequisite for the pre-network guard. The mechanism deadlocks before the full golden rebuild or any package Attempt."
+}

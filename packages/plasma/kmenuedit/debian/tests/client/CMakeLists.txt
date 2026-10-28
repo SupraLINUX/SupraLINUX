@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(supralinux-menu-client LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets DBus)
+add_executable(menu-client main.cpp)
+target_link_libraries(menu-client PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets Qt6::DBus)

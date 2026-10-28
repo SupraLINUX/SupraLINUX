@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-14",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "claim": "hosted-source-binary-lintian-revalidation",
+  "authoritative": false,
+  "canonical_state_effect": "none",
+  "workflow_run": 34892250114,
+  "head_sha": "2b0e78b67becc2ece1064816e20b9a2b9d883c47",
+  "result": "PASS",
+  "gate": {
+    "lintian_scope": ["dsc", "changes"],
+    "preserve_ddeb_referenced_by_changes": true,
+    "package_revision_change": false,
+    "purpose": "Close the source-package Lintian evidence gap without replacing the canonical historical package PASS artifacts."
+  },
+  "nodes": {
+    "kcodecs": {
+      "package_version": "6.30.0-0supralinux4",
+      "job_id": 104137548290,
+      "artifact_id": 10367990559,
+      "artifact_sha256": "434aee54a56b91d6f7791bb02483e61522d287a7ed1920bcb0c2872d177d3ff6",
+      "result": "PASS"
+    },
+    "kdbusaddons": {
+      "package_version": "6.30.0-0supralinux3",
+      "job_id": 104137547996,
+      "artifact_id": 10367472262,
+      "artifact_sha256": "aac536a623fb4907b89ac73f3241032fa465e43985332eaedfd0a8c699bd76d6",
+      "result": "PASS"
+    },
+    "threadweaver": {
+      "package_version": "6.30.0-0supralinux3",
+      "job_id": 104137547891,
+      "artifact_id": 10367666440,
+      "artifact_sha256": "acf24b54f72005f3068c6257216d88a47a44efca44302f6b2bed5f6a9d0d6e6c",
+      "result": "PASS"
+    }
+  }
+}

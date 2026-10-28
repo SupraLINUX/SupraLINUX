@@ -1,0 +1,5 @@
+usr/bin/kde-geo-uri-handler
+usr/share/applications/cartes-geo-handler.desktop
+usr/share/applications/google-maps-geo-handler.desktop
+usr/share/applications/openstreetmap-geo-handler.desktop
+usr/share/applications/wheelmap-geo-handler.desktop

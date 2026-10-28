@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "authority": "SupraLINUX infrastructure mechanism certification",
+  "current_backend": "policy-selected",
+  "default_eligible_backend": "autopkgtest-unshare",
+  "fallback_backend": "autopkgtest-qemu",
+  "candidate_backend": "autopkgtest-unshare",
+  "package_attempt_effect": "none",
+  "evidence_scope": "mechanism certification plus historical PASS real-package canary; does not upgrade any KDE package evidence scope",
+  "requirements": {
+    "outer_runner": "Ubuntu 26.04 authoritative KVM",
+    "architecture": "amd64",
+    "qemu_reference_required": true,
+    "same_fixture_required": true,
+    "normalized_results_equal": true,
+    "required_fixture_tests": [
+      "installed-payload",
+      "needs-root"
+    ]
+  },
+  "backend_policy": {
+    "default_candidate": "unshare",
+    "qemu_fallback_restrictions": [
+      "breaks-testbed",
+      "isolation-container",
+      "isolation-machine",
+      "needs-reboot",
+      "needs-reboot-without-mark"
+    ],
+    "unknown_restriction_policy": "qemu",
+    "retained_upgrade_backend": "qemu"
+  },
+  "certification": {
+    "workflow_run_id": 40519740782,
+    "workflow_job_id": 122243262934,
+    "artifact_id": 12741786656,
+    "artifact_sha256": "96b4e6b6023df90304350eeedf4af83acdd2664613d6f3fec9055f9ee63f0824",
+    "source_commit": "a0e6a584cac7d84e1949a68de0b4426c8ed3b9a8",
+    "evidence_path": "manifests/evidence/infrastructure/autopkgtest-unshare-certification-20261027/result.json",
+    "synthetic_result_sha256": "95233b191ab43fb56b7490dcd1da863d411739ec8bee79a11592466d5a58aa00",
+    "real_canary_result_sha256": "88dec7cc0844690ad9e77c4d79551f193a8e483224525448657ab0676ef131d9"
+  },
+  "measured_speedup": {
+    "synthetic": {
+      "qemu_seconds": 42,
+      "unshare_seconds": 9,
+      "factor": 4.666666666666667
+    },
+    "real_canary": {
+      "node": "ocean-sound-theme",
+      "qemu_seconds": 78,
+      "unshare_seconds": 38,
+      "factor": 2.0526315789473686
+    }
+  },
+  "rollout": {
+    "production_default_changed": true,
+    "policy_selected": true,
+    "eligible_tests_backend": "autopkgtest-unshare",
+    "fallback_backend": "autopkgtest-qemu",
+    "retained_upgrade_backend": "autopkgtest-qemu",
+    "next_step": "measure production package builds and separately certify retained-upgrade unshare"
+  }
+}

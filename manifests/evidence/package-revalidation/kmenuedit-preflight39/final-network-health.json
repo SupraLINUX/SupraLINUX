@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "checked_at": "2026-10-10T18:02:54.290215+00:00",
+  "scope": "read-only observations during exact owned KMenuEdit preflight39 and final direct host inventory",
+  "kernel_carrier_samples": 56,
+  "gateway_samples": 13,
+  "periodic_kernel_carrier_incidents": 0,
+  "gateway_incidents": 0,
+  "final_hang_query_exit_code": 1,
+  "kernel_journal_readability_exit_code": 0,
+  "hardware_hang_observed": false,
+  "libvirt_networks": [],
+  "tso_off": true,
+  "gso_off": true,
+  "eno1_carrier": "1",
+  "host_network_changes": false,
+  "host_installs": false
+}

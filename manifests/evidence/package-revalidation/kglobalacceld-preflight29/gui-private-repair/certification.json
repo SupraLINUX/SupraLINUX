@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "real original Ubuntu imported-target discovery and public SDK compilation; not complete baseline execution or candidate certification",
+  "sdk_authentication": "Signed Ubuntu InRelease -> complete Packages SHA256/size -> exact private SDK Debian SHA256/size/source/version/architecture",
+  "qt_private_sdk_sha256": "40b7622de60eb36866a5800b7a3a84b86f564306d7d2f332d826ed530e4e0c42",
+  "providers": {
+    "libkf6globalaccel6": {
+      "version": "6.24.0-0ubuntu1",
+      "library_sha256": "ef7dac933629d3899cf18f366bf774537b440d9a20369307f31a4730006c2a1d"
+    },
+    "libkglobalacceld0": {
+      "version": "6.6.5-0ubuntu0.1",
+      "library_sha256": "f71d93c392423651f9f7730c3558c3386b94b7ac5f4552b957e1ea53d8fc2dde"
+    },
+    "qt6-base-dev": {
+      "version": "6.10.2+dfsg-7"
+    },
+    "libqt6core6t64": {
+      "version": "6.10.2+dfsg-7"
+    },
+    "libqt6gui6": {
+      "version": "6.10.2+dfsg-7"
+    },
+    "libqt6widgets6": {
+      "version": "6.10.2+dfsg-7"
+    },
+    "libqt6dbus6": {
+      "version": "6.10.2+dfsg-7"
+    }
+  },
+  "controls": {
+    "negative": {
+      "configure_exit": 1,
+      "build_exit": null
+    },
+    "positive": {
+      "configure_exit": 0,
+      "build_exit": 0
+    }
+  },
+  "original_kglobalacceld_export_sha256": "c9d4be4fbaeff29953a8512fd62bf4f9b415537f2839025f6b7d6b8d76c01731",
+  "relocation": "Private include paths point to extracted exact SDK; actual original runtime libraries symlinked inside owned staging root. No host SDK installation, mock targets or upstream changes.",
+  "package_attempt_consumed": false,
+  "files_sha256": {
+    "ubuntu-signature.log": "5c009a515f3763d807cd3a18b8a4df85cf78db9664f858f145acfb306d95a6e6",
+    "positive-build.log": "a768c7ccb4989aa6b4cc704dab1966b6769768cfd1d49739b88713a389940156",
+    "positive-configure.log": "3bfecfecfd46ea13faf6049a83a809941c49402f42de9373aac0c366f1ca1414",
+    "negative-configure.log": "bc980ed7d8b5b2a173a5d9f0cf1814ceb98552130a87f582958050fbc2655539",
+    "positive/CMakeCache.txt": "964a71528af0496fd8f3148347aa032c61f0d6d2dcdb85ccd6ed4a5bd388960b",
+    "negative/CMakeCache.txt": "d0d89f1dd706e2df61e48274bdb643312079e8579f9cd5d04daa28d2320215c3",
+    "source/main.cpp": "b966da4b82b5d8576923a5497a2fe3cfa31db29e236a24a3594a45201e00238e",
+    "source/CMakeLists.txt": "758f848dc421ca1264cfb6be9bfd1ef24516e02988d04ab98854a012198b836e",
+    "negative/CMakeFiles/TargetDirectories.txt": "d0eb437c0da043879525c8d46ca1fb3a072437cd6517e22621876db50d57b1f1",
+    "negative/CMakeFiles/original-export-probe.dir/link.txt": "c637e60d28bbcbc97ea2b954e582aaa66266438f7801f8309107b92935f3dbfa",
+    "negative/CMakeFiles/4.2.3/CompilerIdCXX/CMakeCXXCompilerId.cpp": "15597e769f9705997844403bbbf0c2fa65eb5b46a8ad4e6db684547644239fae",
+    "positive/CMakeFiles/TargetDirectories.txt": "fa75d705f594129cc1d17ce36801e6cf90a3b7af15a5bb527af206aba6260bde",
+    "positive/CMakeFiles/original-export-probe.dir/link.txt": "e2f15afa8ebc8481dd3d7294f7e1bb76b49e6290d592f2cb546eaa5103812811",
+    "positive/CMakeFiles/4.2.3/CompilerIdCXX/CMakeCXXCompilerId.cpp": "15597e769f9705997844403bbbf0c2fa65eb5b46a8ad4e6db684547644239fae"
+  }
+}

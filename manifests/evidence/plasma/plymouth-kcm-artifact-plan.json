@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "plymouth-kcm",
+      "package_version": "6.7.5-0supralinux1",
+      "artifact_id": 12557933576,
+      "workflow_run_id": 40087662878,
+      "artifact_sha256": "4e8e9308c98c9f4dc28bb0a4b6cd42f41d024c13fdaa00c3de5902e98a89ac5b",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+libkf6config-bin: no-manual-page [usr/bin/kreadconfig6]
+libkf6config-bin: no-manual-page [usr/bin/kwriteconfig6]

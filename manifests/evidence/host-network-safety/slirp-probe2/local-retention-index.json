@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "complete sealed host and operator observations with empty offline byte restore",
+  "archive_path": ".artifacts/host-network-safety/slirp-probe2/inputs.zip",
+  "archive_sha256": "309699eba7beea5b64d131cbc268c1b3d938de363f046e221fcbb602b6f403a5",
+  "files": {
+    "host/domain.xml": {
+      "sha256": "f4ccc4852b011962c535883199bc63ffa4851b5fe04b46c5644330202b81a45b",
+      "size": 4693
+    },
+    "host/evidence-sha256.txt": {
+      "sha256": "e1354792974a501e37677965668202538e335563d603659d8f1ada0055418eb4",
+      "size": 2455
+    },
+    "host/golden-provenance-admission.txt": {
+      "sha256": "82c572118e79ad90e42f8fb2032d26e34a4875d63252284172ac2b48d4f33709",
+      "size": 644
+    },
+    "host/guest-copy-out.txt": {
+      "sha256": "2268f68ef7ad3c792f915fed706feeab0d38f72ed8f99cc967b831bd2071acb6",
+      "size": 550
+    },
+    "host/guest-files/evidence/actions-runner.txt": {
+      "sha256": "be8b66c8dc461b18f0776e0ac389b1919f278188def7c56440dcc7c7ad04f0fe",
+      "size": 360
+    },
+    "host/guest-files/evidence/autopkgtest-build-resources.txt": {
+      "sha256": "89f36a5b34c441f0062b3ca49435f8fc5aecf244f4aab8a3ecc2eacd51f1e3f2",
+      "size": 526
+    },
+    "host/guest-files/evidence/base-image-seal.txt": {
+      "sha256": "5adeeb85b54e65e1f07d72f1ec87e724b3090de5abffd130e5cb3b925354d85b",
+      "size": 1265
+    },
+    "host/guest-files/evidence/golden-build-complete.txt": {
+      "sha256": "c351f918be2000999aeb72aa8d2e14b158cfbacd9422a231b062d87e082497d3",
+      "size": 136
+    },
+    "host/guest-files/evidence/golden-build-result.txt": {
+      "sha256": "fe621fc1d388f39882047067c761e2bfbfcda62bfd1854420813998e1b452a4a",
+      "size": 100
+    },
+    "host/guest-files/evidence/runner-guest-provisioning.txt": {
+      "sha256": "a8cda3a416f129a1154d4a7f4b9ab601cf92bbf6d7548ed488e8153f1e04ce26",
+      "size": 1401
+    },
+    "host/host-environment.txt": {
+      "sha256": "d30d5bd0972dcfd8c4aae346ca6a51946726426787251cbdcc57b9973c945b9b",
+      "size": 2584
+    },
+    "host/host-result.json": {
+      "sha256": "8e71e6b6d7e02da6255f9b9488df15dd68636830b010694b922c09ca9279f28e",
+      "size": 116
+    },
+    "host/libguestfs-runtime.txt": {
+      "sha256": "1acb36510cd445459b4e38623cb1d972d8e380bfb5888930aff207d8ccfaca35",
+      "size": 504
+    },
+    "host/network-admission.json": {
+      "sha256": "cb3899a08528dba37dc2b6179f81c459c6e0aa1e14ae4dc14e5bdd14ce5e678e",
+      "size": 322
+    },
+    "host/network-enabled-admission.json": {
+      "sha256": "4bed9e64546a8b132f399c16fc412574dc12ac4c64cf7fa7f15f9b9cd2628d67",
+      "size": 254
+    },
+    "host/network-guest-connectivity-execution.json": {
+      "sha256": "a9868df755d943746bdfe1382c378132d56112de43a2b53a42e285d098cea118",
+      "size": 30612
+    },
+    "host/network-guest-limits.json": {
+      "sha256": "342532b7ced999b1be89870dbef0903587c2f63860ac8f2bfab5004561463410",
+      "size": 256
+    },
+    "host/network-guest-policy-execution.json": {
+      "sha256": "5227af4b7333c685e6419f5522370531f1805fc92cc53f32eabbba5c8f04e46c",
+      "size": 2080
+    },
+    "host/network-guest-safety.json": {
+      "sha256": "ea97e07aca687477c12b53f5e30a8ab59ff20b714d0c47259f4617e1136df73c",
+      "size": 1503
+    },
+    "host/network-live-domain-enabled.xml": {
+      "sha256": "f4ccc4852b011962c535883199bc63ffa4851b5fe04b46c5644330202b81a45b",
+      "size": 4693
+    },
+    "host/network-live-domain.xml": {
+      "sha256": "8313d7fbf8f33b27c52ce7857ba6e4f7bdf3039a1a43e026e85f06eec3257b9f",
+      "size": 4698
+    },
+    "host/overlay-info-before-boot.json": {
+      "sha256": "20be4c0ddef3090e9156bb5c77d2ea929494c101423b1df43daa46313efd7d76",
+      "size": 1359
+    },
+    "host/overlay-info.json": {
+      "sha256": "03471981757c70e875482c76f4e8d52977f57c04a2ba3bf00f4711a08060190f",
+      "size": 1365
+    },
+    "host/overlay-sha256.txt": {
+      "sha256": "fafd9af07f5cb8105dbdd071fe10ea643139a3aefbb263803925dd85cb3179ee",
+      "size": 173
+    },
+    "host/qemu-cpu-policy.json": {
+      "sha256": "b60213e45f35d74af31f58e6bfa1751c4015da826d17aa86f3088ba3647205b4",
+      "size": 227
+    },
+    "host/workflow-baseline-ids.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "size": 3
+    },
+    "operator/cleanup.json": {
+      "sha256": "9079cd0b7eecdc301216dde8302bad08cebb7988f632ab42f4fc18fac7cfac15",
+      "size": 702
+    },
+    "operator/host-health.jsonl": {
+      "sha256": "b67f0a639735370d6d8efe4a8c41a2d07a7c5fd4e01d8211c798dd678e058461",
+      "size": 875
+    },
+    "operator/host.log": {
+      "sha256": "59d0f1fe491fc149250a32e1a2023be1bf90c5623b6c0f32fe1503f2a93ed363",
+      "size": 1736
+    },
+    "operator/watched-gate.py": {
+      "sha256": "59f17027400e735d033f49ac77e85d22dfcba7aa64646cb6f70d751a53649ecb",
+      "size": 2809
+    }
+  },
+  "requires_github_for_restore": false,
+  "empty_offline_byte_restore_verified": true
+}

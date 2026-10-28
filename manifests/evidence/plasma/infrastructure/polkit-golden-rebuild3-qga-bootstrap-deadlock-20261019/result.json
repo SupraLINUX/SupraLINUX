@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "kind": "golden-bootstrap-qga-pre-network-dependency",
+  "node": "polkit-kde-agent-1",
+  "source_commit": "dd7babb81dbc968a4497a590bc17f8eaffaa0d21",
+  "workflow_run_id": 39262805828,
+  "workflow_job_id": 118094672692,
+  "artifact_id": 12191773476,
+  "artifact_digest": "sha256:83a3497705ad8008f0b4d369ba00900afdd4847b958f74829a1f5c39b756d1a0",
+  "stage": "golden-build-network-preflight-before-network-activation",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "exit_code": 1,
+  "cause": "The small golden-network preflight held the SLIRP link down and waited 180 seconds for qemu-guest-agent. The source guest has no certified pre-network QGA dependency, and SupraLINUX installs QGA only later during runner provisioning, after network access exists.",
+  "repair": "Remove qemu-guest-agent from the bootstrap dependency chain. Inject the guest-only nft/tc guard into the disposable overlay offline with libguestfs networking disabled; use a dedicated virtio-serial Unix channel to receive guard READY while the hypervisor link is still down; only then raise SLIRP and require a second VERIFIED message after DHCP/connectivity isolation checks. Clean the temporary bootstrap units and helpers before admitting the golden build."
+}

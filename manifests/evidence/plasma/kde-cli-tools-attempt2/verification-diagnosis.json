@@ -1,0 +1,13 @@
+{
+  "kind": "build-predecessor-verification-false-negative",
+  "original_buildinfo_path": "packages/kde-cli-tools_6.7.5-0supralinux2_amd64.buildinfo",
+  "files_sha256": {
+    "package.buildinfo": "baa4001031d79914a8d6aaec93188398e92fc655e07a86526120d8e4d430ff27",
+    "source-control": "c0a1808f4c6fc00799f45a3af86d5210769561cf804c39aa76c80485c25c5bb8",
+    "build-predecessors.json": "4efac57e4ce002138ebc4e29c6fa5d3349b5aaa8fc9521db365d33ad457663f4"
+  },
+  "original_state": "FAIL",
+  "original_result_sha256": "80c2db8a32793470183cfdfd26498e3021680ed3ed22fd6a69036afc1ada8fc4",
+  "candidate_outputs_retained": true,
+  "package_result": "incomplete; requires remaining package tests"
+}

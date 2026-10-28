@@ -1,0 +1,29 @@
+-- 
+
+-- Configuring incomplete, errors occurred!
+CMake Error at /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/ubuntu-client-sdk/extracted/usr/lib/x86_64-linux-gnu/cmake/Qt6CoreTools/Qt6CoreToolsTargets.cmake:295 (message):
+  The imported target "Qt6::qmake" references the file
+
+     "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/ubuntu-client-sdk/extracted/usr/bin/x86_64-linux-gnu-qmake6"
+
+  but this file does not exist.  Possible reasons include:
+
+  * The file was deleted, renamed, or moved to another location.
+
+  * An install or uninstall procedure did not complete successfully.
+
+  * The installation package was faulty and contained
+
+     "/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/ubuntu-client-sdk/extracted/usr/lib/x86_64-linux-gnu/cmake/Qt6CoreTools/Qt6CoreToolsTargets.cmake"
+
+  but not all the files it references.
+
+Call Stack (most recent call first):
+  /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/ubuntu-client-sdk/extracted/usr/lib/x86_64-linux-gnu/cmake/Qt6CoreTools/Qt6CoreToolsConfig.cmake:56 (include)
+  /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/ubuntu-client-sdk/extracted/usr/lib/x86_64-linux-gnu/cmake/Qt6/Qt6Config.cmake:251 (find_package)
+  /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/ecm-inspection/usr/share/ECM/modules/ECMQueryQt.cmake:61 (find_package)
+  /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/ecm-inspection/usr/share/ECM/kde-modules/KDEInstallDirs6.cmake:211 (include)
+  /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/ecm-inspection/usr/share/ECM/kde-modules/KDEInstallDirs.cmake:17 (include)
+  CMakeLists.txt:17 (include)
+
+

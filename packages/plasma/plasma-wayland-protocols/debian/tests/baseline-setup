@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+apt-get install -y --no-install-recommends build-essential cmake pkgconf libwayland-dev libwayland-bin qt6-base-dev python3
+BASE=/var/tmp/supralinux-plasma-protocols-baseline
+FIXTURE=$(cd "$(dirname "$0")" && pwd)
+mkdir -p "${BASE}/fixture"
+cp -a "${FIXTURE}/." "${BASE}/fixture/"
+[[ $(dpkg-query -W -f='${Version}' plasma-wayland-protocols) == 1.20.0-2 ]]
+python3 "${BASE}/fixture/protocol-inventory.py" "${BASE}/fixture/baseline-xml.json" 1.20.0
+"${BASE}/fixture/build-wire" /usr/share/plasma-wayland-protocols/plasma-window-management.xml "${BASE}/build"
+python3 "${BASE}/fixture/wire-probe.py" "${BASE}/build/server" "${BASE}/build/client" "${BASE}/execution"
+dpkg-query -W -f='${Package} ${Architecture} ${Version}\n' plasma-wayland-protocols > "${BASE}/ubuntu-version"
+dpkg-query -W -f='${Package} ${Architecture} ${Version}\n' libqt6core6t64 qt6-base-dev libwayland-client0 libwayland-server0 libwayland-dev libwayland-bin > "${BASE}/ubuntu-providers"
+sha256sum "${BASE}/build/client" "${BASE}/build/protocol.c" "${BASE}/build/old.h" > "${BASE}/unchanged-client.sha256"

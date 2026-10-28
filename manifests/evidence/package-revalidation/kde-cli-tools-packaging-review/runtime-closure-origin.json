@@ -1,0 +1,14 @@
+{
+  "state": "STAGED",
+  "scope": "exact runtime input contract preparation only; not installability or package certification",
+  "original_record": ".work/dependent-plasma-review/kde-cli-tools/record.json",
+  "original_record_sha256": "ac2a96edf6ff5492f5fff185feaec26b3f4d969f0dc76926a4dfeb95c2cec9b9",
+  "new_record_sha256": "f30becd01c01c0433631c64cdca31487f5323efc6967c6dba0ba7d973eb95f13",
+  "support_nodes_added": [
+    "breeze-icons"
+  ],
+  "binaries_added": [],
+  "packaging_version_and_bytes_unchanged": true,
+  "canonical_effect": "none",
+  "package_attempt_consumed": false
+}

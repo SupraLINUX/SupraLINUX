@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "state": "DIAGNOSED",
+  "incident_run_id": 39109048299,
+  "incident_job_id": 117621044652,
+  "artifact_id": 12128769802,
+  "artifact_digest": "sha256:484e4869af72471783661c2ed54bddc40469a287fc7ca60f756b26098883cc73",
+  "package_attempt_effect": "none",
+  "observations": {
+    "kvm_runtime_admission": "PASS",
+    "kvm_open_ok": true,
+    "kvm_api_version": 12,
+    "stale_workflow_run_id": 39106846518,
+    "stale_workflow_result": "cancelled",
+    "jit_invoked": false,
+    "package_vm_created": false,
+    "sbuild_started": false,
+    "current_golden_sha256": "a0b88447d9a9ecd9785087390cf499abaf9416291864fe1be4d63d9a334b2acd",
+    "golden_source_commit": "3d4ce1a312220337934a51025c32c8429bf8fb3a",
+    "golden_recorded_input_digest": "2d5ec214607124d11c279b8d3f715808a065e88ad0fd6e57f40c89ca6b37110b",
+    "changed_golden_input": "scripts/install-actions-runner.sh",
+    "old_blob_sha1": "9e760f439f4e9e68693be282cc06e0677201d9f5",
+    "current_blob_sha1": "697ae0cc690402eab0d9d842b302e024fdb186eb",
+    "change_commit": "75e4cf469ef44f2ad1c7527ee5b88c2cb63262a0"
+  },
+  "diagnosis": "The golden provenance gate correctly rejected reuse. The Actions runner installer now keeps the downloaded archive private until its GitHub-published SHA-256 is verified and only then transfers ownership to the unprivileged runner; this changes a declared golden input and requires a rebuilt golden image rather than a provenance bypass."
+}

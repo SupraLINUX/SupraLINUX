@@ -1,0 +1,100 @@
+{
+  "check_run_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/check-runs/106656021938",
+  "completed_at": "2026-09-22T07:42:35Z",
+  "conclusion": "success",
+  "created_at": "2026-09-22T07:33:04Z",
+  "head_branch": "architecture/bootstrap-v1",
+  "head_sha": "ae9885dc0bf03447c9550b3a511466e2234e8f8c",
+  "html_url": "https://github.com/SupraLINUX/SupraLINUX/actions/runs/35700002095/job/106656021938",
+  "id": 106656021938,
+  "labels": [
+    "ubuntu-26.04"
+  ],
+  "name": "Build breeze-icons",
+  "node_id": "CR_kwDOUW9fLs8AAAAY1TG9sg",
+  "run_attempt": 1,
+  "run_id": 35700002095,
+  "run_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/runs/35700002095",
+  "runner_group_id": 0,
+  "runner_group_name": "GitHub Actions",
+  "runner_id": 1000012097,
+  "runner_name": "GitHub Actions 1000012097",
+  "started_at": "2026-09-22T07:33:09Z",
+  "status": "completed",
+  "steps": [
+    {
+      "completed_at": "2026-09-22T07:33:11Z",
+      "conclusion": "success",
+      "name": "Set up job",
+      "number": 1,
+      "started_at": "2026-09-22T07:33:10Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-09-22T07:33:11Z",
+      "conclusion": "success",
+      "name": "Checkout",
+      "number": 2,
+      "started_at": "2026-09-22T07:33:11Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-09-22T07:33:12Z",
+      "conclusion": "success",
+      "name": "Download materialized source package",
+      "number": 3,
+      "started_at": "2026-09-22T07:33:11Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-09-22T07:33:14Z",
+      "conclusion": "success",
+      "name": "Download retained inputs",
+      "number": 4,
+      "started_at": "2026-09-22T07:33:12Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-09-22T07:33:21Z",
+      "conclusion": "success",
+      "name": "Download shared rootfs",
+      "number": 5,
+      "started_at": "2026-09-22T07:33:14Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-09-22T07:42:31Z",
+      "conclusion": "success",
+      "name": "Build and validate support node",
+      "number": 6,
+      "started_at": "2026-09-22T07:33:21Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-09-22T07:42:33Z",
+      "conclusion": "success",
+      "name": "Upload package evidence",
+      "number": 7,
+      "started_at": "2026-09-22T07:42:31Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-09-22T07:42:33Z",
+      "conclusion": "success",
+      "name": "Post Checkout",
+      "number": 14,
+      "started_at": "2026-09-22T07:42:33Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-09-22T07:42:33Z",
+      "conclusion": "success",
+      "name": "Complete job",
+      "number": 15,
+      "started_at": "2026-09-22T07:42:33Z",
+      "status": "completed"
+    }
+  ],
+  "url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/jobs/106656021938",
+  "workflow_name": "KDE Frameworks Tier 3 support build level 0"
+}

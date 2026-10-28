@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "local Ubuntu wire event compatibility review; not authoritative package/compositor certification",
+  "as_of": "2026-10-05",
+  "baseline_xml_sha256": "fdaa35df538543fba6b7247f25c3e97e1b879d89a6ba3a8b64979d00e6dff051",
+  "candidate_xml_sha256": "febe9d3170d430f2dd81f6e821fb655d5e9eb0cdfb912f07592ecb5478e6f14e",
+  "negotiated_versions": [
+    1,
+    7,
+    8,
+    20
+  ],
+  "qt_generator_source_package_version": "6.10.2+dfsg-7",
+  "qt_generator_source_sha256": "4f3c8668cef112306fcfc421974bacf71c71b266ef180d1d9e37cf2b7169c0a0",
+  "wayland_server_source_package_version": "1.24.0-2",
+  "wayland_server_source_sha256": "67a415b08082408d722965a7cbb0ff5e82e06a157791efa04609e4ca7df2cef6",
+  "runtime_packages": [
+    "gcc 4:15.2.0-5ubuntu1",
+    "libc6-dev:amd64 2.43-2ubuntu2.4",
+    "libwayland-client0:amd64 1.24.0-2",
+    "libwayland-dev:amd64 1.24.0-2",
+    "libwayland-server0:amd64 1.24.0-2"
+  ],
+  "finding": "Existing pid_changed opcode and uint argument are unchanged. Ubuntu Qt generator forwards the event to the C helper without checking since-version metadata. Ubuntu Wayland marshals the same event without checking the resource version here. An unchanged client compiled against Ubuntu 1.20.0 XML receives the candidate 1.22.0 server event at negotiated versions 1, 7, 8 and 20. Full package/compositor behavior remains pending.",
+  "files_sha256": {
+    "client.c": "6d580a34b7bfba40b05f7144bdf0652fa5d3bee004428bd67b1fac436ea4a760",
+    "result.json": "e3829e3a25185d737edc8a8d6258c277dcef36bb4f6b522eb64e6428e026bd47",
+    "server.c": "abf9a435426f872bd92f38af55a73984f5530a8d7a32a6cdbd9325d60ce8d2d0"
+  }
+}

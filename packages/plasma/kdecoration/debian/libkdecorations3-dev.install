@@ -1,0 +1,5 @@
+usr/include/KDecoration3/
+usr/include/KF6/kdecoration3_version.h
+usr/lib/*/cmake/KDecoration3/
+usr/lib/*/libkdecorations3.so
+usr/lib/*/libkdecorations3private.so

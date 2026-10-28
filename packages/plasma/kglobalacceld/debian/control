@@ -1,0 +1,76 @@
+Source: kglobalacceld
+Section: kde
+Priority: optional
+Maintainer: SupraLINUX Developers <dev@supralinux.org>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Build-Depends: cmake (>= 3.16~),
+               dbus-x11 <!nocheck>,
+               debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               libkf6config-dev (= 6.30.0-0supralinux5),
+               libkf6coreaddons-dev (= 6.30.0-0supralinux4),
+               libkf6crash-dev (= 6.30.0-0supralinux1),
+               libkf6dbusaddons-dev (= 6.30.0-0supralinux3),
+               libkf6globalaccel-dev (= 6.30.0-0supralinux2),
+               libkf6jobwidgets-dev (= 6.30.0-0supralinux4),
+               libkf6kio-dev (= 6.30.0-0supralinux10),
+               libkf6service-dev (= 6.30.0-0supralinux1),
+               libkf6windowsystem-dev (= 6.30.0-0supralinux4),
+               libxcb-keysyms1-dev,
+               libxcb-record0-dev,
+               libxcb-xkb-dev,
+               libxcb-xtest0-dev,
+               libxcb1-dev,
+               qt6-base-dev (>= 6.10.0~),
+               qt6-base-private-dev (= 6.10.2+dfsg-7),
+               qt6-qpa-plugins,
+               python3,
+               dbus,
+               libglib2.0-bin,
+               libx11-dev,
+               libxtst-dev,
+               xauth <!nocheck>,
+               xvfb <!nocheck>,
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/kglobalacceld
+Vcs-Browser: https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/kglobalacceld
+Vcs-Git: https://git.launchpad.net/~kubuntu-packagers/kubuntu-packaging/+git/kglobalacceld
+Rules-Requires-Root: no
+
+Package: kglobalacceld
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends},
+Breaks: libkf5globalaccel-bin (<< 5.116.0-0ubuntu2~),
+Replaces: libkf5globalaccel-bin (<< 5.116.0-0ubuntu2~),
+Description: daemon for global keyboard shortcuts on the Plasma desktop
+ Daemon providing Global Keyboard Shortcut (Accelerator) functionality for the
+ Plasma desktop.
+ .
+ This package contains the daemon and its desktop and service files.
+
+Package: libkglobalacceld-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: libkglobalacceld0 (= ${binary:Version}),
+         libkf6globalaccel-dev (= 6.30.0-0supralinux2),
+         qt6-base-private-dev (= 6.10.2+dfsg-7),
+         ${misc:Depends},
+Description: daemon for global keyboard shortcuts on the Plasma desktop - development files
+ Daemon providing Global Keyboard Shortcut (Accelerator) functionality for the
+ Plasma desktop.
+ .
+ This package contains the development files for the shared library.
+
+Package: libkglobalacceld0
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends}, ${shlibs:Depends},
+Description: daemon for global keyboard shortcuts on the Plasma desktop - shared library
+ Daemon providing Global Keyboard Shortcut (Accelerator) functionality for the
+ Plasma desktop.
+ .
+ This package contains the shared library for interfacing with the daemon.

@@ -1,0 +1,15 @@
+{
+  "state": "PASS",
+  "expected_tests": [
+    "kdecoration3-decorationButtonTest",
+    "kdecoration3-decorationTest",
+    "kdecoration3-decorationShadowTest"
+  ],
+  "executed_tests": [
+    "appstreamtest",
+    "kdecoration3-decorationShadowTest",
+    "kdecoration3-decorationTest",
+    "kdecoration3-decorationButtonTest"
+  ],
+  "scope": "CTest suite executed during the clean package build"
+}

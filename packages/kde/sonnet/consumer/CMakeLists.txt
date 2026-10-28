@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(sonnet_consumer LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+find_package(KF6Sonnet 6.30.0 REQUIRED)
+add_executable(sonnet-consumer main.cpp)
+target_link_libraries(sonnet-consumer PRIVATE KF6::SonnetCore KF6::SonnetUi)

@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-03",
+  "policy": "milestone-images-are-execution-cache-not-source-of-truth",
+  "canonical_reconstruction_sources": [
+    "manifests/kde-dag.json",
+    "retained GitHub Actions package artifacts",
+    "package manifests and immutable evidence"
+  ],
+  "checkpoints": {
+    "frameworks-6.30-pass": {
+      "state": "PASS",
+      "kind": "qcow2-execution-milestone-cache",
+      "host_path": "/var/lib/supralinux/images/milestones/frameworks-6.30-pass.qcow2",
+      "provenance_path": "/var/lib/supralinux/images/milestones/frameworks-6.30-pass.qcow2.provenance.txt",
+      "source_golden_image": "/var/lib/supralinux/images/ubuntu-26.04-authoritative.qcow2",
+      "source_golden_sha256": "a0b88447d9a9ecd9785087390cf499abaf9416291864fe1be4d63d9a334b2acd",
+      "framework_series": "6.30.0",
+      "framework_manifest": "manifests/kde-dag.json",
+      "framework_manifest_git_blob": "c5e21e23bfa61973ac6ca04375bf7f20b1a478cf",
+      "expected_pass_nodes": 65,
+      "payload": {
+        "retained_pass_artifact_pool": true,
+        "extracted_binary_package_pool": true,
+        "local_apt_index": true,
+        "prewarmed_sbuild_rootfs": true,
+        "framework_packages_preinstalled_in_sbuild_rootfs": false
+      },
+      "safety": {
+        "cache_only": true,
+        "package_truth_from_artifacts": true,
+        "undeclared_build_dependencies_must_not_be_masked": true,
+        "failed_checkpoint_build_does_not_change_package_state": true,
+        "failed_checkpoint_build_consumes_package_attempt": false,
+        "replacement_requires_explicit_opt_in": true
+      },
+      "required_before": {
+        "plasma_level0_package_execution": true
+      },
+      "builder": "scripts/build-frameworks-milestone-image.sh",
+      "validator": "scripts/check-frameworks-milestone-image.sh",
+      "image_sha256": "ec38f99e306d5a13333d6b247a9433b3526ec4a6d1a272631242c68df56c3e97",
+      "evidence": {
+        "kind": "host-local-milestone-build",
+        "result": "PASS",
+        "builder_commit": "92defdaf79e573897e0e9836a9365aa3f2c7eb2d",
+        "source_golden_sha256": "a0b88447d9a9ecd9785087390cf499abaf9416291864fe1be4d63d9a334b2acd",
+        "source_golden_compatibility_commit": "92defdaf79e573897e0e9836a9365aa3f2c7eb2d",
+        "evidence_dir": "/var/lib/supralinux/evidence/milestone-frameworks-6.30/20261003T054936Z-1285730",
+        "image_path": "/var/lib/supralinux/images/milestones/frameworks-6.30-pass.qcow2",
+        "image_sha256": "ec38f99e306d5a13333d6b247a9433b3526ec4a6d1a272631242c68df56c3e97",
+        "retained_framework_pass_artifacts": 65,
+        "apt_index_binary_entries": 336,
+        "reusable_resolute_sbuild_rootfs": "PASS",
+        "qemu_img_check": "PASS",
+        "package_execution_started": false,
+        "consumes_package_attempt": false,
+        "canonical_package_state_effect": "none"
+      },
+      "next_checkpoint": "plasma-level0-pass",
+      "next_usage": "Plasma Level 0 package execution may reuse this checkpoint after the remaining Level 0 non-package gates pass"
+    }
+  }
+}

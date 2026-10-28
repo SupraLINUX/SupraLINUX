@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "state": "prepared-inactive",
+  "authority": "Ubuntu Snapshot Service plus SupraLINUX campaign policy",
+  "provider_platform": "ubuntu-resolute",
+  "activation_scope": "future-campaign-boundary-only",
+  "current_plasma_campaign_unchanged": true,
+  "snapshot_id": null,
+  "snapshot_id_format": "YYYYMMDDTHHMMSSZ",
+  "snapshot_service": "https://snapshot.ubuntu.com/ubuntu/",
+  "mirror": "https://archive.ubuntu.com/ubuntu",
+  "suites": [
+    "resolute",
+    "resolute-updates",
+    "resolute-security"
+  ],
+  "components": [
+    "main",
+    "universe"
+  ],
+  "architecture": "amd64",
+  "rootfs": {
+    "builder": "mmdebstrap",
+    "variant": "buildd",
+    "retain_apt_lists": true,
+    "frameworks_and_qt_sdk_preinstalled": false,
+    "source_date_epoch_from_snapshot": true
+  },
+  "sbuild_policy_after_certification": {
+    "apt_update": false,
+    "apt_distupgrade": false,
+    "extra_package_repository_update": true
+  },
+  "certification": {
+    "required": true,
+    "same_snapshot_two_build_sha256_match": true,
+    "apt_lists_present": true,
+    "no_sdk_preinstallation": true,
+    "representative_build_canary": true
+  }
+}

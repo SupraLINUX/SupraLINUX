@@ -1,0 +1,34 @@
+kf6-kconfig (6.30.0-0supralinux4) resolute; urgency=medium
+
+  * Record Batch 9 cycle-4 consumer-smoke FAIL after build, tests, Lintian,
+    ABI and local APT closure passed.
+  * Add qt6-declarative-dev to libkf6config-dev Depends because the exported
+    KF6ConfigConfig.cmake directly requires Qt6Qml >= 6.9.0.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Fri, 18 Sep 2026 15:01:30 +0000
+
+kf6-kconfig (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Record Batch 9 attempt-2 as a real packaging FAIL after the reviewed
+    symbols delta passed but Lintian required the python3 build prerequisite.
+  * Add python3:any to Build-Depends for debian/apply-symbols-delta.py.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Fri, 18 Sep 2026 14:13:59 +0000
+
+kf6-kconfig (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Record the real Batch 9 attempt-1 Lintian/symbols failure.
+  * Add the reviewed KStandardActions::staticMetaObject ABI delta with its
+    KDE upstream introduction minimum 6.29.0.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Fri, 18 Sep 2026 13:15:39 +0000
+
+kf6-kconfig (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE upstream KConfig 6.30.0 for SupraLINUX.
+  * Preserve KDE upstream defaults and keep BUILD_TESTING enabled.
+  * Use Debian 6.28 only as a technical package-layout and symbols baseline.
+  * Preserve Debian-family binary package names and Multi-Arch contracts.
+  * Keep QCH disabled by the common SupraLINUX Frameworks packaging profile.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Fri, 18 Sep 2026 11:30:00 +0000

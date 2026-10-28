@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-26",
+  "scope": "diagnostic-infrastructure-preflight",
+  "authority": "supralinux-ci-architecture",
+  "provider_platform": "ubuntu-resolute",
+  "status": "PASS",
+  "execution_authorized": false,
+  "package_execution_authorized": false,
+  "authoritative": false,
+  "canonical_state_effect": "none",
+  "purpose": "certify diagnostic transport/containment before reusing it on a failing package",
+  "rootfs_reference": {
+    "workflow_run": 36238357510,
+    "artifact_id": 10904512642,
+    "artifact_sha256": "d689f1658d37e3dedcf57d7f4a233917a6d84ed592346d4ac87f60d626724afe",
+    "selection": "~/.cache/sbuild/resolute-amd64.tar",
+    "tar_sha256": "790139881455b78e00621f1b8ab02efaee899b7e6873f4d65ae0ff7fa295020e"
+  },
+  "sbuild_contract": {
+    "version": "0.91.2ubuntu3",
+    "chroot_mode": "unshare",
+    "build_path": "/build/reproducible-path",
+    "host_to_chroot": "pre-build-commands + %SBUILD_CHROOT_EXEC stdin",
+    "chroot_to_host": "external-command stdout evidence stream",
+    "starting_build_semantics": "after build dependencies, immediately before dpkg-buildpackage",
+    "package_build_prevention": "starting-build hook exits sentinel before dpkg-buildpackage"
+  },
+  "synthetic_probe": {
+    "source_package": "supralinux-diagnostic-preflight",
+    "version": "1.0",
+    "target_package_forbidden": true,
+    "expected_pkgbuild_dir": "/build/reproducible-path/supralinux-diagnostic-preflight-1.0",
+    "required_assertions": [
+      "exact rootfs digest",
+      "exact sbuild version",
+      "unshare available",
+      "host-to-chroot hook transfer",
+      "starting-build hook executes as root",
+      "native sbuild user exists and runuser works",
+      "%p resolves expected package build directory",
+      "chroot-to-host evidence stream round-trips",
+      "dpkg-buildpackage is never reached",
+      "no .deb/.changes/.buildinfo produced"
+    ]
+  },
+  "retry_policy": {
+    "max_consecutive_infra_invalid_before_methodology_review": 2,
+    "target_package_must_not_be_first_infrastructure_probe": true,
+    "infra_preflight_required_for_new_diagnostic_mechanism": true,
+    "after_cutoff": "freeze target diagnostic; document methodology review; certify cheap synthetic preflight before retry"
+  },
+  "next_gate": "tier3-round23-krecent-attempt8-full-build-path-diagnostic-evidence",
+  "consumer_handoff": {
+    "diagnostic": "KIO Round 23",
+    "manifest": "manifests/kde-tier3-kio-round23-diagnostic.json",
+    "status": "eligible-after-preflight-PASS"
+  },
+  "evidence": {
+    "workflow_run": 36286096599,
+    "job_id": 108527097646,
+    "commit": "340da99451a86b65513efcbfcae6b6b7145a2a96",
+    "artifact_id": 10920194622,
+    "artifact_sha256": "ee6adecf77aa5110db735220bca0ebecd2a4a41b4a2b8dacc6692816866c1d39",
+    "result": "PASS",
+    "stage": "complete",
+    "rootfs_tar_sha256": "790139881455b78e00621f1b8ab02efaee899b7e6873f4d65ae0ff7fa295020e",
+    "sbuild_exit_code": 1,
+    "package_attempted": false,
+    "canonical_state_effect": "none"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "state": "REVIEW_REQUIRED",
+  "scope": "local source/profile inventory; not package admission",
+  "source_review": "source-input-review.json",
+  "package_attempt_consumed": false,
+  "native_test_definitions": [
+    {
+      "path": "keditfiletype/tests/CMakeLists.txt",
+      "original_text": "include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. )\n\n########### filetypestest ###############\n\nadd_executable(filetypestest\n filetypestest.cpp\n ../mimetypedata.cpp\n ../mimetypewriter.cpp\n)\necm_mark_as_test(filetypestest)\nadd_test(NAME filetypestest COMMAND filetypestest)\ntarget_link_libraries(filetypestest\n   KF6::KIOCore\n   KF6::Service\n   KF6::Parts\n   Qt::Core\n   Qt::Gui\n   Qt::Test\n)\n\nadd_test(NAME kcm_smoketest COMMAND kcmshell6 --smoke-test kcm_filetypes)\nset_tests_properties(kcm_smoketest PROPERTIES\n    ENVIRONMENT_MODIFICATION QT_PLUGIN_PATH=path_list_prepend:${CMAKE_BINARY_DIR}/bin\n)\n"
+    }
+  ],
+  "installed_contract_plan": "Actual MIME classification, SVG rasterization, private file KIO operations, private D-Bus inhibit/notification calls and child lifetime; preserve GUI/auth helpers and compatibility links, with privilege/real desktop/hardware QA separate."
+}

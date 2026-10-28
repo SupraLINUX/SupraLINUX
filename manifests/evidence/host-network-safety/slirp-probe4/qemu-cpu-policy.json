@@ -1,0 +1,12 @@
+{
+  "scope": "outer-disposable-build-guest",
+  "cpu_qom_path": "/machine/unattached/device[0]",
+  "flags": {
+    "kvm-asyncpf": false,
+    "kvm-asyncpf-int": false
+  },
+  "kvm": {
+    "enabled": true,
+    "present": true
+  }
+}

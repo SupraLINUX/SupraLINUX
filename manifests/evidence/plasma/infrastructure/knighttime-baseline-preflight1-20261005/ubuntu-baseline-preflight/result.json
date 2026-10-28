@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "scope": "reviewed-ubuntu-baseline-preflight",
+  "node": "knighttime",
+  "state": "INFRA_INVALID",
+  "exit_code": 16,
+  "source_commit": "af479614cd06a2027657bbd1acd7ccb3495fa613",
+  "workflow_run_id": "37299890272",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "canonical_package_state_effect": "none",
+  "system_test_backend": "autopkgtest-qemu",
+  "system_test_acceleration": "kvm-required",
+  "candidate_installed": false,
+  "inputs_sha256": {
+    "scripts/probe-reviewed-ubuntu-baseline.py": "9fe1eaf6c56fad54bc6e66b687b607ef2e789701b64bdc0092c468c649a213c7",
+    "scripts/plasma-package-testing.py": "6babb4d2b9936b34e6c6b63024fd1a9c581139f37bddc6234b1c78a4c1f0e381",
+    "scripts/qemu-kvm-required.sh": "1e74eafbbd4712b9eeb69b6c2e105232ae5f11e635d9fd4b75d117a67e3fb60d",
+    "packages/plasma/knighttime/debian/tests/baseline-setup": "b832eb1e02c33d28b5c4a10af9265cd3ff2a5fcc03979cc8eca1b1cdc0a7d7e7"
+  },
+  "files_sha256": {
+    "autopkgtest/log": "6c4f6aad3d5cae330acb5fcb92452224abd161bee032fd611ebadb11cc331845",
+    "autopkgtest/summary": "518c710b79955711b024b03f492de1e98f3895dddbe11e6bd429f88be20bda82",
+    "autopkgtest/testinfo.json": "cffb0ec3759dd141ae49f3f26f3b6111d6d6ac611b3d66f078a611754876d8ae",
+    "baseline-setup": "b832eb1e02c33d28b5c4a10af9265cd3ff2a5fcc03979cc8eca1b1cdc0a7d7e7",
+    "reviewed-inputs.json": "b19e415d38e2e1ba978e00757c1c1fa86f79df001bb509db828d9018c367d076",
+    "setup-commands.txt": "6005b0eddefd082d023793f7c97803ee5ec6ea2639cedb8cfc1bf6fabe59eb87"
+  }
+}

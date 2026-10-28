@@ -1,0 +1,594 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Native-provider missing include-path negative/positive reproduction, actual candidate XML/source headers, original export visibility metadata, real original client runtime and owned cleanup; byte restore only, no candidate certification",
+  "archive_path": ".artifacts/plasma-frontier/libksysguard-native-provider-includes-20261009/inputs.zip",
+  "archive_sha256": "f72c4916a18d60cbee414d8331e2fe3433d8dd46eb0afdf23b7a056d2cda5385",
+  "files": {
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/candidate-generated/formatter/formatter_export.h": {
+      "sha256": "5076099568a7db6c04a23313d8595e6c3610859a90b8a7263e6b04ab36f1d7a8",
+      "size": 1149
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/candidate-generated/systemstats/org.kde.ksystemstats1.cpp": {
+      "sha256": "2bf75305f7dc2e63d9a17c83c4690bc2fa9a4189a4913b4148a12ef319e6f822",
+      "size": 941
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/candidate-generated/systemstats/org.kde.ksystemstats1.h": {
+      "sha256": "79f9fca9ee2da4b0a2d6aafff34966931f56566641ae84a7e051072eb841597b",
+      "size": 2746
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/candidate-generated/systemstats/systemstats_export.h": {
+      "sha256": "cdc96015d7b632fa7cb573862121399a9bb4bc9823456f0432ec6c4419c996cd",
+      "size": 1197
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/client/CMakeLists.txt": {
+      "sha256": "759e8059b29399bb16a914eadb3c0880ba802d0c08c94c84bd25f5e6bcae856c",
+      "size": 1433
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/client/main.cpp": {
+      "sha256": "d10a8ee64abc82985395243ef58b5a289fe45a877f1de9c85207707d7b9b743e",
+      "size": 10196
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/client/run-private.py": {
+      "sha256": "1b81e187c146b4f463972e47f779c31dd51e9402b676f2495d0707b7af80a912",
+      "size": 6580
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/client/stats-server.cpp": {
+      "sha256": "ae76d3a105ab9c466a5da475d05158ffa9b56cb2d1b0657df4141239bddb2841",
+      "size": 4104
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/dbus-header-generation.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional/bus-stderr": {
+      "sha256": "bfb5668e5b99fcedaee6111b7d8486c85ac2b78ec216ff32b121d19dc9f3eee8",
+      "size": 146
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional/provider-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional/provider-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional-authorized/actual-interface.txt": {
+      "sha256": "c925569475582ac73bf2d62374b2fd438a5e13f3ee3dca6ead52e1631db52d48",
+      "size": 1772
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional-authorized/bus-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional-authorized/client-stderr": {
+      "sha256": "c61a1ddd8e716dcda2d5aaa17753b8d7b102776ecd39804de3bbead279ab3a97",
+      "size": 132
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional-authorized/client-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional-authorized/provider-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional-authorized/provider-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional-authorized/sensor-face.png": {
+      "sha256": "2d449314bc1b826eb66a754965585e781ec344969d3d4c051c8a461c576eb0c4",
+      "size": 5321
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional-authorized.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional-authorized.stdout": {
+      "sha256": "4621c3976a25b07ffa5a45566d8310119ff2c6341323762c98ce27801c2433ef",
+      "size": 73
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional.stderr": {
+      "sha256": "e12a5911f767430c28869d512a1c684122fe58b5f7772359c02bd1f932b4b011",
+      "size": 425
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/functional.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/.qt/QtDeploySupport.cmake": {
+      "sha256": "ec403f22c188631e8ad3b032e02a7df65d5d4f1327bf32218d286f08a6b6a8e6",
+      "size": 2943
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/.qt/QtDeployTargets.cmake": {
+      "sha256": "d3c2b0c25b5551c0abef287109cb07b589529b5e458c1d92721b7d244d2ae834",
+      "size": 237
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeCache.txt": {
+      "sha256": "d5c8a7a31355a453d69aa7fdc34c40da78062472c041ddf7d029bc13b0e67cce",
+      "size": 39426
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/4.2.3/CMakeCXXCompiler.cmake": {
+      "sha256": "02a92af2d7be5b60750f5d5704e41bb49de67a5c03b15ccaf255df260029df7b",
+      "size": 6435
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/4.2.3/CMakeDetermineCompilerABI_CXX.bin": {
+      "sha256": "7aad0854c05cc22f6a87cc4dd4c9ec4e191a436349fc8e3b2c7f279091f2b51f",
+      "size": 16040
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/4.2.3/CMakeSystem.cmake": {
+      "sha256": "e6dd9890a5f68bed86fe6a79a06176a48a0d2a9c39c50313df0f1cdafe697e47",
+      "size": 398
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/4.2.3/CompilerIdCXX/CMakeCXXCompilerId.cpp": {
+      "sha256": "15597e769f9705997844403bbbf0c2fa65eb5b46a8ad4e6db684547644239fae",
+      "size": 29480
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/4.2.3/CompilerIdCXX/a.out": {
+      "sha256": "a761a1ebb40e916e08c764ec7d7de0be111271fce6b08d596c7e8e16b2baf0b6",
+      "size": 16088
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/CMakeConfigureLog.yaml": {
+      "sha256": "d778038c8c072e02cd5106a7ddb3ddcef2ee75b1ba481fcba6ba9598174d9db4",
+      "size": 181733
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/CMakeDirectoryInformation.cmake": {
+      "sha256": "81999951c39897183c70e89461d18e5c6c87260f8b4c986b38f79931d84ec3a0",
+      "size": 829
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/CMakeRuleHashes.txt": {
+      "sha256": "14e95233a069660b82307a93584b5de779c51fd4e1ea21ad8f27a043a480e504",
+      "size": 159
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/InstallScripts.json": {
+      "sha256": "6d68bea54db8bccd8f932a3fb3ed449f0eaf336598ec760d84f5a98c1e395698",
+      "size": 205
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/Makefile.cmake": {
+      "sha256": "c43c607ac444e86621ea0420be0328f355bd8c9ca04edfa0cf12328acacda065",
+      "size": 16456
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/Makefile2": {
+      "sha256": "e4bd4a5d25b9fc8d9f92d62d9f0f276ba6c454a439fe9e7220173d11467ba915",
+      "size": 9974
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/Progress/2": {
+      "sha256": "2e1cfa82b035c26cbbbdae632cea070514eb8b773f616aaeaf668e2f0be8f10d",
+      "size": 5
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/Progress/3": {
+      "sha256": "2e1cfa82b035c26cbbbdae632cea070514eb8b773f616aaeaf668e2f0be8f10d",
+      "size": 5
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/Progress/5": {
+      "sha256": "2e1cfa82b035c26cbbbdae632cea070514eb8b773f616aaeaf668e2f0be8f10d",
+      "size": 5
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/Progress/count.txt": {
+      "sha256": "f0b5c2c2211c8d67ed15e75e656c7862d086e9245420892a7de62cd9ec582a06",
+      "size": 2
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/TargetDirectories.txt": {
+      "sha256": "939a3972be142d3e83591ad99b1a50bfeef2b4e2947aa438e8c2b5a9ffed65b1",
+      "size": 815
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/cmake.check_cache": {
+      "sha256": "a26189e394421da57f45706a07713c5720acd200a41711b0c0c590c3c63371c4",
+      "size": 85
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/progress.marks": {
+      "sha256": "f0b5c2c2211c8d67ed15e75e656c7862d086e9245420892a7de62cd9ec582a06",
+      "size": 2
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server.dir/DependInfo.cmake": {
+      "sha256": "ce78ea848a948abf2dcc40a0e4e2c7ff1868a234a88482b4b34986da287077cd",
+      "size": 1308
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server.dir/build.make": {
+      "sha256": "01f00ddfe6e8eb09ad35831e67099638c63b70f854946c105d300a40b1452aa1",
+      "size": 9765
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server.dir/cmake_clean.cmake": {
+      "sha256": "9eccc3deeef033c55fdeec4a0ae475bb836a402902d9e3bb0074cf121fb3b59a",
+      "size": 733
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server.dir/compiler_depend.internal": {
+      "sha256": "550baff9ec7da9d83ef698910e6b2f3ec9f2970606d757fca61f2afa6ef8eea3",
+      "size": 55635
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server.dir/compiler_depend.make": {
+      "sha256": "92ae051f6e670bc3480a51e3b6ac7b1228e0a876d5ea9e789f4595dd1c0ec50d",
+      "size": 114128
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server.dir/compiler_depend.ts": {
+      "sha256": "15e1b8af27099ce379f53ae73b8b449c2846ae8bbf0625d82485e620797b24dd",
+      "size": 119
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server.dir/depend.make": {
+      "sha256": "73ad387a6865f37a1ec682b11e388ebb139b23c94f0b58ae71ac0fa592b0561d",
+      "size": 96
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server.dir/flags.make": {
+      "sha256": "2c44f5c0097010241597b2671ffedf1c0e7cfe125054f05b8e2a5d5592754a28",
+      "size": 1229
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server.dir/link.txt": {
+      "sha256": "4feb6f7482caab7a8916969cfd53f55bb23682e57a6f5d4b61dc895b79047b01",
+      "size": 400
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server.dir/progress.make": {
+      "sha256": "0256e132658b08ff6eec531330c116fec44bcf976ba3090f8047a3eb2fa33426",
+      "size": 85
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server.dir/stats-server_autogen/mocs_compilation.cpp.o": {
+      "sha256": "8b9ef92ac051fd668d5818bfb47a033af42dbba68dca4636528d5b2febe07318",
+      "size": 936
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server.dir/stats-server_autogen/mocs_compilation.cpp.o.d": {
+      "sha256": "9268da306750c4ec2b3a038031e66f9c91f998378be96883dfab7f837d626975",
+      "size": 277
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen.dir/AutogenInfo.json": {
+      "sha256": "4298776eb70e3d351cbbc34632825c906783fe4d822f01fac515ca45f1091ae0",
+      "size": 22442
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen.dir/AutogenUsed.txt": {
+      "sha256": "5f68e29e4a402b8cfdfef54976ec14f14b5d9dde0de37d08d95eeca17e61ec25",
+      "size": 69
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen.dir/DependInfo.cmake": {
+      "sha256": "0ce06edadc457acac6962f90ca4da26c76f91c455fd069ed1d0b32081b0047cb",
+      "size": 660
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen.dir/ParseCache.txt": {
+      "sha256": "8432e9ad2bdfb53e083bd8eed316a7a442b7dc3396dc892bbdbf9de5ab4d8c3a",
+      "size": 43734
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen.dir/build.make": {
+      "sha256": "05a3390f26b06b1728beeb0abe551ae1c1ad7babc48c7060965313962454c6a5",
+      "size": 4447
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen.dir/cmake_clean.cmake": {
+      "sha256": "d108835b0d72cd6ee932739bb179660e433439fbe55714b0c8ee091b06eb0d4b",
+      "size": 303
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen.dir/compiler_depend.make": {
+      "sha256": "496052be0b0fd1e343c8949c34ffce13927608f1957b356104de6af596605c83",
+      "size": 130
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen.dir/compiler_depend.ts": {
+      "sha256": "6c08f3038a5ab534b1fd8edd2fbcf61873595dc9f8811d39dc7f2ce9d09c452d",
+      "size": 124
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen.dir/progress.make": {
+      "sha256": "d4ca28a664ad0974c25a2127f0d757b0a3561f29cfa944311ff68c374ee8f0cf",
+      "size": 22
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen_timestamp_deps.dir/DependInfo.cmake": {
+      "sha256": "b2ca23380b5c9dd7f07b120e32fb11a157a4def74d801994559b1c8c88f92f55",
+      "size": 585
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen_timestamp_deps.dir/build.make": {
+      "sha256": "0799af0b7b6f6a1a75af9748120ab05b470d05e0f376a904b689d9ccda8d3747",
+      "size": 3694
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen_timestamp_deps.dir/cmake_clean.cmake": {
+      "sha256": "507bdbb0dc81f823418eec4749ce0f5636d24dd89270ecfdffd2a1fffa787877",
+      "size": 179
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen_timestamp_deps.dir/compiler_depend.make": {
+      "sha256": "b4b9d556541298f90abccd11b3c54c4545a608b4cfa65bdf3c6e13f8a06eb832",
+      "size": 145
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen_timestamp_deps.dir/compiler_depend.ts": {
+      "sha256": "3860c1351471b2a8c0bd59bbe21007ea1e9fa24f37529867086cb8ed39aaf783",
+      "size": 139
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/CMakeFiles/stats-server_autogen_timestamp_deps.dir/progress.make": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "size": 1
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/Makefile": {
+      "sha256": "8ff470837edf72eefafb07a977396bf923ca92bdb3b922eed5f71edb8ecde49c",
+      "size": 8470
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/cmake_install.cmake": {
+      "sha256": "e13c5875b18ee1dbbaeed48cabe94616be431850e2ff1a0e29a77a8395d06ef5",
+      "size": 2384
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/stats-server_autogen/deps": {
+      "sha256": "0719c759437de5027d16584f1eee0e8ab930a32e53ffef3834c83386823857e9",
+      "size": 57419
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/stats-server_autogen/include/stats-server.moc": {
+      "sha256": "622e0fc5d747dad304f54d857d1b0164ba271230c8dd065833e9aa1ea2201d7b",
+      "size": 7911
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/stats-server_autogen/include/stats-server.moc.d": {
+      "sha256": "6ad5d6d364720f0dc74d7cd67868180ea1640a6c0b050ef9632958afa9dc2b34",
+      "size": 42887
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/stats-server_autogen/moc_predefs.h": {
+      "sha256": "dcfcc891f01b39ee0bb05275734193550b50cb143f63543b5be89fb71447edc6",
+      "size": 18631
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/stats-server_autogen/mocs_compilation.cpp": {
+      "sha256": "3a980c470f20620fec75ec0a390d792f1dcc9ba7d99f4ec5fc30ff04b3b16412",
+      "size": 173
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative/stats-server_autogen/timestamp": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative-build.log": {
+      "sha256": "33b452de727f388a8c3365bf8c86a1fb16424b3dd9f343547ccf5fcab815f408",
+      "size": 1209
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/negative-configure.log": {
+      "sha256": "c9710347feb994521e3bd095fed972607ff2a89fdc89c92198f3933e3cef59f2",
+      "size": 701
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/.qt/QtDeploySupport.cmake": {
+      "sha256": "c10e8f72e790f3fd8a3800bdd672b53e3b5a96216554d4b0bc6116c4baeaea1a",
+      "size": 2943
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/.qt/QtDeployTargets.cmake": {
+      "sha256": "8cd1dc73cfb0cd52f183ad6bf2cbc771afd43cd129e3a0d92dce087c7def970a",
+      "size": 237
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeCache.txt": {
+      "sha256": "62889056d70254d1d4ca97396f5c4f93e76553549616fb79eacf779b2dacab4a",
+      "size": 39426
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/4.2.3/CMakeCXXCompiler.cmake": {
+      "sha256": "02a92af2d7be5b60750f5d5704e41bb49de67a5c03b15ccaf255df260029df7b",
+      "size": 6435
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/4.2.3/CMakeDetermineCompilerABI_CXX.bin": {
+      "sha256": "7aad0854c05cc22f6a87cc4dd4c9ec4e191a436349fc8e3b2c7f279091f2b51f",
+      "size": 16040
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/4.2.3/CMakeSystem.cmake": {
+      "sha256": "e6dd9890a5f68bed86fe6a79a06176a48a0d2a9c39c50313df0f1cdafe697e47",
+      "size": 398
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/4.2.3/CompilerIdCXX/CMakeCXXCompilerId.cpp": {
+      "sha256": "15597e769f9705997844403bbbf0c2fa65eb5b46a8ad4e6db684547644239fae",
+      "size": 29480
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/4.2.3/CompilerIdCXX/a.out": {
+      "sha256": "a761a1ebb40e916e08c764ec7d7de0be111271fce6b08d596c7e8e16b2baf0b6",
+      "size": 16088
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/CMakeConfigureLog.yaml": {
+      "sha256": "1f1d26a0a16d8a9af579c56447f79886015fb35c7d777235e0487b663c42cc77",
+      "size": 181733
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/CMakeDirectoryInformation.cmake": {
+      "sha256": "04d0dc91ac1ccdffe9a9e236ab63f6884cc00e1abc7d32e5be6b3d682be0a956",
+      "size": 829
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/CMakeRuleHashes.txt": {
+      "sha256": "e7062b72b905304e7fb935c7dfd3d33a45392d20a0223e639a9afb27ae02b41b",
+      "size": 159
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/InstallScripts.json": {
+      "sha256": "f3bdfb6198f3e022d1c2987edddb3e05881e2bbdd47f517399dd7e6480f76b48",
+      "size": 205
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/Makefile.cmake": {
+      "sha256": "c43c607ac444e86621ea0420be0328f355bd8c9ca04edfa0cf12328acacda065",
+      "size": 16456
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/Makefile2": {
+      "sha256": "f1e7d77f9bc4a05c861de11e87b0eecfcb7a776cbb9c8061a7552e28ba82b6d8",
+      "size": 9974
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/TargetDirectories.txt": {
+      "sha256": "f77630929c54206b51d1bb65b9256448a891314d974b658098411e9f556ecece",
+      "size": 815
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/cmake.check_cache": {
+      "sha256": "a26189e394421da57f45706a07713c5720acd200a41711b0c0c590c3c63371c4",
+      "size": 85
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/progress.marks": {
+      "sha256": "f0b5c2c2211c8d67ed15e75e656c7862d086e9245420892a7de62cd9ec582a06",
+      "size": 2
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/DependInfo.cmake": {
+      "sha256": "ce038c86f8c3230d90020a4aa80bde96b0418de28578f938e07dfdff289138c8",
+      "size": 1308
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/build.make": {
+      "sha256": "ddb02f761ab881bd2731dc676cac203a79b556703f60b83f7c94b5253b6f8275",
+      "size": 9765
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/cmake_clean.cmake": {
+      "sha256": "9eccc3deeef033c55fdeec4a0ae475bb836a402902d9e3bb0074cf121fb3b59a",
+      "size": 733
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/compiler_depend.internal": {
+      "sha256": "d9720a7de9ebe54e2356ce4aede320990104559a161f958f9dca4e534ebacdc0",
+      "size": 55635
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/compiler_depend.make": {
+      "sha256": "92ae051f6e670bc3480a51e3b6ac7b1228e0a876d5ea9e789f4595dd1c0ec50d",
+      "size": 114128
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/compiler_depend.ts": {
+      "sha256": "15e1b8af27099ce379f53ae73b8b449c2846ae8bbf0625d82485e620797b24dd",
+      "size": 119
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/depend.make": {
+      "sha256": "73ad387a6865f37a1ec682b11e388ebb139b23c94f0b58ae71ac0fa592b0561d",
+      "size": 96
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/flags.make": {
+      "sha256": "bb8a0d072a5956e402e74b429c89957120d70422b3ea162c3b8333ada1343fe8",
+      "size": 1358
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/link.d": {
+      "sha256": "11b168124e6e7d38696aacb1c7e78ca3884aa56b5f7c6d6204f277ee44038c0a",
+      "size": 5894
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/link.txt": {
+      "sha256": "4feb6f7482caab7a8916969cfd53f55bb23682e57a6f5d4b61dc895b79047b01",
+      "size": 400
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/progress.make": {
+      "sha256": "0256e132658b08ff6eec531330c116fec44bcf976ba3090f8047a3eb2fa33426",
+      "size": 85
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/stats-server.cpp.o": {
+      "sha256": "d0f243d67e7f2f89ed8c3cda3ef5c5f03434c2c3c318a2ba523421429bffff5c",
+      "size": 752120
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/stats-server.cpp.o.d": {
+      "sha256": "5cd0d6110dca1a9723e33bdacc649f6f4578b6ed8945b8449fbe35a2fe634e50",
+      "size": 53733
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/stats-server_autogen/mocs_compilation.cpp.o": {
+      "sha256": "8b9ef92ac051fd668d5818bfb47a033af42dbba68dca4636528d5b2febe07318",
+      "size": 936
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server.dir/stats-server_autogen/mocs_compilation.cpp.o.d": {
+      "sha256": "2b529f18402fb6c90b965f25cece8d4e98da6ceb54ce47fdf12221173dacc766",
+      "size": 277
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen.dir/AutogenInfo.json": {
+      "sha256": "94a910cbb833ac89b4192e17af04233d879847eab85681fc2ec9835777821b41",
+      "size": 22574
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen.dir/AutogenUsed.txt": {
+      "sha256": "7d82c8e798c112eabe58d84d269e2bd4aff18d85401093a57a6660b9c268a7d5",
+      "size": 69
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen.dir/DependInfo.cmake": {
+      "sha256": "0ce06edadc457acac6962f90ca4da26c76f91c455fd069ed1d0b32081b0047cb",
+      "size": 660
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen.dir/ParseCache.txt": {
+      "sha256": "0ed9e0e3f837261e5716f942405ff7566cf8bc451d75d1e07a15fb0d0c6564a6",
+      "size": 43734
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen.dir/build.make": {
+      "sha256": "9c2f6837eec52d1fcd954099325f0b76d2379fda40458d90aa4d04fec4da2945",
+      "size": 4447
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen.dir/cmake_clean.cmake": {
+      "sha256": "d108835b0d72cd6ee932739bb179660e433439fbe55714b0c8ee091b06eb0d4b",
+      "size": 303
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen.dir/compiler_depend.make": {
+      "sha256": "496052be0b0fd1e343c8949c34ffce13927608f1957b356104de6af596605c83",
+      "size": 130
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen.dir/compiler_depend.ts": {
+      "sha256": "6c08f3038a5ab534b1fd8edd2fbcf61873595dc9f8811d39dc7f2ce9d09c452d",
+      "size": 124
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen.dir/progress.make": {
+      "sha256": "d4ca28a664ad0974c25a2127f0d757b0a3561f29cfa944311ff68c374ee8f0cf",
+      "size": 22
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen_timestamp_deps.dir/DependInfo.cmake": {
+      "sha256": "b2ca23380b5c9dd7f07b120e32fb11a157a4def74d801994559b1c8c88f92f55",
+      "size": 585
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen_timestamp_deps.dir/build.make": {
+      "sha256": "b4ff2fceaa769aaa693d7115cba5afe2256b936a6c0f3449f91d70072f1fa5f6",
+      "size": 3694
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen_timestamp_deps.dir/cmake_clean.cmake": {
+      "sha256": "507bdbb0dc81f823418eec4749ce0f5636d24dd89270ecfdffd2a1fffa787877",
+      "size": 179
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen_timestamp_deps.dir/compiler_depend.make": {
+      "sha256": "b4b9d556541298f90abccd11b3c54c4545a608b4cfa65bdf3c6e13f8a06eb832",
+      "size": 145
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen_timestamp_deps.dir/compiler_depend.ts": {
+      "sha256": "3860c1351471b2a8c0bd59bbe21007ea1e9fa24f37529867086cb8ed39aaf783",
+      "size": 139
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/CMakeFiles/stats-server_autogen_timestamp_deps.dir/progress.make": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "size": 1
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/Makefile": {
+      "sha256": "0d236585751bd93496b9d149b0c725aa9a242fe848159cd47a681440dd698698",
+      "size": 8470
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/cmake_install.cmake": {
+      "sha256": "f3dc0aca1a1a383ce0c35f8c2a6788ed0a9c87c5143a93957ed0de505d98d9d2",
+      "size": 2384
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/stats-server": {
+      "sha256": "d06ccd029064688f9c9f6b462fdc45edb33a94ebed1c0bee55af72a50999701d",
+      "size": 332376
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/stats-server_autogen/deps": {
+      "sha256": "37e5382f810499d8a49996c169f2babfba83b7f772788a184660be6dff5d90a2",
+      "size": 57419
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/stats-server_autogen/include/stats-server.moc": {
+      "sha256": "622e0fc5d747dad304f54d857d1b0164ba271230c8dd065833e9aa1ea2201d7b",
+      "size": 7911
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/stats-server_autogen/include/stats-server.moc.d": {
+      "sha256": "7b334bf840ab6bb0790f34dffaa90ade5c746d7e9490bbb86f5cd0391042e95f",
+      "size": 42887
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/stats-server_autogen/moc_predefs.h": {
+      "sha256": "dcfcc891f01b39ee0bb05275734193550b50cb143f63543b5be89fb71447edc6",
+      "size": 18631
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/stats-server_autogen/mocs_compilation.cpp": {
+      "sha256": "3a980c470f20620fec75ec0a390d792f1dcc9ba7d99f4ec5fc30ff04b3b16412",
+      "size": 173
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive/stats-server_autogen/timestamp": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive-build.log": {
+      "sha256": "eaa0eb89d5604cae7d2fdb48c197484bfb5322aae36d28fd58c820729d46158e",
+      "size": 2785
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/positive-configure.log": {
+      "sha256": "c1eb3ebda7f205a89b5a288b5d5a8570d6fd5b53c52d9ecc3f90346ad070eee7",
+      "size": 701
+    },
+    ".work/dependent-plasma-review/libksysguard/native-provider-include-review/review.json": {
+      "sha256": "978323785d5cf6d1aad23f69fdd4a2f8d3fdda89d85753b4f8d6cc39c11131f4",
+      "size": 19316
+    },
+    ".work/dependent-plasma-review/libksysguard/source/libksysguard-6.7.5/systemstats/org.kde.ksystemstats1.xml": {
+      "sha256": "1fcc7eba971375316ed22d422f65f9d41e290dd98b19239e3977cd35c5acf8c6",
+      "size": 1832
+    },
+    ".work/dependent-plasma-review/libksysguard/source/libksysguard-6.7.5/systemstats/SensorInfo.h": {
+      "sha256": "28aa5a1aa1a0a05e9cf065ea8f848288268d2ce1259e93b35883ea82c470ec2d",
+      "size": 2741
+    },
+    ".work/dependent-plasma-review/libksysguard/source/libksysguard-6.7.5/systemstats/DBusInterface.h": {
+      "sha256": "8396869a440a4a8d9961427ab659deddf1bb36622303b8acd883be44c853f534",
+      "size": 930
+    },
+    ".work/dependent-plasma-review/libksysguard/source/libksysguard-6.7.5/formatter/Unit.h": {
+      "sha256": "9860ebfd85ad85596d603afe35822d35ee18573e05167b6b1601e0b68751bf75",
+      "size": 3457
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/positive/stats-client": {
+      "sha256": "d0cdaeafb717993689356c3f478736b5f76e8ed8af4482dde49110570a46da41",
+      "size": 72816
+    }
+  },
+  "empty_offline_byte_restore_verified": true,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

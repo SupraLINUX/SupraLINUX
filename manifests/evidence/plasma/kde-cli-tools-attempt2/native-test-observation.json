@@ -1,0 +1,17 @@
+{
+  "state": "PASS",
+  "scope": "Original clean sbuild native suite, unchanged source/assertions; payload AppStream validation was skipped before installation",
+  "filetypestest": {
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "blacklisted": 0
+  },
+  "kcm_smoketest": "PASS",
+  "appstream_process": "PASS",
+  "appstream_payload_validation": "NOT RUN; Not installed yet, skipping",
+  "full_sbuild_sha256": "6bd6b06eb253dc5dad6cf3bad564a01fe8eb51f6bdee3e212e5ef0e53195292f",
+  "package_certification": false,
+  "lintian_separate": "NOT RUN",
+  "installed_tests": "NOT RUN"
+}

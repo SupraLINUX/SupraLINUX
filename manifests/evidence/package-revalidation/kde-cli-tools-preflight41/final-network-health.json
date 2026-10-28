@@ -1,0 +1,14 @@
+{
+  "scope": "Final read-only host network observations after exact owned KVM gate; no configuration mutations",
+  "checked_at": "2026-10-11T01:01:33.303217+00:00",
+  "kernel_journal_read_exit_code": 0,
+  "hang_query_exit_code": 1,
+  "hardware_hang_seen": false,
+  "eno1_carrier": "1",
+  "offloads": {
+    "tcp-segmentation-offload": "off",
+    "generic-segmentation-offload": "off"
+  },
+  "libvirt_networks": [],
+  "host_network_modified": false
+}

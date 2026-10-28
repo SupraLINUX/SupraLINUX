@@ -1,0 +1,17 @@
+-- 
+
+-- The following OPTIONAL packages have been found:
+
+ * Python3
+
+-- The following REQUIRED packages have been found:
+
+ * ECM (required version >= 6.0.0), Extra CMake Modules., <https://commits.kde.org/extra-cmake-modules>
+ * WaylandScanner, Executable that converts XML protocol files to C code, <https://wayland.freedesktop.org/>
+ * Wayland, C library implementation of the Wayland protocol: a protocol for a compositor to talk to its clients, <https://wayland.freedesktop.org/>
+
+-- Configuring done (0.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/plasma-protocols-native-preflight/build
+Installing in /usr. Run /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/plasma-protocols-native-preflight/build/prefix.sh to set the environment for PlasmaWaylandProtocols.
+fatal: no upstream configured for branch 'architecture/bootstrap-v1'

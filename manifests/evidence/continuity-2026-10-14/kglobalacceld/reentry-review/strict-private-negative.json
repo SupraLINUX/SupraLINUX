@@ -1,0 +1,6 @@
+{
+  "original_private_binary": "EXPECTED ABI INCOMPATIBILITY",
+  "compatibility_pass": false,
+  "exit_code": 127,
+  "undefined_symbol": "_ZN13KGlobalAccelD22setForeignShortcutKeysERK5QListI7QStringERKS0_I12QKeySequenceE"
+}

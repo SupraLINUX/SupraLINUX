@@ -1,0 +1,189 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-24",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "frameworks_series": "6.30.0",
+  "node": "kio",
+  "round": 11,
+  "claim": "non-promoting-kio-test-environment-diagnostic",
+  "non_promoting": true,
+  "package_attempted": false,
+  "package_state_effect": "none",
+  "dag_state_changes_allowed": false,
+  "downstream_eligibility_changes_allowed": false,
+  "current_canonical_state": {
+    "state": "FAIL",
+    "package_version": "6.30.0-0supralinux6",
+    "canonical_snapshot": "12 PASS / 1 pending / 1 current FAIL / 6 BLOCKED",
+    "execution_authorized": false,
+    "next_gate": "tier3-round11-kio-remediation-definition"
+  },
+  "upstream_source": {
+    "version": "6.30.0",
+    "url": "https://download.kde.org/stable/frameworks/6.30/kio-6.30.0.tar.xz",
+    "sha256": "c19cbd4878347b67a9e05ee6541083f51dd90f9e58ee245b4d7634e09f9c04b2"
+  },
+  "attempt5_evidence": {
+    "workflow_run": 35991007820,
+    "job_id": 107605066803,
+    "package_version": "6.30.0-0supralinux5",
+    "tests": {
+      "total": 69,
+      "pass": 67,
+      "fail": 2
+    },
+    "failed_tests": [
+      "kiowidgets-kdirmodeltest",
+      "kiofilewidgets-knewfilemenutest"
+    ],
+    "observed_target_ctest_environment": [
+      "QT_QPA_PLATFORM=offscreen",
+      "QT_PLUGIN_PATH=<build-tree>/bin"
+    ]
+  },
+  "attempt6_evidence": {
+    "workflow_run": 36035351270,
+    "job_id": 107754320435,
+    "package_version": "6.30.0-0supralinux6",
+    "tests": {
+      "total": 69,
+      "pass": 66,
+      "fail": 3
+    },
+    "failed_tests": [
+      "kiocore-krecentdocumenttest",
+      "kiowidgets-kdirmodeltest",
+      "kiofilewidgets-knewfilemenutest"
+    ],
+    "observed_target_ctest_environment": [
+      "QT_QPA_PLATFORM=xcb",
+      "QT_QPA_SYSTEM_ICON_THEME=breeze"
+    ],
+    "missing_from_target_ctest_environment": [
+      "QT_PLUGIN_PATH"
+    ]
+  },
+  "retained_breeze_provider": {
+    "version": "4:6.30.0-0supralinux1",
+    "workflow_run": 35700002095,
+    "job_id": 106656021938,
+    "artifact_id": 10682012012,
+    "artifact_sha256": "daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577",
+    "breeze_deb_sha256": "308a20089ef387da2d5ba08b42be4299dd62fe5f5535786a0d8881d93b0d1e09",
+    "payload_evidence": [
+      "/usr/share/icons/breeze/index.theme",
+      "/usr/share/icons/breeze/mimetypes/22/unknown.svg",
+      "/usr/share/icons/breeze/mimetypes/16/inode-directory.svg"
+    ]
+  },
+  "established_findings": [
+    {
+      "id": "round10-destructive-ctest-environment-replacement",
+      "state": "PROVEN",
+      "finding": "Round 10 replaced the complete CTest ENVIRONMENT property on kdirmodeltest and knewfilemenutest, removing the ECM-provided QT_PLUGIN_PATH while changing QT_QPA_PLATFORM."
+    },
+    {
+      "id": "breeze-provider-payload-present",
+      "state": "PROVEN",
+      "finding": "The retained Breeze PASS package contains index.theme and the icon payload required by the failing assertions."
+    },
+    {
+      "id": "krecentdocument-timestamp-tie-risk",
+      "state": "EVIDENCE-BACKED-HYPOTHESIS",
+      "finding": "KIO 6.30 records millisecond timestamps and sorts recent URLs only by timestamp while the failing test adds 15 entries in a tight loop; equal timestamps can make exact ordering unstable."
+    }
+  ],
+  "diagnostic_probes": [
+    {
+      "id": "cmake-environment-modification",
+      "purpose": "Prove CMake ENVIRONMENT_MODIFICATION can set XCB/Breeze after upstream ENVIRONMENT while preserving QT_PLUGIN_PATH.",
+      "expected": "QT_QPA_PLATFORM=xcb, QT_QPA_SYSTEM_ICON_THEME=breeze, QT_PLUGIN_PATH preserved"
+    },
+    {
+      "id": "qt-breeze-icon-resolution",
+      "purpose": "Probe QIcon theme name/search paths and unknown/inode-directory/folder-red resolution on Ubuntu Resolute Qt 6.10.2 with the exact retained Breeze package under Xvfb/XCB.",
+      "modes": [
+        "system-theme-default-xdg",
+        "system-theme-explicit-xdg",
+        "explicit-QIcon-theme-explicit-xdg"
+      ]
+    },
+    {
+      "id": "krecentdocument-static-tie-risk",
+      "purpose": "Verify the exact KDE 6.30 source still combines millisecond timestamps, timestamp-only ordering and a tight 15-entry test loop.",
+      "result_effect": "diagnostic-only; no test suppression or source patch authorized"
+    }
+  ],
+  "proposed_non_destructive_mechanism": {
+    "cmake_property": "ENVIRONMENT_MODIFICATION",
+    "operations": [
+      "QT_QPA_PLATFORM=set:xcb",
+      "QT_QPA_SYSTEM_ICON_THEME=set:breeze"
+    ],
+    "status": "diagnostic-PASS-remediation-candidate",
+    "package_revision": null
+  },
+  "status": "diagnostic-PASS",
+  "next_gate": "tier3-round11-kio-remediation-definition",
+  "stable_promotion_requires_explicit_user_approval": true,
+  "diagnostic_evidence": {
+    "workflow_run": 36071103806,
+    "job_id": 107872008601,
+    "commit": "b314ad501bf5eb6213f6cf4b2562cce60804b76c",
+    "artifact_id": 10837734340,
+    "artifact_sha256": "d4d944ac656d755ebd8c828d1e84c1b735e076c26a17adc66da42f0464a8cedc",
+    "result": "DIAG_COMPLETE",
+    "package_attempted": false,
+    "package_state_effect": "none"
+  },
+  "diagnostic_results": {
+    "cmake_environment_modification": {
+      "result": "PASS",
+      "effective_environment": [
+        "QT_QPA_PLATFORM=xcb",
+        "QT_QPA_SYSTEM_ICON_THEME=breeze",
+        "QT_PLUGIN_PATH=/probe/upstream-build-tree/bin"
+      ],
+      "conclusion": "ENVIRONMENT_MODIFICATION changes only the intended variables and preserves the pre-existing CTest environment."
+    },
+    "qt_breeze_icon_resolution": {
+      "result": "PASS",
+      "qt_version": "6.10.2",
+      "theme_name": "breeze",
+      "theme_paths": [
+        "/usr/local/share/icons",
+        "/usr/share/icons",
+        ":/icons"
+      ],
+      "icons": {
+        "unknown": {
+          "has": true,
+          "null": false,
+          "name": "unknown"
+        },
+        "inode-directory": {
+          "has": true,
+          "null": false,
+          "name": "inode-directory"
+        },
+        "folder-red": {
+          "has": true,
+          "null": false,
+          "name": "folder-red"
+        }
+      },
+      "modes_passed": [
+        "system-default-xdg",
+        "system-explicit-xdg",
+        "explicit-theme"
+      ]
+    },
+    "krecentdocument": {
+      "result": "UNRESOLVED-HYPOTHESIS",
+      "classification": "timestamp-tie-risk-present",
+      "action": "do-not-patch-or-suppress-without-focused-runtime-evidence",
+      "rerun_policy": "remain-fatal-in-next-full-Level1-attempt"
+    }
+  }
+}

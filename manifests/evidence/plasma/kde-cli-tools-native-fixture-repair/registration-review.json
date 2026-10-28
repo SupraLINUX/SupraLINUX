@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Actual unchanged source CMake registration with supported native test launcher; not full package build or native execution",
+  "candidate_certification": false,
+  "package_attempt_consumed": false,
+  "filetypestest_target_launcher_registered": true,
+  "kcm_smoketest_registered": true,
+  "generated_ctest_sha256": "524125a1023e1c30bc9d84ba98906d967cfb0a9bfb88ce2bb52faeb5134d4c91",
+  "generated_commands": [
+    "add_test(filetypestest \"/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/kde-cli-tools-native-fixture-packaging-review-20261011/debian/tests/upstream-session\" \"--native\" \"/home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/kde-cli-tools-native-fixture-packaging-review-20261011/cmake-registration/bin/filetypestest\")",
+    "add_test(kcm_smoketest \"kcmshell6\" \"--smoke-test\" \"kcm_filetypes\")"
+  ],
+  "source_test_cmake_sha256": "56c013c886d07eda1f7de086866b142acd58ed2cc81498245c0fdfbce40817ab"
+}

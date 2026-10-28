@@ -1,0 +1,5 @@
+supralinux-guest-probe (1.0-1) resolute; urgency=low
+
+  * Verify real Ubuntu 26.04 guest identity and DEP-8 test execution.
+
+ -- SupraLINUX QA <qa@supralinux.invalid>  Thu, 15 Oct 2026 00:00:00 +0000

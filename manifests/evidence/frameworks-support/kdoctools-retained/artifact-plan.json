@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "artifact_id": 10682066198,
+      "artifact_sha256": "6daeb6beed63ba7b7e441dba4dfd356be3ad48a9f3ae75acddae0945c36a683d",
+      "node": "kdoctools",
+      "package_version": "6.30.0-0supralinux1",
+      "payload_prefix": ""
+    }
+  ],
+  "kind": "retained-support-predecessor-artifact-plan",
+  "schema": 1
+}

@@ -1,0 +1,19 @@
+kf6-kguiaddons (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Add a SupraLINUX symbols overlay for KSystemClipboard::ownsClipboard()
+    and ownsSelection(), both introduced by KDE upstream in 6.29.
+  * Keep the two new symbols versioned at 6.29.0 rather than the current
+    Debian revision, satisfying the source+binary Lintian ABI gate.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Thu, 17 Sep 2026 05:15:00 +0000
+
+kf6-kguiaddons (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE upstream KGuiAddons 6.30.0 for SupraLINUX.
+  * Preserve upstream Linux Wayland, X11, DBus and geo handler defaults.
+  * Preserve upstream Python bindings and build tests.
+  * Keep KCoreAddons out of Build-Depends while exposing its required public
+    development surface through libkf6guiaddons-dev.
+  * Preserve Debian-family binary package names and Multi-Arch contracts.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Thu, 17 Sep 2026 04:30:00 +0000

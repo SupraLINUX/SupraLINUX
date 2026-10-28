@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "scope": "plymouth-kcm-packaging-review-detail",
+  "source_commit": "9e02676ee30be7fccd8c32f7777ee49006913d4d",
+  "workflow_run_id": 39600553649,
+  "workflow_job_id": 119224465715,
+  "artifact_id": 12345613216,
+  "artifact_digest": "sha256:372bca6b61061dee16f5038f2da36422acdc29ed2ca7ff4fe3dda71665099b65",
+  "task_id": "plymouth-kcm-review-detail",
+  "task_exit_code": 1,
+  "stage": "ubuntu-reference-normalized-tree-identity",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "package_attempt_effect": "none",
+  "canonical_package_state_effect": "none",
+  "observed_normalized_debian_tree_sha256": "39c6089327fa296f38dc6837d1a736483e1560cf72b41131b7a9318ef1577783",
+  "incorrectly_expected_sha256": "5eefac021e21e7d2e4ee45a08dbe3a7cb4b9a8169e3cc73e0dbcb089d38ceb37",
+  "cause": "The detail-review task compared its newly normalized Debian packaging tree archive against the materialization evidence field debian_tree_tar_sha256. That field is not the normalized review-scan archive identity. The task reproduced the already-retained review-scan normalized SHA-256 39c608..., then failed closed on the incorrect cross-scope assertion.",
+  "repair": "Bind the normalized tree to the retained review-scan SHA-256 39c608..., separately bind the downloaded .dsc, .debian.tar.xz and orig.tar.xz to materialization hashes, and dearmor the retained upstream signing key before gpgv while requiring the KDE release primary fingerprint."
+}

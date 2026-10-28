@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "plymouth-kcm-authoritative-preflight-evidence-publication",
+  "publication_source_commit": "3683d4210236a13596a35b607ddf7ab33f53dc0a",
+  "canonical_commit": "3fca6a185cfe4485f9ef86992bed53a388bdb4e6",
+  "control": {
+    "router_run_id": 40087157026,
+    "host_job_id": 120852350055,
+    "artifact_id": 12557109544,
+    "artifact_digest": "sha256:b9b282116035d128b342a8bd3a26414dc03b2d11494355d08c42d5b1b1037cbc",
+    "mode": "publish-evidence"
+  },
+  "package_evidence": {
+    "node": "plymouth-kcm",
+    "package_source_commit": "728ee9753afb55eef372cf726be8f1914f90494f",
+    "workflow_run_id": 40053868847,
+    "workflow_job_id": 120752366665,
+    "artifact_id": 12544242876,
+    "artifact_sha256": "985c9a23023ec26f913264eef14023c9605f1ece4e8a48cb003920ddd853dcac",
+    "host_evidence_manifest_sha256": "61cb74f24e121e775fd86a454a0d8ce864e1d4d41d09b5f7559913edfb8dffda",
+    "package_attempt_consumed": false
+  },
+  "result": {
+    "closure_kind": "preflight",
+    "canonical_update_file_count": 16,
+    "canonical_update_manifest_sha256": "c2ccd1450828a6e594a4b67f0135f3ec390ebce0a4d24895fe85f71bf8d75612",
+    "publish_dry_run": false,
+    "published": true,
+    "offline_restore_verified": true,
+    "requires_github_for_restore": false,
+    "vm_created": false,
+    "jit_invoked": false,
+    "package_attempt_effect": "none"
+  },
+  "canonical_state": {
+    "execution_mode": "build",
+    "node_state": "build-pending",
+    "package_attempts": 0,
+    "next_gate": "authoritative-plasma-package-build:plymouth-kcm"
+  }
+}

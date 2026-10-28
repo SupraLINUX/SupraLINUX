@@ -1,0 +1,106 @@
+name: SupraLINUX host workspace VM
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  host-workspace:
+    name: Execute arbitrary task inside disposable KVM workspace
+    runs-on: [self-hosted, linux, x64, supralinux-host-orchestrator]
+    timeout-minutes: 180
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Refresh versioned host orchestration helpers
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo -n install -o root -g root -m 0755 \
+            scripts/supralinux-vm-workspace-broker.sh \
+            /usr/local/libexec/supralinux-vm-workspace-broker
+          sudo -n install -o root -g root -m 0644 \
+            scripts/configure-kvm-guest-network.py \
+            /usr/local/libexec/supralinux-configure-kvm-guest-network.py
+          sudo -n install -o root -g root -m 0755 \
+            scripts/with-libguestfs-runtime.sh \
+            /usr/local/libexec/supralinux-with-libguestfs-runtime
+
+      - name: Validate workspace request
+        shell: bash
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          GITHUB_RUN_ID_VALUE: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          request = json.loads(Path("ops/host-workspace/request.json").read_text())
+          assert request.get("schema") == 1
+          task = request.get("task_id")
+          script = request.get("script")
+          assert isinstance(task, str) and re.fullmatch(r"[A-Za-z0-9._-]{1,64}", task)
+          assert isinstance(script, str) and 0 < len(script.encode()) <= 500_000
+          assert "\x00" not in script
+          print(f"task_id={task}")
+          print(f"payload_bytes={len(script.encode())}")
+          print(f"source_commit={os.environ['PR_HEAD_SHA']}")
+          print(f"run_id={os.environ['GITHUB_RUN_ID_VALUE']}")
+          PY
+
+      - name: Execute request in disposable VM
+        shell: bash
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          GITHUB_RUN_ID_VALUE: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          jq \
+            --arg source_commit "${PR_HEAD_SHA}" \
+            --arg run_id "${GITHUB_RUN_ID_VALUE}" \
+            '. + {source_commit:$source_commit, run_id:$run_id}' \
+            ops/host-workspace/request.json \
+            | sudo -n /usr/local/libexec/supralinux-vm-workspace-broker
+
+      - name: Verify disposable VM cleanup
+        if: always()
+        shell: bash
+        env:
+          GITHUB_RUN_ID_VALUE: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          vm_name="supralinux-workspace-${GITHUB_RUN_ID_VALUE}"
+          run_dir="/var/lib/supralinux/workspace-vms/${GITHUB_RUN_ID_VALUE}"
+          if sudo -n virsh --connect qemu:///system dominfo "${vm_name}" >/dev/null 2>&1; then
+            echo "VM still exists after workspace cleanup: ${vm_name}" >&2
+            exit 1
+          fi
+          sudo -n test ! -e "${run_dir}/disk.qcow2"
+          sudo -n test ! -d "${run_dir}"
+          result_dir="/var/lib/supralinux/workspace-results/${GITHUB_RUN_ID_VALUE}"
+          if [[ -d "${result_dir}" ]]; then
+            {
+              echo "state=PASS"
+              echo "vm_absent=yes"
+              echo "overlay_absent=yes"
+              echo "run_dir_absent=yes"
+            } > "${result_dir}/cleanup-verification.txt"
+          fi
+          echo "Disposable VM cleanup: PASS"
+
+      - name: Upload workspace result
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: host-workspace-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}
+          path: /var/lib/supralinux/workspace-results/${{ github.run_id }}/
+          if-no-files-found: error
+          retention-days: 30
+          include-hidden-files: true

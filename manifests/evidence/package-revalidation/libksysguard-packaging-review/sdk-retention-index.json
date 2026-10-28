@@ -1,0 +1,462 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Actual original Ubuntu LibKSysGuard SDK/client inputs, logs and unadmitted packaging proposal retention; byte restore only",
+  "archive_path": ".artifacts/plasma-frontier/libksysguard-original-cmake-sdk-20261008-v2/inputs.zip",
+  "archive_sha256": "781cf243559b7ba3883b760e5c8e77ec5b65ddecf480dacc1cea615bc5dd835d",
+  "files": {
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/source/CMakeLists.txt": {
+      "sha256": "939af0b1a3c8a58abbe45f73376ffdfaf64f60d689019bd3628b1fe53c67ba04",
+      "size": 1751
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/source/main.cpp": {
+      "sha256": "d10a8ee64abc82985395243ef58b5a289fe45a877f1de9c85207707d7b9b743e",
+      "size": 10196
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/source/run-private.py": {
+      "sha256": "1b81e187c146b4f463972e47f779c31dd51e9402b676f2495d0707b7af80a912",
+      "size": 6580
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/source/stats-server.cpp": {
+      "sha256": "ae76d3a105ab9c466a5da475d05158ffa9b56cb2d1b0657df4141239bddb2841",
+      "size": 4104
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/functional-results/actual-interface.txt": {
+      "sha256": "c925569475582ac73bf2d62374b2fd438a5e13f3ee3dca6ead52e1631db52d48",
+      "size": 1772
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/functional-results/bus-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/functional-results/client-stderr": {
+      "sha256": "c61a1ddd8e716dcda2d5aaa17753b8d7b102776ecd39804de3bbead279ab3a97",
+      "size": 132
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/functional-results/client-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/functional-results/provider-stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/functional-results/provider-stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/functional-results/sensor-face.png": {
+      "sha256": "2d449314bc1b826eb66a754965585e781ec344969d3d4c051c8a461c576eb0c4",
+      "size": 5321
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/review.json": {
+      "sha256": "5118406feb1f274e2f3473debb1006c238e78a7f8a0e44916e3c66ebff7ade12",
+      "size": 4235
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/functional-review.json": {
+      "sha256": "b4af6dd4f0c2f9d5023e8695ce8482702c91ff6397982e5674d794559f32f430",
+      "size": 2004
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/functional.stdout": {
+      "sha256": "4621c3976a25b07ffa5a45566d8310119ff2c6341323762c98ce27801c2433ef",
+      "size": 73
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/functional.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/positive/stats-client": {
+      "sha256": "d0cdaeafb717993689356c3f478736b5f76e8ed8af4482dde49110570a46da41",
+      "size": 72816
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review-v3/positive/stats-server": {
+      "sha256": "ff7125485d229ccd069c4e5a6d3f7200842a2d89d2e11444f00f7582a72b87e8",
+      "size": 151816
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review/download/libkf6config-dev-bin_6.24.0-0ubuntu1_amd64.deb": {
+      "sha256": "2c1dd2a423bc7b6ef28814c29384e96045dd6b242577afc2362f5d95e8ae8e00",
+      "size": 81758
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review/download/libkf6i18n-dev_6.24.0-0ubuntu1_amd64.deb": {
+      "sha256": "a61cdb730376d1e2c984f38adabe7d85969415f6fc7f2c829638305d145018ae",
+      "size": 39584
+    },
+    ".work/dependent-plasma-review/libksysguard/original-cmake-sdk-review/download/libsensors-dev_1%3a3.6.2-2build1_amd64.deb": {
+      "sha256": "a4b63e770a13b083eeef69b496e21fafb6be3bed22007c475d7c3495b02dfd41",
+      "size": 40172
+    },
+    ".work/dependent-plasma-review/libksysguard/ubuntu-sdk/libksysguard-dev_4%3a6.6.5-0ubuntu0.1_amd64.deb": {
+      "sha256": "e56fbc55e6c2582b2f7ada092d9adb4e3d9668227c57baeffed99e6c3a8cb630",
+      "size": 32508
+    },
+    ".work/dependent-plasma-review/libplasma/ubuntu-public-sdk/download/libkf6config-dev_6.24.0-0ubuntu1_amd64.deb": {
+      "sha256": "4371d2cdd08cef200735e7952d37ad59c816fa5e80ce602930c790149a06ec57",
+      "size": 51290
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/admission-check.log": {
+      "sha256": "5bd2babceb8bc14060c4fc2adf850f0474c580448e3e5da5434e251007ac4cba",
+      "size": 75
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/apt-original-sdk-and-retained-inputs.log": {
+      "sha256": "79a78d4994b5c6b1569902dd766ea27d70ce0bbb7b3e2c31f77629790da82987",
+      "size": 124652
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/apt-review.json": {
+      "sha256": "2dcd5e48bce5e6b8daab64b9c4aa393cd6c6e6d64bf30bef13d06b00f651904e",
+      "size": 645
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/README.source": {
+      "sha256": "ed6dc781ed85304313ba4fc8b8486e8b31bcf71d5b3f8de2b1df0841eae0331b",
+      "size": 1833
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/changelog": {
+      "sha256": "2b22ea4ed9176b6dca083ba655f3f398b6dc7105db6b4bf0456aa3af2509882a",
+      "size": 41291
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/control": {
+      "sha256": "be01c8e123c86b95fc52b214e9dbfbdd581b53af3ca8ae8dc839eea267feba09",
+      "size": 8568
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/copyright": {
+      "sha256": "973e0c32e363cd94e0c64b187322236598c787b85f8dc28ba64bff2b5228dad8",
+      "size": 12361
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libksysguard-bin.install": {
+      "sha256": "274165e2c8e846928bec8afaab66091b3a09770e18b872aecec353bae710495f",
+      "size": 290
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libksysguard-bin.postinst.in": {
+      "sha256": "32fd3ce8687e084f0b2150d5241df961ea818ed04623b8949ba096367e7d6605",
+      "size": 421
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libksysguard-data.install": {
+      "sha256": "41f890eadc9767650db01b034a2ff3ee6b0f319c4d84a0ca086d0f040420e7b5",
+      "size": 1048
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libksysguard-dev.install": {
+      "sha256": "6b783dfd89b68b4461ed7b184eba33e5cb56b9d3e2d74374b4b6c08a9b1e95ed",
+      "size": 220
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libksysguardformatter2.install": {
+      "sha256": "593b8e2c6246a5796b72e0f1a41d7eeca9bb7bb548106d9befe2ccafd517771a",
+      "size": 76
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libksysguardformatter2.symbols": {
+      "sha256": "c61d770d4dde378e1a707045eef4a6464bfcf66bc40df9ac167abb97d185005b",
+      "size": 724
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libksysguardsensorfaces2.install": {
+      "sha256": "1bae40863c858c7a2b10552286b3b377961d315ba17b0a0c3154a46df7cfaabc",
+      "size": 80
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libksysguardsensorfaces2.symbols": {
+      "sha256": "fe0b4a3a7519f12a047736e3026a4847f71f6e8be4e1df1ab92d0a844ee0d54a",
+      "size": 11235
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libksysguardsensors2.install": {
+      "sha256": "07e672c32802f376c4b3f7bd067d65362a6c25d1db7d102f6e31843e179f214a",
+      "size": 72
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libksysguardsensors2.symbols": {
+      "sha256": "c75eab69bb173593873ca0d5ef2d98305ad7e63c4fc6761315af6deb17f0bbdb",
+      "size": 13638
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libksysguardsystemstats2.install": {
+      "sha256": "ae901efb140ade73ebc1430389dba7cbaed089e939b0f9ef272da41949b8d9b8",
+      "size": 80
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libksysguardsystemstats2.symbols": {
+      "sha256": "ab3fc9cdbe0ea0efc4424b033cb0020549b3a305b0a4c42d97679ae5358d9a84",
+      "size": 19747
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libprocesscore10.install": {
+      "sha256": "1e6a10c583d64aea2694611e67ad4befe949b5f9c20996719bd58f604cbbbc13",
+      "size": 63
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/libprocesscore10.symbols": {
+      "sha256": "13c8da3bed841763a1f310c2a3e2ccc4b872f5d47d571848c41fc7112cd95f93",
+      "size": 30975
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/qml6-module-org-kde-ksysguard.install": {
+      "sha256": "cb6e1f1436b6375deef8abbb1890027fb903d76c5c741cd7f4bd04c78ab1c134",
+      "size": 104
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/qmldeps.overrides": {
+      "sha256": "f4a637875ac5187794b1a1c387224597faf80426d01ed92dd7267d2ad61011b5",
+      "size": 168
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/rules": {
+      "sha256": "8ddca03148d1fcb026c4ebef3ea69c6cb8966ad33c5296e179e94dc5359eaaa5",
+      "size": 458
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/salsa/extra_repository.list": {
+      "sha256": "412646a06d733ca403c3175d36f1d1e734baaa8a76bb8e5176a0d0fb4bda7d45",
+      "size": 64
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/salsa/qt-kde-team.debian.net.asc": {
+      "sha256": "2b218b250b8929ad7055afe891bd29288228cfb6efac0e4ed638d9db8d3c4e77",
+      "size": 3106
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/salsa-ci.yml": {
+      "sha256": "04779f76232c171e1b0094a8bf323543669e75a3131a1d706b8c6f61ec7c2ab0",
+      "size": 344
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/source/format": {
+      "sha256": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+      "size": 12
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/tests/baseline-setup": {
+      "sha256": "49f25f4921e9347312d7305fbdb3ab39c22a87e1c4518b2fc85e80cff864be1d",
+      "size": 1005
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/tests/client/CMakeLists.txt": {
+      "sha256": "4a6d088803c4dd6bac26799d9c4b9834811ce36a5c5de3a6fe0141d263208416",
+      "size": 1398
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/tests/client/main.cpp": {
+      "sha256": "d10a8ee64abc82985395243ef58b5a289fe45a877f1de9c85207707d7b9b743e",
+      "size": 10196
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/tests/client/run-private.py": {
+      "sha256": "1b81e187c146b4f463972e47f779c31dd51e9402b676f2495d0707b7af80a912",
+      "size": 6580
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/tests/client/stats-server.cpp": {
+      "sha256": "ae76d3a105ab9c466a5da475d05158ffa9b56cb2d1b0657df4141239bddb2841",
+      "size": 4104
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/tests/consumer": {
+      "sha256": "691c8b4964712b7ff9dc66619f0fc7e21926b1d974c0d416c21afa55b9e03a1f",
+      "size": 362
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/tests/control": {
+      "sha256": "6a30b5c5839c555bcc8e20266406e44b8b0f095f85e4dd27324d4574dc6d2f6d",
+      "size": 236
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/tests/ubuntu-abi-client": {
+      "sha256": "7eea3dcb797b8cfae8bbfc7bae35472d0cc89bef11bfda0b2ae2ca9e67c1f909",
+      "size": 2377
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/tests/upstream-session": {
+      "sha256": "e7040cd7563b8bd6e65c479bdfc5e7d09cfed50903ba76457b689975ee2edcd1",
+      "size": 696
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/upstream/metadata": {
+      "sha256": "35170e9774920f521725e859b694feed1e68e704b5f131fe1b6f0ba438193ea0",
+      "size": 323
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/upstream/signing-key.asc": {
+      "sha256": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+      "size": 9538
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/debian/watch": {
+      "sha256": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b",
+      "size": 125
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/origin.json": {
+      "sha256": "07acccc730873bc7b19e69e75f6d6cb1c29c961efc6b1a85b63475875c3c78a0",
+      "size": 736
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/record.json": {
+      "sha256": "7ec7e7510e3943ac693fcc4075f3ce1d449ee1b1a740c71d2f08a9bc51516709",
+      "size": 46616
+    },
+    ".work/dependent-plasma-review/libksysguard/runtime-closure-review-v3/review.json": {
+      "sha256": "aada66ac561614e5d64b71b122835fc0976fb5826a4cb41de2adf1db1619cae4",
+      "size": 1327
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/_home_chmodmasx_Documentos_ChatGPT_SupraLINUX_.work_thunderbolt-runtime-apt-fixed_repo_._Packages": {
+      "sha256": "b5cf4c1b86b60f406b687a71822d5ca31eb71ec84f1112ff60e326dd290a7e80",
+      "size": 133940
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_InRelease": {
+      "sha256": "71101e4fa90e98cafac7e193a744261331f60671201c63b952f508493efe6580",
+      "size": 137403
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_main_binary-amd64_Packages": {
+      "sha256": "d721b7e2c8f057c16cc8479d636e5f188636475931a58a8e54ced71ec39813b9",
+      "size": 2958018
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_main_cnf_Commands-amd64": {
+      "sha256": "04f6f77786bf8962e0ed538437b0dc7e8f983f5209f3af3ab42c05fa4596b999",
+      "size": 15000
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_main_dep11_Components-amd64.yml.gz": {
+      "sha256": "7b0132c5b697e59847b416e7fce26657a3802a217621777096bbf6a1c273b019",
+      "size": 59369
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_main_dep11_icons-128x128.tar.gz": {
+      "sha256": "4b97599aba65ea95fa21187c166895df64bbbb5e6de61992171b58c032492eb7",
+      "size": 61063
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_main_dep11_icons-48x48.tar.gz": {
+      "sha256": "e57e030e4b01c2bf3e44ad4ec9d0c9a0b8b3e53178104b496b4ba5972606625a",
+      "size": 20836
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_main_dep11_icons-64x64%402.tar.gz": {
+      "sha256": "7989bb311baa38ef545250282aa065d23281c46dfb8faabe4c653487bdbded5c",
+      "size": 29
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_main_dep11_icons-64x64.tar.gz": {
+      "sha256": "c07b26d928155ff5a81c1afe573be050502ccd56ee78f983f0b0c6cf468203d7",
+      "size": 29286
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_universe_binary-amd64_Packages": {
+      "sha256": "81b922197ececf6d8c368906bcd789bc898fef4d81dac1f6487cbf9a7bddf225",
+      "size": 955957
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_universe_cnf_Commands-amd64": {
+      "sha256": "ce9a738b96667cf1a822761fe3a42a78f69149b1c559b7588c2f87d16ca3a32b",
+      "size": 14585
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_universe_dep11_Components-amd64.yml.gz": {
+      "sha256": "e272cb4db27bfda5091fa13d75970f3f40214deb06b9dd900f520677280ecbe8",
+      "size": 69519
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_universe_dep11_icons-128x128.tar.gz": {
+      "sha256": "18c070f6592e6bbd74676a95c675990987300628fef4e55c9dfecc2b669fc9ae",
+      "size": 41916
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_universe_dep11_icons-48x48.tar.gz": {
+      "sha256": "cc78d199227569209d20becb60c86763e5f5e856c29d2853b7ba9070d760eb90",
+      "size": 17345
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_universe_dep11_icons-64x64%402.tar.gz": {
+      "sha256": "7989bb311baa38ef545250282aa065d23281c46dfb8faabe4c653487bdbded5c",
+      "size": 29
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-security_universe_dep11_icons-64x64.tar.gz": {
+      "sha256": "d07bd9f6edbec70ca66a1297097882478837b15b0193b94c5ee5ca1c8b1c30ed",
+      "size": 26330
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_InRelease": {
+      "sha256": "6c634247704301b20293f748e6941efba4d5704d281f355a985b3905bbb6efb7",
+      "size": 137401
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_main_binary-amd64_Packages": {
+      "sha256": "08127d9f94d9ca7e5d331551e0f39bbdd3d5cd35ec8dcacd105163fa7d533ff1",
+      "size": 3879636
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_main_cnf_Commands-amd64": {
+      "sha256": "4dd929a1ef13b9f667b334008b03719d7d4c2b5e004234fb0903e3b9d3d47e61",
+      "size": 20325
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_main_dep11_Components-amd64.yml.gz": {
+      "sha256": "46c3b27958b354bd4959260c638d2b6221f2e66346c64fba932968e40316e5d5",
+      "size": 129801
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_main_dep11_icons-128x128.tar.gz": {
+      "sha256": "f8b7522e4d171431ad8b41c4d9ce87f9535e1bf307c15bc9fe82f20b2e95bc8a",
+      "size": 82245
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_main_dep11_icons-48x48.tar.gz": {
+      "sha256": "567e33b0f34159c5b2e749af0162d108af0be4f71e397ab3986e7457eeb193b3",
+      "size": 28754
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_main_dep11_icons-64x64%402.tar.gz": {
+      "sha256": "7989bb311baa38ef545250282aa065d23281c46dfb8faabe4c653487bdbded5c",
+      "size": 29
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_main_dep11_icons-64x64.tar.gz": {
+      "sha256": "592dfb1f099fc40997559fca32053a2f47cc60655ea25b006444904059ea6f0a",
+      "size": 39733
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_universe_binary-amd64_Packages": {
+      "sha256": "5205a50a497f3bf1d5707ff78733160d2fa307519af6834bbecc3b51f4162cca",
+      "size": 1574780
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_universe_cnf_Commands-amd64": {
+      "sha256": "ffff128eca52c3837cd641ff358f7ceba0d6dee0040d647f906fc0206094ac11",
+      "size": 19869
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_universe_dep11_Components-amd64.yml.gz": {
+      "sha256": "95c9449d6db5fba1da1b54d00664664fc2bd200696de43d8fe3fd9a28be9188d",
+      "size": 270541
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_universe_dep11_icons-128x128.tar.gz": {
+      "sha256": "9ef7bb9d3d0e7620f4ad1f0051262def7e8cda12f7d35e159de1cce453f36864",
+      "size": 157443
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_universe_dep11_icons-48x48.tar.gz": {
+      "sha256": "a55aa3e108f24792e8110e027ff7fbd7d13e054e11bdfc9146680e75a802b926",
+      "size": 55028
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_universe_dep11_icons-64x64%402.tar.gz": {
+      "sha256": "7989bb311baa38ef545250282aa065d23281c46dfb8faabe4c653487bdbded5c",
+      "size": 29
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute-updates_universe_dep11_icons-64x64.tar.gz": {
+      "sha256": "74170fcdfc875d757ecad0fc71d4604eae065a5dbcc3762ad874c3814e782180",
+      "size": 92968
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_InRelease": {
+      "sha256": "45f95ce276cdba3e41870516a130e03c58b8b7a79e9546b0efe9e526d255740c",
+      "size": 135549
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_main_binary-amd64_Packages": {
+      "sha256": "92eb335c0ed27983d41a5a0efdf0edce3e67bfa34e8e987af9df260ca72d9bf9",
+      "size": 7581722
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_main_cnf_Commands-amd64": {
+      "sha256": "e3d44159cb8da046c5b080c6464e748d0726724052a97913b3a6c92039180236",
+      "size": 128050
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_main_dep11_Components-amd64.yml.gz": {
+      "sha256": "bfe228cbd2bbff8b8d2688aa030ebc389580be1f7531a2f7027f0405afa4856b",
+      "size": 558928
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_main_dep11_icons-128x128.tar.gz": {
+      "sha256": "b419abde690c47e68271d9338db908031a0a735e45d32e1c011aaa6272970e3a",
+      "size": 261188
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_main_dep11_icons-48x48.tar.gz": {
+      "sha256": "d5a388386d70c47272796de5d4d93d4a34d9a0fddc0a657981f4f4f0ee78eec6",
+      "size": 82790
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_main_dep11_icons-64x64%402.tar.gz": {
+      "sha256": "68815671196f60987e4f46a3d6d3d1ed0a50b071031b08d62163ab3a88198f34",
+      "size": 33457
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_main_dep11_icons-64x64.tar.gz": {
+      "sha256": "18ce5dd5ffd741f93556369ff7f159dc1f45c5245f3f1f8aca1654959b5dc3e1",
+      "size": 117143
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_universe_binary-amd64_Packages": {
+      "sha256": "9c009342905706a05822f6e751f5b1ac34b687f054bfca9a0a652178445fc44c",
+      "size": 76792699
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_universe_cnf_Commands-amd64": {
+      "sha256": "a78ae30eea0e5b7916df6ec6a9cf3ef39702e26246796bb078ec3607ba1390b2",
+      "size": 1430971
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_universe_dep11_Components-amd64.yml.gz": {
+      "sha256": "bb8fd7f747cb42d2e83d3fa24c99c644794eaaf02f3cf5916c0992ebddda2ca3",
+      "size": 7047305
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_universe_dep11_icons-128x128.tar.gz": {
+      "sha256": "137f97e8236fe193b95bb552fc7c2f875c442ada645abc4d5ca7b889de870ff9",
+      "size": 11592661
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_universe_dep11_icons-48x48.tar.gz": {
+      "sha256": "2514b8a0dbdc91b66601a7b445c97943203186021201b91f644739c5d0e3bbc0",
+      "size": 3632853
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_universe_dep11_icons-64x64%402.tar.gz": {
+      "sha256": "6769162217addb05ee056974bd5217c7e7365d7c03ae7d5088d45d03a3c64e9e",
+      "size": 121552
+    },
+    ".work/thunderbolt-runtime-apt-fixed/lists/archive.ubuntu.com_ubuntu_dists_resolute_universe_dep11_icons-64x64.tar.gz": {
+      "sha256": "0d264b872def8845b1b073ad785303f52dd6ea392a8951e27fe634f37e85ca42",
+      "size": 7482572
+    },
+    "external/usr/share/keyrings/ubuntu-archive-keyring.gpg": {
+      "sha256": "80a36b0a6de2f69f49d2df75ef473ccde121e9e190b9ea01d20a4f63778d5c31",
+      "size": 3607
+    }
+  },
+  "empty_offline_byte_restore_verified": true,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

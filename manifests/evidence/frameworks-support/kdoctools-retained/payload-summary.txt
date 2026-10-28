@@ -1,0 +1,3 @@
+meinproc6=PASS
+checkXML6=PASS
+docbook-customization=PASS

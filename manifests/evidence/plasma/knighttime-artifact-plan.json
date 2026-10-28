@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "node": "knighttime",
+      "package_version": "6.7.5-0supralinux1",
+      "artifact_id": 11343357570,
+      "workflow_run_id": 37303795468,
+      "artifact_sha256": "5a08c1f0dbcf0ef435afacbe506a92538ef8aeb71d764155a0e015665996f11e",
+      "payload_prefix": "packages/"
+    }
+  ]
+}

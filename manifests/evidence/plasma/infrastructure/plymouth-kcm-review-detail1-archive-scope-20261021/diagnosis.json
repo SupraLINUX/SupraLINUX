@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "state": "DIAGNOSED",
+  "incident_workflow_run_id": 39600553649,
+  "incident_workflow_job_id": 119224465715,
+  "source_commit": "9e02676ee30be7fccd8c32f7777ee49006913d4d",
+  "task_id": "plymouth-kcm-review-detail",
+  "script_sha256": "8be1df8ce3dd9fa5c17412d64a5ad3059510c59877396011d4420cf6e0c00641",
+  "observations": {
+    "workspace_boot": "PASS",
+    "apt_source_admission": "PASS",
+    "exact_ubuntu_binary_download": "PASS",
+    "exact_ubuntu_source_download": "PASS",
+    "ubuntu_source_version": "6.6.4-0ubuntu1",
+    "normalized_debian_tree_sha256": "39c6089327fa296f38dc6837d1a736483e1560cf72b41131b7a9318ef1577783",
+    "retained_review_scan_sha256": "39c6089327fa296f38dc6837d1a736483e1560cf72b41131b7a9318ef1577783",
+    "materialization_debian_tree_sha256": "5eefac021e21e7d2e4ee45a08dbe3a7cb4b9a8169e3cc73e0dbcb089d38ceb37",
+    "failure": "false cross-scope archive identity assertion",
+    "task_exit_code": 1,
+    "disposable_vm_cleanup": "PASS",
+    "artifact_delivery": "PASS"
+  },
+  "classification": "INFRA_INVALID",
+  "package_attempt_effect": "none",
+  "retry_scope": "same Plymouth KCM planning review after assertion repair"
+}

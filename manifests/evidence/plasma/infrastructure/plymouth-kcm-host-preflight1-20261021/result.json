@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "scope": "plymouth-kcm-authoritative-package-input-preflight-host-admission",
+  "source_commit": "c3eca8da2fce8358b6168b61dbf05e29cf6573b5",
+  "control_workflow_run_id": 39604744576,
+  "control_workflow_job_id": 119238029814,
+  "control_artifact_id": 12348111974,
+  "control_artifact_digest": "sha256:4e04959bade90ef46f827cd1e28f3002fc4ed07b1880a92671bed5ef82d1cc0f",
+  "failed_command": "scripts/check-kvm-host.sh",
+  "failure_stage": "authoritative-host-preflight",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "package_attempt_effect": "none",
+  "vm_created": false,
+  "jit_invoked": false,
+  "note": "The authoritative broker failed closed before JIT/package execution. The control artifact retained KVM runtime admission and operator identity; no PolicyKit/Plymouth package Attempt was consumed."
+}

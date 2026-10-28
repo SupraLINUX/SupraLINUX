@@ -1,0 +1,42 @@
+{
+  "state": "PASS",
+  "scope": "observed binary ABI additions; no installed candidate certification",
+  "old_symbols_sha256": "4300f53f67bcd814a0ae67fcee2f381f900fc6ca92190d07bb668f20a5de324b",
+  "new_symbols_sha256": "9dd9b6d4e6981cf61190faac5498113a5167e14543867f188e54d2638002cf10",
+  "original_existing_lines_and_floors_preserved": true,
+  "observed_binary": {
+    "package": "libkf6screen8",
+    "archive_member": "packages/libkf6screen8_6.7.5-0supralinux2_amd64.deb",
+    "deb_sha256": "958e55af891c2c4912f8c2786a6731051b251edbf2be749c505075d9e848cb15",
+    "metadata": {
+      "Package": "libkf6screen8",
+      "Source": "libkscreen",
+      "Version": "4:6.7.5-0supralinux2",
+      "Architecture": "amd64",
+      "Maintainer": "Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>",
+      "Installed-Size": "442",
+      "Depends": "libkscreen-data (= 4:6.7.5-0supralinux2), libc6 (>= 2.29), libqt6core6t64 (>= 6.10.2), libqt6dbus6 (>= 6.10.0~), libqt6gui6 (>= 6.10.0~), libstdc++6 (>= 5), qt6-base-private-abi (= 6.10.2)",
+      "Recommends": "hwdata",
+      "Section": "libs",
+      "Priority": "optional",
+      "Multi-Arch": "same",
+      "Homepage": "https://invent.kde.org/plasma/libkscreen",
+      "Description": "library for screen management - shared library\nThe KDE multiple monitor support is trying be as smart as possible\nadapting the behavior of it to each use case making the configuration\nof monitors as simple as plugging them to your computer.\n.\nThis package contains the shared library",
+      "Original-Maintainer": "Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>"
+    },
+    "symbols_sha256": "f275fd21df1c05bb0bf76df29dfb604744b481e00c93c8d0e91dfb8eccfb7edf"
+  },
+  "added_symbols": [
+    " _ZN7KScreen6Output11setAbmLevelEj@Base 4:6.7.5",
+    " _ZN7KScreen6Output15abmLevelChangedEv@Base 4:6.7.5",
+    " _ZN7KScreen6Output20setHdrIccProfilePathERK7QString@Base 4:6.7.5",
+    " _ZN7KScreen6Output24hdrIccProfilePathChangedEv@Base 4:6.7.5",
+    " _ZN7KScreen6Output24setHdrColorProfileSourceENS0_18ColorProfileSourceE@Base 4:6.7.5",
+    " _ZN7KScreen6Output28hdrColorProfileSourceChangedEv@Base 4:6.7.5",
+    " _ZNK7KScreen6Output17hdrIccProfilePathEv@Base 4:6.7.5",
+    " _ZNK7KScreen6Output21hdrColorProfileSourceEv@Base 4:6.7.5",
+    " _ZNK7KScreen6Output8abmLevelEv@Base 4:6.7.5"
+  ],
+  "floor": "4:6.7.5",
+  "source_tests_and_qt_unchanged": true
+}

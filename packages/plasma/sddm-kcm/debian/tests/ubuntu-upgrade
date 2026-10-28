@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-sddm-kcm-baseline
+source_dir="$(cd "$(dirname "$0")/.." && pwd)"
+expected="$(dpkg-parsechangelog -l "${source_dir}/changelog" -S Version)"
+installed="$(dpkg-query -W -f='${Version}' kde-config-sddm)"
+[[ "${installed}" == "${expected}" ]]
+test -s "${BASE}/installed-files.txt"
+original="$(cat "${BASE}/ubuntu-version")"
+dpkg --compare-versions "${expected}" gt "${original}"
+apt-get check
+printf 'Real Ubuntu-to-SupraLINUX SDDM KCM upgrade: PASS\n'

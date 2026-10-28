@@ -1,0 +1,32 @@
+kf6-ktexttemplate (6.30.0-0supralinux3) resolute; urgency=medium
+
+  * Reopen Batch 2 after validating the documentation binary contents.
+  * Describe libkf6texttemplate-doc as a compatibility package because the
+    current build profile ships no QCH payload.
+  * Keep KDE 6.30 source, tested ABI transform and runtime contracts unchanged.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Mon, 14 Sep 2026 15:54:00 -0300
+
+kf6-ktexttemplate (6.30.0-0supralinux2) resolute; urgency=medium
+
+  * Record the first clean package attempt as a real dpkg-gensymbols FAIL after
+    all 10 upstream autotests passed.
+  * Review the KDE 6.30 ABI delta against the retained Debian 6.28 baseline:
+    keep three new public Filter symbols at upstream minimum 6.30.0, treat the
+    inline Exception vtable as optional, and drop implementation-only Qt/plugin
+    exports moved out of libKF6TextTemplate by upstream's scriptable-tag split.
+  * Apply the reviewed symbols delta deterministically with verified input and
+    output SHA-256 values before dh_makeshlibs.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sun, 13 Sep 2026 15:50:00 -0300
+
+kf6-ktexttemplate (6.30.0-0supralinux1) resolute; urgency=medium
+
+  * Package KDE Frameworks ktexttemplate 6.30.0 from KDE upstream stable.
+  * Preserve Debian-family binary package names and Multi-Arch contracts as
+    compatibility inputs while selecting dependencies from KDE 6.30 requirements.
+  * Build against retained SupraLINUX ECM 6.30 and KDE-selected Qt >= 6.9.
+  * Keep KDE upstream autotests enabled and keep QDoc outside the default build.
+  * Use the retained Debian 6.28 symbols tree as the closest technical ABI baseline.
+
+ -- SupraLINUX Project <packages@supralinux.invalid>  Sat, 12 Sep 2026 18:00:00 -0300

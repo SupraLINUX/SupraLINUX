@@ -1,0 +1,7 @@
+Tests: ubuntu-abi-client
+Depends: @, build-essential, cmake, pkgconf, libwayland-dev, libwayland-bin, python3
+Restrictions: needs-root, allow-stderr
+
+Tests: consumer
+Depends: @, build-essential, cmake, pkgconf, libwayland-dev, libwayland-bin, python3
+Restrictions: needs-root, allow-stderr

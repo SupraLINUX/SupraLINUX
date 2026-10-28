@@ -1,0 +1,157 @@
+{
+  "schema": 1,
+  "kind": "private-sdk-scoped-reentry-review",
+  "state": "REENTRY REVIEW INPUTS PREPARED; GENERIC SEMANTIC VALIDATION PENDING",
+  "node": "kglobalacceld",
+  "original_version": "6.7.5-0supralinux1",
+  "candidate_version": "6.7.5-0supralinux2",
+  "upstream_sha256": "83e9a4e226e695fe1544cfa19a9659c5f1000be46c669fe3a9e299029c6c2abf",
+  "signature_sha256": "fa9d58f8c91445a7a8762da14c4f2faaf78c7869720b1c28974754ca31de60bf",
+  "original_hold_reference": {
+    "reason": "Upstream private KGlobalAccelD SDK changes QList to QSet under SONAME 0; the reviewed unchanged Ubuntu private SDK client and ten original symbol guards require a scoped compatibility transition review.",
+    "result_path": "manifests/evidence/plasma/kglobalacceld-attempt1/result.json",
+    "review_path": "manifests/evidence/plasma/kglobalacceld-attempt1/compatibility-review.json",
+    "review_sha256": "f84984b1b629881d0ab82794121ececa20e389fb9fd2647f0545d391f99d6191",
+    "reentry_gate": "reviewed-private-sdk-and-actual-Ubuntu-consumer-compatibility-transition"
+  },
+  "original_attempt_source_commit": "3809ef74c9d86d480001b9a8a989862efe44bbd7",
+  "staged_packaging": ".work/kglobalacceld-private-sdk-symbol-floor-followup-20261012/debian",
+  "staged_packaging_sha256": {
+    "README.source": "1bccafc6b583d1beaa5bec35168163cdd94a27dd2dfdac8d33322276de02f585",
+    "changelog": "1a764360a69131b51dfedc1a92a3686b7bc599decb5af825e50d0dba18a48f1a",
+    "control": "c53f92b93a59299c3673f654745c64d3510d488c9f723a04d2beab9ea1e1176d",
+    "copyright": "bfaa65402e461578ae4039133329e38a62511ab5f3403a60b4e8c282789de978",
+    "kglobalacceld.install": "df89033a59cf2f76edec0738d92f6f5206b9a2904f40155a1171cbfef87860d4",
+    "libkglobalacceld-dev.install": "76e3c7fbb3743bd83869ddf7726049a438067f1dc2d05d2059e54297aef9cac3",
+    "libkglobalacceld-dev.links": "e85c737283b7c0785a17b33672eea9b60d829366e23f0fd08289dd7231c3132f",
+    "libkglobalacceld0.install": "42cafac276e3dcc6763f66b86339aa7f5a99a2004cd376945a4c540a3948aab1",
+    "libkglobalacceld0.symbols": "aeea617441c0b545deb9626e33bee88e275426307d102815801f63927b2ab13d",
+    "rules": "46b648dd0987b7d871dccc3caf908cdf324674a251facc5eeced7cb402230a5e",
+    "salsa-ci.yml": "64bfb6be33af05cd116d8bee786f95e7b2aaa9faa54e90333151a7a05ef03058",
+    "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+    "tests/baseline-setup": "83023131f1b679e56c16052f7735d923d13d2d9cb7f2f9204fb45e47801f064e",
+    "tests/client/CMakeLists.txt": "201505220a0cb84fb7060f5dc39f555c75dc28eecf134d37774e8d57fc7b4d9b",
+    "tests/client/library.cpp": "01ccf06d2127094e8eeea1af84ce2bfbc172d0cc7dd05f120c206c6b45b6a2d3",
+    "tests/client/main.cpp": "4b850a1e2d8b10d3f8b46c72117c1a5b4511e9c112aeaa27f4e70e397bf7c60c",
+    "tests/client/run-private.py": "e92c1a7e5dfc8bd6c3b17f435226cf036a7767351617fe611874fb64954133b0",
+    "tests/client/ubuntu-runtime-consumer-versions": "3b43993df715b49d5c2b3081ee39fbd343c5f4a8288e1b4ce7014e24e300739b",
+    "tests/client/ubuntu-runtime-consumers.sha256": "7381705b1566f6c58c58f5f8147442cd59fd7f57ee7f81d2baf3f2196be5be7b",
+    "tests/consumer": "5cfd1f36d145295b35655d8feb1eb8fd264e1c552134475710612ada9732c718",
+    "tests/control": "4690e54294115e2c37d7031ad708178d035905e726595454b6e7fa7e38cfc68a",
+    "tests/ubuntu-abi-client": "77be6521ecae3bf58554e613c9630506279de311eab2d65dc29fc12b47ff6f02",
+    "tests/upstream-session": "d0e37f948f417742f50d5d2c0da9fe9b0548e5135ea3123744ace956fa567595",
+    "upstream/metadata": "008e982500654a516549b956e8bf9d72a38acee5cc7c0fcd376f9082b8dd052c",
+    "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+    "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+  },
+  "runtime_roles": {
+    "original-daemon-public-and-private": {
+      "result": "original-daemon-public-and-private-result.json",
+      "host": "original-daemon-public-and-private-host.json",
+      "cleanup": "original-daemon-public-and-private-cleanup.json",
+      "scope": "Private zero-NIC Ubuntu26.04 KVM runtime of frozen original daemon/XCB plugin/public client before and after library-provider change, plus unchanged official native and same-source SDK controls. Not fresh package build, installed upgrade, full KWin/Ubuntu compatibility or transition admission. Frameworks6.30 and Qt6.10.2 frozen in all phases.",
+      "phase_states": {
+        "original-private": "PASS",
+        "original-public": "PASS",
+        "candidate-native": "PASS",
+        "candidate-private": "PASS",
+        "candidate-public": "PASS",
+        "negative-original-private": "EXPECTED_ABI_INCOMPATIBILITY"
+      },
+      "retention_index": ".artifacts/plasma-frontier/kglobalacceld-zero-nic-kvm-runtime-control-20261011/index.json",
+      "retention_index_sha256": "be4c229b879829b71a2b577dbac3b3803134c873a7e46359f678faad5da892b8",
+      "archive_sha256": "1edaddea08d9e89ff95e401e51d1b9adcb0d80dffb0f60d2e06ebc89624f4e1c"
+    },
+    "original-kwin-wayland": {
+      "result": "original-kwin-wayland-result.json",
+      "host": "original-kwin-wayland-host.json",
+      "cleanup": "original-kwin-wayland-cleanup.json",
+      "scope": "Private zero-NIC Ubuntu26.04 KVM actual original KWin6.6.6 virtual QPainter runtime, owned public Wayland diagnostic consumer and fake-input v6 keyboard events, before-after KGlobalAccelD6.6.5/6.7.5 provider change. Additional Frameworks6.30/Qt6.10.2 inputs fixed in both phases. Not source build, installed upgrade, native KWin suite or full compatibility admission.",
+      "phase_states": {
+        "negative-undeclared-permission": "EXPECTED_PERMISSION_DENIAL",
+        "owned-permission-small-certification": "PASS",
+        "original-wayland-consumer": "PASS",
+        "candidate-wayland-consumer": "PASS"
+      },
+      "retention_index": ".artifacts/plasma-frontier/kglobalacceld-original-kwin-wayland-zero-nic-runtime-control-20261011/index.json",
+      "retention_index_sha256": "58fbea738dad4d1b0f0f9e699712945b2ab6337d964124dbfaf529c5c98ff244",
+      "archive_sha256": "e0e559fbceae73994bb0b99912d987d02c41b25b36c9e7a8804115efb9494af9"
+    },
+    "original-kwin-x11": {
+      "result": "original-kwin-x11-result.json",
+      "host": "original-kwin-x11-host.json",
+      "cleanup": "original-kwin-x11-cleanup.json",
+      "scope": "Original Ubuntu KWinX11 6.6.4 window manager, original daemon/XCB plugin and unchanged public X11 client before/after KGlobalAccelD provider 6.6.5/6.7.5; fixed Qt6.10.2/Frameworks6.30, no GPU compositing, zero NIC. Diagnostic only, not installed .deb upgrade/source build/full desktop or transition admission.",
+      "phase_states": {
+        "original-x11-session-small-certification": "PASS",
+        "original-x11-session-consumer": "PASS",
+        "candidate-x11-session-consumer": "PASS"
+      },
+      "retention_index": ".artifacts/plasma-frontier/kglobalacceld-apt-source-x11-private-transition-review-20261011/index.json",
+      "retention_index_sha256": "bd3fdae00b4ca0bc3c489145818bab93b3a9bc8469b813a3a05d05ad31027486",
+      "archive_sha256": "cd997d9b3f13683d8761c5c61bcc6f2524c58c682c60cb3b0838ceadd0e1785a"
+    },
+    "strict-private-wrapper": {
+      "result": "strict-private-wrapper-result.json",
+      "host": "strict-private-wrapper-host.json",
+      "cleanup": "strict-private-wrapper-cleanup.json",
+      "scope": "Small zero-NIC KVM certification of staged private SDK transition wrapper only. Same original executable positive baseline, strict candidate-provider old private binary negative, same-source rebuilt candidate positive, unchanged three native tests. Diagnostic library bytes; not clean .deb build, installed APT upgrade, KWin replay, transition admission or package Attempt.",
+      "phase_states": {
+        "original-private": "PASS",
+        "negative-original-private-strict": "EXPECTED_ABI_INCOMPATIBILITY",
+        "candidate-native": "PASS",
+        "candidate-private": "PASS"
+      },
+      "retention_index": ".artifacts/plasma-frontier/kglobalacceld-staged-private-sdk-wrapper-kvm-certification-20261011/index.json",
+      "retention_index_sha256": "27c591c55cc983945f43791a3e066c4c3e1bf3617c819c6a012b80c32dd8d31c",
+      "archive_sha256": "e016fc129fdfa30c5f2c3911289e96f52006ec137498e1d86c8eeede43e809ea"
+    }
+  },
+  "private_old_sdk_abi_compatible": false,
+  "source_or_qt_changed": false,
+  "package_certification": false,
+  "release_compatibility_certification": false,
+  "unmodified_client_sources": [
+    "tests/client/main.cpp",
+    "tests/client/library.cpp",
+    "tests/client/CMakeLists.txt"
+  ],
+  "boundary": "Public original application remains mandatory. Old private binary must fail only at the exact reviewed removed setter and remain explicitly ABI-incompatible; the same source rebuilt for the private SDK must pass. Frozen original KWin Wayland/X11 runtime and exact installed bytes/version guards do not certify undeclared private consumers or old KWin source rebuilds.",
+  "required_fresh_gates": [
+    "Bind generic reentry semantic validation and negative controls",
+    "Preserve original FAIL/HOLD and all prior evidence; explicit canonical reentry record/assignment",
+    "New authoritative input preflight",
+    "Clean sbuild with complete unchanged native tests and strict symbols",
+    "Separate lintian and actual installed normal APT upgrade/public client/strict old-private negative/rebuilt consumer",
+    "Original KWin executable/library bytes and versions preserved through actual upgrade; package APT check",
+    "Fresh packaged library/session and remaining application/hardware/release gates"
+  ],
+  "files_sha256": {
+    "original-daemon-public-and-private-result.json": "127df5673705ae0c5eaa96e77e42df028554fc4377743c3ab44d8765fdd25366",
+    "original-daemon-public-and-private-host.json": "863369fad79b55ae55683f76bba39290cbdfd94a1f54ee2d88226f5f88d107a9",
+    "original-daemon-public-and-private-cleanup.json": "84d50385199ff21349e6f81e5b9e4f0fdc826567d62db85005ed8b4304f18cee",
+    "original-kwin-wayland-result.json": "0bd8a80514b2b85dcf117fd6ef85341e5ae11cdb97d1da391f5827d4aaa37af9",
+    "original-kwin-wayland-host.json": "e625de7748893a77dcf04932db728e6d39c54120123f883e87eb39a189499b82",
+    "original-kwin-wayland-cleanup.json": "bf2e04191e7831844436b8ea660e755a38d54222dca9c859ec892dfe20447cba",
+    "original-kwin-x11-result.json": "9b49c4c9ce5c50601ae21dc8ebf6ab77262a4bf7bf701418d06e46f6eb55d5fc",
+    "original-kwin-x11-host.json": "c84136f4269e6c01d9f14c4d4a9689a18ba0aff5a943988a16451d79ee53e339",
+    "original-kwin-x11-cleanup.json": "dd33a71526722dc75eec11b4403e3c483111035d738156b5804081454edb1024",
+    "strict-private-wrapper-result.json": "f45e7c2e622997f813c31b5dffb6da7a9ea12eb7a1c600cf3b195ab888e9f6e3",
+    "strict-private-wrapper-host.json": "e476ff1b88ae8a99ee040d1b517243dff43027f46711bf60cc271f39de893ee9",
+    "strict-private-wrapper-cleanup.json": "b1e463b482d1639c66598b6fb3d9ddb6fdd8c5773486e4e15e708d22d5f18f0d",
+    "original-hold.json": "f84984b1b629881d0ab82794121ececa20e389fb9fd2647f0545d391f99d6191",
+    "original-failed-result.json": "412d99be6df9b9c6799d3bef7f0138870557b7e794b300dc9e1d624366dcbfc8",
+    "original.symbols": "95576a3407afb4fd9840b2f4701dadefc25640d8a5f98e2d123e964631656f1d",
+    "reviewed.symbols": "aeea617441c0b545deb9626e33bee88e275426307d102815801f63927b2ab13d",
+    "symbol-floor-review.json": "2ec276ad086bbd0fe348ec924b9eeee719f2c3a91ffb99776bb637be30b3bdb8",
+    "strict-symbols.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "strict-generated.symbols": "11c445c70c53ae1963d77f8b608d599bd14acc00d41e0dd3f0a1ab9e2ed99c92",
+    "signed-source-consumer-review.json": "3e9bb45648e5b6d6207862d98ea3f0495040d9d8f03d28076fac250e6a5a326a",
+    "original-import-review.json": "9b61c6b17cf523568e4e09e25fc288382759d03acb262134b607f2d4359aebe2",
+    "direct-cleanup-followup.json": "a42108a9e87ca52f93bf399ac858c7b59bfebfd3ae2a1d135b2c15877a768424",
+    "exact-original-kwin-pins.json": "70fb1e8d3cb95dab929d6e7c2cd28f1143629bbae963bfd18239e6ee7e9641ee",
+    "strict-private-negative.json": "fb9d8395bb8dc781ba5c9c9aeef6b74b4fa07b03577e1720e9a6d615ccef037f"
+  },
+  "canonical_effect": "none",
+  "package_attempt_consumed": false
+}

@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "discover-attempt1-failed-artifact-retention",
+  "source_commit": "4eb8a87f3a253d4efab861db46af2b9fc8be769b",
+  "original_package": {
+    "workflow_run_id": 40095668250,
+    "workflow_job_id": 120877288408,
+    "source_commit": "425daf64c0c49bda74d9c1059831c67ffbc097cb",
+    "artifact_id": 12560898154,
+    "artifact_sha256": "7d729eb3a94fe380ca2f1fdbc84705af12048006658739334dd38b109daa5308",
+    "result_sha256": "cc06a2e93ea8df64092c6db0032213417330e20fccf0f7e541a10baf3e9ff8b3",
+    "package_attempt_consumed": true,
+    "original_state": "FAIL",
+    "stage": "sbuild"
+  },
+  "control": {
+    "router_run_id": 40097676122,
+    "host_job_id": 120883269666,
+    "control_artifact_id": 12561393035,
+    "control_artifact_digest": "sha256:7e0ccf06cf99fcb64561e1c396475362486b8f7175f5b73248b27e5ae7ce4f11",
+    "exit_code": 3,
+    "expected_terminal_state": "DIAGNOSIS_REQUIRED",
+    "vm_created": false,
+    "jit_invoked": false,
+    "package_attempt_effect": "none"
+  },
+  "retained_raw_artifact": "/var/lib/supralinux/artifacts/raw/discover/40095668250/7d729eb3a94fe380ca2f1fdbc84705af12048006658739334dd38b109daa5308.zip",
+  "canonical_update_created": false,
+  "conclusion": "The complete failed child artifact is retained persistently on the authoritative host with its original SHA-256. Exit 3 is the expected fail-closed diagnosis state and does not consume another package Attempt."
+}

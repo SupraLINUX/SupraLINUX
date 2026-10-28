@@ -1,0 +1,11 @@
+Source: supralinux-guest-probe
+Section: misc
+Priority: optional
+Maintainer: SupraLINUX QA <qa@supralinux.invalid>
+Standards-Version: 4.7.0
+Testsuite: autopkgtest
+
+Package: supralinux-guest-probe
+Architecture: all
+Description: Disposable CI integration probe, not a distributed product package
+ Used exclusively for hosted Ubuntu QEMU/DEP-8 mechanism checks.

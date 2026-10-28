@@ -1,0 +1,3 @@
+# GUI/helper executables without command line interfaces.
+drkonqi: no-manual-page [usr/bin/drkonqi-coredump-gui]
+drkonqi: no-manual-page [usr/bin/drkonqi-sentry-data]

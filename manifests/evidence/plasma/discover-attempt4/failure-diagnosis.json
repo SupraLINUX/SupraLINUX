@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "state": "FAIL",
+  "kind": "discover-installed-payload-suffix-collision-non-elf",
+  "node": "discover",
+  "version": "6.7.5-0supralinux4",
+  "attempt": 4,
+  "source_commit": "3f0fda015398acf53585af94a924ea7bd8f9c4ee",
+  "workflow_run_id": 40175744687,
+  "workflow_job_id": 121115923055,
+  "artifact_id": 12592521285,
+  "artifact_sha256": "f4090877a38277e930a9b2b21ff3b7e80a60c2f242335a66abb99e9531d604a3",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261025t081110z-1793791",
+  "host_evidence_manifest_sha256": "0f32824a9ffeaf31c6c2638f29092e7ad069b89edd483ad50f86b80a9839f138",
+  "observation": {
+    "stage": "autopkgtest-qemu",
+    "sbuild_result": "PASS",
+    "lintian_result": "PASS",
+    "autopkgtest_result": "FAIL",
+    "package_attempt_consumed": true,
+    "failed_test": "installed-payload",
+    "passing_test": "ubuntu-upgrade",
+    "false_target": "/usr/share/lintian/overrides/plasma-discover",
+    "matched_suffix": "/plasma-discover",
+    "expected_elf_target": "/usr/bin/plasma-discover",
+    "called_program": "ldd",
+    "called_program_exit_code": 1,
+    "revision4_loader_context_repair_reached": true
+  },
+  "root_cause": "The installed-payload test selected every regular file whose path ended with a binary suffix. The suffix /plasma-discover matched both the real /usr/bin/plasma-discover ELF and /usr/share/lintian/overrides/plasma-discover, which is a text file. Passing that text file to ldd caused exit status 1. sbuild, lintian, the unchanged CategoriesTest, and the real Ubuntu-to-SupraLINUX seven-binary upgrade all passed; this is a DEP-8 target-selection false negative, not a runtime payload failure.",
+  "repair_scope": "Autopkgtest only. Keep KDE source, compiled runtime payload, Qt, Frameworks, package split and the revision4 private-library loader-context rule unchanged. For each expected binary suffix, require exactly one installed file with ELF magic 0x7f454c46 before invoking ldd. A colliding text path may not satisfy or fail an ELF target.",
+  "reentry": "Increment Debian revision to 6.7.5-0supralinux5 because reviewed DEP-8 bytes change, mark preflight51 inapplicable only for revision5 packaging/test bytes, add a cheap regression for exact ELF selection, then obtain a fresh authoritative input preflight before Attempt5."
+}

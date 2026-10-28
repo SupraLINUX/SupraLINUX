@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+"""Validate the installed Discover suite without contacting software stores."""
+from pathlib import Path
+import os
+import subprocess
+
+packages = {
+    'plasma-discover': ['/plasma-discover', '/libDiscoverCommon.so', '/kns-backend.so', '/packagekit-backend.so'],
+    'kde-config-updates': ['/kcm_updates.so', '/kcm_updates.desktop'],
+    'plasma-discover-backend-flatpak': ['/flatpak-backend.so', '/org.kde.discover.flatpak.desktop'],
+    'plasma-discover-backend-fwupd': ['/fwupd-backend.so'],
+    'plasma-discover-backend-snap': ['/snap-backend.so', '/SnapMacaroonDialog', '/libsnap_helper', '/org.kde.discover.libsnapclient.policy'],
+    'plasma-discover-common': ['/plasmadiscoverui.rc', '/discover.categories'],
+    'plasma-discover-notifier': ['/DiscoverNotifier', '/org.kde.discover.notifier.desktop'],
+}
+source_dir = Path(__file__).resolve().parent.parent
+expected = subprocess.check_output(['dpkg-parsechangelog', '-l', str(source_dir/'changelog'), '-S', 'Version'], text=True).strip()
+all_files = {}
+for pkg, suffixes in packages.items():
+    installed = subprocess.check_output(['dpkg-query','-W','-f=${Version}',pkg], text=True).strip()
+    assert installed == expected, (pkg, installed, expected)
+    files = [Path(x) for x in subprocess.check_output(['dpkg-query','-L',pkg], text=True).splitlines()]
+    assert files, pkg
+    all_files[pkg] = files
+    for suffix in suffixes:
+        matches = [p for p in files if str(p).endswith(suffix)]
+        assert matches, (pkg, suffix)
+        assert any(p.exists() for p in matches), (pkg, suffix, matches)
+
+def is_elf(path):
+    if not path.is_file():
+        return False
+    with path.open('rb') as handle:
+        return handle.read(4) == b'\x7fELF'
+
+private_matches = [
+    p for p in all_files['plasma-discover']
+    if p.name == 'libDiscoverCommon.so' and is_elf(p)
+]
+assert len(private_matches) == 1, private_matches
+discover_private_dir = private_matches[0].parent
+
+binary_suffixes = {
+    '/plasma-discover', '/libDiscoverCommon.so', '/kcm_updates.so', '/kns-backend.so', '/packagekit-backend.so',
+    '/flatpak-backend.so', '/fwupd-backend.so', '/snap-backend.so', '/SnapMacaroonDialog',
+    '/libsnap_helper', '/DiscoverNotifier'
+}
+checked = []
+plugin_checked = []
+for suffix in sorted(binary_suffixes):
+    candidates = [
+        p for files in all_files.values() for p in files
+        if str(p).endswith(suffix) and is_elf(p)
+    ]
+    assert len(candidates) == 1, (suffix, candidates)
+    path = candidates[0]
+    environment = None
+    if '/qt6/plugins/discover/' in str(path):
+        environment = os.environ.copy()
+        environment['LD_LIBRARY_PATH'] = str(discover_private_dir)
+        plugin_checked.append(path)
+    result = subprocess.run(['ldd', str(path)], check=True, capture_output=True, text=True, env=environment)
+    assert 'not found' not in result.stdout, (path, result.stdout)
+    checked.append(path)
+assert len(checked) == len(binary_suffixes), (checked, binary_suffixes)
+assert plugin_checked
+assert any(p.suffix == '.mo' and '/locale/' in str(p) for p in all_files['plasma-discover-common']), 'translations missing'
+print(f'Discover seven-binary installed payload/linkage: PASS ({len(checked)} ELF targets; {len(plugin_checked)} plugins in Discover loader context)')

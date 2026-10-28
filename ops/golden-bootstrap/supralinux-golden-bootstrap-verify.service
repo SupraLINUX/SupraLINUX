@@ -1,0 +1,13 @@
+[Unit]
+Description=SupraLINUX golden bootstrap network verification
+Requires=supralinux-golden-bootstrap-guard.service
+After=supralinux-golden-bootstrap-guard.service network.target
+ConditionPathExists=/usr/local/libexec/supralinux-golden-bootstrap-channel.py
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/libexec/supralinux-golden-bootstrap-channel.py --phase verify
+TimeoutStartSec=180
+
+[Install]
+WantedBy=multi-user.target

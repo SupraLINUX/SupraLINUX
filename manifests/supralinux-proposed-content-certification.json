@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "authority": "SupraLINUX proposed integration content certification",
+  "role": "unsigned exact integration repository certification",
+  "evidence_scope": "24 admitted Plasma PASS candidates over the 65-node retained Frameworks base; content certification only, with no package-state promotion or repository activation",
+  "certification": {
+    "workflow_run_id": 40637977168,
+    "workflow_job_id": 122649711388,
+    "artifact_id": 12794456859,
+    "artifact_sha256": "82a4dfa6bc2688ef3e2ebaa65fbf2279596a6aa4f862f1b085b9b29a0e78a5c1",
+    "source_commit": "f0b30cb58ab690f59133e69bf385fdb17fef38dd",
+    "evidence_path": "manifests/evidence/infrastructure/supralinux-proposed-content-certification-20261028/result.json",
+    "result_sha256": "ddce4d0dc19dd6f487009c983c6f94d8c0e4dd915a9139e562f9bb268e29fe85",
+    "plan_sha256": "0fc9451dfad898e6dc64b84f271bd68e29796aa6de3c4245c6c5807190837ea5",
+    "repository_manifest_sha256": "4cbdfa67cec9350318e399c4918590c9413c30d0f984dd4c887385041b6ecd2c",
+    "packages_sha256": "9a0ba6ef868c3fcd608dde871d1799e7872e30d1bc1cebc241d53614cabd0507",
+    "sources_sha256": "393e4e2c3df5b49fa14f18273f26dc8a415e1f06d19fc5f275c6f92abe43375a",
+    "release_sha256": "bb6c460c4b3e138b3f2f3bafff1c98d6c1aedb70e92d62e45b219ba348dd78da"
+  },
+  "coverage": {
+    "suite": "resolute-supralinux-proposed",
+    "architecture": "amd64",
+    "plasma_candidates": 24,
+    "excluded_candidates": 3,
+    "frameworks_pass_nodes": 65,
+    "frameworks_artifacts_verified": 65,
+    "frameworks_archive_index_sha256": "039e1b1cf9548e9051baaf553d6810e2b155b0d260e0ec54c3c44cf6c24e2ee3",
+    "frameworks_requires_github_for_restore": false
+  },
+  "invariants": {
+    "signed": false,
+    "activation_eligible": false,
+    "repository_active": false,
+    "stable_publication_authorized": false,
+    "canonical_package_state_effect": "none",
+    "package_attempt_consumed": false,
+    "sbuild_invoked": false,
+    "vm_created": false,
+    "jit_invoked": false,
+    "network_required": false,
+    "artifact_root_persistent": true
+  },
+  "rollout": {
+    "phase_completed": "unsigned-content-certification",
+    "production_activation_changed": false,
+    "next_step": "ephemeral signed repository certification before APT solver/install/upgrade integration gates"
+  }
+}

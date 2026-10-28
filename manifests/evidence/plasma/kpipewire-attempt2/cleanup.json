@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-10-07T03:57:54.550840+00:00",
+  "vm": "supralinux-plasma-package-build-20261007t015941z-2094181",
+  "runner_id": 230,
+  "vm_removed": true,
+  "runner_removed": true,
+  "writable_overlay_removed": true,
+  "overlay_path": "/var/lib/supralinux/ephemeral-runners/supralinux-plasma-package-build-20261007t015941z-2094181",
+  "unrelated_vms_untouched": true,
+  "host_evidence_manifest_sha256": "b57596a9126e10b608b149d5115960786aa799088cd616b9b94b429cc911788b"
+}

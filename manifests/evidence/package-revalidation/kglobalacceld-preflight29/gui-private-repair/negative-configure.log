@@ -1,0 +1,40 @@
+-- The CXX compiler identification is GNU 15.2.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Performing Test HAVE_STDATOMIC
+-- Performing Test HAVE_STDATOMIC - Success
+-- Found WrapAtomic: TRUE
+-- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so
+-- Found WrapOpenGL: TRUE
+-- Found WrapVulkanHeaders: /usr/include
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+CMake Error at /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/kglobalacceld-gui-private-target-review/original-sdk/usr/lib/x86_64-linux-gnu/cmake/KGlobalAccelD/KGlobalAccelDTargets.cmake:71 (set_target_properties):
+  The link interface of target "K::KGlobalAccelD" contains:
+
+    Qt6::GuiPrivate
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+Call Stack (most recent call first):
+  /home/chmodmasx/Documentos/ChatGPT/SupraLINUX/.work/kglobalacceld-gui-private-target-review/original-sdk/usr/lib/x86_64-linux-gnu/cmake/KGlobalAccelD/KGlobalAccelDConfig.cmake:41 (include)
+  CMakeLists.txt:16 (find_package)
+
+
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    SDK
+
+
+CMake Generate step failed.  Build files cannot be regenerated correctly.

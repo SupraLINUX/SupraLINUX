@@ -1,0 +1,23 @@
+{
+  "state": "PASS",
+  "kind": "actual-build-predecessor-version-verification",
+  "source_package": "plasma-wayland-protocols",
+  "version": "1.22.0-0supralinux1",
+  "build_architecture": "amd64",
+  "available_predecessor_count": 1,
+  "required_direct_predecessors": [
+    "extra-cmake-modules"
+  ],
+  "installed_predecessors": [
+    {
+      "package": "extra-cmake-modules",
+      "node": "extra-cmake-modules",
+      "version": "6.30.0-0supralinux3",
+      "architecture": "all"
+    }
+  ],
+  "available_predecessors_not_installed": [],
+  "complete_available_input_transport": "certified separately by the infrastructure consumer",
+  "control_sha256": "9e846c271194f7e1294bc6a54c94c5b249d683c0636d8e9f0eac999854e84af0",
+  "buildinfo_sha256": "5ac83dd9ba7c8dc9a11a3ebe18a26d17c78891d03d417a06b02fea5e14872e98"
+}

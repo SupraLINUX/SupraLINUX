@@ -1,0 +1,26 @@
+{
+  "source_package": "knighttime",
+  "version": "6.7.5-0supralinux1",
+  "ubuntu_baseline_package": "knighttime-dev",
+  "baseline_setup_script": "tests/baseline-setup",
+  "packaging_path": "packages/plasma/knighttime/debian",
+  "packaging_sha256": {
+    "changelog": "958002d60c168a9e54407ed7631650dd1b797c21dc0f22ffa52760aac004726d",
+    "control": "c4f6cc3150ff370bc2fb264d80452a605df492c5e52404ff8582bd3bcb9fb9bc",
+    "copyright": "2e4292089642c282a2c658812f02f10f2ce091e587b203b2311b1c4c35c80785",
+    "knighttime-dev.install": "cd050f56873ef11bd726a448ddee7efc8078020c88dbacc3c4cf1207e6ab832d",
+    "knighttime.install": "a6f2cb04e064dd7172e2f1fa7c8313a745cbab216395883943961a821f54afd4",
+    "libknighttime0.install": "0f10bee6cb9399b309be54fc78515e43c0ce9dad3edf118140cd43bbe194d331",
+    "libknighttime0.symbols": "dc861ddde851bdcd62f601b6e25d3abff41003cdec772049974853d6c833fb84",
+    "rules": "a0f242fcf9d8667d44970b85645a13f8f0b64563489df9aca3edc666096dd20c",
+    "salsa-ci.yml": "32997347e7094680bbc5a1dec4ec4f04424b79bcf4ccbb6bb318f0b601e78e3f",
+    "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+    "tests/baseline-setup": "b832eb1e02c33d28b5c4a10af9265cd3ff2a5fcc03979cc8eca1b1cdc0a7d7e7",
+    "tests/consumer": "4d88941e9b9a62dc2edeb1d03f1c62b0381bd2650f851acfb30e713fa6b21746",
+    "tests/control": "87056ce81ced12c252c1fa5cc6bb87cd9c57fc46f3849503e7cc3471df07fbc1",
+    "tests/ubuntu-abi-client": "a21c20e372ccbe8d8df7f0f18f5256a759060635adda8364f3ce2d73fdb6d686",
+    "upstream/metadata": "f59a5a56c5ebbe702583c2f11753e55704def29a730938dc7bb42c24817b7970",
+    "upstream/signing-key.asc": "ebab3869b4186628f1cb668c3e8060cc90c8ba0fc4c89d7ba79fdc6c15b1c9fd",
+    "watch": "12d663674732e6efbfb098cea45d288826424987cd82973c8f800577c252ca29"
+  }
+}

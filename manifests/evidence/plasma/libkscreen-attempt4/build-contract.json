@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "role": "reviewed-plasma-package-build",
+  "state": "execution-authorized",
+  "package_execution_authorized": true,
+  "authorized_nodes": [
+    "libkscreen"
+  ],
+  "runner_class": "supralinux-kvm-ubuntu-26.04-ephemeral",
+  "execution_checkpoint": "frameworks-6.30-pass",
+  "execution_mode": "build",
+  "nodes": {
+    "libkscreen": {
+      "state": "build-pending",
+      "source_package": "libkscreen",
+      "version": "4:6.7.5-0supralinux4",
+      "upstream_version": "6.7.5",
+      "upstream_url": "https://download.kde.org/stable/plasma/6.7.5/libkscreen-6.7.5.tar.xz",
+      "upstream_sha256": "df317e03acfadfcbc68981b78131750103fadf4d5c5df6368c9e91e698677219",
+      "signature_sha256": "e0a5bc61be757de528bacd2d5841bf90e76c6b16a57497cd231d16e68c68f419",
+      "packaging_reference_version": "4:6.6.4-0ubuntu1",
+      "packaging_reference_sha256": "c7fa56d0251b9c0997bcd924d3fa581cd23b067c19b526b7c7f9e776e49de6c2",
+      "packaging_path": "packages/plasma/libkscreen/debian",
+      "packaging_review": "PASS",
+      "binary_packages": {
+        "libkscreen-bin": "amd64",
+        "libkf6screen8": "amd64",
+        "libkf6screendpms8": "amd64",
+        "libkscreen-data": "all",
+        "libkscreen-dev": "amd64",
+        "libkscreen-doc": "all"
+      },
+      "ubuntu_baseline_package": "libkf6screen8",
+      "baseline_setup_script": "tests/baseline-setup",
+      "baseline_preflight_required": true,
+      "baseline_setup_payload": "reviewed-tests-tree",
+      "required_executable_files": [
+        "rules",
+        "tests/baseline-setup",
+        "tests/ubuntu-abi-client",
+        "tests/consumer",
+        "tests/upstream-session"
+      ],
+      "upstream_tests": [
+        "kscreen-testscreenconfig",
+        "kscreen-testconfigserializer",
+        "kscreen-testconfigmonitor",
+        "kscreen-testinprocess",
+        "kscreen-testbackendloader",
+        "kscreen-testlog",
+        "kscreen-testmodelistchange",
+        "kscreen-testedid"
+      ],
+      "sbuild_rootfs_policy": {
+        "kind": "immutable-bare-milestone",
+        "sha256": "4fdb9d433ebdd075af3d4a94ffb32dc50d84c2e8e47d9d9385c2921a61f85c0b",
+        "suites": [
+          "resolute",
+          "resolute-updates",
+          "resolute-security"
+        ]
+      },
+      "frameworks_predecessors": {
+        "extra-cmake-modules": {
+          "source_package": "kf6-extra-cmake-modules",
+          "version": "6.30.0-0supralinux3",
+          "binaries": [
+            {
+              "package": "extra-cmake-modules",
+              "architecture": "all",
+              "sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+            }
+          ]
+        }
+      },
+      "supplementary_predecessors": {
+        "plasma-wayland-protocols": {
+          "source_package": "plasma-wayland-protocols",
+          "version": "1.22.0-0supralinux1",
+          "upstream_version": "1.22.0",
+          "cmake_package": "PlasmaWaylandProtocols",
+          "binaries": [
+            {
+              "package": "plasma-wayland-protocols",
+              "architecture": "all",
+              "sha256": "85b989ff73b9b8d4e0797a4f326dbe17df3b14f8026a3ea59856b732110f26e7"
+            }
+          ],
+          "evidence": {
+            "result_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/result.json",
+            "result_sha256": "a8360723475a3973e9676f6f02eb9bea654b1d0dcb3c256093cf490deee76f56",
+            "contract_path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/build-contract.json",
+            "artifact_id": 11480891803,
+            "artifact_sha256": "2df8366c884296d8c07c0e4431f11fdefb1b62f2dde12c913e740a7fb8b945d1",
+            "contract_sha256": "d24fbde21fb6fb792a204f6143f865ed4db82641f052ef1f6d2a8584ab4ca40a",
+            "archive_root": ".artifacts/plasma-1.22.0/plasma-wayland-protocols-attempt1",
+            "payload_prefix": "packages/"
+          }
+        }
+      },
+      "review": {
+        "source": "Signed official stable source unchanged; preserve six binary packages, both SONAME 8 libraries, all original symbol guards, installed backends/helpers, public SDK and QCH.",
+        "version": "Preserve epoch and upstream version; 4:6.7.5-0supralinux4 supersedes retained failed 4:6.7.5-0supralinux3 and the captured Ubuntu reference; prior assignments remain sealed.",
+        "dependencies": "Exact eligible ECM 6.30.0-0supralinux3 and authoritative supplementary Plasma Wayland Protocols 1.22.0-0supralinux1; transport identity, digest and exact CMake metadata require KVM input preflight. Matching Ubuntu Qt/private SDK, Wayland and XCB preserved; XRandR and DPMS dependencies remain enabled. No dependency on KWayland library is invented. Declares hwdata <!nocheck> after observed clean native test failure: Original EDID deviceId assertions require vendor names from /usr/share/hwdata/pnp.ids. Attempt 1 omitted hwdata and failed four EDID rows; seven other KScreen tests and ECM AppStream passed.",
+        "tests": "All eight upstream registered CTests enabled and verbose, with built-plugin paths and launcher activation on private reaped D-Bus sessions. Installed public Ubuntu ABI client passes Fake/D-Bus config get/set, EDID, modes, cloning, monitor signals and hotplug, plus actual XRandR discovery and unsupported ScreenDpms properties on owned Xvfb. Same unchanged client after APT upgrade and exact SDK rebuilt consumer; clean baseline before candidate execution. Local Ubuntu preparation passed without a package Attempt. Private installed-client wrappers block the host system bus and discard inherited Qt/QML search paths. CLI help now runs on the same owned private display and D-Bus before and after APT upgrade; prior functional assertions remain intact, cleanup verifies whole process groups and runtime absence.",
+        "licensing": "Preserve authenticated Ubuntu copyright, inherited tests and upstream attribution; explicitly restrict CC0 to newly authored integration fixture/control/session files and private virtual EDID/profile.",
+        "profile": "Preserve all Fake/KWayland/XRandR plugins, helper commands, systemd/D-Bus service, documentation and both libraries. Upstream early return omits unavailable KF6::WaylandServer suites and optional native XRandR tests; no claim of execution. Real compositor/output-management, hardware and DPMS power switching remain integration QA."
+      },
+      "packaging_sha256": {
+        "README.source": "30cabfc9bad63660481178a64c27ced848869f05dd94913033f20907fbb04876",
+        "changelog": "283fe7eff937c991c693ec52349f69f548941532f4fa8747761f2e0ba8a8c7ee",
+        "control": "c6eefc63bc70bed6cfad54a6d2c151dc30f2de55e6600b20dc5853e18961e8bd",
+        "copyright": "24bd04539fbc827914b913b5549ea399df357f9df6ed4cb8092c51b0e9395368",
+        "libkf6screen8.install": "2e33ea75498761509e6f903fe869a671f9e4bb2e1a478dc9967cab2331e71543",
+        "libkf6screen8.lintian-overrides": "d0694d2ba2eeda14981b0e4e1c987749a9d1fa35373d460fc1550ea87de87a96",
+        "libkf6screen8.symbols": "9dd9b6d4e6981cf61190faac5498113a5167e14543867f188e54d2638002cf10",
+        "libkf6screendpms8.install": "ea4f1e91a56aafb3315ab497094585496b4dedecb1d11e87309dc71d7b681945",
+        "libkf6screendpms8.symbols": "cf70f903a5a4eb717027ae49e7084c1547f69a14de9d8895b0acddadd03553ed",
+        "libkscreen-bin.install": "2057b800bb541db7a093e1bb28ea8d83ca136395aea980e67bc062116c5e6c8a",
+        "libkscreen-bin.lintian-overrides": "7bf89c5293e3f380948d64d26386c25391dca967db6c70e92cd775dbc1c4bd2c",
+        "libkscreen-data.install": "2a691864a48c09efbcb7646a8f74b4ae3b29c1504874528e61006eb6d78698a4",
+        "libkscreen-dev.install": "2fc1e9ba1cf1f8f8e4699fc683382373717d61ccf8457762e859ebda48f16afd",
+        "libkscreen-doc.install": "2060b90fcc31354d915269709332b573ca287b53b0d4bb780b6059e47fce9e30",
+        "patches/Make-qt6-wayland-optional.patch": "3e3d9fee461b63fbc5b663f0dbefe737f9804b3dbbe897c29c8c8df32f66b21b",
+        "patches/series": "02cb62b94f5a2a3c43f67b7e919d2176624cc8faa746c36213359bfcc28f03d4",
+        "rules": "c65061a3576d8558ac0501790a9276566870fd7b66fd3b5956579804c46c03d1",
+        "salsa-ci.yml": "64bfb6be33af05cd116d8bee786f95e7b2aaa9faa54e90333151a7a05ef03058",
+        "source/format": "1be7080d72e6b566df3e236ce2c55efdfbbb8fa1c972d825e5b672ff8773be1a",
+        "tests/baseline-setup": "20fc6b90292f4e4f45424b0a745864c279a5b43cfa135879f01258651a40a558",
+        "tests/client/CMakeLists.txt": "e423f65a208956321b11379d896ccefa3e1d9577d9531592069457c3acc0d1bf",
+        "tests/client/main.cpp": "81f3c7d91100dbeb94a7955394933cb877ec6b5ef44b1bd7fe479c1ac093e510",
+        "tests/client/profile.json": "f58f4fb95b40fdeffc497019208a9d9d283c5008a76251415033e0b95b508898",
+        "tests/client/run-private.py": "1fd38dc7d1ba6078b33b68360ef18ce70a4a8b93b5e2981d77d5d15c1509fe1a",
+        "tests/consumer": "7659a133444640553ffeca058ebeb4c33ef7cbc74d553799b781315a2394cbee",
+        "tests/control": "b5389a5f913a651f6603d4e42e987581ea824789776d082f77fe20d6779caf55",
+        "tests/ubuntu-abi-client": "94c1f04a3486c10f939e1c808074567f0a462cd73c39d3a2734a0143dd095646",
+        "tests/upstream-session": "30a934a1e7f4703aaa51ad3b0eb36b55bf739361488cbd7381254c9e0d143d94",
+        "upstream/metadata": "cc3a7b8dbaf700b40056c85c77ec4c3234b53a8a946791952b21446fc69255bb",
+        "upstream/signing-key.asc": "1475b32186d2102a3689072f89e1591810ce45dae08b04ad1eaaadb8be73309c",
+        "watch": "97a304c1ba93e88e1a390630a3e5e617483ed64196ec527d2bc21827ae691a8b"
+      }
+    }
+  },
+  "next_package_attempt": 4,
+  "campaign_manifest": "manifests/kde-plasma-package-build.json",
+  "campaign_manifest_sha256": "5cf69276d26599506bda04482acfae58395560088a004b27ecfb8da2bdcd8928"
+}

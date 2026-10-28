@@ -1,0 +1,2 @@
+# This is a GRUB theme configuration file, not package documentation.
+grub-theme-breeze: package-contains-documentation-outside-usr-share-doc [usr/share/grub/themes/breeze/theme.txt]

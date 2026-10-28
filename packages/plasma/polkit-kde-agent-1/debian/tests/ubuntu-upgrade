@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: CC0-1.0
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-polkit-agent-baseline
+source_dir="$(cd "$(dirname "$0")/.." && pwd)"
+expected="$(dpkg-parsechangelog -l "${source_dir}/changelog" -S Version)"
+installed="$(dpkg-query -W -f='${Version}' polkit-kde-agent-1)"
+[[ "${installed}" == "${expected}" ]]
+test -s "${BASE}/installed-files.txt"
+original="$(cat "${BASE}/ubuntu-version")"
+dpkg --compare-versions "${expected}" gt "${original}"
+apt-get check
+printf 'Real Ubuntu-to-SupraLINUX installed package upgrade: PASS\n'

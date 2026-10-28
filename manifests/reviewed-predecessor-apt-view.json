@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "state": "prepared-inactive",
+  "role": "reviewed-predecessor-apt-view",
+  "current_transport": "sbuild --extra-package per selected .deb",
+  "candidate_transport": "one exact local APT view per consumer node",
+  "source_of_truth": "admit-frameworks-cache.py PASS selected list",
+  "invariants": {
+    "exact_selected_set_only": true,
+    "validate_sha256": true,
+    "validate_package": true,
+    "validate_version": true,
+    "validate_architecture": true,
+    "validate_source_package": true,
+    "no_unselected_milestone_packages": true,
+    "rootfs_sdk_preinstallation": false
+  },
+  "rollout": {
+    "production_changed": false,
+    "first_certification": "synthetic exact-view solver test",
+    "second_certification": "one historical PASS package canary",
+    "package_attempt_effect": "none until canary"
+  }
+}

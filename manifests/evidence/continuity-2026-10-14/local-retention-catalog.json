@@ -1,0 +1,240 @@
+{
+  "schema": 1,
+  "scope": "Local preservation inventory, not cloud availability or package certification",
+  "archives": [
+    {
+      "local_index": ".artifacts/plasma-6.7.5/kde-cli-tools-attempt3/index.json",
+      "index_sha256": "ee3cf6d12947aff481796c0c4b1268d15655f143bee0ae869e4dc2e06441ddf7",
+      "archive_sha256": "066c2c2a9bd09643185ffedfd3065b552fa7c9b1e141e62ccdcc66e19d9f9f83",
+      "file_count": 356,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-6.7.5/kde-cli-tools-attempt3-complete-host/index.json",
+      "index_sha256": "c200e9d7bf6bba724c42f634a0f4482aea4abbec63cc862753c257466ae25258",
+      "archive_sha256": "129ea00c0303669b7a0f74fa45d1e4b27f0439c7da661f7e85ecfca33cd813e2",
+      "file_count": 416,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kgamma-source-and-runtime-scope-review-20261011/index.json",
+      "index_sha256": "2b4152d35575e465df4121f5149d31561fc5fe6600a3a087b7f34d8c77bfde70",
+      "archive_sha256": "686ccfba592cd7d381565f12c73c8d0711148b2b0b679acbb5991bade2440fe2",
+      "file_count": 141,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-amd64-template-minimum-followup-20261012/index.json",
+      "index_sha256": "1e2c02fe3a7c5065f06124edf4baa2a3f38d84a9a3180f3dc6af87e1b9d3ff9b",
+      "archive_sha256": "3b409609bd1a7d06690b752f15f75ba65671562b4cf9153e14d47de875839862",
+      "file_count": 30,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-apt-source-x11-private-transition-review-20261011/index.json",
+      "index_sha256": "bd3fdae00b4ca0bc3c489145818bab93b3a9bc8469b813a3a05d05ad31027486",
+      "archive_sha256": "cd997d9b3f13683d8761c5c61bcc6f2524c58c682c60cb3b0838ceadd0e1785a",
+      "file_count": 1892,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-authenticated-xcb-sdk-inputs-20261010/index.json",
+      "index_sha256": "bb7b3da2b952a8da96f3b1731919706aed656ba6726768444e955358a5d9897b",
+      "archive_sha256": "9659139a44e8a5554f53da444b9cefa69899a07a95c8cb46dbb3c021cf39088e",
+      "file_count": 20,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-exact-original-consumer-pin-review-20261011/index.json",
+      "index_sha256": "ccaab61d4a663b2c7b2c80ba12de942668869328fc4643df51cb1f8706e2cd18",
+      "archive_sha256": "055eab7a1840ba751d075a5dbe7b1201d1ccc892b294770bc686a4a9cf65c2ac",
+      "file_count": 29,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-kwin-owned-permission-format-diagnosis-20261011/index.json",
+      "index_sha256": "83e83f8359ba6a592c22086f822942785df6f0549d6ce26e32d78208dcd53c2a",
+      "archive_sha256": "dddbf56a615040dc4cb3ab8964ca884115a74d08aaf2fe719c70e2c7612ab4e3",
+      "file_count": 53,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-local-diagnostic-construction-20261010/index.json",
+      "index_sha256": "09d2a860de5182bb8c1a087c71d7dd3093c255f8906143b4c1d94136359a5e25",
+      "archive_sha256": "e274955ded182858682d05d3cb347743711451a6e550a12cc016aea64e0605d3",
+      "file_count": 91,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-local-native-diagnostic-followup-20261010/index.json",
+      "index_sha256": "c0294afc05a6470f9b0e40fb2339467889fb3595c1be216ee360307d66d7a2a1",
+      "archive_sha256": "08d17f058fe01829018b8678932dd990964fdc7b322b0fdc054ebe8d1406f9c4",
+      "file_count": 28,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-original-consumer-followup-20261009/index.json",
+      "index_sha256": "8ed6cc527a03a648724ef14db8c4f5f34099b3e399fe3ae86163564b5a1465f7",
+      "archive_sha256": "ee9565ef5ef701f4db0c97138c2fc072c26e7af8efed8eb3601942700035de6b",
+      "file_count": 20,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-original-kwin-authenticated-runtime-inputs-20261011/index.json",
+      "index_sha256": "0e9befd702c6850490f7f2d726b166cc563e942fdc7b3e62754e102388ce058f",
+      "archive_sha256": "8d48543cf56f224d1522e96d82cfb9b61ef0eaca795709b8cc33e6cf25fe76d4",
+      "file_count": 870,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-original-kwin-virtual-permission-diagnosis-20261011/index.json",
+      "index_sha256": "49e24ae2728ccedf850298a3fcd9db84f227520dc239684c8034f49f969156f0",
+      "archive_sha256": "2b0245f4592cb1a16513f349ffd1fd2e93afd28cf5574faca4ba8dd5f292bb82",
+      "file_count": 112,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-original-kwin-wayland-zero-nic-runtime-control-20261011/index.json",
+      "index_sha256": "58fbea738dad4d1b0f0f9e699712945b2ab6337d964124dbfaf529c5c98ff244",
+      "archive_sha256": "e0e559fbceae73994bb0b99912d987d02c41b25b36c9e7a8804115efb9494af9",
+      "file_count": 95,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-original-kwin-x11-loader-infrastructure-review-20261011/index.json",
+      "index_sha256": "d21bf6550040cd8675a375b9d4b35a68f3936ad02acc76c106e44e1ef519fefc",
+      "archive_sha256": "ae4aa951c0630c2aaa1fff1f08d6b8083296f58f2eaa5ae56fb94399e78c291e",
+      "file_count": 38,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-original-ubuntu-consumer-elf-20261009/index.json",
+      "index_sha256": "62236521a0e95055aee230cb2e61ec0c01852fb9934ba4f8aed722a28b3be56a",
+      "archive_sha256": "21d50d1e1f4c7b81d1454ef53f51a4e1654ce32636e52377b999e5da689e40ae",
+      "file_count": 32,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-owned-data-and-sdk-runtime-control-20261011/index.json",
+      "index_sha256": "dc003cac70604c308b1be5ccb6d4b93888731752174905cea788c215b80d2802",
+      "archive_sha256": "7b257f4545c0a918a74cd8c4b2964540acd5c95f5d418add5dcce3ef100bee26",
+      "file_count": 170,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-owned-kwin-kvm-preparation-20261009/index.json",
+      "index_sha256": "48216f4b2608317491213a97ed1c03a01481bbb73a4951d424b93e84a7c152c6",
+      "archive_sha256": "3213e69eb4fde96cb7f6632859808cfe8de23b1c14499937b282d25b830f5aa0",
+      "file_count": 8,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-private-sdk-input-preparation-20261010/index.json",
+      "index_sha256": "be7c376816f462ea705c6b6009402bb2accd68c5f6a4a9affa8157f733ef112c",
+      "archive_sha256": "9c8e0537d79d48bd8dd3fb070ddbcaf8cd7c7c7c53a54a4ded9dc67d263e58af",
+      "file_count": 195,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-private-transition-input-followup-20261010/index.json",
+      "index_sha256": "a5d58a4e8e5c06b72f06656725445e305d2bb36e30356e8deebd4d9b177e3638",
+      "archive_sha256": "845f210dddf06334ab69bfef006e15edb1b2bfc956c0ef3d7e383e831c6f9fc4",
+      "file_count": 5,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-scoped-reentry-evidence-bindings-20261011/index.json",
+      "index_sha256": "7ba7992d2384045e09b2f3e532fa130bcb620348f0eb5ba281f536a99ecc679a",
+      "archive_sha256": "c39071b32dd997b4f0326e5e3b33177cb0f2c28ead32d01bde5062685ea8c11f",
+      "file_count": 31,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-scoped-reentry-evidence-bundle-20261011/index.json",
+      "index_sha256": "a019b93229b8914ed7a4c5f6838bcc669a3fa13f24bd5e814d04000b9df1470f",
+      "archive_sha256": "30bd0be86da142e887a2384dceed4ae076eeebe2568063b0e5e5086e78f3ca38",
+      "file_count": 28,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-staged-private-sdk-wrapper-kvm-certification-20261011/index.json",
+      "index_sha256": "27c591c55cc983945f43791a3e066c4c3e1bf3617c819c6a012b80c32dd8d31c",
+      "archive_sha256": "e016fc129fdfa30c5f2c3911289e96f52006ec137498e1d86c8eeede43e809ea",
+      "file_count": 103,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/kglobalacceld-zero-nic-kvm-runtime-control-20261011/index.json",
+      "index_sha256": "be4c229b879829b71a2b577dbac3b3803134c873a7e46359f678faad5da892b8",
+      "archive_sha256": "1edaddea08d9e89ff95e401e51d1b9adcb0d80dffb0f60d2e06ebc89624f4e1c",
+      "file_count": 1345,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/libksysguard-current-upstream-correction-review-20261010/index.json",
+      "index_sha256": "45a2fad623dd20fe40ba8c8fe5e50bb2ee4c4ce9cb421d4fd2dbe35219bc489e",
+      "archive_sha256": "fcb6a07a18150addab42e3b77c0db18f481d5775dbe6bbcb09565f562b51699f",
+      "file_count": 7,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    },
+    {
+      "local_index": ".artifacts/plasma-frontier/libksysguard-current-upstream-correction-review-20261011/index.json",
+      "index_sha256": "2311dfb0c3062aa1a5db5f6b01af4f94ab570a2199cf7ac6ded44dfd615432cc",
+      "archive_sha256": "07d052c2e028815f94b828140e3dd26c33e9e88b67cd1e0f2fba7ec2b3f2a364",
+      "file_count": 5,
+      "empty_offline_byte_restore_verified": true,
+      "off_host_backup_verified": false,
+      "access": "LOCAL ONLY; not uploaded to Git; full host captures may contain credentials"
+    }
+  ]
+}

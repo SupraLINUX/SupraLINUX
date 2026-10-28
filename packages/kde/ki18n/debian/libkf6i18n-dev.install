@@ -1,0 +1,6 @@
+usr/include/KF6/KI18n/
+usr/include/KF6/KI18nLocaleData/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6I18n/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6I18n.so
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6I18nLocaleData.so
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6I18nQml.so

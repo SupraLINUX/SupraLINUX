@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "authority": "SupraLINUX proposed repository signing certification",
+  "role": "ephemeral non-production signing mechanism certification",
+  "evidence_scope": "24 admitted Plasma PASS candidates over the sealed 65-node Frameworks base; signed metadata verification only, with no repository activation or package-state promotion",
+  "certification": {
+    "workflow_run_id": 40639991710,
+    "workflow_job_id": 122656052744,
+    "artifact_id": 12794773020,
+    "artifact_sha256": "a2fcbd57760c50ecd91544793502f88d03b80d6dfe3e12cce77791216e9eac96",
+    "source_commit": "aa8a767caa6d76d3b546cafe5dedada31f2c7c97",
+    "evidence_path": "manifests/evidence/infrastructure/supralinux-proposed-signing-certification-20261028/result.json",
+    "result_sha256": "3a9bb6b0f58c869655c2a02a0dbff24d339fdf1a8993e174d98768725c415991",
+    "repository_manifest_sha256": "a10cf093d7a8b715bd04c401229c33a714df1b9201fd8455ef1df84ff4b0cfb2",
+    "plan_sha256": "0fc9451dfad898e6dc64b84f271bd68e29796aa6de3c4245c6c5807190837ea5",
+    "packages_sha256": "9a0ba6ef868c3fcd608dde871d1799e7872e30d1bc1cebc241d53614cabd0507",
+    "sources_sha256": "393e4e2c3df5b49fa14f18273f26dc8a415e1f06d19fc5f275c6f92abe43375a",
+    "release_sha256": "bb6c460c4b3e138b3f2f3bafff1c98d6c1aedb70e92d62e45b219ba348dd78da",
+    "public_key_sha256": "da02617a4257eeb1726f9e86b25732f8b9871f29e80745089bc20ea54cedb7f2",
+    "inrelease_sha256": "20cf66240d42520e208f7d3c4fc39187509a25183e22a1b0bcda2ab81c0a81c3",
+    "release_gpg_sha256": "634e286edcbde40f23baaa87b5a5dab9ac50ece676fdad763cacbee4c49aa98b",
+    "signing_fingerprint": "5B2B3807BB9D1709C81E0608919B1ED28D826129"
+  },
+  "sealed_content": {
+    "source_commit": "f0b30cb58ab690f59133e69bf385fdb17fef38dd",
+    "result_sha256": "ddce4d0dc19dd6f487009c983c6f94d8c0e4dd915a9139e562f9bb268e29fe85",
+    "candidate_count": 24,
+    "frameworks_pass_nodes": 65
+  },
+  "verification": {
+    "signature_verification": "PASS",
+    "signed": true,
+    "ephemeral_signing_key": true,
+    "private_signing_key_retained": false,
+    "artifact_contains_private_key_material": false
+  },
+  "invariants": {
+    "builder_activation_eligible": false,
+    "production_activation_eligible": false,
+    "repository_active": false,
+    "stable_publication_authorized": false,
+    "canonical_package_state_effect": "none",
+    "package_attempt_consumed": false,
+    "sbuild_invoked": false,
+    "vm_created": false,
+    "jit_invoked": false,
+    "network_required": false
+  },
+  "rollout": {
+    "phase_completed": "ephemeral-signing-certification",
+    "production_activation_changed": false,
+    "next_step": "APT solver/install/upgrade/integration-image certification using a signed certification repository before any pipeline activation"
+  }
+}

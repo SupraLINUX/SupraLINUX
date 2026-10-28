@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "discover-attempt3-installed-payload-loader-context-repair",
+  "repair_base_commit": "98c49151431a6bc086dbf5560fc5c76d5c06c083",
+  "node": "discover",
+  "old_version": "6.7.5-0supralinux3",
+  "new_version": "6.7.5-0supralinux4",
+  "attempt3": {
+    "state": "FAIL",
+    "workflow_run_id": 40168357432,
+    "workflow_job_id": 121093928333,
+    "artifact_id": 12589518189,
+    "artifact_sha256": "c2e1ccaff2ef2844a4754e9fc93519693140492ca78e70c6266c4048f4b814d4",
+    "original_result_sha256": "d4be7fc16ff90114b52a77def6e2470225f5a3885c0a8d973bf760d2aaf12620",
+    "observation_sha256": "f7db885d24c419a5f2be7f561b3d689207411ded789d8ba38e7fe972e521080e",
+    "offline_retained_artifact": "/var/lib/supralinux/artifacts/raw/discover/40168357432/c2e1ccaff2ef2844a4754e9fc93519693140492ca78e70c6266c4048f4b814d4.zip"
+  },
+  "diagnosis": {
+    "failed_test": "installed-payload",
+    "passing_test": "ubuntu-upgrade",
+    "isolated_target": "/usr/lib/x86_64-linux-gnu/qt6/plugins/discover/kns-backend.so",
+    "isolated_missing_library": "libDiscoverCommon.so",
+    "private_library_present": true,
+    "plasma_discover_host_runpath": "/usr/lib/x86_64-linux-gnu/plasma-discover",
+    "cause": "The DEP-8 linkage check treated backend plugins as standalone programs. The Discover host already loads its private libDiscoverCommon.so from its own RUNPATH before resolving backend plugins, so isolated plugin ldd did not model the real loader context."
+  },
+  "adaptation": {
+    "upstream_source_changed": false,
+    "upstream_test_changed": false,
+    "compiled_runtime_payload_changed": false,
+    "qt_changed": false,
+    "frameworks_changed": false,
+    "package_split_changed": false,
+    "packaging_test_only": true,
+    "rules_sha256_unchanged": "6a7ae2201d95f58b3b0cfbef37009aa4fb50cc0704077f8e13171a16c8052d5c",
+    "old_installed_payload_sha256": "bc7d0c4e268979217b8fcbd71b20e7d9d80e28efe30700060486beef6155d496",
+    "new_installed_payload_sha256": "4a13b1b553e4a9f1bbd5fc41b1765a3a4079c177a790ccda9d318109d87d14fb",
+    "old_changelog_sha256": "72200c0fdec4f0e9c0400e73b54ffaf5da397c5d3d929a9cdd22b304c4e1f949",
+    "new_changelog_sha256": "57754f761c8915d15eae282616c732913af1a2ab03b75df503559b88b4e64f8e",
+    "mechanism": "Require libDiscoverCommon.so as installed payload, preserve ordinary ldd for standalone ELF targets, and supply only the Discover private library directory through LD_LIBRARY_PATH when checking qt6/plugins/discover backends."
+  },
+  "regression": {
+    "path": "scripts/test-plasma-package-inputs.py",
+    "checks": [
+      "libDiscoverCommon.so is an explicit plasma-discover payload requirement",
+      "private library path is derived from the installed plasma-discover file list",
+      "standalone ELF checks use the default loader environment",
+      "only qt6/plugins/discover backends receive Discover private loader context",
+      "plugin checks pass LD_LIBRARY_PATH through subprocess env",
+      "at least one Discover backend plugin must be checked"
+    ]
+  },
+  "input_certification": {
+    "previous_path": "manifests/evidence/package-revalidation/discover-preflight50/verification.json",
+    "previous_applicable": false,
+    "next_gate": "authoritative-plasma-package-input-preflight:discover",
+    "attempt4_authorized": false
+  },
+  "package_execution_started": false,
+  "consumes_package_attempt": false
+}

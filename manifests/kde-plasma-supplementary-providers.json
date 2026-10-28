@@ -1,0 +1,185 @@
+{
+  "schema": 1,
+  "role": "plasma-supplementary-providers",
+  "nodes": {
+    "plasma-wayland-protocols": {
+      "schema": 1,
+      "as_of": "2026-10-05",
+      "role": "post-planning-provider-version-review",
+      "state": "package-PASS",
+      "affected_nodes": [
+        "kwayland",
+        "kwin",
+        "libkscreen"
+      ],
+      "cmake_requirement": {
+        "module": "PlasmaWaylandProtocols",
+        "minimum": "1.21.0",
+        "source_url": "https://download.kde.org/stable/plasma/6.7.5/kwayland-6.7.5.tar.xz",
+        "source_sha256": "8d4c83524919dc87b5dec546d0fb14c591c03957888cb7b240a4a9d1bbdc8269",
+        "path": "CMakeLists.txt"
+      },
+      "ubuntu_provider": {
+        "package": "plasma-wayland-protocols",
+        "version": "1.20.0-2",
+        "satisfies_upstream_minimum": false,
+        "policy_path": "manifests/evidence/plasma/provider-gaps/ubuntu-wayland-provider-policy-20261005.txt",
+        "policy_sha256": "7a0150a02b00e90fb7a6876154c7f1f44f87b0c19d4eec74dd806267041eda63",
+        "scope": "local Ubuntu Resolute APT index; recheck in clean authoritative rootfs before execution"
+      },
+      "candidate_provider": {
+        "authority": "kde-upstream-stable",
+        "source_package": "plasma-wayland-protocols",
+        "upstream_version": "1.22.0",
+        "upstream_url": "https://download.kde.org/stable/plasma-wayland-protocols/plasma-wayland-protocols-1.22.0.tar.xz",
+        "upstream_sha256": "f628585c4c2d5e3a9f447a6274e2f59d7811272da557e75341e36948aa3f9d43",
+        "signature_sha256": "03710c5c4495a36130f411e872a94e25485836658c5b85180c90e29ed68ff773",
+        "signing_primary_fingerprint": "0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D",
+        "listing_source": "https://download.kde.org/stable/plasma-wayland-protocols/",
+        "signature_verification": "PASS",
+        "selection_reason": "Newest official stable provider satisfying the pinned Plasma source; XML/build metadata only, no Qt/platform runtime replacement",
+        "package_gate": "PASS"
+      },
+      "historical_provider_review_preserved": true,
+      "historical_review_limit": "Source Build-Depends provider availability did not certify changed upstream minimum versions",
+      "qt_provider_effect": "none",
+      "dag_topology_effect": "none; additional external build provider required",
+      "package_execution_authorized": false,
+      "consumes_package_attempt": false,
+      "next_gate": "individual-dependent-package-review-and-build",
+      "additional_requirement_sources": [
+        {
+          "node": "kwin",
+          "source_url": "https://download.kde.org/stable/plasma/6.7.5/kwin-6.7.5.tar.xz",
+          "source_sha256": "6baa910b732d93c48c90f9c1cc685cc93d0b8de0cdf138c24192c045bc3a48e2",
+          "path": "CMakeLists.txt",
+          "minimum": "1.21.0"
+        },
+        {
+          "node": "libkscreen",
+          "source_url": "https://download.kde.org/stable/plasma/6.7.5/libkscreen-6.7.5.tar.xz",
+          "source_sha256": "df317e03acfadfcbc68981b78131750103fadf4d5c5df6368c9e91e698677219",
+          "path": "CMakeLists.txt",
+          "minimum": "1.21.0"
+        }
+      ],
+      "compatibility_review": {
+        "state": "pending-runtime-and-package-gates",
+        "ubuntu_baseline_upstream_version": "1.20.0",
+        "protocol_xml_files_before": 30,
+        "protocol_xml_files_candidate": 30,
+        "changed_files": [
+          "kde-output-device-v2.xml",
+          "kde-output-management-v2.xml",
+          "org-kde-plasma-virtual-desktop.xml",
+          "plasma-window-management.xml",
+          "zkde-screencast-unstable-v1.xml"
+        ],
+        "existing_wire_opcode_argument_enum_preservation": "local schema review: unchanged except pid_changed since-version metadata",
+        "semantic_delta": {
+          "interface": "org_kde_plasma_window",
+          "event": "pid_changed",
+          "opcode": 10,
+          "old_since": 1,
+          "new_since": 8,
+          "state": "local Ubuntu old-client/new-server wire probe PASS at versions 1, 7, 8 and 20; authoritative package and compositor gates pending"
+        },
+        "scope": "XML structural/source review only; full real Wayland integration still required",
+        "local_wire_review": {
+          "path": "manifests/evidence/plasma/provider-gaps/plasma-wayland-protocols-wire-review-20261005/review.json",
+          "sha256": "517cc7826961bc73966454449efc96fa04fa27b2b299ec407f54c667889ac221",
+          "state": "PASS",
+          "scope": "local Ubuntu wire event compatibility review; not authoritative package/compositor certification"
+        },
+        "native_tests_review": {
+          "path": "manifests/evidence/plasma/provider-gaps/plasma-protocols-native-tests-20261005/review.json",
+          "sha256": "52c282e491175da30e48f2a255b62162fe810e12fce8479611d61f81d6fb8cfe",
+          "state": "PASS",
+          "scope": "local native source/test review; no authoritative package certification"
+        }
+      },
+      "package_record": "plasma-wayland-protocols",
+      "package_evidence": {
+        "path": "manifests/evidence/plasma/plasma-wayland-protocols-attempt1/result.json",
+        "sha256": "a8360723475a3973e9676f6f02eb9bea654b1d0dcb3c256093cf490deee76f56"
+      }
+    },
+    "wayland-protocols": {
+      "schema": 1,
+      "as_of": "2026-10-05",
+      "role": "post-planning-provider-version-review",
+      "authority": "freedesktop-upstream",
+      "state": "packaging-preparation-pending",
+      "affected_nodes": [
+        "kwin"
+      ],
+      "cmake_requirement": {
+        "module": "WaylandProtocols",
+        "minimum": "1.48",
+        "source_url": "https://download.kde.org/stable/plasma/6.7.5/kwin-6.7.5.tar.xz",
+        "source_sha256": "6baa910b732d93c48c90f9c1cc685cc93d0b8de0cdf138c24192c045bc3a48e2",
+        "path": "CMakeLists.txt"
+      },
+      "ubuntu_provider": {
+        "package": "wayland-protocols",
+        "version": "1.47-1",
+        "satisfies_upstream_minimum": false,
+        "policy_path": "manifests/evidence/plasma/provider-gaps/ubuntu-wayland-protocols-policy-20261005.txt",
+        "policy_sha256": "c4d6112ccfa64fad9ca05515df4d367c59a7086bdd7dd5da7f7c8dc32b9caa4f",
+        "scope": "local Ubuntu Resolute APT index; recheck in clean authoritative rootfs before execution"
+      },
+      "candidate_provider": {
+        "upstream_version": "1.48",
+        "selection_reason": "Minimum official released XML definitions required by pinned KWin; retain Ubuntu Wayland libraries and Qt",
+        "release_evidence": "https://wayland.freedesktop.org/releases.html",
+        "package_gate": "pending",
+        "authority": "freedesktop-upstream-release",
+        "upstream_url": "https://gitlab.freedesktop.org/wayland/wayland-protocols/-/releases/1.48/downloads/wayland-protocols-1.48.tar.xz",
+        "upstream_sha256": "398036ac0eb6484982ddbde7ff86848d753231f9cdeeae983f06b52946625aa1",
+        "signature_sha256": "645555033eb12308d4689b3192b43ba686415d10d4eda9d07e4a7738f61cd7eb",
+        "signing_primary_fingerprint": "8307C0A224BABDA1BABD0EB9A6EEEC9E0136164A",
+        "signature_verification": "PASS",
+        "signing_key_path": "manifests/evidence/plasma/provider-gaps/wayland-protocols-source-review-20261005/upstream-key-arch-reference.asc",
+        "signing_key_sha256": "c985debf708fa23ffee8f385b0b411cd5130305c180cd8c615508bc4acba3689"
+      },
+      "qt_provider_effect": "none",
+      "wayland_runtime_provider_effect": "none",
+      "package_execution_authorized": false,
+      "consumes_package_attempt": false,
+      "next_gate": "review-package-and-certify-installed-protocol-compatibility",
+      "source_review": {
+        "path": "manifests/evidence/plasma/provider-gaps/wayland-protocols-source-review-20261005/review.json",
+        "sha256": "6ce0a57a8c7aa85b7d12021b37b5316a7b8c1a586a2d95f5855d866a5537ed7f",
+        "state": "PASS",
+        "scope": "official released source authentication and local installed-XML structure review; no package/runtime certification"
+      },
+      "compatibility_review": {
+        "state": "local-installed-schema-PASS; authoritative-package-and-runtime-pending",
+        "baseline_installed_xml_count": 57,
+        "candidate_installed_xml_count": 58,
+        "existing_opcodes_arguments_enum_values": "preserved in all baseline installed stable/staging/unstable XML definitions",
+        "existing_interface_version_updates": [
+          "zxdg_decoration_manager_v1 1->2",
+          "zxdg_toplevel_decoration_v1 1->2",
+          "zwp_text_input_v3 1->2",
+          "zwp_text_input_manager_v3 1->2",
+          "zwp_pointer_gesture_swipe_v1 2->3",
+          "zwp_pointer_gesture_pinch_v1 2->3"
+        ],
+        "experimental_profile": "upstream default does not install experimental definitions; preserve Ubuntu installed profile"
+      }
+    }
+  },
+  "source_review_retention": {
+    "path": "manifests/evidence/plasma/provider-gaps/provider-source-input-retention-20261005.json",
+    "sha256": "fe4dca62aaf4ea5886501cb354c7e45ea3c8bd88af047a7c63a1e062e878ad8f",
+    "state": "PASS",
+    "scope": "authenticated sources/review inputs; no package execution",
+    "offline_restoration": {
+      "path": "manifests/evidence/plasma/provider-gaps/provider-source-offline-restore-20261005.json",
+      "sha256": "12a64405628460be00dc56d0fd0d88e2a4a1835155be41dc62da36b110c878ec",
+      "state": "PASS",
+      "scope": "offline empty-cache signed Ubuntu source-chain restoration"
+    }
+  }
+}

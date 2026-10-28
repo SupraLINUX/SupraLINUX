@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-kpipewire-baseline
+cmake -S "${BASE}/source" -B "${AUTOPKGTEST_TMP}/build" -DCMAKE_BUILD_TYPE=Release
+cmake --build "${AUTOPKGTEST_TMP}/build" --parallel 2
+python3 "${BASE}/source/run-private-video.py" "${AUTOPKGTEST_TMP}/build/ubuntu-kpipewire-client" "${AUTOPKGTEST_ARTIFACTS}/rebuilt-consumer" "${AUTOPKGTEST_TMP}/build/private-video-source"

@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "local native build and tests only; authoritative package certification pending",
+  "upstream_version": "1.22.0",
+  "qt_sdk_required": "Retain Ubuntu qt6-base-dev: ECM 6.30 KDEInstallDirs requires Qt6::qtpaths through Qt6 CoreTools config even though this project compiles XML only. Initial missing/incomplete SDK configure logs retained.",
+  "upstream_ctest_required_executed": 120,
+  "ctest_total_executed": 121,
+  "upstream_server_header_fixture_limit": "Upstream server-header tests invoke client-header; retained unmodified. Separately generated and compiled 30 actual server headers.",
+  "correct_server_headers_compiled": 30,
+  "wayland_runtime_version": "1.24.0",
+  "candidate_package_execution_started": false,
+  "files_sha256": {
+    "build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "configure-with-complete-ubuntu-sdk.log": "80f85bad6556f4149148a089c8fa4cd38937865fd3816910c6fdaff89658702c",
+    "configure-with-coretools-closure.log": "d8ef978b8d447eba6979e622cafcff0c97bd1a54237391b072f7c855db8d192b",
+    "configure-with-ubuntu-sdk.log": "252b98fd63fba3eb60fa81a4c68528cf31db8baa72c690ace88b33145730a892",
+    "configure.log": "f2dd7ba9a21b58e6da1b56935c62ab43e0ae29e42e0b3fb77cf0269410bbf40b",
+    "ctest.log": "680afd891db77901ec00b692c83713efc33344a8f8410def3b2de94f0f24ad6d"
+  }
+}

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-kglobalacceld-baseline
+dpkg --compare-versions "$(cat "${BASE}/ubuntu-version")" lt 6.7.5-0supralinux1
+sha256sum --check "${BASE}/ubuntu-clients.sha256"
+dpkg-query -W -f='${Package} ${Architecture} ${Version}\n' libqt6core6t64 libqt6gui6 libqt6widgets6 libqt6dbus6 > "${BASE}/candidate-provider-versions"
+cmp "${BASE}/ubuntu-provider-versions" "${BASE}/candidate-provider-versions"
+python3 "${BASE}/source/run-private.py" application "${BASE}/build/shortcut-client" "${BASE}/upgraded-application"
+python3 "${BASE}/source/run-private.py" library "${BASE}/build/direct-sdk-client" "${BASE}/upgraded-library"
+for package in kglobalacceld libkglobalacceld-dev libkglobalacceld0; do
+    test "$(dpkg-query -W -f='${Version}' "${package}")" = 6.7.5-0supralinux1
+done
+readelf -d /usr/lib/x86_64-linux-gnu/libKGlobalAccelD.so.0 | grep -F 'Library soname: [libKGlobalAccelD.so.0]'
+test -s /usr/lib/x86_64-linux-gnu/qt6/plugins/org.kde.kglobalacceld.platforms/KGlobalAccelDXcb.so
+test -s /usr/lib/systemd/user/plasma-kglobalaccel.service
+test -s /etc/xdg/autostart/kglobalacceld.desktop
+test -s /usr/lib/x86_64-linux-gnu/cmake/KGlobalAccelD/KGlobalAccelDConfigVersion.cmake
+apt-get check

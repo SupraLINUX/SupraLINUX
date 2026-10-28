@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+"""Validate installed SDDM KCM payload without mutating SDDM state."""
+import os
+import pathlib
+import subprocess
+
+pkg = 'kde-config-sddm'
+files = [pathlib.Path(x) for x in subprocess.check_output(['dpkg-query', '-L', pkg], text=True).splitlines()]
+assert files
+
+def one_suffix(suffix, *, executable=False):
+    matches = [p for p in files if str(p).endswith(suffix)]
+    assert len(matches) == 1, (suffix, matches)
+    path = matches[0]
+    assert path.is_file(), path
+    if executable:
+        assert os.access(path, os.X_OK), path
+    return path
+
+helper = one_suffix('/kcmsddm_authhelper', executable=True)
+installer = one_suffix('/sddmthemeinstaller', executable=True)
+knsrc = one_suffix('/sddmtheme.knsrc')
+kcm = one_suffix('/kcm_sddm.so')
+
+policy = [p for p in files if p.suffix == '.policy' and 'kcmsddm' in p.name]
+assert len(policy) == 1, policy
+assert policy[0].is_file(), policy[0]
+
+for binary in (helper, installer, kcm):
+    linkage = subprocess.run(['ldd', str(binary)], check=True, capture_output=True, text=True)
+    assert 'not found' not in linkage.stdout, (binary, linkage.stdout)
+
+knsrc_text = knsrc.read_text(errors='replace')
+assert '[KNewStuff3]' in knsrc_text or '[KNewStuff]' in knsrc_text, knsrc_text
+assert 'ProvidersUrl=' in knsrc_text, knsrc_text
+
+policy_text = policy[0].read_text(errors='replace')
+assert 'org.kde.kcontrol.kcmsddm' in policy_text, policy[0]
+assert any(p.suffix == '.mo' and '/locale/' in str(p) for p in files), 'Translations not installed'
+
+print('Installed SDDM KCM, KAuth helper, theme installer, KNewStuff metadata, policy and translations: PASS')

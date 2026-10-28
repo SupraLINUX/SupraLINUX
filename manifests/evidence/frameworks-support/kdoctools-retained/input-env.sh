@@ -1,0 +1,13 @@
+SOURCE_PACKAGE=kf6-kdoctools
+PACKAGE_VERSION=6.30.0-0supralinux1
+UPSTREAM_VERSION=6.30.0
+DSC=/home/runner/work/SupraLINUX/SupraLINUX/.work/materialized-source/kf6-kdoctools_6.30.0-0supralinux1.dsc
+ORIG=/home/runner/work/SupraLINUX/SupraLINUX/.work/materialized-source/kf6-kdoctools_6.30.0.orig.tar.xz
+DEBIAN_TAR=/home/runner/work/SupraLINUX/SupraLINUX/.work/materialized-source/kf6-kdoctools_6.30.0-0supralinux1.debian.tar.xz
+ECM_DEB=/home/runner/work/SupraLINUX/SupraLINUX/.work/retained-inputs/extra_cmake_modules/extra-cmake-modules_6.30.0-0supralinux3_all.deb
+RUNTIME_PACKAGE=libkf6doctools6
+DEV_PACKAGE=libkf6doctools-dev
+SONAME=libKF6DocTools.so.6
+CMAKE_PACKAGE=KF6DocTools
+CMAKE_TARGET=KF6::DocTools
+PAYLOAD_CONTRACT=meinproc-checkxml-docbook-runtime-plus-kf6doctools-library

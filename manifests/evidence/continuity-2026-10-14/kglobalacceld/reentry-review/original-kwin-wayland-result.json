@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "state": "SCOPED_DIAGNOSTIC_PASS",
+  "scope": "Private zero-NIC Ubuntu26.04 KVM actual original KWin6.6.6 virtual QPainter runtime, owned public Wayland diagnostic consumer and fake-input v6 keyboard events, before-after KGlobalAccelD6.6.5/6.7.5 provider change. Additional Frameworks6.30/Qt6.10.2 inputs fixed in both phases. Not source build, installed upgrade, native KWin suite or full compatibility admission.",
+  "package_attempt_consumed": false,
+  "canonical_effect": "none",
+  "compatibility_transition_admitted": false,
+  "checks": {
+    "frozen_critical_inputs": "PASS",
+    "guest_loader_prerequisites": "PASS",
+    "frozen_inputs_after_execution": "PASS"
+  },
+  "phases": {
+    "negative-undeclared-permission": {
+      "state": "EXPECTED_PERMISSION_DENIAL",
+      "wrapper_exit_code": 1,
+      "phase": "original",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-negative-undeclared-permission"
+    },
+    "owned-permission-small-certification": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "original",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-owned-permission-small-certification"
+    },
+    "original-wayland-consumer": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "original",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-original-wayland-consumer"
+    },
+    "candidate-wayland-consumer": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "candidate",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-candidate-wayland-consumer"
+    }
+  }
+}

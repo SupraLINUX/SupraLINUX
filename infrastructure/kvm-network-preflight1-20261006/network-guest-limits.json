@@ -1,0 +1,8 @@
+{
+  "state": "PASS",
+  "network": "default",
+  "tap": "vnet0",
+  "guest_download_kib_per_second": 256,
+  "guest_upload_kib_per_second": 128,
+  "scope": "one-disposable-guest-interface"
+}

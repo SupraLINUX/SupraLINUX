@@ -1,0 +1,12 @@
+{
+  "state": "PASS",
+  "scope": "empty-state local APT simulation of all 173 retained inputs plus original Ubuntu SDK and explicit lm-sensors development dependency; not installation or authoritative certification",
+  "selected_retained_binaries": 173,
+  "original_ubuntu_sdk_version": "4:6.6.5-0ubuntu0.1",
+  "retained_selection_sha256": "2756ab718a5719ac3e2c85a761ab9750424b5e5174c8a3ae29776742fd981060",
+  "apt_log_sha256": "79a78d4994b5c6b1569902dd766ea27d70ce0bbb7b3e2c31f77629790da82987",
+  "package_installation_performed": false,
+  "host_dpkg_state_used": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

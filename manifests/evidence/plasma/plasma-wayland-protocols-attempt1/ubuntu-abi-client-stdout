@@ -1,0 +1,13 @@
+/var/tmp/supralinux-plasma-protocols-baseline/build/client: OK
+/var/tmp/supralinux-plasma-protocols-baseline/build/protocol.c: OK
+/var/tmp/supralinux-plasma-protocols-baseline/build/old.h: OK
+Unchanged Ubuntu protocol client, negotiated version 1, candidate server PID event 4242: PASS
+Unchanged Ubuntu protocol client, negotiated version 7, candidate server PID event 4242: PASS
+Unchanged Ubuntu protocol client, negotiated version 8, candidate server PID event 4242: PASS
+Unchanged Ubuntu protocol client, negotiated version 20, candidate server PID event 4242: PASS
+/var/tmp/supralinux-plasma-protocols-baseline/build/client: OK
+/var/tmp/supralinux-plasma-protocols-baseline/build/protocol.c: OK
+/var/tmp/supralinux-plasma-protocols-baseline/build/old.h: OK
+Reading package lists...
+Building dependency tree...
+Reading state information...

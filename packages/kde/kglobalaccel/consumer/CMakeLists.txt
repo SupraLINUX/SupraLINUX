@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(kglobalaccel-consumer LANGUAGES CXX)
+find_package(KF6GlobalAccel 6.30 REQUIRED)
+add_executable(kglobalaccel-consumer main.cpp)
+target_compile_features(kglobalaccel-consumer PRIVATE cxx_std_17)
+target_link_libraries(kglobalaccel-consumer PRIVATE KF6::GlobalAccel ${CMAKE_DL_LIBS})

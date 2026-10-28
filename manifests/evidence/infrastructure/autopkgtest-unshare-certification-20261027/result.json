@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "kind": "autopkgtest-unshare-production-rollout-certification",
+  "source_commit": "a0e6a584cac7d84e1949a68de0b4426c8ed3b9a8",
+  "workflow_run_id": 40519740782,
+  "workflow_job_id": 122243262934,
+  "artifact_id": 12741786656,
+  "artifact_sha256": "96b4e6b6023df90304350eeedf4af83acdd2664613d6f3fec9055f9ee63f0824",
+  "synthetic": {
+    "result_sha256": "95233b191ab43fb56b7490dcd1da863d411739ec8bee79a11592466d5a58aa00",
+    "state": "PASS",
+    "normalized_results_equal": true,
+    "qemu_seconds": 42,
+    "unshare_seconds": 9,
+    "speedup_qemu_over_unshare": 4.666666666666667
+  },
+  "real_canary": {
+    "node": "ocean-sound-theme",
+    "version": "6.7.5-0supralinux1",
+    "retained_artifact_id": 11317894456,
+    "retained_artifact_sha256": "9243fe8efcf9a24b659ed3ec76954cca4263a08dd71e7613f12f20b57cddc2f2",
+    "result_sha256": "88dec7cc0844690ad9e77c4d79551f193a8e483224525448657ab0676ef131d9",
+    "state": "PASS",
+    "normalized_results_equal": true,
+    "qemu_seconds": 78,
+    "unshare_seconds": 38,
+    "speedup_qemu_over_unshare": 2.0526315789473686,
+    "candidate_rebuilt": false,
+    "canonical_package_state_effect": "none"
+  },
+  "outer_environment": {
+    "platform": "Ubuntu 26.04",
+    "virtualization": "KVM",
+    "architecture": "amd64"
+  },
+  "package_attempt_consumed": false,
+  "sbuild_invoked": false,
+  "production_rollout_authorized": true,
+  "fallback_policy": "QEMU for machine/container isolation, reboot, breaks-testbed, unknown restrictions, and retained-upgrade until separately certified"
+}

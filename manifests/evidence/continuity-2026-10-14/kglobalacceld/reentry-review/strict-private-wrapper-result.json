@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "state": "SCOPED_DIAGNOSTIC_PASS",
+  "scope": "Small zero-NIC KVM certification of staged private SDK transition wrapper only. Same original executable positive baseline, strict candidate-provider old private binary negative, same-source rebuilt candidate positive, unchanged three native tests. Diagnostic library bytes; not clean .deb build, installed APT upgrade, KWin replay, transition admission or package Attempt.",
+  "package_attempt_consumed": false,
+  "canonical_effect": "none",
+  "compatibility_transition_admitted": false,
+  "checks": {
+    "frozen_critical_inputs": "PASS",
+    "guest_loader_prerequisites": "PASS",
+    "frozen_inputs_after_execution": "PASS"
+  },
+  "phases": {
+    "original-private": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "original",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-original-private"
+    },
+    "negative-original-private-strict": {
+      "state": "EXPECTED_ABI_INCOMPATIBILITY",
+      "wrapper_exit_code": 0,
+      "phase": "candidate-native",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-negative-original-private-strict"
+    },
+    "candidate-native": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "candidate-native",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-candidate-native"
+    },
+    "candidate-private": {
+      "state": "PASS",
+      "wrapper_exit_code": 0,
+      "phase": "candidate-native",
+      "fixture_result": "/var/tmp/supra-offline-diagnostic/fixture-candidate-private"
+    }
+  }
+}

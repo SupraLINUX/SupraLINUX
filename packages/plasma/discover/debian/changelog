@@ -1,0 +1,57 @@
+plasma-discover (6.7.5-0supralinux5) resolute; urgency=medium
+
+  * Preserve failed revision4 and its retained authoritative evidence.
+  * Keep KDE source, compiled runtime payload, Qt, Frameworks and package split unchanged.
+  * Restrict DEP-8 linkage checks to exactly one ELF object per expected binary suffix,
+    so text files with colliding suffixes are not passed to ldd.
+  * Preserve the Discover private-library loader context and Ubuntu upgrade coverage.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Sun, 25 Oct 2026 09:46:00 +0000
+
+plasma-discover (6.7.5-0supralinux4) resolute; urgency=medium
+
+  * Preserve failed revision3 and its retained authoritative evidence.
+  * Keep the KDE runtime payload and revision3 CategoriesTest adaptation unchanged.
+  * Require the private libDiscoverCommon.so payload explicitly and validate
+    Discover backend plugins in the host application's private-loader context.
+  * Keep standalone ELF linkage and Ubuntu-to-SupraLINUX upgrade checks strict.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Sun, 25 Oct 2026 06:55:00 +0000
+
+plasma-discover (6.7.5-0supralinux3) resolute; urgency=medium
+
+  * Preserve failed revision2 and its retained authoritative evidence.
+  * Keep staging the unchanged upstream CMake install tree for KI18n catalogs.
+  * Run unchanged CategoriesTest directly with ctest so the staged
+    XDG_DATA_DIRS reaches the test instead of being sanitized by dh_auto_test.
+  * Keep Flatpak network integration deferred to controlled integration tests.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Sun, 25 Oct 2026 04:31:00 +0000
+
+plasma-discover (6.7.5-0supralinux2) resolute; urgency=medium
+
+  * Preserve the failed revision1 package Attempt and unchanged upstream test.
+  * Stage the upstream CMake install tree in a disposable DESTDIR before
+    CategoriesTest so KI18n-installed libdiscover catalogs are discoverable.
+  * Keep Flatpak network integration deferred to controlled integration tests.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Sat, 24 Oct 2026 13:22:00 +0000
+
+plasma-discover (6.7.5-0supralinux1) resolute; urgency=medium
+
+  * Integrate unchanged, signed KDE Plasma 6.7.5 Discover sources.
+  * Preserve Ubuntu's seven-binary Discover feature/backend scope.
+  * Bind exact eligible KDE Frameworks 6.30.0 inputs and declare direct
+    WindowSystem and KItemModels QML build requirements explicitly.
+  * Match upstream Kirigami Addons and AppStreamQt minimum versions.
+  * Execute the hermetic upstream CategoriesTest in the clean build; the
+    Flathub-mutating Flatpak test is reserved for controlled integration.
+  * Add DEP-8 installed-payload and full Ubuntu-to-SupraLINUX upgrade checks.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Sat, 24 Oct 2026 11:45:00 +0000
+
+plasma-discover (6.6.6-0ubuntu0.1) resolute; urgency=medium
+
+  * Ubuntu packaging reference used for this SupraLINUX adaptation.
+
+ -- SupraLINUX Developers <dev@supralinux.org>  Sat, 24 Oct 2026 11:44:00 +0000

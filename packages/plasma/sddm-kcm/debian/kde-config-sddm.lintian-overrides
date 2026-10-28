@@ -1,0 +1,3 @@
+kde-config-sddm: no-manual-page [usr/bin/sddmthemeinstaller]
+# systemsettings5 executable required for the KCM is provided by the systemsettings dependency
+kde-config-sddm: desktop-command-not-in-package systemsettings [usr/share/applications/kcm_sddm.desktop]

@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+import importlib.util
+import json
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+POLICY = ROOT / "scripts/autopkgtest-backend-policy.py"
+CERTIFIER = ROOT / "scripts/certify-autopkgtest-unshare-backend.sh"
+RUNNER_WORKFLOW = ROOT / ".github/workflows/runner-contract.yml"
+MANIFEST = ROOT / "manifests/autopkgtest-backend-certification.json"
+
+spec = importlib.util.spec_from_file_location("autopkgtest_backend_policy", POLICY)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+
+with tempfile.TemporaryDirectory() as directory:
+    root = Path(directory)
+    normal = root / "normal.control"
+    normal.write_text(
+        "Tests: payload\n"
+        "Depends: @, python3\n"
+        "Restrictions: needs-root, allow-stderr\n"
+    )
+    result = module.classify(normal)
+    assert result["backend"] == "unshare"
+    assert not result["qemu_required_restrictions"]
+    assert not result["unknown_restrictions"]
+
+    machine = root / "machine.control"
+    machine.write_text(
+        "Tests: reboot\n"
+        "Depends: @\n"
+        "Restrictions: isolation-machine\n"
+    )
+    result = module.classify(machine)
+    assert result["backend"] == "qemu"
+    assert result["qemu_required_restrictions"] == ["isolation-machine"]
+
+    container = root / "container.control"
+    container.write_text(
+        "Tests: service-manager\n"
+        "Depends: @\n"
+        "Restrictions: isolation-container\n"
+    )
+    result = module.classify(container)
+    assert result["backend"] == "qemu"
+    assert result["qemu_required_restrictions"] == ["isolation-container"]
+
+    destructive = root / "breaks.control"
+    destructive.write_text(
+        "Tests: destructive\n"
+        "Depends: @\n"
+        "Restrictions: breaks-testbed\n"
+    )
+    result = module.classify(destructive)
+    assert result["backend"] == "qemu"
+    assert result["qemu_required_restrictions"] == ["breaks-testbed"]
+
+    unknown = root / "unknown.control"
+    unknown.write_text(
+        "Tests: future\n"
+        "Depends: @\n"
+        "Restrictions: future-restriction\n"
+    )
+    result = module.classify(unknown)
+    assert result["backend"] == "qemu"
+    assert result["unknown_restrictions"] == ["future-restriction"]
+
+controls = sorted(ROOT.glob("packages/plasma/*/debian/tests/control"))
+assert len(controls) >= 27, "expected the reviewed Plasma autopkgtest corpus"
+unshare_candidates = 0
+for control in controls:
+    result = module.classify(control)
+    assert result["state"] == "PASS"
+    assert not result["unknown_restrictions"], f"unknown restriction in {control}"
+    if result["backend"] == "unshare":
+        unshare_candidates += 1
+assert unshare_candidates >= 27, "reviewed Plasma corpus unexpectedly lost unshare eligibility"
+
+certifier = CERTIFIER.read_text()
+for token in (
+    'run_backend qemu',
+    'run_backend unshare',
+    '--include=ca-certificates,apt-utils,python3',
+    '"tls_ca_certificates_preinstalled": true',
+    '"autopkgtest_local_repo_tooling_preinstalled": true',
+    '"autopkgtest_setup_python_preinstalled": true',
+    'unshare --arch amd64 --tarball',
+    'UNSHARE_PRIVATE_DIR="/usr/local/libexec/supralinux-autopkgtest"',
+    'PATH="${UNSHARE_PRIVATE_DIR}:${PATH}"',
+    'sha256sum /usr/bin/unshare "${UNSHARE_PRIVATE}"',
+    '"normalized_results_equal": True',
+    '"package_attempt_consumed": False',
+    '"sbuild_invoked": False',
+    '"production_backend_changed": False',
+    'one-real-package-canary-before-default-rollout',
+    'unshare-security-contract.txt',
+    'backend-exit-codes.txt',
+    'kernel-security-events.txt',
+    'profile_attachment=%s',
+    'profile_mode=private-unshare-unconfined-with-userns-exception',
+):
+    assert token in certifier, f"missing certification contract: {token}"
+for forbidden in (
+    "run-authoritative-plasma-package.sh",
+    "sbuild --",
+    "execute-and-publish-pass",
+    "aa-exec",
+    "unshare-mount-preflight",
+    "unshare --user --map-auto --map-root-user --mount -- true",
+):
+    assert forbidden not in certifier, f"certifier crosses package boundary: {forbidden}"
+
+workflow = RUNNER_WORKFLOW.read_text()
+for token in (
+    "autopkgtest-virt-unshare",
+    "scripts/certify-autopkgtest-unshare-backend.sh",
+    "Certify autopkgtest unshare backend equivalence",
+):
+    assert token in workflow, f"runner contract misses certification hook: {token}"
+
+manifest = json.loads(MANIFEST.read_text())
+assert manifest["state"] == "PASS"
+assert manifest["current_backend"] == "policy-selected"
+assert manifest["default_eligible_backend"] == "autopkgtest-unshare"
+assert manifest["fallback_backend"] == "autopkgtest-qemu"
+assert manifest["candidate_backend"] == "autopkgtest-unshare"
+assert manifest["package_attempt_effect"] == "none"
+assert manifest["backend_policy"]["retained_upgrade_backend"] == "qemu"
+assert manifest["rollout"]["production_default_changed"] is True
+assert manifest["rollout"]["policy_selected"] is True
+assert manifest["certification"]["workflow_run_id"] == 40519740782
+assert manifest["certification"]["artifact_sha256"] == "96b4e6b6023df90304350eeedf4af83acdd2664613d6f3fec9055f9ee63f0824"
+assert manifest["measured_speedup"]["synthetic"]["qemu_seconds"] == 42
+assert manifest["measured_speedup"]["synthetic"]["unshare_seconds"] == 9
+assert manifest["measured_speedup"]["real_canary"]["qemu_seconds"] == 78
+assert manifest["measured_speedup"]["real_canary"]["unshare_seconds"] == 38
+
+print(
+    "Autopkgtest backend certification policy: PASS; "
+    f"reviewed_controls={len(controls)} unshare_candidates={unshare_candidates}"
+)

@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "local original Ubuntu CLI private-display fixture verification; fresh authoritative baseline and candidate installed tests remain required",
+  "candidate_certification": false,
+  "original_package_version": "4:6.6.4-0ubuntu1",
+  "original_cli_sha256": "a80559b6bdc381d344abf1159fe20fd306701c33fb26f74297b86e7f41e450ab",
+  "original_packaging_driver_sha256": "c4989e20a147deb1c508a5db44fe07c1fa138612610f8de02d01565cce6320ff",
+  "repaired_driver_sha256": "1fd38dc7d1ba6078b33b68360ef18ce70a4a8b93b5e2981d77d5d15c1509fe1a",
+  "original_missing_display_reproduced": true,
+  "repaired_original_cli_exit_code": 0,
+  "whole_owned_process_groups_and_runtime_absent": true,
+  "host_session_or_screen_configuration_touched": false,
+  "package_attempt_consumed": false,
+  "fixture_payload_directory": "fixture-review",
+  "files_sha256": {
+    "run-private.py": "1fd38dc7d1ba6078b33b68360ef18ce70a4a8b93b5e2981d77d5d15c1509fe1a",
+    "negative-control.json": "c98f50677e4a9aa35664292af5161e2986ec55be40bfe3cf7e004312c2c9fa8a",
+    "original-no-display.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-no-display.stderr": "079676ee498eb298a117fa9955c08558a4f8ee5aee35da7b6191e1b0c08a7418",
+    "original-ubuntu-doctor-help-with-cleanup.log": "b1d05249f0d051804799d5133448258a384a857d19450ce1fd8dc91b1a1be405",
+    "original-ubuntu-doctor-help-with-cleanup/client.log": "f90ed3fd98f17a8660fb0c59bab74133e39463e1b0d58160569f096a632cd2b3",
+    "original-ubuntu-doctor-help-with-cleanup/bus.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original-ubuntu-doctor-help-with-cleanup/xvfb.log": "09af44186174436345e3e1e8877555c5d6aaa892a7414425cd9c2d8bfea148e7",
+    "original-ubuntu-doctor-help-with-cleanup/launcher.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

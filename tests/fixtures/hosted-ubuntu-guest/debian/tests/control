@@ -1,0 +1,3 @@
+Tests: guest-smoke
+Depends: python3, ubuntu-keyring
+Restrictions: isolation-machine

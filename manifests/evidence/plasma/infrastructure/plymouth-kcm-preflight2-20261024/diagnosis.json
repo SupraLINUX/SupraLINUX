@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "state": "DIAGNOSED",
+  "scope": "plymouth-kcm-frameworks-support-runtime-closure",
+  "source_commit": "3a4d07e3937fbd6ae8f8abf9610f9239dfdbfa2c",
+  "classification": "INFRA_INVALID",
+  "observations": {
+    "reviewed_predecessor_admission": "PASS",
+    "selected_predecessor_count": 158,
+    "previously_missing_kdoctools": "resolved",
+    "resolver_failure_package": "libkf6iconthemes6",
+    "resolver_failure_version": "6.30.0-0supralinux3",
+    "missing_relation": "libkf6breezeicons6 (>= 4:6.30.0~)",
+    "candidate_source_prepared": true,
+    "candidate_sbuild_started": false
+  },
+  "closure_review": {
+    "breeze_icons": {
+      "source_package": "kf6-breeze-icons",
+      "version": "4:6.30.0-0supralinux1",
+      "binary": "libkf6breezeicons6",
+      "sha256": "39843417452315f82dda133b09d1b588a5d23d44095ff821e63ee7943075b232",
+      "evidence_path": "manifests/evidence/frameworks-support/breeze-icons-retained/verification.json"
+    },
+    "kded": {
+      "source_package": "kf6-kded",
+      "version": "6.30.0-0supralinux1",
+      "binary": "kded6",
+      "sha256": "bb93a73c8f3056405cad73b56b618e7dac58d446104d3178eba91fd51ec4de1a",
+      "artifact_id": 10691372157,
+      "artifact_sha256": "ff8756cf6efb4746568fa032cfb17cdf5c6b47bc31f532130936536aecb7c5c9",
+      "required_by": "kio6 6.30.0-0supralinux10 hard Depends",
+      "retained_input_origin": "original KIO Attempt 10 support_runtime input"
+    }
+  },
+  "repair": "Retain KDED through the existing Frameworks support-input materializer and add only libkf6breezeicons6 plus kded6 to Plymouth's reviewed predecessor set. Both are exact historical PASS binaries; all their custom Frameworks runtime dependencies are already in the selected closure.",
+  "expected_selected_predecessor_count": 160,
+  "candidate_source_changed": false,
+  "packaging_changed": false,
+  "execution_mode": "preflight",
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "package_attempt_effect": "none",
+  "next_gate": "authoritative-plasma-package-input-preflight:plymouth-kcm"
+}

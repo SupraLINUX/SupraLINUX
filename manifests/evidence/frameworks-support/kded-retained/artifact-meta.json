@@ -1,0 +1,13 @@
+{
+  "archive_download_url": "https://api.github.com/repos/SupraLINUX/SupraLINUX/actions/artifacts/10691372157/zip",
+  "digest": "sha256:ff8756cf6efb4746568fa032cfb17cdf5c6b47bc31f532130936536aecb7c5c9",
+  "id": 10691372157,
+  "name": "kde-tier3-support-level1-kded-0d2a345af7be591b84807ae27b2d3b604f357d1a",
+  "workflow_run": {
+    "id": 35721085911,
+    "repository_id": 1366253358,
+    "head_repository_id": 1366253358,
+    "head_branch": "architecture/bootstrap-v1",
+    "head_sha": "0d2a345af7be591b84807ae27b2d3b604f357d1a"
+  }
+}

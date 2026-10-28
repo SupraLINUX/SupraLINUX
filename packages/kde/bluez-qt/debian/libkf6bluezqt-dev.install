@@ -1,0 +1,4 @@
+usr/include/KF6/BluezQt/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6BluezQt/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6BluezQt.so
+usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig/KF6BluezQt.pc

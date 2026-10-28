@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "original private host network/hang investigation, authorized libvirt network retirement and verified user-applied runtime mitigation; no stress test and no causal proof",
+  "archive_path": ".artifacts/host-network-safety/incident-20261009/inputs.zip",
+  "archive_sha256": "0d8cc24b991e25bd2f56abcfc85cf575566e6ab57b619f87d91960b16e7f7fc9",
+  "files": {
+    ".work/network-incident-20261009/before-address.json": {
+      "sha256": "a536269f64b14aaa18d5daeacd8312e568ee6462d4cc152ce94cda6cb83be8e4",
+      "size": 9243
+    },
+    ".work/network-incident-20261009/before-default-network.xml": {
+      "sha256": "85c8b84a4685155a1d3a66c42af48185720211e9e4aa7b0960f7e1f351d24e46",
+      "size": 420
+    },
+    ".work/network-incident-20261009/before-links.json": {
+      "sha256": "6623299273dab00362cc228ce3fadde66c2cfe228e0a3618bf2b171fd6d1ede2",
+      "size": 28778
+    },
+    ".work/network-incident-20261009/before-route.json": {
+      "sha256": "8e65e900b2ccea35c121ea948ad4dedc808a89b231437afd435122b02e0d3ba5",
+      "size": 10015
+    },
+    ".work/network-incident-20261009/eno1-features-after.txt": {
+      "sha256": "b1632c1696679cab4fc023221e1a12451dccfa2b18a1db7e63af607f49f37b96",
+      "size": 1877
+    },
+    ".work/network-incident-20261009/eno1-features-before.txt": {
+      "sha256": "42d05a506f7ef98a35b40fa1a00f4f36834aed7ba670bc4e7c61de5f220afff6",
+      "size": 1873
+    },
+    ".work/network-incident-20261009/eno1-stats-before.txt": {
+      "sha256": "f8bf9d91ec641aa33f52d5a8c84a05491f82ed333a08e02c4acfa6e8a4772ece",
+      "size": 1341
+    },
+    ".work/network-incident-20261009/network-retirement.json": {
+      "sha256": "a2a4a5122084353bbcc789e60c4bcc41a587b0c7d4161bae7e500ce771d013cd",
+      "size": 502
+    },
+    ".work/network-incident-20261009/offload-mitigation.json": {
+      "sha256": "3914a5a580052534057809912b644067599f907dbff8ecc27f01f55b202c9c03",
+      "size": 452
+    },
+    ".work/network-incident-20261009/previous-boot-kernel.jsonl": {
+      "sha256": "d563b825e771719190a39663f6f13bcbc0378d50eb9bd9f8f9024f3b183ca08c",
+      "size": 7339333
+    },
+    ".work/network-incident-20261009/previous-boot-nm.jsonl": {
+      "sha256": "4024122357444c0b2e6290f41f1de3038d352713fdeca240996f5b5b810a364e",
+      "size": 631187
+    },
+    ".work/network-incident-20261009/retained-domain-interfaces.json": {
+      "sha256": "7e7818f91da406add2fe8d0b34038076c48fe9305c3e3265d846030a20022f8c",
+      "size": 9336
+    },
+    ".work/network-incident-20261009/retirement-after-lan.json": {
+      "sha256": "c3e1b0935dda85a149d615132864d500992aee62f5467ff3a6e45b6fb59b8603",
+      "size": 2106
+    },
+    ".work/network-incident-20261009/retirement-before-lan.json": {
+      "sha256": "791a134c95efbff0e1ffe5971b5baed14171d464d1f98f84f6eeeb0d0ec7efc1",
+      "size": 2106
+    },
+    ".work/libksysguard-preflight34-host.log": {
+      "sha256": "c8e7f9dd32789e496fde4c16dbc1e42fa3dfbec87368c4cec35194a49009e431",
+      "size": 23177
+    },
+    ".work/libksysguard-preflight34-cleanup.json": {
+      "sha256": "e932c52f4a1abecac81481d885e6318cc4858d260fbdb5ae7c4b94a2a06c1b81",
+      "size": 705
+    },
+    ".work/network-safety-tests.log": {
+      "sha256": "f67aafa5114f64ef456e964aa360b3ae2e1c4b3ac10a1b1620490aea30364e9c",
+      "size": 115
+    },
+    ".work/network-safety-generated-domain-v2.xml": {
+      "sha256": "d9091f84ea6c7d9bc694fc3273ae0081a67b30113ba4a185ae06399cccccd627",
+      "size": 1281
+    },
+    ".work/network-safety-live-host-admission.json": {
+      "sha256": "cb3899a08528dba37dc2b6179f81c459c6e0aa1e14ae4dc14e5bdd14ce5e678e",
+      "size": 322
+    }
+  },
+  "empty_offline_byte_restore_verified": true,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

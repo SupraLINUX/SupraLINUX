@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "state": "DIAGNOSED",
+  "incident_run_id": 39109601718,
+  "incident_job_id": 117622697197,
+  "artifact_id": 12129778196,
+  "artifact_digest": "sha256:fc422154d32394fd8361436f409b5b0573288d48d51eb6f8012d37e7c1b999af",
+  "package_attempt_effect": "none",
+  "observations": {
+    "host_kvm_preflight": "PASS",
+    "signed_source_image_verification": "PASS",
+    "failure_command": "virt-install",
+    "failure": "No se ha encontrado la red: No existe una red que coincida con el nombre 'default'",
+    "preparation_vm_started": false,
+    "jit_invoked": false,
+    "sbuild_started": false,
+    "retired_default_network_intentionally_absent": true,
+    "current_network_policy": "QEMU SLIRP with guest-local private-address rejection and no host bridge/TAP/libvirt network"
+  },
+  "diagnosis": "The rebuild request incorrectly reused the historical full golden builder after the project had retired its libvirt `default` NAT transport. Recreating that host network would violate the current network-safety contract; the builder itself must migrate to the already adopted bridge-free SLIRP model."
+}

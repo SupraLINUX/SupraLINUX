@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.29)
+project(kidletime-consumer LANGUAGES CXX)
+find_package(KF6IdleTime 6.30 REQUIRED)
+add_executable(kidletime-consumer main.cpp)
+target_compile_features(kidletime-consumer PRIVATE cxx_std_17)
+target_link_libraries(kidletime-consumer PRIVATE KF6::IdleTime ${CMAKE_DL_LIBS})

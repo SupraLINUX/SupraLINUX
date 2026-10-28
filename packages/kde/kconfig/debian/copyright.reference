@@ -1,0 +1,3 @@
+Debian 6.28 technical reference: kconfig/debian/copyright
+SHA-256: 093a0643bf4b9cea796f8179474228686c4dce93e13e5b079a8101c32ca56594
+The Batch 9 runner materializes this reference into debian/copyright and adds SupraLINUX attribution.

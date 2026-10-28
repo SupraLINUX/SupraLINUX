@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "kind": "evidence-closure-existing-output-directory",
+  "source_commit": "a0839db7c64b32ed40f57a638b45a1763bb666ed",
+  "control": {
+    "router_run_id": 40097476877,
+    "host_job_id": 120882669018,
+    "mode": "close-evidence",
+    "exit_code": 1
+  },
+  "package_evidence": {
+    "node": "discover",
+    "workflow_run_id": 40095668250,
+    "workflow_job_id": 120877288408,
+    "artifact_id": 12560898154,
+    "artifact_sha256": "7d729eb3a94fe380ca2f1fdbc84705af12048006658739334dd38b109daa5308",
+    "original_state": "FAIL",
+    "package_attempt_consumed": true
+  },
+  "failure": "host-close-package-evidence.py attempted args.output_dir.mkdir(parents=True) after the broker had already created the same output directory, raising FileExistsError before artifact retention.",
+  "classification": "Evidence-retention infrastructure failure only. Discover Attempt 1 remains the previously consumed package FAIL; this control run consumes no additional package Attempt.",
+  "repair": "Make evidence output-directory preparation idempotent with exist_ok=True and exercise the already-existing-directory case in the cheap authoritative-host-control contract test before retrying retention."
+}

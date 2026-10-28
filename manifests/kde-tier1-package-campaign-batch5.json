@@ -1,0 +1,448 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-15",
+  "frameworks_series": "6.30.0",
+  "authority": "kde-upstream",
+  "provider_platform": "ubuntu-resolute",
+  "batch": "tier1-batch-5",
+  "state": "PASS",
+  "canonical_state_role": "batch-package-attempt-ledger",
+  "canonical_snapshot": {
+    "state": "promoted-at-batch-closure",
+    "tier1": "16 PASS / 13 pending / 0 current FAIL / 0 BLOCKED"
+  },
+  "selected_nodes": [
+    "kidletime",
+    "modemmanager-qt",
+    "networkmanager-qt"
+  ],
+  "selection_rationale": {
+    "policy": "independent Tier 1 nodes compatible with the current single-primary-library ABI package runner",
+    "deferred": {
+      "kconfig": "Deferred because KConfig exports multiple ABI libraries/symbol files and requires an explicit multi-library runner extension.",
+      "ki18n": "Deferred because KI18n exports multiple ABI libraries/symbol files.",
+      "sonnet": "Deferred because Sonnet exports multiple ABI libraries plus plugin surface.",
+      "kcoreaddons": "Not selected while simpler nodes remain because upstream Linux/shared defaults enable Python bindings.",
+      "kguiaddons": "Not selected while simpler nodes remain because upstream Linux/shared defaults enable Python bindings.",
+      "kwidgetsaddons": "Not selected while simpler nodes remain because upstream Linux/shared defaults enable Python bindings.",
+      "kirigami": "Deferred from this runner lane because it is primarily QML/Quick surface rather than a simple single-library ABI package.",
+      "kquickcharts": "Deferred from this runner lane because it is primarily QML/Quick surface rather than a simple single-library ABI package."
+    }
+  },
+  "shared_predecessors": {
+    "extra_cmake_modules": {
+      "state": "PASS",
+      "version": "6.30.0-0supralinux3",
+      "workflow_run": 34694951158,
+      "artifact_id": 10298635300,
+      "deb_sha256": "ba544c482df73ec162ceb08543d23e2e3f9af3e309e42b16a51c83966081692f"
+    },
+    "packaging_trees": {
+      "status": "PASS",
+      "workflow_run": 34708030450,
+      "artifact_id": 10301938362,
+      "artifact_sha256": "6e91848334c018e15d7bdc1752eb5b494bdeeda8ca04c9323dde46844cf26de6",
+      "snapshot_json_sha256": "f761a2d92005107eac2e82322b1b776e4f8867851e657ce79748f0cb266ee345"
+    },
+    "dependency_provider": {
+      "status": "PASS",
+      "workflow_run": 35012023822,
+      "job_id": 104526071758,
+      "commit": "48fd01bfa7b254b5e5c8447b3d609f76a91f786f",
+      "artifact_id": 10414525047,
+      "artifact_sha256": "db6868402b08bca82241d07980e158639a2f2fc64c4a5ab595fa58846361cb4a",
+      "authoritative": false,
+      "claim": "provider-availability-only"
+    }
+  },
+  "shared_packaging_inputs": {
+    "signing_key": {
+      "path": "debian/upstream/signing-key.asc",
+      "sha256": "86b56008ff74b4473b0d6ad9f01ca5e40e9ff951bc9be1ff362ce97e396ca17d",
+      "source": "retained-debian-packaging-reference"
+    },
+    "documentation_policy": {
+      "qch_enabled": false,
+      "package_role": "debian-family-compatibility-name",
+      "note": "Batch 5 documentation packages are compatibility stubs; no QCH payload is claimed."
+    },
+    "lintian_policy": {
+      "sbuild_summary_required": true,
+      "source_and_changes_required": true,
+      "preserve_referenced_ddeb": true
+    }
+  },
+  "nodes": {
+    "kidletime": {
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-kidletime",
+      "source_sha256": "22873204292ddb757e5a0a57004c57debe1285cd0fd4e796d07e9de2402e60c3",
+      "root_cmake_blob": "3617fd79358beaea36d862483b8b4947eef30508",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/kidletime-6.30.0.tar.xz",
+      "runtime_package": "libkf6idletime6",
+      "development_package": "libkf6idletime-dev",
+      "documentation_package": "libkf6idletime-doc",
+      "binary_contracts": [
+        {
+          "name": "libkf6idletime-dev",
+          "architecture": "amd64",
+          "multi_arch": null
+        },
+        {
+          "name": "libkf6idletime-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6idletime6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "dependency_contracts": {
+        "libkf6idletime-dev": [
+          "libkf6idletime6 (= 6.30.0-0supralinux1)",
+          "qt6-base-dev (>= 6.9.0~)"
+        ]
+      },
+      "recommendation_contracts": {
+        "libkf6idletime-dev": [
+          "libkf6idletime-doc (= 6.30.0-0supralinux1)"
+        ]
+      },
+      "build_profile_tokens": [
+        "dh-exec",
+        "libwayland-dev (>= 1.9~)",
+        "libx11-dev",
+        "libx11-xcb-dev",
+        "libxcb-sync-dev",
+        "libxcb1-dev",
+        "libxss-dev",
+        "pkgconf",
+        "plasma-wayland-protocols (>= 1.6.0~)",
+        "qt6-base-dev (>= 6.9.0~)",
+        "qt6-base-private-dev (>= 6.9.0~)",
+        "qt6-tools-dev (>= 6.9.0~)",
+        "qt6-wayland-dev (>= 6.9.0~)",
+        "wayland-protocols (>= 1.27~)",
+        "xauth <!nocheck>",
+        "xvfb <!nocheck>"
+      ],
+      "soname": "libKF6IdleTime.so.6",
+      "cmake_package": "KF6IdleTime",
+      "cmake_target": "KF6::IdleTime",
+      "consumer_run": "direct",
+      "copyright": {
+        "file": "copyright",
+        "sha256": "1afa9e5366e809877f085a8918ac733de4935be71be1aee3ff785362aee2bd0b",
+        "reference": "debian-sid-6.28.0"
+      },
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {
+        "file": "libkf6idletime6.symbols",
+        "sha256": "1ae402305be324fc97b61bb099d3c6e001ec2bfc8eaf2ae09f1cd69eafbe914c",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0"
+      },
+      "evidence": [
+        {
+          "result": "PASS",
+          "workflow_run": 35014875475,
+          "job_id": 104535671033,
+          "commit": "30b5dcd293527b488c88cf0a861883ee869e3ea0",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10414598079,
+          "artifact_sha256": "272ccad537d21905cf75a1add74e937d176c20c05c38bf967226fef4ab28b605",
+          "stage": "complete",
+          "tests": "1/1 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6IdleTime.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
+      ],
+      "last_pass_files": {
+        "libkf6idletime_dev_deb_sha256": "91f46cbedcd002e175ed47f2d67263a96e58a9aadbfe6602031db83c9fec0dc0",
+        "libkf6idletime_doc_deb_sha256": "d46d408417d18ad4dd5dcfd12e90360c120d8a9ea11306170be2e6e70ae71c8a",
+        "libkf6idletime6_deb_sha256": "855530deaa8dd29715928806792a9797ece6e5f5e975976b08beabcd9bd68028",
+        "libkf6idletime6_dbgsym_ddeb_sha256": "7da03341afded3939e617968cd54d3c5115f4cd9298df05aa9adb30d317066c2",
+        "changes_sha256": "ed753e65add80fc116a662dd744b2c2f0fc53ea385ce0834564cd227b38bbce3",
+        "buildinfo_sha256": "951b20d820886da2a015760d82fde8c361635488bb57f1891e239764923f2bf0",
+        "dsc_sha256": "be555bca2562b5f5f3b69081dff269872c54cf5f39911f57bfdf05a4ff6afb4b",
+        "orig_tar_sha256": "22873204292ddb757e5a0a57004c57debe1285cd0fd4e796d07e9de2402e60c3",
+        "debian_tar_sha256": "8ebb5aa03fea7c5a6b6b1de24211e5b75cc80c4949679d7a2b785e9044227586",
+        "rootfs_sha256": "1b28a68693bd7dba3e175811726cf668d94e9184b4714f3c1034a724b8c8eb18"
+      }
+    },
+    "modemmanager-qt": {
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-modemmanager-qt",
+      "source_sha256": "d7c4106dc130729fdfd435abaeaf85039a874fc18563a41755e14f7ea174ae21",
+      "root_cmake_blob": "1c253781f61fe39608b7d102a9359ca2f9afb1b0",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/modemmanager-qt-6.30.0.tar.xz",
+      "runtime_package": "libkf6modemmanagerqt6",
+      "development_package": "libkf6modemmanagerqt-dev",
+      "documentation_package": "libkf6modemmanagerqt-doc",
+      "binary_contracts": [
+        {
+          "name": "libkf6modemmanagerqt-dev",
+          "architecture": "amd64",
+          "multi_arch": null
+        },
+        {
+          "name": "libkf6modemmanagerqt-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6modemmanagerqt6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "dependency_contracts": {
+        "libkf6modemmanagerqt-dev": [
+          "libkf6modemmanagerqt6 (= 6.30.0-0supralinux3)",
+          "modemmanager-dev (>= 1.0)",
+          "qt6-base-dev (>= 6.9.0~)"
+        ]
+      },
+      "recommendation_contracts": {
+        "libkf6modemmanagerqt-dev": [
+          "libkf6modemmanagerqt-doc (= 6.30.0-0supralinux3)"
+        ]
+      },
+      "build_profile_tokens": [
+        "dbus-daemon <!nocheck>",
+        "modemmanager-dev (>= 1.0)",
+        "pkgconf",
+        "python3:any",
+        "qt6-base-dev (>= 6.9.0~)",
+        "qt6-tools-dev (>= 6.9.0~)"
+      ],
+      "soname": "libKF6ModemManagerQt.so.6",
+      "cmake_package": "KF6ModemManagerQt",
+      "cmake_target": "KF6::ModemManagerQt",
+      "consumer_run": "direct",
+      "copyright": {
+        "file": "copyright",
+        "sha256": "6863209ef5575d5ac62b9e77d9ee6ee7a4c06e05622cb9671499686696c4605d",
+        "reference": "debian-sid-6.28.0"
+      },
+      "package_version": "6.30.0-0supralinux3",
+      "symbols": {
+        "file": "libkf6modemmanagerqt6.symbols",
+        "sha256": "70c9ebc08c99174f022c3b4b38ed4cde4a8725f0a2f8ea04a09371132312d6f2",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0"
+      },
+      "evidence": [
+        {
+          "result": "FAIL",
+          "workflow_run": 35014875475,
+          "job_id": 104535671188,
+          "commit": "30b5dcd293527b488c88cf0a861883ee869e3ea0",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10415586492,
+          "artifact_sha256": "f79f98cc73f561e5750c4db7917917a043f260131af0ac19180fd835dee78af7",
+          "failure_stage": "sbuild",
+          "failure_substage": "Lintian/symbols",
+          "tests": "11/11 PASS",
+          "cause": "dpkg-gensymbols added _ZSt19piecewise_construct@Base at the current Debian revision; Lintian rejected symbols-file-contains-current-version-with-debian-revision."
+        },
+        {
+          "result": "FAIL",
+          "workflow_run": 35017509303,
+          "job_id": 104544555425,
+          "commit": "77f4c6e9e077e12bf7063ee2f872255d397ec8c8",
+          "attempted_package_version": "6.30.0-0supralinux2",
+          "artifact_id": 10416692119,
+          "artifact_sha256": "2b081f989d42f6d4820b238c9e739ccb4104080ceae7a49aa49cb20305eb66d7",
+          "failure_stage": "sbuild",
+          "failure_substage": "Lintian/build-prerequisite",
+          "tests": "11/11 PASS",
+          "symbols_transform": "PASS",
+          "cause": "The hash-locked symbols transform succeeded, but debian/rules invokes python3 without declaring python3:any (or an equivalent Python build prerequisite); Lintian rejected rules-require-build-prerequisite."
+        },
+        {
+          "result": "PASS",
+          "workflow_run": 35021323444,
+          "job_id": 104557423664,
+          "commit": "dea48cdc1184e0fc961ea4f3efc0b38e19a2fb8d",
+          "attempted_package_version": "6.30.0-0supralinux3",
+          "artifact_id": 10417683848,
+          "artifact_sha256": "42d4f804effc6e4b9148e8c01887bdce6f95f0554ac4d03295e844a861a54eb7",
+          "stage": "complete",
+          "tests": "11/11 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6ModemManagerQt.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "validated_gate": "sbuild-summary-plus-dsc-plus-changes",
+          "downstream_eligible": true
+        }
+      ],
+      "provider_contract": {
+        "requirement": "ModemManager >= 1.0",
+        "ubuntu_provider": "modemmanager-dev",
+        "pkg_config_module": "ModemManager"
+      },
+      "remediation": {
+        "candidate_package_version": "6.30.0-0supralinux3",
+        "status": "validated",
+        "source_change": false,
+        "changes": [
+          "retain the validated deterministic hash-locked symbols delta before dh_makeshlibs",
+          "declare python3:any explicitly in Build-Depends because debian/rules invokes the transform script"
+        ],
+        "symbols_baseline_sha256": "70c9ebc08c99174f022c3b4b38ed4cde4a8725f0a2f8ea04a09371132312d6f2",
+        "symbols_result_sha256": "b717475396376ac884bb3587ab2a0e898af5beb940836c45ee834758eec6820f",
+        "symbols_transform_sha256": "f468a9e752ecb79ccc05e3a7e344622f7b1e6aeae94fb71089a94f0f51d5559b",
+        "validated_by_run_id": 35021323444
+      },
+      "last_pass_files": {
+        "libkf6modemmanagerqt_dev_deb_sha256": "1a9a69eff9542006535e52a4a3dfaba7378c506240c19dde6bf0599c73105302",
+        "libkf6modemmanagerqt_doc_deb_sha256": "cf9102c482151ca33edd94f7e086ab767d44287858e6d73e8f2629e0d297bf0d",
+        "libkf6modemmanagerqt6_deb_sha256": "7a52678aa62fc69eafdaff513a6bc4a9f72938ff3ea552a7bc99e58a3a3e0c4f",
+        "libkf6modemmanagerqt6_dbgsym_ddeb_sha256": "563c0b886433ed461be1bd830f1f338ae36f47282b0e31b2c52264fff46c6222",
+        "changes_sha256": "c2631cceca814bdfee0e7b7ce9e888fdcb97a198fff64c0089d088b1e0493a9d",
+        "buildinfo_sha256": "5e93dfb613a2405b916839747aeb718485a12846889263d58eed62a75d889223",
+        "dsc_sha256": "b02fcc77644d524af831543ac8282be48885296753e85c0517175d523d58115e",
+        "orig_tar_sha256": "d7c4106dc130729fdfd435abaeaf85039a874fc18563a41755e14f7ea174ae21",
+        "debian_tar_sha256": "648b8013108455bee99a09c93e79aa1132436df63d884dc6601828105a53934c",
+        "rootfs_sha256": "d9545276368dd4116cb234e9925c59311b30e4c934ff18ac1b7558f9fa1e308b"
+      }
+    },
+    "networkmanager-qt": {
+      "state": "PASS",
+      "last_result": "PASS",
+      "downstream_eligible": true,
+      "upstream_version": "6.30.0",
+      "source_package": "kf6-networkmanager-qt",
+      "source_sha256": "f6ba5f54d413ea0b2642207a6ebd0803e7cb8392b91fcf8a1679fd0c21062865",
+      "root_cmake_blob": "be28b0b1092c3b64a4561fcb28f0dbf811e6a939",
+      "source_url": "https://download.kde.org/stable/frameworks/6.30/networkmanager-qt-6.30.0.tar.xz",
+      "runtime_package": "libkf6networkmanagerqt6",
+      "development_package": "libkf6networkmanagerqt-dev",
+      "documentation_package": "libkf6networkmanagerqt-doc",
+      "binary_contracts": [
+        {
+          "name": "libkf6networkmanagerqt-dev",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "libkf6networkmanagerqt-doc",
+          "architecture": "all",
+          "multi_arch": "foreign"
+        },
+        {
+          "name": "libkf6networkmanagerqt6",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        },
+        {
+          "name": "qml6-module-org-kde-networkmanager",
+          "architecture": "amd64",
+          "multi_arch": "same"
+        }
+      ],
+      "dependency_contracts": {
+        "libkf6networkmanagerqt-dev": [
+          "libkf6networkmanagerqt6 (= 6.30.0-0supralinux1)",
+          "libnm-dev (>= 1.4.0~)",
+          "qml6-module-org-kde-networkmanager (= 6.30.0-0supralinux1)",
+          "qt6-base-dev (>= 6.9.0~)"
+        ]
+      },
+      "recommendation_contracts": {
+        "libkf6networkmanagerqt-dev": [
+          "libkf6networkmanagerqt-doc (= 6.30.0-0supralinux1)"
+        ]
+      },
+      "build_profile_tokens": [
+        "dh-sequence-qmldeps",
+        "libglib2.0-dev",
+        "libnm-dev (>= 1.4.0~)",
+        "pkgconf",
+        "qt6-base-dev (>= 6.9.0~)",
+        "qt6-declarative-dev (>= 6.9.0~)",
+        "qt6-tools-dev (>= 6.9.0~)"
+      ],
+      "soname": "libKF6NetworkManagerQt.so.6",
+      "cmake_package": "KF6NetworkManagerQt",
+      "cmake_target": "KF6::NetworkManagerQt",
+      "consumer_run": "direct",
+      "copyright": {
+        "file": "copyright",
+        "sha256": "c6d6d851fc0ac1e99ab9d5535159213b3ba4a7deff6a4239f76e59fb51316e1e",
+        "reference": "debian-sid-6.28.0"
+      },
+      "package_version": "6.30.0-0supralinux1",
+      "symbols": {
+        "file": "libkf6networkmanagerqt6.symbols",
+        "sha256": "324a154e35a6dab6c2ab10c5857517a20253d7d65f279294a62e7ced3c8ebfaa",
+        "tree_provider": "debian",
+        "reference_version": "6.28.0"
+      },
+      "evidence": [
+        {
+          "result": "PASS",
+          "workflow_run": 35014875475,
+          "job_id": 104535671250,
+          "commit": "30b5dcd293527b488c88cf0a861883ee869e3ea0",
+          "attempted_package_version": "6.30.0-0supralinux1",
+          "artifact_id": 10414714325,
+          "artifact_sha256": "abf927b5749b34094d2b5ee530831f64638ba116a83e8b82f925a758aa018ad4",
+          "stage": "complete",
+          "tests": "38/38 PASS",
+          "lintian": "PASS-errors",
+          "consumer_smoke": "PASS",
+          "abi_soname": "libKF6NetworkManagerQt.so.6",
+          "ecm_predecessor": "6.30.0-0supralinux3",
+          "downstream_eligible": true
+        }
+      ],
+      "test_policy": {
+        "excluded": [
+          "managertest",
+          "settingstest",
+          "activeconnectiontest"
+        ],
+        "reason": "require a live NetworkManager service unavailable by design in isolated package CI",
+        "all_other_upstream_tests_enabled": true
+      },
+      "last_pass_files": {
+        "libkf6networkmanagerqt_dev_deb_sha256": "f3a29d5fb6e34762aba94f50389570db5c4fd6ee5c0f8bdad7c371a8f4b1e1d3",
+        "libkf6networkmanagerqt_doc_deb_sha256": "f99ba4f1ba29f7e7adc6b87a60b9910e8650ece17767b8bd2b34ca5fa54b70a8",
+        "libkf6networkmanagerqt6_deb_sha256": "788f33d95eb531e75eef66a4a24be05adbfeb108abde84d0448dc7bdb36208ad",
+        "qml6_module_org_kde_networkmanager_deb_sha256": "8c5a1cec0a9386d1c974e96d9636fc780a2f9a72d78f572810a22423d11000b9",
+        "libkf6networkmanagerqt6_dbgsym_ddeb_sha256": "ea35187faa36a33bd2e71a8573c2cdad11d9afeb7b26cca37eeeaeaaafac0338",
+        "qml6_module_org_kde_networkmanager_dbgsym_ddeb_sha256": "e26832d08adee13911cd1a4fc33236a3f22d0035a46e41f9efff83b03755f275",
+        "changes_sha256": "7595636639c8cc9a447609286d6e06e8c4d7d5df3f865102cfa6f659c60746c4",
+        "buildinfo_sha256": "1fe33c330ff7ac1875a93bf68b3e94d712b6df9db879620a5d5382d4edfebf08",
+        "dsc_sha256": "9de0795c067e58c3715b01bb7c3fe659f36fbbe12e41e90e44b5243c5e7532e2",
+        "orig_tar_sha256": "f6ba5f54d413ea0b2642207a6ebd0803e7cb8392b91fcf8a1679fd0c21062865",
+        "debian_tar_sha256": "7a53d321ad9f4b95f1dbb3b58f007013a0d43086ffd38b19af3937493235b1d4",
+        "rootfs_sha256": "772cce7005b53f83cd6b9bab82e40a9c261bb5ccaa0da8c5cd7f3673156eb90c"
+      }
+    }
+  },
+  "closure": {
+    "workflow_run": 35021323444,
+    "commit": "dea48cdc1184e0fc961ea4f3efc0b38e19a2fb8d",
+    "repository_policy_run": 35021323425,
+    "scope": {
+      "kidletime": "scope-skip-retained-pass",
+      "modemmanager-qt": "rebuilt-pass",
+      "networkmanager-qt": "scope-skip-retained-pass"
+    }
+  }
+}

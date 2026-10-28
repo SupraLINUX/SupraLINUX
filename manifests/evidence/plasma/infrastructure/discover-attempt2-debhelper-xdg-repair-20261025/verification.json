@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "discover-attempt2-packaging-test-invocation-repair",
+  "repair_base_commit": "be299ecd368d75704466459924361622cead0982",
+  "node": "discover",
+  "old_version": "6.7.5-0supralinux2",
+  "new_version": "6.7.5-0supralinux3",
+  "attempt2": {
+    "state": "FAIL",
+    "workflow_run_id": 40158903682,
+    "workflow_job_id": 121066085578,
+    "artifact_id": 12584669771,
+    "artifact_sha256": "07e2a09154b35a4456fd88282d64ebfc886a1b72331daff0b53f57d5a329215b",
+    "original_result_sha256": "e2744e378b9efd3bd4c40001d265670deb6c9479867371477a3c13401865c8dc",
+    "observation_sha256": "02be09bc2dda42eec38a73828840964029d55134b97016c714f8170d338a5104",
+    "offline_retained_artifact": "/var/lib/supralinux/artifacts/raw/discover/40158903682/07e2a09154b35a4456fd88282d64ebfc886a1b72331daff0b53f57d5a329215b.zip"
+  },
+  "diagnosis": {
+    "test": "CategoriesTest::testTranslations()",
+    "assertion": "languages.size() > 1",
+    "staged_catalogs_materialized": true,
+    "xdg_data_dirs_reached_test": false,
+    "cause": "Revision2 staged the catalogs correctly, but the authoritative ctest environment emitted by the dh_auto_test path lacked XDG_DATA_DIRS, leaving KLocalizedString with only en_US."
+  },
+  "adaptation": {
+    "upstream_source_changed": false,
+    "upstream_test_changed": false,
+    "qt_changed": false,
+    "frameworks_changed": false,
+    "packaging_only": true,
+    "old_rules_sha256": "0aa8eae9ad6c07a457ececb9630434a9cc9a96988ce1724d3346ec40d6c7fb46",
+    "new_rules_sha256": "6a7ae2201d95f58b3b0cfbef37009aa4fb50cc0704077f8e13171a16c8052d5c",
+    "old_changelog_sha256": "931f8e313f541e8d9477f807be9c17f72ebfe197b958dc24bee77a29c68edbad",
+    "new_changelog_sha256": "72200c0fdec4f0e9c0400e73b54ffaf5da397c5d3d929a9cdd22b304c4e1f949",
+    "mechanism": "Keep the disposable CMake install DESTDIR, export its usr/share through XDG_DATA_DIRS, and invoke only unchanged CategoriesTest directly with ctest so the environment reaches the test process."
+  },
+  "regression": {
+    "path": "scripts/test-plasma-package-inputs.py",
+    "checks": [
+      "host build directory derived via dpkg-architecture",
+      "temporary DESTDIR install",
+      "staged usr/share in XDG_DATA_DIRS",
+      "offscreen Qt",
+      "direct ctest invocation",
+      "CategoriesTest remains selected",
+      "dh_auto_test wrapper rejected for this test",
+      "temporary tree cleanup",
+      "flatpaktest remains excluded"
+    ]
+  },
+  "input_certification": {
+    "previous_path": "manifests/evidence/package-revalidation/discover-preflight49/verification.json",
+    "previous_applicable": false,
+    "next_gate": "authoritative-plasma-package-input-preflight:discover",
+    "attempt3_authorized": false
+  },
+  "package_execution_started": false,
+  "consumes_package_attempt": false
+}

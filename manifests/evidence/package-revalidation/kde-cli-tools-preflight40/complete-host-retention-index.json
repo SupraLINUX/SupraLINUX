@@ -1,0 +1,462 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "Complete original INFRA_INVALID input transport preflight before candidate execution; exact Actions ZIP/meta/job, owned VM270 cleanup, source contract and operator bytes; no package Attempt",
+  "archive_path": ".artifacts/host-network-safety/kde-cli-tools-preflight40-complete-host/inputs.zip",
+  "archive_sha256": "03236503e2a6291fca2a6184c7236ac36ecad21b24c08428737036444ac0d302",
+  "files": {
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/domain.xml": {
+      "sha256": "baf9251206e946d9c0287e7d9c9d2606ade9119d3b8dc47fd3dd676250229b89",
+      "size": 4698
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/evidence-sha256.txt": {
+      "sha256": "9ebf961f44ee14af72e4c2d58ee15630605b1b709fc9b84675a24ffe2656fd64",
+      "size": 11251
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/execution-cache-access.txt": {
+      "sha256": "378998ff8c8952328632fb00c54b7248b18c47ddca699a5cfe0e1adf51fb82d9",
+      "size": 133
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/execution-cache-admission.txt": {
+      "sha256": "952a5302a9fbb7fc6c5e576c2f764089f1f926fd884de2951f390e280a118807",
+      "size": 272
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/golden-provenance-admission.txt": {
+      "sha256": "990f23a76c0b29cd59b0b70180bf03ad596c43d333e705ef3c03042543f65650",
+      "size": 644
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-copy-out.txt": {
+      "sha256": "b22afc46e487e98022389032f0a6a60b3a68917120fde487171aab0bc36416bf",
+      "size": 231
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/_diag/Runner_20261010-201308-utc.log": {
+      "sha256": "8b85123a9465eed2f71ed7a7a2486e0ba0e76d39ea5d0ace0b44e5e60f63ad51",
+      "size": 29166
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/_diag/Runner_20261010-201328-utc.log": {
+      "sha256": "13e2dabf5eb9ba4aaf57d89f4fb6fff835c83ee4f64d3676b68db3205c20e6f8",
+      "size": 9381
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/_diag/Worker_20261010-201322-utc.log": {
+      "sha256": "49b0918223a02c42d24809a761050129268bc0cc12185d399b936be932ccf39f",
+      "size": 250964
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/evidence/actions-runner.txt": {
+      "sha256": "be8b66c8dc461b18f0776e0ac389b1919f278188def7c56440dcc7c7ad04f0fe",
+      "size": 360
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/evidence/autopkgtest-build-resources.txt": {
+      "sha256": "89f36a5b34c441f0062b3ca49435f8fc5aecf244f4aab8a3ecc2eacd51f1e3f2",
+      "size": 526
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/evidence/base-image-seal.txt": {
+      "sha256": "5adeeb85b54e65e1f07d72f1ec87e724b3090de5abffd130e5cb3b925354d85b",
+      "size": 1265
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/evidence/golden-build-complete.txt": {
+      "sha256": "c351f918be2000999aeb72aa8d2e14b158cfbacd9422a231b062d87e082497d3",
+      "size": 136
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/evidence/golden-build-result.txt": {
+      "sha256": "fe621fc1d388f39882047067c761e2bfbfcda62bfd1854420813998e1b452a4a",
+      "size": 100
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/evidence/runner-guest-provisioning.txt": {
+      "sha256": "a8cda3a416f129a1154d4a7f4b9ab601cf92bbf6d7548ed488e8153f1e04ce26",
+      "size": 1401
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/supralinux-actions-runner-console.log": {
+      "sha256": "90e0a698ede3dde5a8f386fded21d0bb0e73f271bd4218dc8de28f78f0ba5f76",
+      "size": 405
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/actions-runner-runtime.txt": {
+      "sha256": "955755193c37fb2ac4210ee635af806341d455ee8975a9adfc1aa8fc039ce5db",
+      "size": 258
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/build-contract.json": {
+      "sha256": "41d9a0e2dd9cb0eeb1a7a11737e7e90725bb218399ae9585e7316db52db878d4",
+      "size": 42519
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/cache-probe/sbuild.log": {
+      "sha256": "82b4d0f5f0e053ae6d744df4461e10edd27461619e448c1f368ae74d197d31aa",
+      "size": 67331
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/cache-probe/supralinux-cache-probe_1.0.dsc": {
+      "sha256": "144e674e4b2e6d2dea700dcccbbf02e52fc80241deeee178203c1cc6fa3c8d1a",
+      "size": 7449
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/cache-probe/supralinux-cache-probe_1.0.tar.xz": {
+      "sha256": "e8055502f262233c1b368e6ce768cae30f26b2fad8fdfa17d504ebace5cad125",
+      "size": 3420
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/environment.txt": {
+      "sha256": "f29e468a88d41e56703775ba5de5db0182d031ae8ec046aeccc5bc3aea9636fb",
+      "size": 835
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/nested-kvm-runtime.txt": {
+      "sha256": "29e1f6fea17162a8a0f3c14cb84f305f9ffd3b2629eae7da11802b0b8322b083",
+      "size": 516
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/packages/kde-cli-tools_6.7.5-0supralinux1.debian.tar.xz": {
+      "sha256": "ab2cc4de976a64843e9df879b32f0865a6afbc8513cb6a82cc439c6e47ab5fb3",
+      "size": 30892
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/packages/kde-cli-tools_6.7.5-0supralinux1.dsc": {
+      "sha256": "7f0175f91fb64d92a47ecee95e4c484b8eeac67fab3787f5f7605d666f2d25f1",
+      "size": 2525
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/packages/kde-cli-tools_6.7.5.orig.tar.xz": {
+      "sha256": "18f3c421b305003caf73f9e9fbec09fbf30f472dbe81fec328046cca7883a31d",
+      "size": 639564
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/pipeline.log": {
+      "sha256": "c8afefa51498512fb31533d8b54318b4bb46830a75efc06cf012761429e3ba64",
+      "size": 72561
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/predecessor-inputs.json": {
+      "sha256": "8611bb226a51fa8bbb753193033a0b1457f84d8878c3e333354d68463129c3c5",
+      "size": 66753
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/result.json": {
+      "sha256": "fd5e2c6cd864ca3dd1369c3a7acfd10f0d53399347f9018eb28fe3bf5baa2f54",
+      "size": 5780
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/breeze-icons/breeze-icon-theme-rcc_6.30.0-0supralinux1_all.deb": {
+      "sha256": "b5105c4deb0b120b8bd08550f1d79e9db79069503e1eb08992da867380f1df8a",
+      "size": 3008312
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/breeze-icons/breeze-icon-theme_6.30.0-0supralinux1_all.deb": {
+      "sha256": "308a20089ef387da2d5ba08b42be4299dd62fe5f5535786a0d8881d93b0d1e09",
+      "size": 3771814
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/breeze-icons/daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577.zip": {
+      "sha256": "daaa5abda5a8f824c6fa509142d7cd9132de213d782cb32e0561873f427aa577",
+      "size": 13510034
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/breeze-icons/kf6-breeze-icon-theme-rcc_6.30.0-0supralinux1_all.deb": {
+      "sha256": "ab05a47bb8ee1d425469a858134a054657b6d7a06192cd4ab4ba0572c5aebbad",
+      "size": 12314
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/breeze-icons/kf6-breeze-icon-theme_6.30.0-0supralinux1_all.deb": {
+      "sha256": "1c598d29fb31ab6fba6a80c041fc81de33b74bcb23cb6f06b2cb37810e2462f3",
+      "size": 12310
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/breeze-icons/libkf6breezeicons-dev_6.30.0-0supralinux1_amd64.deb": {
+      "sha256": "46974cd2a2e7fb22fabf5332fcf51b560a9c03fca4c1cc3eff014cd5b0336a1b",
+      "size": 16618
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/breeze-icons/libkf6breezeicons6_6.30.0-0supralinux1_amd64.deb": {
+      "sha256": "39843417452315f82dda133b09d1b588a5d23d44095ff821e63ee7943075b232",
+      "size": 3010528
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/72bbcd2d97d802c973febfb93233156de9461e0c9f1eac8cb41c580403cd733f.zip": {
+      "sha256": "72bbcd2d97d802c973febfb93233156de9461e0c9f1eac8cb41c580403cd733f",
+      "size": 10118500
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6config-bin_6.30.0-0supralinux5_amd64.deb": {
+      "sha256": "e2ec5c0108ddec37acbe5aef9ba7ad415fcafbfb674a774ad5bc1f8e4460fd8a",
+      "size": 33572
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6config-data_6.30.0-0supralinux5_all.deb": {
+      "sha256": "11383e2d047ef865e61a01b887b7b1fa72ab8ceca12e45779b99488fd18c1eb7",
+      "size": 175316
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6config-dev-bin_6.30.0-0supralinux5_amd64.deb": {
+      "sha256": "d7e10cf7629c68a93fa65a320ca868870e4f9f9446b580da70360233aebf8fe5",
+      "size": 80788
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6config-dev_6.30.0-0supralinux5_amd64.deb": {
+      "sha256": "d92bf4fed918165562d93f2512d36298ef014fa9191f53a51eab3a64286ce3a9",
+      "size": 54064
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6configcore6_6.30.0-0supralinux5_amd64.deb": {
+      "sha256": "fd21f8ffec2c9a1092f4f1a823fc9ad117c8453a4cbd796d1997cb38bf9577c0",
+      "size": 183168
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6configgui6_6.30.0-0supralinux5_amd64.deb": {
+      "sha256": "994d74a35f900487bce4b5ffa838fa428fd00fe7a713f6441b6659992c65c711",
+      "size": 76206
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/libkf6configqml6_6.30.0-0supralinux5_amd64.deb": {
+      "sha256": "4a15fb6c5b9a95c49bc8910b81f5e7d14b1d5d125041a1b43e918c978241a949",
+      "size": 22832
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kconfig/qml6-module-org-kde-config_6.30.0-0supralinux5_amd64.deb": {
+      "sha256": "ab1ce3ccf930a368faccdd7c5aca19acea87f355d888169d5f0cefa2524fd069",
+      "size": 13250
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kdoctools/6daeb6beed63ba7b7e441dba4dfd356be3ad48a9f3ae75acddae0945c36a683d.zip": {
+      "sha256": "6daeb6beed63ba7b7e441dba4dfd356be3ad48a9f3ae75acddae0945c36a683d",
+      "size": 2308812
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kdoctools/kdoctools6_6.30.0-0supralinux1_amd64.deb": {
+      "sha256": "e455675b2fe7c3fe730d702b99b882f16f70ce2e3d44394c06774a292ebd3933",
+      "size": 460794
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kdoctools/libkf6doctools-dev_6.30.0-0supralinux1_amd64.deb": {
+      "sha256": "10ee3bb9a61dcd87645b26f6df46d48e38ec3e29331e07cb983c8a62fcc9e8be",
+      "size": 12716
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/revalidated-predecessors/kdoctools/libkf6doctools6_6.30.0-0supralinux1_amd64.deb": {
+      "sha256": "db37d679c86ac997a8731062e3fa4bc13a87958321569d98bb10014ad37f45fe",
+      "size": 17210
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/rootfs-sha256.txt": {
+      "sha256": "424b5472498f2ac6e926c02725168d67fff979ea07abfb5fbfb8cf897fbe0dde",
+      "size": 112
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/rootfs.log": {
+      "sha256": "bfab8002a68f685f6f9328ddac149b4fb9d22bccf390ca79ab197ea4eabd1c80",
+      "size": 916
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/signature.log": {
+      "sha256": "8a80d83bece07ad844f67b4d3e075ec304be203123969d9a380d0c78f331ff2f",
+      "size": 699
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/source-package.log": {
+      "sha256": "6749cb57a9eb4db0f7e915d589398da8a6de7372d342421738cda8c91c9b75ec",
+      "size": 526
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/test-image-sha256.txt": {
+      "sha256": "f3d2c4ecbc75e300b04e963038454cc3791d86cb104c10b69eaf0b832b243805",
+      "size": 117
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-files/workspace/evidence/authoritative-plasma-package/upstream.tar.xz.sig": {
+      "sha256": "94c6118e6edec4aa2e6f095022490735ae7611847b73cef775dfea43c097541a",
+      "size": 488
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/guest-runner-exec.json": {
+      "sha256": "3d16d5203a32e8333b1477f5d513a3f5d27135c885828a7dc68f2da4b03bfeaf",
+      "size": 24
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/host-environment.txt": {
+      "sha256": "798f16e10cdc51ba38197331db98a639eb6701c988201956c2f46439fdbcc53b",
+      "size": 2661
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/host-result.json": {
+      "sha256": "188eadf084fac40e8e35f793876a5a925b980c5eaa97c0559aab37681c6da4c0",
+      "size": 132
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/jit-config-dir-create.json": {
+      "sha256": "a65530cd380011e62e56cf656d4cb518af77c31d22defbf632c1e684b32574bd",
+      "size": 40
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/jit-config-flush.json": {
+      "sha256": "246463fd3dbec1484e517f7fdc730765fb006f0332af64f8e348811f42f92a74",
+      "size": 14
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/jit-config-write.json": {
+      "sha256": "c3ba0f2fee383fc79f84a0ba46459363991142b5d7f8e795e2456d3a7ebbe595",
+      "size": 38
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/jit-create-transport.txt": {
+      "sha256": "2b779bd5cf937111ea7e80c53b581735c452c411010c4143d44e71ba8183cf9c",
+      "size": 33
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/libguestfs-runtime.txt": {
+      "sha256": "1acb36510cd445459b4e38623cb1d972d8e380bfb5888930aff207d8ccfaca35",
+      "size": 504
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/network-admission.json": {
+      "sha256": "039f0bab9d5f19f7839cffaf1bd2e1f68263d7b9a17b2fa2685fb106947d1f81",
+      "size": 391
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/network-enabled-admission.json": {
+      "sha256": "c3d22432d2fe66e37f80fd222b97ca15f305fb82b44c990262e4b1e653f3aa81",
+      "size": 323
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/network-guest-connectivity-execution.json": {
+      "sha256": "5638dae0419fa7173241d1fcfecf900f7b01d4e690a2d90cfc9aee86c35a7d70",
+      "size": 1608
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/network-guest-connectivity.json": {
+      "sha256": "4d49e9af8db66fa029783edb37795d9a27337016140497a0c59df9dbaf122868",
+      "size": 1147
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/network-guest-limits.json": {
+      "sha256": "b2d16501f3953774da368e289a45379a929a15e62f6719b177aaec2bca15a790",
+      "size": 325
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/network-guest-policy-execution.json": {
+      "sha256": "83bdf819398ee1c96e0ed31c52fc69c944d5fb2366808f28c46f709c1c9da693",
+      "size": 5916
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/network-guest-safety.json": {
+      "sha256": "1eea56db672970f7ff01297d0ca60ca5de81c8620cd27535e1c3042f5ec5fb8d",
+      "size": 4379
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/network-live-domain-enabled.xml": {
+      "sha256": "baf9251206e946d9c0287e7d9c9d2606ade9119d3b8dc47fd3dd676250229b89",
+      "size": 4698
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/network-live-domain.xml": {
+      "sha256": "a4035a004a472db4614afdc0b4e8577149a13ceb16b264181c083ba917235584",
+      "size": 4703
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/overlay-info-before-boot.json": {
+      "sha256": "8739fbd0fdbe6f212615576a5a5d10446bab6336e8e9a6ca2df4464fb63ea2cf",
+      "size": 1367
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/overlay-info.json": {
+      "sha256": "56f3b57b593ed3c77dc12637520f48188099184ec2d6fbbe4bc58aa9902cf91b",
+      "size": 1376
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/overlay-sha256.txt": {
+      "sha256": "f0f8ce6843bf03c7adb4e26cab3d230b8d0d88663cf6e9e4353e209d3b4777c0",
+      "size": 172
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/qemu-cpu-policy.json": {
+      "sha256": "b60213e45f35d74af31f58e6bfa1751c4015da826d17aa86f3088ba3647205b4",
+      "size": 227
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/runner-busy.json": {
+      "sha256": "56e03ccac993ac1a682e57158f5050ab6119743cadda1f9f7e6482f839069d3c",
+      "size": 470
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/runner-online.json": {
+      "sha256": "5304a33f7d0cc98a143e629ac3086e68a465d01d4615d7859a4db43af4903209",
+      "size": 471
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/workflow-baseline-ids.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "size": 3
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/workflow-run-created.json": {
+      "sha256": "8c7fa75522c1f5333a1f1393499ae2cdb2d2c7391bbd60b7eacff1c137dd6484",
+      "size": 12829
+    },
+    "external/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261010t201128z-1398653/workflow-run.json": {
+      "sha256": "2fcba55be02eef23f90885f74a1c5981a1e33e195a6ac32cbfcc46bf56d25bf1",
+      "size": 14386
+    },
+    ".work/kde-cli-tools-preflight40.zip": {
+      "sha256": "bb18f1e38bc333ce0c6f653bebeb2834e7727a41bf25d0955ce8cc590b841ec4",
+      "size": 37560841
+    },
+    ".work/kde-cli-tools-preflight40.transport.json": {
+      "sha256": "9aeda67ba244df9e728c0275d778e830353b8f432b5042b6dcc61db606943e78",
+      "size": 752
+    },
+    ".work/kde-cli-tools-preflight40-artifact-meta.json": {
+      "sha256": "389d530a0c8856720d4ec99e81c72e59e99d869372c393df2a3d147ce605fcdb",
+      "size": 845
+    },
+    ".work/kde-cli-tools-preflight40-job.json": {
+      "sha256": "507d205d1421fbb7cbde88cf0d3824595ba6596d7d9bbf0105fed9de083f843e",
+      "size": 2563
+    },
+    ".work/kde-cli-tools-preflight40-operator-sources/download-github-artifact.py": {
+      "sha256": "80d9e26c85a8e5964081a94c171128c1b201320f07f53d90380686425ff8c59b",
+      "size": 3131
+    },
+    ".work/kde-cli-tools-preflight40-operator-sources/enrich-new-input-proof.py": {
+      "sha256": "dcc6f9e7676488711f595a0a38770cac9ad7498a35e02dbfaa7b7dde15d00b77",
+      "size": 4562
+    },
+    ".work/kde-cli-tools-preflight40-operator-sources/index.json": {
+      "sha256": "ad9d21d271726a4bb22528cb5efd92a9e0b336d14c8578f05097f0994773d6f9",
+      "size": 1005
+    },
+    ".work/kde-cli-tools-preflight40-operator-sources/observe-owned-physical-gateway.py": {
+      "sha256": "96b2c750787cdadf92d5fc8a4caa67bfb9158c03eef99ae121ccb86aa438cc59",
+      "size": 2944
+    },
+    ".work/kde-cli-tools-preflight40-operator-sources/read-owned-kvm-progress.py": {
+      "sha256": "367507595629dcd8f7048269b238db53e24755bb3eb908009610878f492c6a07",
+      "size": 6337
+    },
+    ".work/kde-cli-tools-preflight40-operator-sources/retain-local-review-inputs.py": {
+      "sha256": "3203ad78d10b3de0d5f909cd3cd44ae9e6b125dbf3952a77e37915d860c426a3",
+      "size": 1970
+    },
+    ".work/kde-cli-tools-preflight40-operator-sources/run-watched-kvm-gate.py": {
+      "sha256": "59f17027400e735d033f49ac77e85d22dfcba7aa64646cb6f70d751a53649ecb",
+      "size": 2809
+    },
+    ".work/kde-cli-tools-preflight40-operator-sources/verify-owned-kvm-cleanup.py": {
+      "sha256": "e56d4bdbc8c51e1c27ba93876278a8952919a03f528f7309a6cbf991c30eeec5",
+      "size": 2570
+    },
+    ".work/kde-cli-tools-preflight40-source-manifests/kde-plasma-level0.json": {
+      "sha256": "d8aa6b4dfdf99bc1fb1b3caa9e113682158dcebd35b0689444bcc6edad4bd554",
+      "size": 39959
+    },
+    ".work/kde-cli-tools-preflight40-source-manifests/kde-plasma-package-build.json": {
+      "sha256": "183f7cf7b1efe777f9a6f97a7302278c0037db366fc7f2a0095d7b66885169fd",
+      "size": 508678
+    },
+    ".work/kde-cli-tools-preflight40-source-manifests/kde-plasma.json": {
+      "sha256": "fe7a7c36c345bafe2ad83cf3e56c16c802e651455d16a79b8bc24ba46d8a1e14",
+      "size": 30900
+    },
+    ".work/kde-cli-tools-preflight40-host.log": {
+      "sha256": "734bbd37cdf3c38c38966a2497fef0bb42a5beab8f288c0656a58bf1c823c6d3",
+      "size": 2262
+    },
+    ".work/kde-cli-tools-preflight40-host-health.jsonl": {
+      "sha256": "af1008764a178baff8b13824cec10f6dea5246e667a2850b5704004c9ca75cb8",
+      "size": 3375
+    },
+    ".work/kde-cli-tools-preflight40-physical-gateway-health.jsonl": {
+      "sha256": "0474f6b73ff2f26cead0e0f45691be320c4171640a786cd596f77a28e94e175e",
+      "size": 1410
+    },
+    ".work/kde-cli-tools-preflight40-progress.jsonl": {
+      "sha256": "8f3b0eaee7eeb28d2bcda5fb78877b9f6564e88ac8b79530617c54feb3ea80fa",
+      "size": 1340
+    },
+    ".work/kde-cli-tools-preflight40-cleanup.json": {
+      "sha256": "9c1c0400563942dccad8f3605729305f89237db3d9b98d273aa950925671746c",
+      "size": 705
+    },
+    ".work/kde-cli-tools-preflight40-final-network-health.json": {
+      "sha256": "ee13a67952acadf8097c3659650383f61efbc84b77d67fba5375e742b4a4328d",
+      "size": 486
+    },
+    ".work/kde-cli-tools-preflight40-active-checkpoint.json": {
+      "sha256": "76caccd3fb5b696766c74bdb598a6138517b9c17159dc0a56712e24403e76c87",
+      "size": 1274
+    },
+    "manifests/evidence/package-revalidation/kde-cli-tools-preflight40/artifact-meta.json": {
+      "sha256": "389d530a0c8856720d4ec99e81c72e59e99d869372c393df2a3d147ce605fcdb",
+      "size": 845
+    },
+    "manifests/evidence/package-revalidation/kde-cli-tools-preflight40/build-contract.json": {
+      "sha256": "41d9a0e2dd9cb0eeb1a7a11737e7e90725bb218399ae9585e7316db52db878d4",
+      "size": 42519
+    },
+    "manifests/evidence/package-revalidation/kde-cli-tools-preflight40/host-evidence-sha256.txt": {
+      "sha256": "9ebf961f44ee14af72e4c2d58ee15630605b1b709fc9b84675a24ffe2656fd64",
+      "size": 11251
+    },
+    "manifests/evidence/package-revalidation/kde-cli-tools-preflight40/host-result.json": {
+      "sha256": "188eadf084fac40e8e35f793876a5a925b980c5eaa97c0559aab37681c6da4c0",
+      "size": 132
+    },
+    "manifests/evidence/package-revalidation/kde-cli-tools-preflight40/qemu-cpu-policy.json": {
+      "sha256": "b60213e45f35d74af31f58e6bfa1751c4015da826d17aa86f3088ba3647205b4",
+      "size": 227
+    },
+    "manifests/evidence/package-revalidation/kde-cli-tools-preflight40/result.json": {
+      "sha256": "fd5e2c6cd864ca3dd1369c3a7acfd10f0d53399347f9018eb28fe3bf5baa2f54",
+      "size": 5780
+    },
+    "manifests/evidence/package-revalidation/kde-cli-tools-preflight40/signature.log": {
+      "sha256": "8a80d83bece07ad844f67b4d3e075ec304be203123969d9a380d0c78f331ff2f",
+      "size": 699
+    },
+    "manifests/evidence/package-revalidation/kde-cli-tools-preflight40/verification.json": {
+      "sha256": "1f675678a60a1e7c44ab54983ba8743e89b7dc4ecb22155465fdfffb9bb50b0c",
+      "size": 40432
+    },
+    "manifests/evidence/package-revalidation/kde-cli-tools-preflight40/workflow-job.json": {
+      "sha256": "507d205d1421fbb7cbde88cf0d3824595ba6596d7d9bbf0105fed9de083f843e",
+      "size": 2563
+    }
+  },
+  "empty_offline_byte_restore_verified": true,
+  "requires_github_for_restore": false,
+  "off_host_backup_verified": false,
+  "candidate_execution": "NOT RUN",
+  "package_attempt_consumed": false
+}

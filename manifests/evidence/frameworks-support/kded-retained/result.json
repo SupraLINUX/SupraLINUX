@@ -1,0 +1,69 @@
+{
+  "result": "PASS",
+  "state": "PASS",
+  "node": "kded",
+  "package_version": "6.30.0-0supralinux1",
+  "package_attempted": true,
+  "package_state_effect": "PASS",
+  "downstream_eligible": true,
+  "tests": "1/1 PASS",
+  "lintian": "PASS-errors",
+  "apt_check": "PASS",
+  "executable_contract": "PASS",
+  "cmake_consumer": "PASS",
+  "payload_contract": "PASS",
+  "ecm_predecessor": "6.30.0-0supralinux3",
+  "direct_predecessors": {
+    "kconfig": {
+      "dev_package": "libkf6config-dev",
+      "version": "6.30.0-0supralinux4"
+    },
+    "kcoreaddons": {
+      "dev_package": "libkf6coreaddons-dev",
+      "version": "6.30.0-0supralinux4"
+    },
+    "kcrash": {
+      "dev_package": "libkf6crash-dev",
+      "version": "6.30.0-0supralinux1"
+    },
+    "kdbusaddons": {
+      "dev_package": "libkf6dbusaddons-dev",
+      "version": "6.30.0-0supralinux3"
+    },
+    "kservice": {
+      "dev_package": "libkf6service-dev",
+      "version": "6.30.0-0supralinux1"
+    },
+    "kdoctools": {
+      "dev_package": "libkf6doctools-dev",
+      "version": "6.30.0-0supralinux1"
+    }
+  },
+  "package_dependency_closure": {
+    "karchive": {
+      "dev_package": "libkf6archive-dev",
+      "version": "6.30.0-0supralinux4"
+    },
+    "ki18n": {
+      "dev_package": "libkf6i18n-dev",
+      "version": "6.30.0-0supralinux1"
+    }
+  },
+  "files": {
+    "kf6-kded_6.30.0-0supralinux1_amd64.changes": "b51856ff7bfe547f1d72ea4add17e851532aef7013c41bbb1780fe8e23e8673e",
+    "kf6-kded_6.30.0-0supralinux1.debian.tar.xz": "5f971aa53129d6c1a70347b19876731addeca02fa3d21060af9a396aedd7be9d",
+    "kded6-dbgsym_6.30.0-0supralinux1_amd64.ddeb": "0458b17ccc5fb4fa65a79838c1483129ae48dd84823ab4f2dfff6d7504909208",
+    "kf6-kded_6.30.0-0supralinux1_amd64.buildinfo": "f3038d8394729caf70cb81f3dd9e13eadc5926dec90c3b3fed206ab553646160",
+    "kf6-kded_6.30.0.orig.tar.xz": "0adf6e22300cee74d57e790b5db844f03a1366a4d6315edbaa49174b12bf1861",
+    "kf6-kded_6.30.0-0supralinux1.dsc": "fe48627801159b62904c354794e7a980ecf8175a20c3c282d8a378f25083e4de",
+    "kded6_6.30.0-0supralinux1_amd64.deb": "bb93a73c8f3056405cad73b56b618e7dac58d446104d3178eba91fd51ec4de1a",
+    "kded6-dev_6.30.0-0supralinux1_amd64.deb": "5242a02a6be2855f98145ee280e6ba58ed9a77268e101ef4268c5f37fe511860"
+  },
+  "schema": 1,
+  "exit_code": 0,
+  "stage": "complete",
+  "started_at": "2026-09-22T11:24:31Z",
+  "finished_at": "2026-09-22T11:27:04Z",
+  "claim": "hosted-clean-package-preflight",
+  "authoritative": false
+}

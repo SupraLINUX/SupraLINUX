@@ -1,0 +1,27 @@
+Source: breeze-plymouth
+Section: kde
+Priority: optional
+Maintainer: SupraLINUX Project <packages@supralinux.invalid>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Build-Depends: cmake (>= 2.8.12),
+               debhelper-compat (= 13),
+               dh-sequence-kf6,
+               dh-sequence-pkgkde-symbolshelper,
+               extra-cmake-modules (= 6.30.0-0supralinux3),
+               libevdev-dev,
+               libplymouth-dev,
+               libudev-dev,
+               libxkbcommon-dev,
+               pkgconf,
+Standards-Version: 4.7.0
+Homepage: https://invent.kde.org/plasma/breeze-plymouth
+Vcs-Browser: https://github.com/SupraLINUX/SupraLINUX/tree/architecture/bootstrap-v1/packages/plasma/breeze-plymouth
+Vcs-Git: https://github.com/SupraLINUX/SupraLINUX.git
+Rules-Requires-Root: no
+
+Package: plymouth-theme-breeze
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, fonts-noto-core, plymouth-label,
+Description: Breeze theme for Plymouth
+ Breeze theme for Plymouth system boot splash to fit in with KDE
+ Plasma's themeing.

@@ -1,0 +1,4 @@
+31858ca3969a93efff4909693db543444bd52286dd5f9eb945bc2df5b6d3dbf3  /usr/bin/kwin_wayland
+84ae0c7431ceff9f5ca48aee61b2c45bad590738330ca29daadcf7f48e53de93  /usr/bin/kwin_x11
+fb4f9611686fb9e898fd902c0fa579f9c5183952f30580854935ca4ec060775a  /usr/lib/x86_64-linux-gnu/libkwin.so.6
+f83c9e2755264124712fb74414ac131bbecae01898110b140a76bc16ab443f21  /usr/lib/x86_64-linux-gnu/libkwin-x11.so.6

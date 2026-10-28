@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-kpipewire-baseline
+sha256sum --check --strict "${BASE}/ubuntu-client.sha256"
+dpkg-query -W -f='${Package} ${Architecture} ${Version}\n' libqt6core6t64 libpipewire-0.3-0t64 libavcodec62 libavformat62 libavfilter11 libavutil60 libswscale9 > "${AUTOPKGTEST_TMP}/providers"
+cmp "${BASE}/ubuntu-provider-versions" "${AUTOPKGTEST_TMP}/providers"
+python3 "${BASE}/source/run-private-video.py" "${BASE}/build/ubuntu-kpipewire-client" "${AUTOPKGTEST_ARTIFACTS}/unchanged-ubuntu-client" "${BASE}/build/private-video-source"
+version=$(dpkg-query -W -f='${Version}' libkpipewire6)
+dpkg --compare-versions "${version}" gt "$(cat "${BASE}/ubuntu-version")"
+for package in libkpipewire-data libkpipewire-dev libkpipewire6 libkpipewiredmabuf6 libkpipewirerecord6 qml6-module-org-kde-pipewire; do
+    [[ $(dpkg-query -W -f='${Version}' "${package}") == "${version}" ]]
+done
+for library in KPipeWire KPipeWireRecord KPipeWireDmaBuf; do
+    ldconfig -p | grep -F "lib${library}.so.6 " >/dev/null
+done
+apt-get check
+cp -a "${BASE}" "${AUTOPKGTEST_ARTIFACTS}/ubuntu-client-baseline"

@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+"""Execute the unchanged Ubuntu client after the complete four-binary upgrade."""
+import os
+import shutil
+import subprocess
+from pathlib import Path
+
+base=Path('/var/tmp/supralinux-layershell-baseline')
+candidate='6.7.5-0supralinux1'
+baseline=(base/'ubuntu-dev-version').read_text().strip()
+subprocess.run(['dpkg','--compare-versions',candidate,'gt',baseline],check=True)
+subprocess.run(['sha256sum','--check','--strict',str(base/'binary-sha256.txt')],check=True)
+for package in ['layer-shell-qt','liblayershellqtinterface-dev','liblayershellqtinterface6','qml6-module-org-kde-layershell']:
+    assert subprocess.check_output(['dpkg-query','-W','-f=${Version}',package],text=True).strip()==candidate
+assert subprocess.check_output(['dpkg-query','-W','-f=${Version}','libqt6waylandclient6'],text=True).strip()==(base/'ubuntu-qt-wayland-version').read_text().strip()
+library=Path('/usr/lib/x86_64-linux-gnu/libLayerShellQtInterface.so.6')
+assert library.resolve().name.endswith('.6.7.5')
+assert 'Library soname: [libLayerShellQtInterface.so.6]' in subprocess.check_output(['readelf','-d',str(library)],text=True)
+assert 'not found' not in subprocess.check_output(['ldd',str(library)],text=True)
+environment=os.environ.copy();environment.update(QT_QPA_PLATFORM='offscreen',XDG_RUNTIME_DIR=str(base/'runtime'))
+subprocess.run([str(base/'build/ubuntu-layershell-client')],env=environment,check=True)
+subprocess.run(['apt-get','check'],check=True)
+shutil.copytree(base,Path(os.environ['AUTOPKGTEST_ARTIFACTS'])/'ubuntu-compiled-client',dirs_exist_ok=True)
+print(f'Unchanged Ubuntu {baseline} client after complete SupraLINUX {candidate} library/plugin/QML upgrade: PASS')

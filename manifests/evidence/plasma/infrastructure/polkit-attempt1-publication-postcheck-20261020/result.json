@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "state": "INFRA_INVALID",
+  "kind": "host-evidence-publication-post-push-pr-head-lag",
+  "source_commit": "0c7a9ccca6e9763b040cc59ce9864db8922c4e55",
+  "control": {
+    "router_run_id": 39447487752,
+    "host_job_id": 118713234012,
+    "artifact_id": 12275588234,
+    "artifact_digest": "sha256:a75dbf317ba6ffdd48c4e29173bd819e794a779e3dd650fb6ae96e780e0d213c",
+    "mode": "publish-evidence",
+    "exit_code": 1
+  },
+  "publication": {
+    "canonical_commit": "f312b670579a0946b2f4acd1ef16da22d6adb359",
+    "branch": "architecture/bootstrap-v1",
+    "branch_update_succeeded": true,
+    "externally_verified_current_head": "f312b670579a0946b2f4acd1ef16da22d6adb359",
+    "canonical_state_verified": true
+  },
+  "package": {
+    "node": "polkit-kde-agent-1",
+    "attempt": 1,
+    "state": "PASS",
+    "package_source_commit": "a8bfddd4a39c719016476a0e7425aaf461d9d9c5",
+    "workflow_run_id": 39416478708,
+    "workflow_job_id": 118606632416,
+    "artifact_id": 12261299420,
+    "artifact_sha256": "b3403e7a820ae901faeedecc46b9cd8fdc555e104537e010be0a40bdca7d3422",
+    "package_attempt_consumed": true
+  },
+  "observations": {
+    "failure_stage": "post-push PR-head verification",
+    "package_execution_started": false,
+    "new_package_attempt_consumed": false,
+    "canonical_publish_replay_required": false,
+    "branch_republish_required": false
+  },
+  "cause": "The checked publication push completed and the canonical commit became the branch head, but the immediate GitHub pull-request API read still reported the pre-push head. The control therefore failed after the mutation had already succeeded.",
+  "repair": "Verify successful publication against the exact remote branch ref with bounded retries after a successful force-with-lease push. Do not repeat the already successful canonical publication. Reset the authoritative request to a non-mutating mode."
+}

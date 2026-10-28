@@ -1,0 +1,4 @@
+usr/include/KF6/KItemViews/
+usr/lib/${DEB_HOST_MULTIARCH}/cmake/KF6ItemViews/
+usr/lib/${DEB_HOST_MULTIARCH}/libKF6ItemViews.so
+usr/lib/${DEB_HOST_MULTIARCH}/qt6/plugins/designer/kitemviews6widgets.so

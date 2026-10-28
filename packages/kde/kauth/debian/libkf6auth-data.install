@@ -1,0 +1,4 @@
+usr/share/dbus-1/system.d/org.kde.kf6auth.conf
+usr/share/kf6/kauth/
+usr/share/locale/*/*/kauth6_qt.qm
+usr/share/qlogging-categories6/kauth.*

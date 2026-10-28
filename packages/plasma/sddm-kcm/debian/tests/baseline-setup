@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+BASE=/var/tmp/supralinux-sddm-kcm-baseline
+mkdir -p -- "${BASE}"
+actual="$(dpkg-query -W -f='${Version}' kde-config-sddm)"
+expected="$(cat /var/tmp/supralinux-ubuntu-package-version)"
+[[ "${actual}" == "${expected}" ]]
+printf '%s\n' "${actual}" > "${BASE}/ubuntu-version"
+dpkg-query -L kde-config-sddm > "${BASE}/installed-files.txt"
+grep -F '/kcmsddm_authhelper' "${BASE}/installed-files.txt" >/dev/null
+grep -F '/sddmthemeinstaller' "${BASE}/installed-files.txt" >/dev/null
+grep -F '/sddmtheme.knsrc' "${BASE}/installed-files.txt" >/dev/null
+grep -F '/kcm_sddm.so' "${BASE}/installed-files.txt" >/dev/null
+printf 'Reviewed Ubuntu SDDM KCM baseline: PASS\n'

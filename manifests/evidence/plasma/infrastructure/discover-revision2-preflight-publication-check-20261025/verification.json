@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "discover-revision2-authoritative-preflight-publication-check",
+  "source_commit": "c57a0a0b8bb740c3dfe1a1cf13bb0262c26da0b3",
+  "control": {
+    "router_run_id": 40156638273,
+    "host_job_id": 121059344143,
+    "artifact_id": 12585130712,
+    "artifact_digest": "sha256:ebcc90202202bcfff2f8ed8932fc98e91379c4de0e0db831aa7902e1b8dc80d7",
+    "mode": "publish-evidence-check"
+  },
+  "package_evidence": {
+    "node": "discover",
+    "package_version": "6.7.5-0supralinux2",
+    "package_source_commit": "a2f4fe6b71a1c4abcbb43c6ec4be5bda3790d1d9",
+    "workflow_run_id": 40098455633,
+    "workflow_job_id": 120885513138,
+    "artifact_id": 12561658605,
+    "artifact_sha256": "f5fa15f92e0aacd18ee808331bde9f70a2c73d8b5874f94114e04c37630a95dd",
+    "host_evidence_manifest_sha256": "25c2b66e0d9af7c4040cb74bbb73fca08ca4bc4eef96ea2ddbd20046d622e842",
+    "package_attempt_consumed": false
+  },
+  "result": {
+    "closure_kind": "preflight",
+    "canonical_update_file_count": 16,
+    "canonical_update_manifest_sha256": "aaa59da3a8fde7f5ea758a5ba9ac518c2b6e5885d54b6be3f51e8e75025c1a18",
+    "candidate_commit": "347221a0bebff8693e20b7cf72dc4170c3f5bd09",
+    "publish_dry_run": true,
+    "published": false,
+    "offline_restore_verified": true,
+    "requires_github_for_restore": false,
+    "package_attempt_effect": "none"
+  },
+  "conclusion": "The authoritative Discover revision2 input-preflight PASS replayed successfully, produced the expected 16-file canonical preflight closure, passed repository validation and a force-with-lease dry-run, and consumed no package Attempt."
+}

@@ -1,0 +1,15 @@
+# SupraLINUX authoritative runner exception for autopkgtest-virt-unshare.
+# Ubuntu keeps kernel.apparmor_restrict_unprivileged_userns=1 globally.
+# autopkgtest-virt-unshare supports a local util-linux unshare copy found via
+# PATH; only that reviewed private copy receives the userns exception.
+#
+# /usr/bin/unshare remains governed by Ubuntu's default AppArmor policy.
+
+abi <abi/5.0>,
+include <tunables/global>
+
+profile supralinux-autopkgtest-virt-unshare /usr/local/libexec/supralinux-autopkgtest/unshare flags=(unconfined) {
+  userns,
+
+  include if exists <local/supralinux-autopkgtest-virt-unshare>
+}

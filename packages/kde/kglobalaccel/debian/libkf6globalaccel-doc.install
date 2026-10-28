@@ -1,0 +1,2 @@
+# Intentionally empty: SupraLINUX retains the Debian-family documentation package name
+# but does not build QCH in the current Frameworks profile.

@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "state": "PASS",
+  "scope": "e1000e-runtime-offload-safety-restore",
+  "source_commit": "7def2927c8c29a355a729a21a9ea8243f34b46a8",
+  "workflow_run_id": 39370558076,
+  "workflow_job_id": 118457563598,
+  "artifact_id": 12241405975,
+  "artifact_digest": "sha256:01a9ddb835c1f9b2faa089e6fb197a0d87dd922cccdf9f87b7f7686e311cc4aa",
+  "interface": "eno1",
+  "driver": "e1000e",
+  "changed": true,
+  "features_before": {
+    "gso": "on",
+    "tso": "on"
+  },
+  "features_after": {
+    "gso": "off",
+    "tso": "off"
+  },
+  "carrier_before": "1",
+  "carrier_after": "1",
+  "addresses_preserved": true,
+  "default_route_preserved": true,
+  "userspace_network_admission": "PASS",
+  "kvm_open_ok": true,
+  "kvm_api_version": 12,
+  "persistent_change": false,
+  "host_firewall_modified": false,
+  "host_packages_installed": false,
+  "host_routes_modified": false,
+  "host_bridges_modified": false,
+  "docker_modified": false,
+  "vm_created": false,
+  "jit_invoked": false,
+  "package_execution_started": false,
+  "consumes_package_attempt": false,
+  "package_attempt_effect": "none",
+  "next_gate": "authoritative-plasma-package-input-preflight:polkit-kde-agent-1"
+}

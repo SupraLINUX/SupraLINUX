@@ -1,0 +1,14 @@
+#!/bin/sh
+# SPDX-License-Identifier: CC0-1.0
+# Run the real helper, preserving its arguments and result; settle only on success.
+set -eu
+helper=$1
+settle=$2
+shift 2
+case "$helper" in /*) ;; *) exit 2 ;; esac
+case "$settle" in 5.1|1.6) ;; *) exit 2 ;; esac
+test -x "$helper"
+status=0
+"$helper" "$@" || status=$?
+if [ "$status" -eq 0 ]; then sleep "$settle"; fi
+exit "$status"

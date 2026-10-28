@@ -1,0 +1,18 @@
+[  0%] Built target stats-client_autogen_timestamp_deps
+[  0%] Built target stats-server_autogen_timestamp_deps
+[ 20%] Automatic MOC for target stats-server
+[ 20%] Automatic MOC for target stats-client
+[ 20%] Built target stats-client_autogen
+[ 30%] Building CXX object CMakeFiles/stats-client.dir/stats-client_autogen/mocs_compilation.cpp.o
+[ 40%] Building CXX object CMakeFiles/stats-client.dir/main.cpp.o
+[ 40%] Built target stats-server_autogen
+[ 50%] Building CXX object CMakeFiles/stats-server.dir/stats-server_autogen/mocs_compilation.cpp.o
+[ 60%] Building CXX object CMakeFiles/stats-server.dir/stats-server.cpp.o
+gmake[2]: *** No rule to make target '/usr/lib/x86_64-linux-gnu/libsensors.so', needed by 'stats-client'.  Stop.
+gmake[2]: *** Waiting for unfinished jobs....
+gmake[2]: *** No rule to make target '/usr/lib/x86_64-linux-gnu/libsensors.so', needed by 'stats-server'.  Stop.
+gmake[2]: *** Waiting for unfinished jobs....
+gmake[1]: *** [CMakeFiles/Makefile2:128: CMakeFiles/stats-client.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+gmake[1]: *** [CMakeFiles/Makefile2:95: CMakeFiles/stats-server.dir/all] Error 2
+gmake: *** [Makefile:91: all] Error 2

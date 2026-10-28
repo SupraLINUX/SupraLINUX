@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+"""Check the complete signed resource set, freedesktop metadata and decoding."""
+import configparser
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+
+
+def verify(root, expected):
+    owned = subprocess.check_output(["dpkg-query", "-L", "oxygen-sounds"], text=True).splitlines()
+    actual = {str(Path(path).relative_to(root)) for path in owned if Path(path).is_relative_to(root)
+              and (Path(path).is_file() or Path(path).is_symlink())}
+    assert actual == set(expected), "Installed sound resource set changed"
+    for relative, checksum in expected.items():
+        path = root / relative
+        if isinstance(checksum, dict):
+            assert path.is_symlink() and str(path.readlink()) == checksum["symlink"], "Sound alias target changed"
+            assert path.resolve().is_relative_to(root.resolve()) and path.is_file(), "Sound alias is broken or escapes theme"
+            continue
+        assert not path.is_symlink(), "Unexpected sound resource symlink"
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == checksum, f"Resource differs from signed upstream: {relative}"
+    metadata = configparser.ConfigParser(interpolation=None, strict=True)
+    metadata.read(root / "oxygen/index.theme")
+    theme = metadata["Sound Theme"]
+    assert theme["Name"] == "Oxygen" and theme["Directories"] == "stereo"
+    assert metadata["stereo"]["OutputProfile"] == "stereo"
+    audio = sorted(path for path in (root / "oxygen/stereo").iterdir() if path.suffix in {".oga", ".ogg", ".wav"})
+    assert audio, "No playable theme sounds"
+    assert any(path.stem == theme["Example"] for path in audio), "Theme example is missing"
+    # Legacy applications still resolve all old Oxygen-*.ogg paths.
+    legacy = sorted(root.glob("Oxygen-*.ogg"))
+    assert len(legacy) == 50, "Legacy sound paths are incomplete"
+    for path in audio + legacy:
+        subprocess.run(["ffmpeg", "-v", "error", "-xerror", "-i", str(path), "-f", "null", "-"],
+                       stdin=subprocess.DEVNULL, check=True)
+    print(f"Sound resource integrity and decoding: PASS; files={len(expected)}; audio={len(audio)}")
+
+
+if __name__ == "__main__":
+    verify(Path("/usr/share/sounds"), json.loads(Path(__file__).with_suffix(".json").read_text()))

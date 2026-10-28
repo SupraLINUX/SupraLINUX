@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "scope": "direct post-gate cleanup verification",
+  "checked_at": "2026-10-08T03:10:54.767710+00:00",
+  "vm_name": "supralinux-plasma-package-build-20261007t235908z-751922",
+  "vm_absent": true,
+  "runner_id": 240,
+  "runner_absent": true,
+  "overlay_directory": "/var/lib/supralinux/ephemeral-runners/supralinux-plasma-package-build-20261007t235908z-751922",
+  "overlay_absent": true,
+  "golden_image_preserved": true,
+  "execution_backing_image_preserved": true,
+  "workflow_run_id": 37705452980,
+  "source_commit": "3e889e04f3229fe07aeab7b12bc24a15cb42da9a",
+  "host_evidence_dir": "/var/lib/supralinux/evidence/host-kvm/supralinux-plasma-package-build-20261007t235908z-751922"
+}

@@ -1,0 +1,2 @@
+ubuntu-abi-client    FAIL stderr: dbus-daemon[1017]: [session uid=0 pid=1017 pidfd=5] Activating service name='org.kde.NightTime' requested by ':1.0' (uid=0 pid=1020 comm="/var/tmp/supralinux-knighttime-baseline/build/ubun" label="unconfined")
+consumer             FAIL stderr: dbus-daemon[998]: [session uid=0 pid=998 pidfd=5] Activating service name='org.kde.NightTime' requested by ':1.0' (uid=0 pid=1001 comm="/tmp/autopkgtest.2jqyhd/autopkgtest_tmp/consumer/u" label="unconfined")

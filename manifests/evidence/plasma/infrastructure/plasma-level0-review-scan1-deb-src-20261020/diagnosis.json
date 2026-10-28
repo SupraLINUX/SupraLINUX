@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "state": "DIAGNOSED",
+  "incident_workflow_run_id": 39448797020,
+  "incident_workflow_job_id": 118717842403,
+  "source_commit": "63644219f82ad93c4146d1b9be99fe915b066de5",
+  "task_id": "plasma-level0-review-scan",
+  "script_sha256": "832bde591d15093757af0d496eefdbeb0dfb12c9f9491a544365a7ad958d2d1b",
+  "observations": {
+    "workspace_boot": "PASS",
+    "network_connectivity": "PASS",
+    "apt_binary_update": "PASS",
+    "prerequisite_packages": "PASS",
+    "pending_nodes": 12,
+    "first_node": "discover",
+    "first_source_package": "plasma-discover",
+    "first_reference_version": "6.6.6-0ubuntu0.1",
+    "failure": "APT source repositories unavailable",
+    "task_exit_code": 100,
+    "disposable_vm_cleanup": "PASS",
+    "artifact_delivery": "PASS"
+  },
+  "classification": "INFRA_INVALID",
+  "package_attempt_effect": "none",
+  "retry_scope": "same planning scan after guest-only deb-src repair"
+}

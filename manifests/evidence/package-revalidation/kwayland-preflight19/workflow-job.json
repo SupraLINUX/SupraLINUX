@@ -1,0 +1,48 @@
+{
+  "id": 112850088659,
+  "name": "Reviewed Plasma package on KVM guest",
+  "status": "completed",
+  "conclusion": "success",
+  "run_id": 37638261684,
+  "logs_url": null,
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Checkout exact authorized PR head",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Run current reviewed package",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3
+    },
+    {
+      "name": "Retain package sources, binaries and evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Post Checkout exact authorized PR head",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9
+    }
+  ],
+  "head_sha": "e7445b8dce4a200248616ba395c3f9e5444ca017",
+  "head_sha_source": "GitHub connector artifact.workflow_run; independently checked against sealed host workflow-run.json"
+}

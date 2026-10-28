@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+"""Re-run the unchanged Ubuntu KDED/Qt client after candidate module upgrade."""
+import os
+import shutil
+import subprocess
+from pathlib import Path
+base=Path('/var/tmp/supralinux-kwrited-baseline')
+candidate='4:6.7.5-0supralinux1'
+baseline=(base/'ubuntu-version').read_text().strip()
+subprocess.run(['dpkg','--compare-versions',candidate,'gt',baseline],check=True)
+assert subprocess.check_output(['dpkg-query','-W','-f=${Version}','kwrited'],text=True).strip()==candidate
+assert subprocess.check_output(['dpkg-query','-W','-f=${Version}','libqt6core6t64'],text=True).strip()==(base/'ubuntu-qt-core-version').read_text().strip()
+subprocess.run(['sha256sum','--check','--strict',str(base/'binary-sha256.txt')],check=True)
+installed=subprocess.check_output(['dpkg','-L','kwrited'],text=True).splitlines()
+modules=[p for p in installed if p.endswith('/kf6/kded/kwrited.so')]
+assert len(modules)==1 and any(p.endswith('/kwrited.notifyrc') for p in installed)
+assert not any(p.endswith('/bin/kwrited') for p in installed), 'Unexpected privileged executable profile'
+assert 'not found' not in subprocess.check_output(['ldd',modules[0]],text=True)
+subprocess.run([str(base/'run-session'),str(base/'build/ubuntu-kwrited-client')],check=True)
+subprocess.run(['apt-get','check'],check=True)
+shutil.copytree(base,Path(os.environ['AUTOPKGTEST_ARTIFACTS'])/'ubuntu-compiled-client',dirs_exist_ok=True)
+print(f'Unchanged Ubuntu {baseline} client with SupraLINUX {candidate} module and actual PTY/notification behavior: PASS')
