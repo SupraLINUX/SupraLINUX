@@ -182,7 +182,7 @@ required_broker = [
     '"SUPRALINUX_GITHUB_TOKEN": token',
     '"SUPRALINUX_PERSISTENT_ARTIFACT_ROOT": str(PERSISTENT_ARTIFACT_ROOT)',
     '"package_attempt_effect=none-before-execute"',
-    '"jit_api_lifecycle="',
+    'jit_api_lifecycle=',
     '"jit-api-preflight-result.txt"',
     '"jit_runner_lifecycle=create-delete-pass"',
     '["scripts/check-jit-runner-api-lifecycle.sh"]',
