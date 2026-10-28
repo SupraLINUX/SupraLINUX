@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "gate": "supralinux-proposed",
   "mode": "repair-proposed-retained-artifacts",
+  "gate": "supralinux-proposed",
   "runner_group_id": 3
 }
