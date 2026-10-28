@@ -72,13 +72,14 @@ jobs:
               "repair-frameworks-retained-artifacts",
               "repair-proposed-retained-artifacts",
               "certify-proposed-content",
+              "certify-proposed-signing",
           }
           assert request.get("gate") in {"plasma-package-build", "runner-contract", "supralinux-proposed"}
           if request["gate"] == "runner-contract":
               assert request["mode"] in {"preflight", "execute"}
           if request["gate"] == "supralinux-proposed":
-              assert request["mode"] in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content"}
-          if request["mode"] in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content"}:
+              assert request["mode"] in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"}
+          if request["mode"] in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"}:
               assert request["gate"] == "supralinux-proposed"
           assert isinstance(request.get("runner_group_id"), int) and request["runner_group_id"] > 0
           cancel = request.get("cancel_run_id")
@@ -88,7 +89,7 @@ jobs:
               assert cancel_head is None
           else:
               assert isinstance(cancel_head, str) and re.fullmatch(r"[0-9a-f]{40}", cancel_head)
-          if request["mode"] in {"diagnose", "repair-host", "repair-libguestfs-runtime", "rebuild-golden", "execute", "execute-and-publish-pass", "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence", "repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content"}:
+          if request["mode"] in {"diagnose", "repair-host", "repair-libguestfs-runtime", "rebuild-golden", "execute", "execute-and-publish-pass", "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence", "repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"}:
               assert cancel is None and cancel_head is None
           if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:
               assert isinstance(request.get("evidence_node"), str)

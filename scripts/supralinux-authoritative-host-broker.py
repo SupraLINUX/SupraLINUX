@@ -57,15 +57,16 @@ if request.get("mode") not in {
     "repair-frameworks-retained-artifacts",
     "repair-proposed-retained-artifacts",
     "certify-proposed-content",
+    "certify-proposed-signing",
 }:
     raise SystemExit("Unsupported control mode.")
 if request.get("gate") not in {"plasma-package-build", "runner-contract", "supralinux-proposed"}:
     raise SystemExit("Unsupported authoritative gate.")
 if request.get("gate") == "runner-contract" and request.get("mode") not in {"preflight", "execute"}:
     raise SystemExit("Runner contract gate permits only preflight or execute mode.")
-if request.get("gate") == "supralinux-proposed" and request.get("mode") not in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content"}:
+if request.get("gate") == "supralinux-proposed" and request.get("mode") not in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"}:
     raise SystemExit("SupraLINUX-proposed gate permits only retained-artifact repair or content certification.")
-if request.get("mode") in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content"} and request.get("gate") != "supralinux-proposed":
+if request.get("mode") in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"} and request.get("gate") != "supralinux-proposed":
     raise SystemExit("SupraLINUX-proposed repair/certification modes require the SupraLINUX-proposed gate.")
 
 source_commit = request.get("source_commit")
@@ -156,7 +157,7 @@ else:
 if request["mode"] in {
     "diagnose", "repair-host", "repair-libguestfs-runtime", "rebuild-golden", "execute", "execute-and-publish-pass",
     "close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence",
-    "repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content",
+    "repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing",
 } and (
     cancel_run_id is not None or cancel_run_head_sha is not None
 ):
@@ -609,6 +610,77 @@ if request["mode"] == "certify-proposed-content":
     if proposed_rc != 0:
         raise SystemExit(proposed_rc)
     print("HOST_SUPRALINUX_PROPOSED_CONTENT_CERTIFICATION=PASS")
+    raise SystemExit(0)
+
+
+
+if request["mode"] == "certify-proposed-signing":
+    signing_root = WORK_ROOT / control_run_id
+    signing_checkout = signing_root / "repo"
+    signing_work = signing_root / "work"
+    signing_evidence = signing_root / "evidence"
+    if signing_root.exists():
+        raise SystemExit(f"Proposed signing certification work directory already exists: {signing_root}")
+    signing_root.mkdir(mode=0o700)
+    os.chown(signing_root, operator.pw_uid, operator.pw_gid)
+
+    signing_log = result_dir / "proposed-signing-certification.log"
+    signing_rc = 125
+    try:
+        prepare_control_checkout(signing_checkout)
+        run_as_operator(["test", "-d", str(PERSISTENT_ARTIFACT_ROOT)])
+        run_as_operator(["test", "-r", str(PERSISTENT_ARTIFACT_ROOT)])
+        signing_rc = stream_as_operator(
+            [
+                "python3",
+                "scripts/certify-supralinux-proposed-signing.py",
+                "--checkout", str(signing_checkout),
+                "--artifact-root", str(PERSISTENT_ARTIFACT_ROOT),
+                "--work-dir", str(signing_work),
+                "--evidence-dir", str(signing_evidence),
+                "--source-commit", source_commit,
+            ],
+            signing_log,
+            cwd=signing_checkout,
+        )
+        if signing_evidence.exists():
+            if any(path.is_symlink() for path in signing_evidence.rglob("*")):
+                raise SystemExit("Proposed signing certification evidence contains a symlink.")
+            destination = result_dir / "proposed-signing-certification"
+            shutil.copytree(signing_evidence, destination)
+            for path in [destination, *destination.rglob("*")]:
+                os.chown(path, runner_pw.pw_uid, runner_pw.pw_gid)
+                os.chmod(path, 0o700 if path.is_dir() else 0o600)
+    finally:
+        if signing_root.exists():
+            shutil.rmtree(signing_root)
+
+    write_result(
+        "proposed-signing-control-result.txt",
+        "\n".join(
+            [
+                f"state={'PASS' if signing_rc == 0 else 'INFRA_INVALID'}",
+                f"exit_code={signing_rc}",
+                "mode=certify-proposed-signing",
+                "gate=supralinux-proposed",
+                f"source_commit={source_commit}",
+                "scope=supralinux-proposed-signing-certification",
+                "github_api_mutation=no",
+                "repository_active=no",
+                "production_activation_eligible=no",
+                "private_signing_key_retained=no",
+                "stable_publication_authorized=no",
+                "vm_created=no",
+                "jit_invoked=no",
+                "sbuild_invoked=no",
+                "package_attempt_effect=none",
+                "",
+            ]
+        ),
+    )
+    if signing_rc != 0:
+        raise SystemExit(signing_rc)
+    print("HOST_SUPRALINUX_PROPOSED_SIGNING_CERTIFICATION=PASS")
     raise SystemExit(0)
 
 

@@ -68,6 +68,10 @@ for token in (
     "InRelease",
     "Release.gpg",
     "signed proposed repositories require --signing-key",
+    "--signed-certification",
+    "signed certification requires --signing-key",
+    '"certification_mode": certification_mode',
+    '"activation_eligible": signing is not None and not args.signed_certification',
     '"stable_publication_authorized": False',
 ):
     assert token in builder, f"proposed builder missing contract: {token}"

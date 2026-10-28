@@ -18,6 +18,7 @@ expected_auto = {
     ("supralinux-proposed", "repair-frameworks-retained-artifacts"),
     ("supralinux-proposed", "repair-proposed-retained-artifacts"),
     ("supralinux-proposed", "certify-proposed-content"),
+    ("supralinux-proposed", "certify-proposed-signing"),
 }
 if module.AUTO_SYNCHRONIZE_CONTROLS != expected_auto:
     raise SystemExit("automatic host-control scope drifted")

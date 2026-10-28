@@ -359,6 +359,7 @@ def main() -> None:
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--signing-key")
     parser.add_argument("--unsigned-certification", action="store_true")
+    parser.add_argument("--signed-certification", action="store_true")
     args = parser.parse_args()
 
     if args.output.exists() or args.manifest.exists():
@@ -368,10 +369,21 @@ def main() -> None:
         raise SystemExit("invalid proposed transaction plan")
     if plan.get("stable_publication_authorized") is not False:
         raise SystemExit("proposed plan must not authorize stable publication")
+    if args.unsigned_certification and args.signed_certification:
+        raise SystemExit("choose exactly one certification mode")
     if not args.signing_key and not args.unsigned_certification:
         raise SystemExit("signed proposed repositories require --signing-key")
     if args.signing_key and args.unsigned_certification:
         raise SystemExit("choose signed mode or unsigned certification mode, not both")
+    if args.signed_certification and not args.signing_key:
+        raise SystemExit("signed certification requires --signing-key")
+    certification_mode = (
+        "signed"
+        if args.signed_certification
+        else "unsigned"
+        if args.unsigned_certification
+        else None
+    )
 
     suite = plan["suite"]
     pool = args.output / "pool" / "main"
@@ -510,7 +522,8 @@ def main() -> None:
         "release_sha256": sha256(release_path),
         "signed": signing is not None,
         "signing": signing,
-        "activation_eligible": signing is not None,
+        "certification_mode": certification_mode,
+        "activation_eligible": signing is not None and not args.signed_certification,
         "stable_publication_authorized": False,
         "canonical_package_state_effect": "none",
         "package_attempt_consumed": False,
