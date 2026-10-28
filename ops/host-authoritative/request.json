@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "mode": "certify-proposed-signing",
-  "gate": "supralinux-proposed",
+  "mode": "execute",
+  "gate": "supralinux-proposed-integration",
   "runner_group_id": 3
 }
