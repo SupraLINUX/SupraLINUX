@@ -373,6 +373,7 @@ required_workflow = [
     '"runner-contract"',
     '"repair-proposed-retained-artifacts"',
     '"certify-proposed-content"',
+    '"certify-proposed-signing"',
     '"supralinux-proposed"',
 ]
 for token in required_workflow:
@@ -387,6 +388,7 @@ required_router = [
     '"runner-contract"',
     '"repair-proposed-retained-artifacts"',
     '"certify-proposed-content"',
+    '"certify-proposed-signing"',
     '"supralinux-proposed"',
     "scripts/plan-host-control-trigger.py",
     "needs.repository-policy.result == 'success'",
@@ -436,15 +438,16 @@ if request.get("mode") not in {
     "repair-frameworks-retained-artifacts",
     "repair-proposed-retained-artifacts",
     "certify-proposed-content",
+    "certify-proposed-signing",
 }:
     raise SystemExit(f"unexpected authoritative host request mode: {request!r}")
 if request.get("gate") not in {"plasma-package-build", "runner-contract", "supralinux-proposed"}:
     raise SystemExit(f"unexpected authoritative host request gate: {request!r}")
 if request.get("gate") == "runner-contract" and request.get("mode") not in {"preflight", "execute"}:
     raise SystemExit(f"invalid runner-contract request mode: {request!r}")
-if request.get("gate") == "supralinux-proposed" and request.get("mode") not in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content"}:
+if request.get("gate") == "supralinux-proposed" and request.get("mode") not in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"}:
     raise SystemExit(f"invalid supralinux-proposed request mode: {request!r}")
-if request.get("mode") in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content"} and request.get("gate") != "supralinux-proposed":
+if request.get("mode") in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"} and request.get("gate") != "supralinux-proposed":
     raise SystemExit(f"invalid proposed repair/certification gate: {request!r}")
 if request.get("runner_group_id") != 3:
     raise SystemExit(f"unexpected authoritative host runner group: {request!r}")
