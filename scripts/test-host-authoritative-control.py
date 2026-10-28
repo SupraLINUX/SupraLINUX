@@ -369,9 +369,6 @@ required_workflow = [
     '"repair-proposed-retained-artifacts"',
     '"certify-proposed-content"',
     '"supralinux-proposed"',
-    "scripts/plan-host-control-trigger.py",
-    "needs.repository-policy.result == 'success'",
-    "needs.host-workspace-admission.outputs.requested == 'true'",
 ]
 for token in required_workflow:
     if token not in workflow:
@@ -386,6 +383,9 @@ required_router = [
     '"repair-proposed-retained-artifacts"',
     '"certify-proposed-content"',
     '"supralinux-proposed"',
+    "scripts/plan-host-control-trigger.py",
+    "needs.repository-policy.result == 'success'",
+    "needs.host-workspace-admission.outputs.requested == 'true'",
 ]
 for token in required_router:
     if token not in router:
