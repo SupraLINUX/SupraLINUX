@@ -67,8 +67,8 @@ if request.get("gate") == "runner-contract" and request.get("mode") not in {"pre
     raise SystemExit("Runner contract gate permits only preflight or execute mode.")
 if request.get("gate") == "supralinux-proposed" and request.get("mode") not in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"}:
     raise SystemExit("SupraLINUX-proposed gate permits only retained-artifact repair or content certification.")
-if request.get("gate") == "supralinux-proposed-integration" and request.get("mode") not in {"preflight", "execute"}:
-    raise SystemExit("SupraLINUX-proposed integration gate permits only preflight or execute mode.")
+if request.get("gate") == "supralinux-proposed-integration" and request.get("mode") not in {"repair-host", "preflight", "execute"}:
+    raise SystemExit("SupraLINUX-proposed integration gate permits only repair-host, preflight, or execute mode.")
 if request.get("mode") in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"} and request.get("gate") != "supralinux-proposed":
     raise SystemExit("SupraLINUX-proposed repair/certification modes require the SupraLINUX-proposed gate.")
 

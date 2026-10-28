@@ -19,6 +19,7 @@ expected_auto = {
     ("supralinux-proposed", "repair-proposed-retained-artifacts"),
     ("supralinux-proposed", "certify-proposed-content"),
     ("supralinux-proposed", "certify-proposed-signing"),
+    ("supralinux-proposed-integration", "repair-host"),
     ("supralinux-proposed-integration", "preflight"),
     ("supralinux-proposed-integration", "execute"),
 }
@@ -126,6 +127,36 @@ with tempfile.TemporaryDirectory() as directory:
         json.dumps(
             {
                 "schema": 1,
+                "mode": "repair-host",
+                "gate": "supralinux-proposed-integration",
+                "runner_group_id": 3,
+            }
+        )
+        + "\n"
+    )
+    subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
+    subprocess.run(["git", "-C", str(repo), "commit", "-qm", "proposed integration host repair"], check=True)
+    integration_repair = subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+    integration_repair_plan = module.plan(
+        repo=repo,
+        event_action="synchronize",
+        before=package,
+        after=integration_repair,
+        selector_path=selector,
+        authoritative_request_path=request,
+    )
+    if not (
+        integration_repair_plan["requested"] is True
+        and integration_repair_plan["automatic"] is True
+        and integration_repair_plan["gate"] == "supralinux-proposed-integration"
+        and integration_repair_plan["mode"] == "repair-host"
+    ):
+        raise SystemExit("reviewed proposed integration host repair did not auto-trigger")
+
+    request.write_text(
+        json.dumps(
+            {
+                "schema": 1,
                 "mode": "preflight",
                 "gate": "supralinux-proposed-integration",
                 "runner_group_id": 3,
@@ -139,7 +170,7 @@ with tempfile.TemporaryDirectory() as directory:
     integration_preflight_plan = module.plan(
         repo=repo,
         event_action="synchronize",
-        before=package,
+        before=integration_repair,
         after=integration_preflight,
         selector_path=selector,
         authoritative_request_path=request,

@@ -130,7 +130,7 @@ required_broker = [
     'if request["mode"] in {"close-evidence-check", "close-evidence", "publish-evidence-check", "publish-evidence"}:',
     '"package_attempt_effect=none"',
     'request.get("gate") not in {"plasma-package-build", "runner-contract", "supralinux-proposed", "supralinux-proposed-integration"}',
-    '"SupraLINUX-proposed integration gate permits only preflight or execute mode."',
+    '"SupraLINUX-proposed integration gate permits only repair-host, preflight, or execute mode."',
     '"Runner contract gate permits only preflight or execute mode."',
     'run.get("status") == "queued"',
     'job.get("status") != "queued"',
@@ -482,7 +482,7 @@ if request.get("gate") == "runner-contract" and request.get("mode") not in {"pre
     raise SystemExit(f"invalid runner-contract request mode: {request!r}")
 if request.get("gate") == "supralinux-proposed" and request.get("mode") not in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"}:
     raise SystemExit(f"invalid supralinux-proposed request mode: {request!r}")
-if request.get("gate") == "supralinux-proposed-integration" and request.get("mode") not in {"preflight", "execute"}:
+if request.get("gate") == "supralinux-proposed-integration" and request.get("mode") not in {"repair-host", "preflight", "execute"}:
     raise SystemExit(f"invalid supralinux-proposed-integration request mode: {request!r}")
 if request.get("mode") in {"repair-frameworks-retained-artifacts", "repair-proposed-retained-artifacts", "certify-proposed-content", "certify-proposed-signing"} and request.get("gate") != "supralinux-proposed":
     raise SystemExit(f"invalid proposed repair/certification gate: {request!r}")
