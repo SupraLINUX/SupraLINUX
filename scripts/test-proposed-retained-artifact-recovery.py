@@ -20,6 +20,8 @@ for token in (
     'remove_header("Authorization")',
     'exc.code in {404, 410}',
     '"scripts/retain-package-artifacts.py"',
+    '"--dag", str(dag_path)',
+    'source_package != candidate.get("source_package")',
     '"archive_index_sha256"',
     '"package_attempt_consumed": False',
     '"canonical_package_state_effect": "none"',
@@ -82,6 +84,31 @@ with tempfile.TemporaryDirectory() as directory:
             pass
         else:
             raise SystemExit(f"unsafe logical archive root accepted: {invalid}")
+
+    dag_path = base / "plasma-dag.json"
+    module.write_plasma_identity_dag(
+        dag_path,
+        "example-node",
+        {"source_package": "example-source"},
+        {"source_package": "example-source"},
+    )
+    if module.json.loads(dag_path.read_text()) != {
+        "schema": 1,
+        "nodes": {"example-node": {"source_package": "example-source"}},
+    }:
+        raise SystemExit("synthetic Plasma identity DAG is not exact")
+
+    try:
+        module.write_plasma_identity_dag(
+            dag_path,
+            "example-node",
+            {"source_package": "expected-source"},
+            {"source_package": "wrong-source"},
+        )
+    except SystemExit:
+        pass
+    else:
+        raise SystemExit("mismatched Plasma source identity was accepted")
 
     if hasattr(os, "symlink"):
         symlink_root = base / "symlink-root"

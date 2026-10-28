@@ -296,6 +296,30 @@ def download_artifact(
     raise SystemExit(f"artifact {artifact_id} download failed: {last_error}")
 
 
+def write_plasma_identity_dag(
+    path: Path,
+    node: str,
+    candidate: dict,
+    record: dict,
+) -> None:
+    source_package = record.get("source_package")
+    if (
+        not isinstance(source_package, str)
+        or not source_package
+        or source_package != candidate.get("source_package")
+    ):
+        raise SystemExit(f"{node}: proposed source identity differs from Plasma campaign")
+    payload = {
+        "schema": 1,
+        "nodes": {
+            node: {
+                "source_package": source_package,
+            }
+        },
+    }
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+
 def verified_index_bytes(
     checkout: Path,
     node: str,
@@ -336,6 +360,8 @@ def verified_index_bytes(
     validate_digest(expected_index_sha)
     with tempfile.TemporaryDirectory(prefix=f"supralinux-proposed-recovery-{node}-") as directory:
         archive = Path(directory) / "archive"
+        dag_path = Path(directory) / "plasma-identity-dag.json"
+        write_plasma_identity_dag(dag_path, node, candidate, record)
         sha_dir = archive / "sha256"
         sha_dir.mkdir(parents=True)
         staged = sha_dir / f"{candidate['artifact_sha256']}.zip"
@@ -345,6 +371,7 @@ def verified_index_bytes(
                 "python3",
                 "scripts/retain-package-artifacts.py",
                 "--plan", str(plan_path),
+                "--dag", str(dag_path),
                 "--archive", str(archive),
                 "--allow-legacy-source-gaps",
             ],
