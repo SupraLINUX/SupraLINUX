@@ -106,7 +106,7 @@ required_broker = [
     '"certify-proposed-content"',
     '"supralinux-proposed"',
     '"HOST_FRAMEWORKS_RETAINED_ARTIFACT_REPAIR=PASS"',
-    '"HOST_PROPOSED_RETAINED_ARTIFACT_REPAIR="',
+    'f"HOST_PROPOSED_RETAINED_ARTIFACT_REPAIR={repair_state}"',
     '"scope=supralinux-proposed-retained-artifact-recovery"',
     '"HOST_SUPRALINUX_PROPOSED_CONTENT_CERTIFICATION=PASS"',
     '"scope=supralinux-proposed-content-certification"',
