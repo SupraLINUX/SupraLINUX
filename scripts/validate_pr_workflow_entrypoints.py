@@ -136,6 +136,7 @@ expected_authoritative_modes = {
     "repair-frameworks-retained-artifacts",
     "repair-proposed-retained-artifacts",
     "certify-proposed-content",
+    "certify-proposed-signing",
 }
 admitted_authoritative_modes = (
     set(re.findall(r'"([^"]+)"', mode_match.group(1)))
