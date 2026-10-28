@@ -83,9 +83,15 @@ cleanup_named_runner() {
 }
 
 REPO_JSON="$(api GET "/repos/${REPOSITORY}")"
+printf '%s\n' "${REPO_JSON}" \
+    | jq '{id,full_name,private,visibility}' \
+    > "${EVIDENCE_DIR}/repository-admission-source.json"
 REPO_ID="$(jq -r '.id // empty' <<<"${REPO_JSON}")"
-REPO_PRIVATE="$(jq -r '.private // empty' <<<"${REPO_JSON}")"
+REPO_PRIVATE="$(jq -r 'if has("private") then (.private | tostring) else empty end' <<<"${REPO_JSON}")"
 GROUP_JSON="$(api GET "/orgs/${RUNNER_ORGANIZATION}/actions/runner-groups/${RUNNER_GROUP_ID}")"
+printf '%s\n' "${GROUP_JSON}" \
+    | jq '{id,name,visibility,allows_public_repositories,restricted_to_workflows,selected_workflows}' \
+    > "${EVIDENCE_DIR}/runner-group-admission-source.json"
 GROUP_NAME="$(jq -r '.name // empty' <<<"${GROUP_JSON}")"
 GROUP_VISIBILITY="$(jq -r '.visibility // empty' <<<"${GROUP_JSON}")"
 GROUP_ALLOWS_PUBLIC="$(jq -r '.allows_public_repositories // false' <<<"${GROUP_JSON}")"

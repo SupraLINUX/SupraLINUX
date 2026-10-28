@@ -235,6 +235,9 @@ for token in required_jit_core:
 
 required_jit_api_preflight = [
     "runner-group-admission.json",
+    "repository-admission-source.json",
+    "runner-group-admission-source.json",
+    'if has("private") then (.private | tostring) else empty end',
     "allows_public_repositories",
     "runner-group-disallows-public-repository",
     "repository-not-selected-for-runner-group",
