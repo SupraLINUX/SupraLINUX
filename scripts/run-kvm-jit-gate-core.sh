@@ -655,6 +655,20 @@ else
     printf 'JIT startup preflight: trigger-label mutation disabled.\n'
 fi
 
+if [[ "${GATE}" == "supralinux-proposed-integration" ]]; then
+    printf 'Running cheap JIT API lifecycle preflight before VM creation...\n'
+    if ! SUPRALINUX_REPOSITORY="${REPOSITORY}" \
+        SUPRALINUX_RUNNER_ORGANIZATION="${RUNNER_ORGANIZATION}" \
+        SUPRALINUX_RUNNER_GROUP_ID="${RUNNER_GROUP_ID}" \
+        SUPRALINUX_GITHUB_TOKEN="${HOST_GITHUB_TOKEN}" \
+        SUPRALINUX_JIT_PREFLIGHT_EVIDENCE_ROOT="${EVIDENCE_DIR}/jit-api-preflight" \
+        "${ROOT}/scripts/check-jit-runner-api-lifecycle.sh" \
+        | tee "${EVIDENCE_DIR}/jit-api-preflight.log"; then
+        printf 'JIT API lifecycle preflight failed before VM creation.\n' >&2
+        exit 1
+    fi
+fi
+
 printf 'Creating ephemeral overlay and KVM VM...\n'
 BACKING_FORMAT="$(qemu-img info --output=json "${BASE_IMAGE}" | jq -r '.format')"
 qemu-img create -f qcow2 -F "${BACKING_FORMAT}" -b "${BASE_IMAGE}" "${OVERLAY}"

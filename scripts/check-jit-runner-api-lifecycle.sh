@@ -84,16 +84,46 @@ cleanup_named_runner() {
 
 REPO_JSON="$(api GET "/repos/${REPOSITORY}")"
 REPO_ID="$(jq -r '.id // empty' <<<"${REPO_JSON}")"
+REPO_PRIVATE="$(jq -r '.private // empty' <<<"${REPO_JSON}")"
 GROUP_JSON="$(api GET "/orgs/${RUNNER_ORGANIZATION}/actions/runner-groups/${RUNNER_GROUP_ID}")"
 GROUP_NAME="$(jq -r '.name // empty' <<<"${GROUP_JSON}")"
 GROUP_VISIBILITY="$(jq -r '.visibility // empty' <<<"${GROUP_JSON}")"
-if [[ -z "${REPO_ID}" || -z "${GROUP_NAME}" ]]; then
+GROUP_ALLOWS_PUBLIC="$(jq -r '.allows_public_repositories // false' <<<"${GROUP_JSON}")"
+GROUP_RESTRICTED_WORKFLOWS="$(jq -r '.restricted_to_workflows // false' <<<"${GROUP_JSON}")"
+if [[ -z "${REPO_ID}" || -z "${GROUP_NAME}" || -z "${REPO_PRIVATE}" ]]; then
     printf 'Could not establish repository/runner-group identity.\n' >&2
     exit 1
 fi
+jq -n \
+    --argjson repository_id "${REPO_ID}" \
+    --argjson repository_private "${REPO_PRIVATE}" \
+    --arg runner_group_id "${RUNNER_GROUP_ID}" \
+    --arg runner_group_name "${GROUP_NAME}" \
+    --arg visibility "${GROUP_VISIBILITY}" \
+    --argjson allows_public_repositories "${GROUP_ALLOWS_PUBLIC}" \
+    --argjson restricted_to_workflows "${GROUP_RESTRICTED_WORKFLOWS}" \
+    '{
+        repository_id:$repository_id,
+        repository_private:$repository_private,
+        runner_group_id:($runner_group_id|tonumber),
+        runner_group_name:$runner_group_name,
+        visibility:$visibility,
+        allows_public_repositories:$allows_public_repositories,
+        restricted_to_workflows:$restricted_to_workflows
+    }' > "${EVIDENCE_DIR}/runner-group-admission.json"
+if [[ "${REPO_PRIVATE}" == "false" && "${GROUP_ALLOWS_PUBLIC}" != "true" ]]; then
+    printf 'status=INFRA_INVALID\nreason=runner-group-disallows-public-repository\nrunner_group_id=%s\n' \
+        "${RUNNER_GROUP_ID}" > "${EVIDENCE_DIR}/result.txt"
+    printf 'Runner group %s does not allow public repositories; repository %s is public.\n' \
+        "${RUNNER_GROUP_ID}" "${REPOSITORY}" >&2
+    exit 1
+fi
 if [[ "${GROUP_VISIBILITY}" == "selected" ]]; then
-    SELECTED_JSON="$(api GET "/orgs/${RUNNER_ORGANIZATION}/actions/runner-groups/${RUNNER_GROUP_ID}/repositories")"
+    SELECTED_JSON="$(api GET "/orgs/${RUNNER_ORGANIZATION}/actions/runner-groups/${RUNNER_GROUP_ID}/repositories?per_page=100")"
+    printf '%s\n' "${SELECTED_JSON}" > "${EVIDENCE_DIR}/runner-group-selected-repositories.json"
     if ! jq -e --argjson id "${REPO_ID}" '.repositories[]? | select(.id == $id)' <<<"${SELECTED_JSON}" >/dev/null; then
+        printf 'status=INFRA_INVALID\nreason=repository-not-selected-for-runner-group\nrunner_group_id=%s\n' \
+            "${RUNNER_GROUP_ID}" > "${EVIDENCE_DIR}/result.txt"
         printf 'Repository %s is not selected for runner group %s.\n' "${REPOSITORY}" "${RUNNER_GROUP_ID}" >&2
         exit 1
     fi
@@ -120,9 +150,11 @@ body="$(sed '$d' <<<"${raw}")"
 printf 'curl_exit_code=%s\nhttp_status=%s\n' "${curl_rc}" "${http_code:-missing}" > "${EVIDENCE_DIR}/transport.txt"
 
 if (( curl_rc != 0 )) || [[ "${http_code}" != "201" ]]; then
-    unset body raw
+    printf '%s\n' "${body}" > "${EVIDENCE_DIR}/jit-create-response.txt"
     cleanup_named_runner || true
-    printf 'status=INFRA_INVALID\nreason=ambiguous-jit-create\n' > "${EVIDENCE_DIR}/result.txt"
+    printf 'status=INFRA_INVALID\nreason=ambiguous-jit-create\ncurl_exit_code=%s\nhttp_status=%s\n' \
+        "${curl_rc}" "${http_code:-missing}" > "${EVIDENCE_DIR}/result.txt"
+    unset body raw
     printf 'JIT API lifecycle synthetic preflight: INFRA_INVALID (curl=%s HTTP=%s)\n' "${curl_rc}" "${http_code:-missing}" >&2
     exit 1
 fi

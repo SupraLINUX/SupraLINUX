@@ -12,6 +12,7 @@ CLOSE_HELPER = ROOT / "scripts/host-close-package-evidence.py"
 WORKFLOW = ROOT / ".github/workflows/host-authoritative-control.yml"
 ROUTER = ROOT / ".github/workflows/pr-ci-router.yml"
 JIT_CORE = ROOT / "scripts/run-kvm-jit-gate-core.sh"
+JIT_API_PREFLIGHT = ROOT / "scripts/check-jit-runner-api-lifecycle.sh"
 REQUEST = ROOT / "ops/host-authoritative/request.json"
 
 broker = BROKER.read_text()
@@ -19,6 +20,7 @@ close_helper = CLOSE_HELPER.read_text()
 workflow = WORKFLOW.read_text()
 router = ROUTER.read_text()
 jit_core = JIT_CORE.read_text()
+jit_api_preflight = JIT_API_PREFLIGHT.read_text()
 request = json.loads(REQUEST.read_text())
 
 broker_tree = ast.parse(broker)
@@ -216,10 +218,27 @@ required_jit_core = [
     'SUPRALINUX_PERSISTENT_ARTIFACT_ROOT',
     'prepare-supralinux-proposed-integration-payload.py',
     'virt-copy-in',
+    'check-jit-runner-api-lifecycle.sh',
+    'SUPRALINUX_JIT_PREFLIGHT_EVIDENCE_ROOT',
+    'JIT API lifecycle preflight failed before VM creation.',
 ]
 for token in required_jit_core:
     if token not in jit_core:
         raise SystemExit(f"missing JIT gate receipt contract: {token}")
+
+required_jit_api_preflight = [
+    "runner-group-admission.json",
+    "allows_public_repositories",
+    "runner-group-disallows-public-repository",
+    "repository-not-selected-for-runner-group",
+    "runner-group-selected-repositories.json",
+    "jit-create-response.txt",
+    "http_status=%s",
+    "cleanup_named_runner",
+]
+for token in required_jit_api_preflight:
+    if token not in jit_api_preflight:
+        raise SystemExit(f"missing JIT API preflight diagnostic contract: {token}")
 
 required_helper = [
     'choices=["check", "close", "publish-check", "publish"]',
