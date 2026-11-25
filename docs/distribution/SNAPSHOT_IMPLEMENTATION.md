@@ -7,3 +7,6 @@ S01 unit tests: malformed/rolling URL, fechas, builder, duplicados, repos. S02 C
 
 ## S02 primera ejecución
 [Run 45540170479](https://github.com/SupraLINUX/SupraLINUX/actions/runs/45540170479): builder fijado y repos core/extra descargados; Pacman resolvió 143 paquetes. FAIL en validación de filename: cuatro filenames con epoch (`1:`), comprobados en artifact 14988738442. Fix permite `:` y `@` sin rutas; compara metadata de cada paquete con desc de la DB original (sin extraer archivos); añade tests de epoch, correspondencia y discrepancia. Reejecución requerida. La firma de paquetes sigue pendiente.
+
+## S03 — Verificación de paquetes (incremento experimental)
+IMPLEMENTED / CI pending. Descarga secuencial de cada paquete y su firma separada desde el snapshot, valida SHA-256 y firma GPG con confianza plena/última del keyring Arch del builder fijado. Rechaza estados de firma inválida, revocada o expirada observados por ese keyring; no recupera claves externas. No instala paquetes; conserva lock candidato y emite evidencia separada solo si coincide toda la clausura. No constituye firma de release ni prueba de revocación posterior al keyring congelado. Falta segunda resolución independiente, política de actualización/revocación del keyring y build/boot. Fallo de descarga, firma o confianza bloquea el job, sin bypass.

@@ -9,7 +9,7 @@ permissions:
 jobs:
   resolve:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - name: Unit tests
@@ -35,6 +35,17 @@ jobs:
             --mount "type=bind,source=$PWD/evidence,target=/out" \
             "${config[0]}" bash /resolve.sh "${config[1]}" "${config[@]:2}"
           python3 tools/system-lab/snapshot_lock.py distribution/images/experimental-base.json evidence
+      - name: Verify full candidate closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/system-lab/verify_snapshot.py prepare distribution/images/experimental-base.json evidence
+          builder=$(head -n 1 evidence/build-input.txt)
+          docker run --rm --platform linux/amd64 --security-opt no-new-privileges \
+            --mount "type=bind,source=$PWD/tools/system-lab/verify_snapshot.sh,target=/verify.sh,readonly" \
+            --mount "type=bind,source=$PWD/evidence,target=/out" \
+            "$builder" bash /verify.sh
+          python3 tools/system-lab/verify_snapshot.py report distribution/images/experimental-base.json evidence
       - uses: actions/upload-artifact@v4
         if: always()
         with:
