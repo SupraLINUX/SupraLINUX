@@ -25,3 +25,5 @@ SupraDeploy es interfaz versionada de transacciones de la distribución, no un s
 - [Automatic Boot Assessment](https://systemd.io/AUTOMATIC_BOOT_ASSESSMENT/): boot counting y bless-boot son piezas reutilizables, hay que definir boot-complete gate y estrategia de reinicio tras fallo; no confundir contador con watchdog.
 
 Decisión profesional provisional: Arkdep primero. Si parches afectan arquitectura central de despliegue, comparar sysupdate con composición local acotada, luego RAUC según diseño de almacenamiento. No mantener todas las opciones en producción. Gates en PROTOTYPE_GATES.md.
+## 2026-11-25
+[Investigación D00 ampliada](D00_ATOMIC_VALIDATION.md): ocho áreas, relectura de código Arkdep y contratos libalpm, Btrfs, boot, snapshot, installer, recovery y reproducibilidad. NOT_RUN, decisiones técnicas PROPOSED.

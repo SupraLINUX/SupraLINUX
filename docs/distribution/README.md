@@ -30,3 +30,6 @@ Todas las elecciones concretas son PROPOSED y pruebas NOT_RUN.
 
 ## Laboratorio y hardware
 [Infraestructura y trust](RELEASE_LAB.md), [hardware y firmware](HARDWARE_FIRMWARE.md). fwupd/LVFS como adaptador opcional, no flasher propio. [Fronteras de repositorios](https://github.com/SupraLINUX/SupraDesktop/blob/docs/m00-import/docs/architecture/REPOSITORY_BOUNDARIES.md).
+
+## 2026-11-25
+[Investigación D00 ampliada](D00_ATOMIC_VALIDATION.md): ocho áreas, relectura de código Arkdep y contratos libalpm, Btrfs, boot, snapshot, installer, recovery y reproducibilidad. NOT_RUN, decisiones técnicas PROPOSED.
