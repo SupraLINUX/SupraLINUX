@@ -33,3 +33,6 @@ Todas las elecciones concretas son PROPOSED y pruebas NOT_RUN.
 
 ## 2026-11-25
 [Investigación D00 ampliada](D00_ATOMIC_VALIDATION.md): ocho áreas, relectura de código Arkdep y contratos libalpm, Btrfs, boot, snapshot, installer, recovery y reproducibilidad. NOT_RUN, decisiones técnicas PROPOSED.
+
+## Laboratorio CI
+[CI y VM](CI_VM_LAB.md): prueba de capacidad KVM y captura QMP; no sustituye validación de despliegues ni hardware.
