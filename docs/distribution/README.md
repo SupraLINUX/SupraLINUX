@@ -1,5 +1,5 @@
-# Distribución oficial candidata — Arch atómico
-Objetivo: experiencia integrada tipo macOS, control de stack y actualización coherente, sin convertir SupraDesktop en dependencia de Arch. Nombre de distro y relación con SupraLINUX actual pendientes de decisión. No migrar proyecto existente. Estado PROPOSED; no imagen ni prototipo.
+# SupraLINUX — Arch atómico
+Objetivo: experiencia integrada tipo macOS, control de stack y actualización coherente, sin convertir SupraDesktop en dependencia de Arch. Nombre y repositorio ratificados por el mantenedor: SupraLINUX, SupraLINUX/SupraLINUX. El escritorio vive en SupraLINUX/SupraDesktop. No migrar versiones antiguas de la distro. Estado PROPOSED; no imagen ni prototipo.
 ## Diseño inicial
 Arch x86-64, snapshot coherente de repositorios, PKGBUILD propios, imagen versionada y firmada, raíz protegida de solo lectura, datos persistentes, kernel LTS candidato, firmware y drivers por imagen, Wayland/XWayland. Flatpak, AppImage/AppDir, SupraBundle opcional; AUR integrado, restringido o instalado por capas del sistema bajo consentimiento; sin APT/dpkg ni proveedor .deb oficial. Pacman en build y staging, no actualización in-place habitual. Distro no obliga a usar IA.
 ## Documentos
@@ -13,7 +13,7 @@ Arch x86-64, snapshot coherente de repositorios, PKGBUILD propios, imagen versio
 [Arch Archive](https://wiki.archlinux.org/title/Arch_Linux_Archive), [partial upgrades](https://wiki.archlinux.org/title/System_maintenance#Partial_upgrades_are_unsupported), [Arkdep](https://github.com/arkanelinux/arkdep), [RAUC](https://rauc.readthedocs.io/en/latest/using.html), [sysupdate](https://www.freedesktop.org/software/systemd/man/latest/systemd-sysupdate.html). Revisión documental 2026-11-24, no pruebas realizadas.
 
 ## Aclaraciones aceptadas del mantenedor
-SupraDesktop y la distribución oficial son proyectos diferenciados, con interfaces portables y sin dependencia obligatoria de Arch para el escritorio. No se ha creado otro repositorio ni migrado SupraLINUX. La UX se dirige primero a personas poco experimentadas: operaciones visuales, comprensibles, accesibles, con progreso real, cancelación y recuperación. Conservar libertad avanzada de instalación de paquetes Arch/AUR en un despliegue personalizado. v4l2loopback es ejemplo de módulo bajo demanda, no requisito de imagen base. El riesgo de AUR debe explicarse sin bloquear su uso legítimo. Decisión de backend delegada, sujeta a pruebas.
+SupraDesktop y la distribución oficial son proyectos diferenciados, con interfaces portables y sin dependencia obligatoria de Arch para el escritorio. La investigación está importada a este repositorio oficial; no hay implementación ni migración de versiones anteriores. La UX se dirige primero a personas poco experimentadas: operaciones visuales, comprensibles, accesibles, con progreso real, cancelación y recuperación. Conservar libertad avanzada de instalación de paquetes Arch/AUR en un despliegue personalizado. v4l2loopback es ejemplo de módulo bajo demanda, no requisito de imagen base. El riesgo de AUR debe explicarse sin bloquear su uso legítimo. Decisión de backend delegada, sujeta a pruebas.
 ## Profundización
 - [Comparativa de backends](BACKEND_EVALUATION.md)
 - [SupraLayers: capas y transacciones](PACKAGE_LAYERING.md)
@@ -29,4 +29,4 @@ Todas las elecciones concretas son PROPOSED y pruebas NOT_RUN.
 [Auditoría de código Arkdep y estrategia de adaptación](ARKDEP_SOURCE_REVIEW.md), [frontend Calamares](INSTALLER_FRONTEND.md), [prototipos y pruebas de decisión](PROTOTYPE_GATES.md). El mantenedor ratifica congelación coherente, cifrado LUKS2, recuperación offline, Beginner First y adaptación visual del instalador. Backend todavía no seleccionado; no crear fork hasta validar brecha y licencia. Calamares upstream se trasladó a Codeberg.
 
 ## Laboratorio y hardware
-[Infraestructura y trust](RELEASE_LAB.md), [hardware y firmware](HARDWARE_FIRMWARE.md). fwupd/LVFS como adaptador opcional, no flasher propio. [Fronteras de repositorios](../architecture/REPOSITORY_BOUNDARIES.md).
+[Infraestructura y trust](RELEASE_LAB.md), [hardware y firmware](HARDWARE_FIRMWARE.md). fwupd/LVFS como adaptador opcional, no flasher propio. [Fronteras de repositorios](https://github.com/SupraLINUX/SupraDesktop/blob/docs/m00-import/docs/architecture/REPOSITORY_BOUNDARIES.md).

@@ -23,3 +23,6 @@ Consulta documental 2026-11-24. Todos NOT_RUN, no imagen ni benchmark. Cada prue
 UX transversal: USER_EXPERIENCE, tareas sin terminal, accesibilidad, progreso real, origen y riesgos comprendidos. D00/D01/D03/D04/D06/D09 críticos y no compensables; no publicar hasta gates, licencia, recursos de mantenimiento y aprobación. No se fijó nombre ni repositorio de distro.
 ## Gate de elección del backend y frontend
 [PROTOTYPE_GATES.md](PROTOTYPE_GATES.md). Verificar que el contador de arranque existente de Arkdep se combina con health gate real; no confundir tres intentos con recuperación demostrada. Auditar transacción multi-recurso, AUR y persistencia. Probar presentación Calamares con datos sintéticos y disco descartable antes de adaptar particionador.
+
+
+Actualización de alcance: nombre SupraLINUX y repositorio oficial ratificados. Los gates técnicos permanecen NOT_RUN.

@@ -15,6 +15,6 @@ Estado de todas: NOT_RUN. No distro ni release existente.
 | D10 | Instalador, cifrado, dual boot, recuperación y hardware |
 | D11 | CVE, canales, promoción, revocación y disponibilidad de artefactos |
 | D12 | Auditoría, documentación, soporte y aprobación explícita antes de publicación |
-No declarar PASS sin evidencia; no confundir checks Markdown con pruebas. Mantener track distro separado de desarrollo de compositor; no bloquear M01/M02. D00 requiere decisión de nombre/repositorio/alcance y recursos de mantenimiento; no migrar SupraLINUX existente.
+No declarar PASS sin evidencia; no confundir checks Markdown con pruebas. Mantener track distro separado de desarrollo de compositor; no bloquear M01/M02. Nombre y repositorio ratificados; D00 todavía requiere decisión de backend/alcance y recursos de mantenimiento. No migrar versiones antiguas.
 
 [Matriz D ampliada](DEEP_VALIDATION.md) descompone las 18 áreas y sus casos de prueba. Todos NOT_RUN. Prioridad: D00 backend y layering; D01 reproducibilidad; D03/D04 fallos; D06 módulos; D09 confianza; UX transversal.

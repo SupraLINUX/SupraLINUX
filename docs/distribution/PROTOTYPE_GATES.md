@@ -1,6 +1,6 @@
 # Cierre de investigación y primeros prototipos
 
-Estado NOT_RUN. No instalar en host ni modificar discos reales. No publicación estable. No migrar SupraLINUX; distribución en repo diferenciado cuando mantenedor lo autorice. Limitar trabajo nuevo a decisiones que reduzcan riesgo, no aumentar indefinidamente subsistemas.
+Estado NOT_RUN. No instalar en host ni modificar discos reales. No publicación estable. Repositorio oficial SupraLINUX/SupraLINUX ratificado; no migrar instalaciones ni versiones antiguas. Limitar trabajo nuevo a decisiones que reduzcan riesgo, no aumentar indefinidamente subsistemas.
 
 | Gate | Evidencia | Criterio de rechazo |
 |---|---|---|
@@ -16,4 +16,4 @@ Estado NOT_RUN. No instalar en host ni modificar discos reales. No publicación 
 | M-P3 | Toolkit candidato, texto, a11y y acción tipada con permisos | Incapaz de satisfacer control visual y semántico |
 
 Medir tiempo, disco, bytes, compatibilidad y esfuerzo de mantenimiento; registrar commit exacto, artefacto, entorno, comandos y resultados. Pruebas de fallo con fixtures de prueba, no sistemas reales. Elegir backend tras gates D-P0–D-P4, o comparar alternativa acotada; no construir todas. Contratos de UI/CLI/MCP no dependen de proveedor. Separar estado de arranque técnico y confirmación de experiencia; no exigir login manual para todas las actualizaciones ni marcar good antes de health check apropiado. Automatización de pruebas y resultados auditables. Antes de incorporar código resolver licencia del componente y núcleo; antes de 1:1 obtener referencia macOS nativa autorizada.
-[Laboratorio de validación](../testing/VALIDATION_LAB.md) descompone las 14 incertidumbres. D-P0–D-P4 en VM descartable y M-P1–M-P3 anidado/headless. No pruebas ejecutadas.
+[Laboratorio de validación](https://github.com/SupraLINUX/SupraDesktop/blob/docs/m00-import/docs/testing/VALIDATION_LAB.md) descompone las 14 incertidumbres. D-P0–D-P4 en VM descartable y M-P1–M-P3 anidado/headless. No pruebas ejecutadas.
