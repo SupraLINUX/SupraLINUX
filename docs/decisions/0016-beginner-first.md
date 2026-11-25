@@ -1,0 +1,2 @@
+# ADR-0016 — Beginner-first UX
+Estado ACCEPTED para dirección explícita del mantenedor: experiencia gráfica 1:1, destinada a personas poco experimentadas, con procesos visualmente cuidados, sin exigir terminal. Diseño técnico PROPOSED. Progressive disclosure, lenguaje claro, progreso real, vista avanzada, consentimiento explícito, cancelación y recuperación. No ocultar origen, permisos o errores; no fingir porcentajes, no autoejecutar paquetes. Accesibilidad y acciones AI Ready compartidas. [Especificación](../distribution/USER_EXPERIENCE.md).

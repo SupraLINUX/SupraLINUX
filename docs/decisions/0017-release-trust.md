@@ -1,0 +1,2 @@
+# ADR-0017 — Confianza de releases
+Estado PROPOSED. Firma de paquete, manifiesto de release, boot assets, módulos y datos cifrados tienen fronteras distintas. Evaluar TUF, claves offline, UKI, systemd boot assessment, LUKS2, política de módulos y verificación runtime separada. Base oficial nunca firmada con claves locales de capas; personalización etiquetada. Canales promueven mismo artefacto, deltas opcionales tras full image confiable. [Confianza](../distribution/TRUST_BOOT.md), [entrega](../distribution/DELIVERY_SECURITY.md).
