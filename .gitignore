@@ -1,0 +1,12 @@
+target/
+.cache/
+work/
+out/
+*.iso
+*.qcow2
+*.img
+*.raw
+*.pkg.tar.zst
+.env
+*.key
+*.pem
