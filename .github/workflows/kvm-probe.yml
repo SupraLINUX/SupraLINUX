@@ -2,7 +2,7 @@ name: KVM capability probe
 on:
   push:
     branches: ['research/d00-atomic-validation']
-    paths: ['.github/workflows/kvm-probe.yml', 'tools/system-lab/kvm_probe.py']
+    paths: ['.github/workflows/kvm-probe.yml', 'tools/system-lab/**']
   workflow_dispatch:
 permissions:
   contents: read
@@ -12,6 +12,8 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
+      - name: Unit tests
+        run: python3 -m unittest discover -s tools/system-lab -p 'test_*.py'
       - name: Install QEMU
         run: |
           sudo apt-get update -qq

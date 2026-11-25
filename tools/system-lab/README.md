@@ -1,0 +1,3 @@
+# SupraSystemLab — D00
+Run python3 -m unittest discover -s tools/system-lab -p 'test_*.py' then python3 tools/system-lab/kvm_probe.py evidence. Requires QEMU for integration; unit tests use only stdlib. Original synthetic BIOS guest draws two known color fields and emits QEMU debug console readiness. QMP screenshot verified by region samples, exported PNG and PPM plus JSON/logs. No real Linux boot, UEFI, rollback or GPU verification. No fixed sleep for readiness. TCG fallback is not KVM PASS. 
+Previous capture-only run 45538320560 succeeded with KVM enabled; new semantic fixture gate pending CI. Next: OVMF, frozen Arch kernel/root filesystem, immutable overlay and actual OS readiness. Do not import Arkdep code until license audit and choice.
