@@ -29,4 +29,4 @@ Todas las elecciones concretas son PROPOSED y pruebas NOT_RUN.
 [Auditoría de código Arkdep y estrategia de adaptación](ARKDEP_SOURCE_REVIEW.md), [frontend Calamares](INSTALLER_FRONTEND.md), [prototipos y pruebas de decisión](PROTOTYPE_GATES.md). El mantenedor ratifica congelación coherente, cifrado LUKS2, recuperación offline, Beginner First y adaptación visual del instalador. Backend todavía no seleccionado; no crear fork hasta validar brecha y licencia. Calamares upstream se trasladó a Codeberg.
 
 ## Laboratorio y hardware
-[Infraestructura y trust](RELEASE_LAB.md), [hardware y firmware](HARDWARE_FIRMWARE.md). fwupd/LVFS como adaptador opcional, no flasher propio. [Fronteras de repositorios](https://github.com/SupraLINUX/SupraDesktop/blob/docs/m00-import/docs/architecture/REPOSITORY_BOUNDARIES.md).
+[Infraestructura y trust](RELEASE_LAB.md), [hardware y firmware](HARDWARE_FIRMWARE.md). fwupd/LVFS como adaptador opcional, no flasher propio. [Fronteras de repositorios](https://github.com/SupraLINUX/SupraDesktop/blob/main/docs/architecture/REPOSITORY_BOUNDARIES.md).

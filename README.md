@@ -14,5 +14,5 @@ Estado: investigación M00, sin imagen arrancable ni release. Arkdep es candidat
 - [Procedencia y separación](docs/MIGRATION.md)
 
 Escritorio: [SupraDesktop](https://github.com/SupraLINUX/SupraDesktop).
-Principios compartidos: [Constitución de SupraDesktop](https://github.com/SupraLINUX/SupraDesktop/blob/docs/m00-import/PRINCIPLES.md).
+Principios compartidos: [Constitución de SupraDesktop](https://github.com/SupraLINUX/SupraDesktop/blob/main/PRINCIPLES.md).
 No usar la rama de investigación como sistema de producción. Licencia del código propio aún pendiente.
