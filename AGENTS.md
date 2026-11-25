@@ -1,6 +1,6 @@
 # Instrucciones del proyecto SupraLINUX
 
-Leer README, docs/distribution/README.md, PROTOTYPE_GATES.md y las decisiones aplicables. Los [principios canónicos](https://github.com/SupraLINUX/SupraDesktop/blob/docs/m00-import/PRINCIPLES.md) y [política upstream](https://github.com/SupraLINUX/SupraDesktop/blob/docs/m00-import/docs/development/UPSTREAM_POLICY.md) se comparten con SupraDesktop. 
+Leer README, docs/distribution/README.md, PROTOTYPE_GATES.md y las decisiones aplicables. Los [principios canónicos](https://github.com/SupraLINUX/SupraDesktop/blob/main/PRINCIPLES.md) y [política upstream](https://github.com/SupraLINUX/SupraDesktop/blob/main/docs/development/UPSTREAM_POLICY.md) se comparten con SupraDesktop. 
 - Separar desktop y distro: consumir versiones fijadas del escritorio y contratos públicos. No duplicar tokens, SDK ni acciones.
 - Reutilizar, adaptar o implementar por evidencia, con atribuciones y licencias. No elegir backend definitivo sin gates.
 - Raíz activa no se modifica mediante layering; paquetes efectivos por despliegue, rollback y datos persistentes. AUR libre por consentimiento; no ejecución automática.
