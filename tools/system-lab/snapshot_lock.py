@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import tarfile
 
 ORIGIN = "https://archive.archlinux.org/repos"
 FIELDS = ("repository", "name", "version", "arch", "sha256", "filename", "url")
@@ -22,7 +23,7 @@ def validate_config(cfg):
         raise ValueError("Unexpected repository set")
     if not re.fullmatch(r"docker\.io/library/archlinux@sha256:[0-9a-f]{64}", cfg["builder"]):
         raise ValueError("Builder must be digest-pinned")
-    if not cfg["packages"] or any(not re.fullmatch(r"[a-z0-9][a-z0-9+_.-]*", p) for p in cfg["packages"]):
+    if not cfg["packages"] or any(not re.fullmatch(r"[a-z0-9][a-z0-9+_.@-]*", p) for p in cfg["packages"]):
         raise ValueError("Invalid package selection")
     return cfg
 
@@ -35,14 +36,14 @@ def lock(cfg, lines, database_hashes):
             raise ValueError("Malformed Pacman transaction row")
         item = dict(zip(FIELDS, parts))
         repo, name = item["repository"], item["name"]
-        if repo not in cfg["repositories"] or not re.fullmatch(r"[a-z0-9][a-z0-9+_.-]*", name):
+        if repo not in cfg["repositories"] or not re.fullmatch(r"[a-z0-9][a-z0-9+_.@-]*", name):
             raise ValueError("Unexpected repository or package")
         if name in packages or item["arch"] not in ("any", cfg["architecture"]):
             raise ValueError("Duplicate or incompatible package")
         if not re.fullmatch(r"[0-9a-f]{64}", item["sha256"]):
             raise ValueError("Invalid package digest")
-        if not re.fullmatch(r"[A-Za-z0-9+_.-]+\.pkg\.tar\.(zst|xz)", item["filename"]):
-            raise ValueError("Invalid package filename")
+        if not re.fullmatch(r"[A-Za-z0-9+_.@:-]+\.pkg\.tar\.(zst|xz)", item["filename"]):
+            raise ValueError(f"Invalid package filename: {item['filename']!r}")
         expected = f"{ORIGIN}/{cfg['snapshot']}/{repo}/os/x86_64/{item['filename']}"
         if item["url"] != expected:
             raise ValueError("Package not from configured snapshot")
@@ -59,6 +60,40 @@ def lock(cfg, lines, database_hashes):
             "databases": database_hashes, "packages": [packages[n] for n in sorted(packages)],
             "package_signatures_verified": False, "release_signed": False}
 
+def validate_database(lock_result, evidence):
+    """Match every selected package to the fetched repo metadata, without extracting tar files."""
+    expected = {(p["repository"], p["name"]): p for p in lock_result["packages"]}
+    matched = set()
+    keys = {"NAME":"name", "VERSION":"version", "ARCH":"arch",
+            "FILENAME":"filename", "SHA256SUM":"sha256"}
+    for repo in lock_result["databases"]:
+        with tarfile.open(evidence/f"{repo}.db", "r:*") as archive:
+            for member in archive:
+                if not member.isfile() or not member.name.endswith("/desc"):
+                    continue
+                if member.size > 1024*1024:
+                    raise ValueError("Oversized repository metadata")
+                stream = archive.extractfile(member)
+                if stream is None:
+                    raise ValueError("Missing repository metadata")
+                fields = {}
+                for block in stream.read().decode("utf-8").strip().split("\n\n"):
+                    lines = block.splitlines()
+                    if len(lines) == 2:
+                        fields[lines[0].strip("%")] = lines[1]
+                key = (repo,fields.get("NAME"))
+                if key not in expected:
+                    continue
+                if key in matched:
+                    raise ValueError(f"Duplicate selected package metadata: {key}")
+                item = expected[key]
+                if any(fields.get(k) != item[v] for k,v in keys.items()):
+                    raise ValueError(f"Transaction metadata mismatch: {key}")
+                matched.add(key)
+    if matched != expected.keys():
+        raise ValueError("Selected packages missing in repository metadata")
+    return True
+
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("config",type=Path)
@@ -68,6 +103,7 @@ def main():
     evidence=args.evidence
     hashes={repo:hashlib.sha256((evidence/f"{repo}.db").read_bytes()).hexdigest() for repo in cfg["repositories"]}
     result=lock(cfg,(evidence/"transaction.txt").read_text().splitlines(),hashes)
+    result["database_metadata_matched"] = validate_database(result, evidence)
     (evidence/"snapshot-lock.json").write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
     print(f"Resolved {len(result['packages'])} packages from {result['snapshot']}")
     print("Metadata candidate only; package signatures and image build not yet verified.")
