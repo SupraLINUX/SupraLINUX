@@ -36,3 +36,6 @@ Todas las elecciones concretas son PROPOSED y pruebas NOT_RUN.
 
 ## Laboratorio CI
 [CI y VM](CI_VM_LAB.md): prueba de capacidad KVM y captura QMP; no sustituye validación de despliegues ni hardware.
+
+## Snapshot experimental
+[Implementación y gates](SNAPSHOT_IMPLEMENTATION.md): resolver snapshot candidato y manifest de dependencias con Pacman, sin instalación ni firma de release. CI pendiente al commit.

@@ -9,3 +9,6 @@ Probe actual en investigación; verificar resultado real antes de declarar dispo
 
 ## Primer incremento D00
 [Run 45538320560](https://github.com/SupraLINUX/SupraLINUX/actions/runs/45538320560) terminó success, query-kvm.enabled=true y captura 864015 bytes; solo prueba de capacidad. Nuevo [laboratorio](../../tools/system-lab/README.md) separa QMP, fixture y framebuffer, usa marca de readiness y valida colores antes de PASS, genera PNG. Estado IMPLEMENTED, integración pendiente de CI. No prueba una imagen Arch ni certifica KVM en otros runners.
+
+## Evidencia D00
+[Run 45539586294](https://github.com/SupraLINUX/SupraLINUX/actions/runs/45539586294): PASS_KVM_FIXTURE, query-kvm enabled=true, guest_ready y fixture_verified true, captura 640x400 SHA256 76b08f6d64599ed6ca1c9a99a315f4ff6a7c6509ea8612a7626bb3a8e0075dda, 3 tests unitarios PASS. Invitado sintético, no UEFI/Arch. Siguiente [snapshot](SNAPSHOT_IMPLEMENTATION.md).

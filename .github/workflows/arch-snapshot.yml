@@ -1,0 +1,44 @@
+name: Frozen Arch snapshot probe
+on:
+  push:
+    branches: ['research/d00-atomic-validation']
+    paths: ['distribution/images/experimental-base.json', 'tools/system-lab/*snapshot*', '.github/workflows/arch-snapshot.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  resolve:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unit tests
+        run: python3 -m unittest discover -s tools/system-lab -p 'test_*.py'
+      - name: Resolve dated snapshot in disposable builder
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence
+          python3 - <<'PY'
+          import json, sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools/system-lab')
+          from snapshot_lock import validate_config
+          cfg = validate_config(json.loads(Path('distribution/images/experimental-base.json').read_text()))
+          Path('evidence/build-input.txt').write_text('\n'.join([cfg['builder'],cfg['snapshot'],*cfg['packages']])+'\n')
+          PY
+          mapfile -t config < evidence/build-input.txt
+          docker pull --platform linux/amd64 "${config[0]}"
+          docker image inspect "${config[0]}" --format '{{.Id}} {{json .RepoDigests}}' > evidence/builder.txt
+          docker run --rm --platform linux/amd64 --security-opt no-new-privileges \
+            --mount "type=bind,source=$PWD/tools/system-lab/resolve_snapshot.sh,target=/resolve.sh,readonly" \
+            --mount "type=bind,source=$PWD/evidence,target=/out" \
+            "${config[0]}" bash /resolve.sh "${config[1]}" "${config[@]:2}"
+          python3 tools/system-lab/snapshot_lock.py distribution/images/experimental-base.json evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frozen-arch-snapshot
+          path: evidence/
+          retention-days: 7
+          if-no-files-found: warn
