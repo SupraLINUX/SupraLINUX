@@ -49,11 +49,21 @@ def check_target(console):
         raise ValueError("Target did not emit unique readiness marker")
 
 
+def target_report(console, accel):
+    check_target(console)
+    if accel not in ("kvm", "tcg"):
+        raise ValueError("Unknown target accelerator")
+    return {"schema_version": 2, "direct_kernel_boot_verified": True,
+            "accelerator": accel, "kvm_target_boot_verified": accel == "kvm",
+            "uefi_boot_verified": False, "release_signed": False}
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("phase", choices=["builder", "hashes", "target"])
     p.add_argument("evidence", type=Path)
     p.add_argument("work", type=Path, nargs="?")
+    p.add_argument("--accel", choices=["kvm", "tcg"])
     a = p.parse_args()
     if a.phase == "builder":
         check_builder((a.evidence / "rootfs-vm-console.log").read_text(errors="replace"),
@@ -65,9 +75,9 @@ def main():
         check_hashes((a.evidence / "rootfs-boot-files.sha256").read_text(), a.work)
         print("Extracted kernel and initramfs hashes verified")
     else:
-        check_target((a.evidence / "rootfs-target-console.log").read_text(errors="replace"))
-        report = {"schema_version": 1, "direct_kernel_boot_verified": True,
-                  "uefi_boot_verified": False, "release_signed": False}
+        if a.accel is None:
+            p.error("target phase requires explicit accelerator")
+        report = target_report((a.evidence / "rootfs-target-console.log").read_text(errors="replace"), a.accel)
         (a.evidence / "rootfs-target-boot.json").write_text(json.dumps(report, sort_keys=True) + "\n")
         print("Direct target kernel boot verified")
 

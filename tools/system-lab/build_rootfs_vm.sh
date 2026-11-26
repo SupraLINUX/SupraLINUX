@@ -40,6 +40,7 @@ test -f "$initrd"
 sudo install -m 0644 "$kernel" "$work/kernel"
 sudo install -m 0644 "$initrd" "$work/initrd"
 printf '%s\n' "$kernel" > evidence/rootfs-builder-kernel.txt
+bash tools/system-lab/rootfs_kvm_access.sh evidence/rootfs-builder-kvm.txt
 status=0
 timeout 1200 qemu-system-x86_64 -accel kvm -machine q35 -cpu host -m 4096 -smp 2 \
     -display none -monitor none -serial stdio -nic none -no-reboot \

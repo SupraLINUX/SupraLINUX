@@ -1,5 +1,5 @@
 import unittest
-from rootfs_evidence import check_builder, check_target, parse_hashes
+from rootfs_evidence import check_builder, check_target, parse_hashes, target_report
 
 
 class RootfsEvidenceTests(unittest.TestCase):
@@ -26,3 +26,11 @@ class RootfsEvidenceTests(unittest.TestCase):
         for content in (kernel, kernel + "\n" + kernel, kernel + "\n" + initrd.replace("  boot/", "  /boot/")):
             with self.assertRaises(ValueError):
                 parse_hashes(content)
+
+    def test_accelerator_is_not_conflated(self):
+        marker = "SUPRA_TARGET_BOOT_READY\r\n"
+        self.assertTrue(target_report(marker, "kvm")["kvm_target_boot_verified"])
+        self.assertFalse(target_report(marker, "tcg")["kvm_target_boot_verified"])
+        self.assertTrue(target_report(marker, "tcg")["direct_kernel_boot_verified"])
+        with self.assertRaises(ValueError):
+            target_report(marker, "unknown")
