@@ -51,10 +51,11 @@ pacman "${args[@]}" -Q > /out/installed-packages.txt
 test -x "$root/usr/lib/systemd/systemd"
 test -s "$root/boot/vmlinuz-linux-lts"
 test -s "$root/boot/initramfs-linux-lts.img"
-sha256sum "$root/boot/vmlinuz-linux-lts" "$root/boot/initramfs-linux-lts.img" | sed "s|$root/||g" > /out/rootfs-boot-files.sha256
+(cd "$root" && sha256sum boot/vmlinuz-linux-lts boot/initramfs-linux-lts.img) > /out/rootfs-boot-files.sha256
 # Test-only service: prove a fresh systemd boot reached multi-user prerequisites.
 # It is never shipped as a release component.
 install -D -m 0644 /boot-probe.service "$root/etc/systemd/system/supra-boot-probe.service"
+install -D -m 0755 /boot-probe.sh "$root/usr/local/libexec/supra-boot-probe"
 mkdir -p "$root/etc/systemd/system/multi-user.target.wants"
 ln -s ../supra-boot-probe.service "$root/etc/systemd/system/multi-user.target.wants/supra-boot-probe.service"
 sync

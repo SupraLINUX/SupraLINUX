@@ -23,6 +23,7 @@ sudo install -m 0644 evidence/rootfs-input.tsv "$stage/out/rootfs-input.tsv"
 sudo install -m 0755 tools/system-lab/build_rootfs.sh "$stage/build.sh"
 sudo install -m 0755 tools/system-lab/rootfs_guest_init.sh "$stage/supra-init"
 sudo install -m 0644 tools/system-lab/rootfs_boot_probe.service "$stage/boot-probe.service"
+sudo install -m 0755 tools/system-lab/rootfs_boot_probe.sh "$stage/boot-probe.sh"
 disk="$work/builder.ext4"
 truncate -s 10G "$disk"
 sudo mke2fs -q -t ext4 -F -d "$stage" "$disk"
@@ -52,9 +53,7 @@ for name in rootfs-vm-status.txt rootfs-install.log installed-packages.txt rootf
     debugfs -R "dump /out/$name evidence/$name" "$disk" 2>/dev/null || true
 done
 (( status == 0 ))
-grep -Fxq 'SUPRA_BUILD_VM_READY' evidence/rootfs-vm-console.log
-grep -Fxq 'SUPRA_BUILD_VM_EXIT=0' evidence/rootfs-vm-console.log
-test "$(cat evidence/rootfs-vm-status.txt)" = 0
+python3 tools/system-lab/rootfs_evidence.py builder evidence
 test -s evidence/installed-packages.txt
 test -s evidence/rootfs-boot-files.sha256
 
