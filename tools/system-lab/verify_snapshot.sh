@@ -40,6 +40,12 @@ while IFS=$'\t' read -r name hash url; do
     signer=$(awk '$1=="[GNUPG:]" && $2=="VALIDSIG" {print $3}' "$work/status")
     [[ "$signer" =~ ^[A-F0-9]{40,64}$ ]]
     printf '%s\t%s\t%s\n' "$name" "$hash" "$signer" >> "$report"
+    # Optional private cache for S04. Never publish package payloads as evidence.
+    if [[ -d /packages ]]; then
+        filename=${url##*/}
+        install -m 0644 "$work/package" "/packages/$filename"
+        install -m 0644 "$work/package.sig" "/packages/$filename.sig"
+    fi
     count=$((count+1))
     rm -f "$work/package" "$work/package.sig" "$work/status"
 done < /out/verification-input.tsv

@@ -2,7 +2,7 @@ name: Frozen Arch snapshot probe
 on:
   push:
     branches: ['research/d00-atomic-validation']
-    paths: ['distribution/images/experimental-base.json', 'tools/system-lab/*snapshot*', '.github/workflows/arch-snapshot.yml']
+    paths: ['distribution/images/experimental-base.json', 'tools/system-lab/*snapshot*', 'tools/system-lab/*rootfs*', '.github/workflows/arch-snapshot.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -71,3 +71,51 @@ jobs:
           path: evidence/
           retention-days: 7
           if-no-files-found: error
+  rootfs:
+    needs: [compare]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: frozen-arch-snapshot
+          path: evidence
+      - uses: actions/download-artifact@v4
+        with:
+          name: snapshot-reproducibility
+          path: comparison
+      - name: Prepare and verify locked packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/system-lab/prepare_rootfs.py distribution/images/experimental-base.json evidence comparison
+          mkdir packages
+          builder=$(head -n 1 evidence/build-input.txt)
+          docker pull --platform linux/amd64 "$builder"
+          docker run --rm --platform linux/amd64 --security-opt no-new-privileges \
+            --mount "type=bind,source=$PWD/tools/system-lab/verify_snapshot.sh,target=/verify.sh,readonly" \
+            --mount "type=bind,source=$PWD/evidence,target=/out" \
+            --mount "type=bind,source=$PWD/packages,target=/packages" \
+            "$builder" bash /verify.sh
+          python3 tools/system-lab/verify_snapshot.py report distribution/images/experimental-base.json evidence
+      - name: Build disposable root offline
+        shell: bash
+        run: |
+          set -euo pipefail
+          builder=$(head -n 1 evidence/build-input.txt)
+          docker run --rm --network none --platform linux/amd64 --security-opt no-new-privileges \
+            --mount "type=bind,source=$PWD/tools/system-lab/build_rootfs.sh,target=/build.sh,readonly" \
+            --mount "type=bind,source=$PWD/packages,target=/packages,readonly" \
+            --mount "type=bind,source=$PWD/evidence,target=/out" \
+            "$builder" bash /build.sh
+          python3 tools/system-lab/prepare_rootfs.py distribution/images/experimental-base.json evidence comparison --check-installed
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rootfs-build-evidence
+          path: |
+            evidence/rootfs-*
+            evidence/installed-packages.txt
+          retention-days: 7
+          if-no-files-found: warn
