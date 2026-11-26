@@ -9,12 +9,15 @@ keyring="$work/gnupg"
 mkdir -m 700 "$keyring"
 pacman-key --gpgdir "$keyring" --init
 pacman-key --gpgdir "$keyring" --populate archlinux
-pacman -Q archlinux-keyring > /out/verification-keyring.txt
-gpg --version > /out/verification-gpg.txt
+pacman -Q archlinux-keyring > "$work/verification-keyring.txt"
+gpg --version > "$work/verification-gpg.txt"
+# Publish only non-secret metadata, readable by the unprivileged CI runner.
+install -m 0644 "$work/verification-keyring.txt" /out/verification-keyring.txt
+install -m 0644 "$work/verification-gpg.txt" /out/verification-gpg.txt
 download() {
-    curl --fail --silent --show-error --location --retry 2 \
-        --proto '=https' --proto-redir '=https' --connect-timeout 20 \
-        --max-time 180 --output "$2" "$1"
+    curl --fail --silent --show-error --location --retry 4 --retry-max-time 600 \
+        --proto '=https' --proto-redir '=https' --connect-timeout 30 \
+        --max-time 300 --output "$2" "$1"
 }
 report="$work/verified.tsv"
 count=0
@@ -22,6 +25,7 @@ while IFS=$'\t' read -r name hash url; do
     [[ "$name" =~ ^[a-z0-9][a-z0-9+_.@-]*$ ]]
     [[ "$hash" =~ ^[0-9a-f]{64}$ ]]
     [[ "$url" =~ ^https://archive\.archlinux\.org/repos/[0-9]{4}/[0-9]{2}/[0-9]{2}/(core|extra)/os/x86_64/[A-Za-z0-9+_.@:-]+\.pkg\.tar\.(zst|xz)$ ]]
+    printf 'Verifying package %s (index %s)\n' "$name" "$((count+1))"
     download "$url" "$work/package"
     printf '%s  %s\n' "$hash" "$work/package" | sha256sum --check --strict
     download "$url.sig" "$work/package.sig"
@@ -40,5 +44,5 @@ while IFS=$'\t' read -r name hash url; do
     rm -f "$work/package" "$work/package.sig" "$work/status"
 done < /out/verification-input.tsv
 (( count > 0 ))
-cp "$report" /out/verified-packages.tsv
+install -m 0644 "$report" /out/verified-packages.tsv
 printf 'Verified %s package hashes and trusted detached signatures\n' "$count"
