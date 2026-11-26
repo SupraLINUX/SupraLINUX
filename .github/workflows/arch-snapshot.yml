@@ -99,16 +99,15 @@ jobs:
             --mount "type=bind,source=$PWD/packages,target=/packages" \
             "$builder" bash /verify.sh
           python3 tools/system-lab/verify_snapshot.py report distribution/images/experimental-base.json evidence
-      - name: Build disposable root offline
-        shell: bash
+      - name: Install isolated VM tooling
         run: |
-          set -euo pipefail
-          builder=$(head -n 1 evidence/build-input.txt)
-          docker run --rm --network none --platform linux/amd64 --security-opt no-new-privileges \
-            --mount "type=bind,source=$PWD/tools/system-lab/build_rootfs.sh,target=/build.sh,readonly" \
-            --mount "type=bind,source=$PWD/packages,target=/packages,readonly" \
-            --mount "type=bind,source=$PWD/evidence,target=/out" \
-            "$builder" bash /build.sh
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends qemu-system-x86 linux-image-virtual initramfs-tools e2fsprogs
+          test -c /dev/kvm
+          sudo setfacl -m "u:$(id -un):rw" /dev/kvm
+      - name: Build disposable root offline in KVM
+        run: |
+          bash tools/system-lab/build_rootfs_vm.sh
           python3 tools/system-lab/prepare_rootfs.py distribution/images/experimental-base.json evidence comparison --check-installed
       - uses: actions/upload-artifact@v4
         if: always()

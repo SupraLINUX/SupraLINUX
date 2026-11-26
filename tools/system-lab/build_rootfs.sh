@@ -1,11 +1,21 @@
 #!/usr/bin/env bash
-# Disposable OCI filesystem only. No host root, privileged mode or network.
+# Run only inside the disposable, networkless build VM.
 set -euo pipefail
 export LC_ALL=C
 umask 022
 root=$(mktemp -d)
 keyring=$(mktemp -d)
-trap 'rm -rf "$root" "$keyring"' EXIT
+cleanup() {
+    for dir in dev sys proc; do
+        if mountpoint -q "$root/$dir"; then umount "$root/$dir" || return 1; fi
+    done
+    rm -rf "$root" "$keyring"
+}
+trap cleanup EXIT
+mkdir -p "$root"/{dev,sys,proc}
+mount -t proc proc "$root/proc"
+mount -t sysfs sysfs "$root/sys"
+mount --bind /dev "$root/dev"
 mkdir -p "$root/var/lib/pacman" "$root/var/cache/pacman/pkg" "$root/var/log"
 pacman-key --gpgdir "$keyring" --init
 pacman-key --gpgdir "$keyring" --populate archlinux
