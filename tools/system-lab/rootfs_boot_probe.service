@@ -1,0 +1,9 @@
+[Unit]
+Description=SupraLinux disposable boot probe
+DefaultDependencies=no
+After=multi-user.target
+ConditionPathExists=/usr/lib/systemd/systemd
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh -ec 'test "$$(cat /proc/1/comm)" = systemd; test -b /dev/vda; grep -q "^/dev/vda / ext4 " /proc/mounts; echo SUPRA_TARGET_BOOT_READY > /dev/ttyS0; systemctl --no-block poweroff'

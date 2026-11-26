@@ -5,11 +5,17 @@ export LC_ALL=C
 umask 022
 root=$(mktemp -d)
 keyring=$(mktemp -d)
+# A separate blank disk is explicitly attached by the VM launcher.
+test -b /dev/vdb
+test "$(blkid -s LABEL -o value /dev/vdb)" = SUPRA_TARGET
+mount /dev/vdb "$root"
 cleanup() {
     for dir in dev sys proc; do
         if mountpoint -q "$root/$dir"; then umount "$root/$dir" || return 1; fi
     done
-    rm -rf "$root" "$keyring"
+    umount "$root" || return 1
+    rmdir "$root"
+    rm -rf "$keyring"
 }
 trap cleanup EXIT
 mkdir -p "$root"/{dev,sys,proc}
@@ -46,4 +52,10 @@ test -x "$root/usr/lib/systemd/systemd"
 test -s "$root/boot/vmlinuz-linux-lts"
 test -s "$root/boot/initramfs-linux-lts.img"
 sha256sum "$root/boot/vmlinuz-linux-lts" "$root/boot/initramfs-linux-lts.img" | sed "s|$root/||g" > /out/rootfs-boot-files.sha256
+# Test-only service: prove a fresh systemd boot reached multi-user prerequisites.
+# It is never shipped as a release component.
+install -D -m 0644 /boot-probe.service "$root/etc/systemd/system/supra-boot-probe.service"
+mkdir -p "$root/etc/systemd/system/multi-user.target.wants"
+ln -s ../supra-boot-probe.service "$root/etc/systemd/system/multi-user.target.wants/supra-boot-probe.service"
+sync
 echo "Experimental offline root built; no boot or release claim"

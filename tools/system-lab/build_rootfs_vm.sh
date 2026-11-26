@@ -22,11 +22,15 @@ sudo cp -a packages/. "$stage/packages/"
 sudo install -m 0644 evidence/rootfs-input.tsv "$stage/out/rootfs-input.tsv"
 sudo install -m 0755 tools/system-lab/build_rootfs.sh "$stage/build.sh"
 sudo install -m 0755 tools/system-lab/rootfs_guest_init.sh "$stage/supra-init"
+sudo install -m 0644 tools/system-lab/rootfs_boot_probe.service "$stage/boot-probe.service"
 disk="$work/builder.ext4"
 truncate -s 10G "$disk"
 sudo mke2fs -q -t ext4 -F -d "$stage" "$disk"
 sudo chown "$(id -u):$(id -g)" "$disk"
 sudo rm -rf -- "$stage"
+target="$work/target.ext4"
+truncate -s 6G "$target"
+mke2fs -q -F -t ext4 -L SUPRA_TARGET "$target"
 # Ubuntu kernel/initramfs is transport for the build VM, not the target kernel.
 kernel=$(find /boot -maxdepth 1 -name 'vmlinuz-*-generic' -type f | sort -V | tail -n 1)
 test -n "$kernel"
@@ -40,7 +44,8 @@ timeout 1200 qemu-system-x86_64 -accel kvm -machine q35 -cpu host -m 4096 -smp 2
     -display none -monitor none -serial stdio -nic none -no-reboot \
     -kernel "$work/kernel" -initrd "$work/initrd" \
     -append 'root=/dev/vda rootfstype=ext4 rw console=ttyS0 init=/supra-init' \
-    -drive "file=$disk,format=raw,if=virtio" \
+    -drive "file=$disk,format=raw,if=virtio,index=0" \
+    -drive "file=$target,format=raw,if=virtio,index=1" \
     2>&1 | tee evidence/rootfs-vm-console.log || status=$?
 # Extract only named evidence files after the guest exits, never mount the disk on host.
 for name in rootfs-vm-status.txt rootfs-install.log installed-packages.txt rootfs-boot-files.sha256; do
@@ -52,3 +57,7 @@ grep -Fxq 'SUPRA_BUILD_VM_EXIT=0' evidence/rootfs-vm-console.log
 test "$(cat evidence/rootfs-vm-status.txt)" = 0
 test -s evidence/installed-packages.txt
 test -s evidence/rootfs-boot-files.sha256
+
+# Validate the build closure BEFORE starting a separate target-kernel VM.
+python3 tools/system-lab/prepare_rootfs.py distribution/images/experimental-base.json evidence comparison --check-installed
+bash tools/system-lab/boot_rootfs.sh "$target" "$work" evidence
