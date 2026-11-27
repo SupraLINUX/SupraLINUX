@@ -2,7 +2,7 @@ name: KVM capability probe
 on:
   push:
     branches: ['research/d00-atomic-validation']
-    paths: ['.github/workflows/kvm-probe.yml', 'tools/system-lab/**']
+    paths: ['.github/workflows/kvm-probe.yml', 'tools/system-lab/**', 'tools/ci/install-ubuntu-vm-tools.sh']
   workflow_dispatch:
 permissions:
   contents: read
@@ -16,8 +16,7 @@ jobs:
         run: python3 -m unittest discover -s tools/system-lab -p 'test_*.py'
       - name: Install QEMU
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends qemu-system-x86
+          bash tools/ci/install-ubuntu-vm-tools.sh qemu-system-x86
       - name: Inspect runner and boot disposable guest
         run: |
           mkdir -p evidence
