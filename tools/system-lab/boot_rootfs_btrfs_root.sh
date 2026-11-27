@@ -24,7 +24,9 @@ timeout 360 qemu-system-x86_64 -accel kvm -machine q35 -cpu host -m 3072 -smp 2 
     -drive "file=$work/output.raw,format=raw,if=virtio,index=3" \
     2>&1 | tee "$out/rootfs-btrfs-root-prepare-console.log" || prepare_rc=$?
 # Preserve partial diagnostics even if the guest failed before export completed.
-debugfs -R "dump /mkinitcpio.log $out/rootfs-btrfs-root-mkinitcpio-partial.log" "$work/output.raw" 2>/dev/null || true
+for name in mkinitcpio.log initramfs-contents.txt modules.builtin driver-evidence.tsv; do
+    debugfs -R "dump /$name $out/rootfs-btrfs-root-partial-$name" "$work/output.raw" 2>/dev/null || true
+done
 sha256sum -c "$out/rootfs-btrfs-root-source.sha256"
 (( prepare_rc == 0 ))
 python3 - "$out/rootfs-btrfs-root-prepare-console.log" <<'PY'
@@ -34,7 +36,7 @@ sys.path.insert(0, "tools/system-lab")
 from rootfs_btrfs_root_evidence import ordered_marker
 ordered_marker(Path(sys.argv[1]).read_text(errors="replace"), "SUPRA_BTRFS_ROOT_PREPARED")
 PY
-for name in target-kernel target-initrd boot.sha256 installed-packages.txt layout.txt mkinitcpio.log initramfs-contents.txt; do
+for name in target-kernel target-initrd boot.sha256 installed-packages.txt layout.txt mkinitcpio.log initramfs-contents.txt modules.builtin driver-evidence.tsv; do
     debugfs -R "dump /$name $work/$name" "$work/output.raw" 2>/dev/null
     test -s "$work/$name"
 done
@@ -43,6 +45,8 @@ cmp "$work/installed-packages.txt" "$out/installed-packages.txt"
 cmp "$work/target-kernel" "$(dirname "$work")/target-kernel"
 cp "$work/mkinitcpio.log" "$out/rootfs-btrfs-root-mkinitcpio.log"
 cp "$work/initramfs-contents.txt" "$out/rootfs-btrfs-root-initramfs-contents.txt"
+cp "$work/driver-evidence.tsv" "$out/rootfs-btrfs-root-driver-evidence.tsv"
+cp "$work/modules.builtin" "$out/rootfs-btrfs-root-modules.builtin"
 cp "$work/boot.sha256" "$out/rootfs-btrfs-root-boot.sha256"
 grep -Fxq base_created=true "$work/layout.txt"
 sha256sum -c "$out/rootfs-btrfs-root-source.sha256"

@@ -63,12 +63,13 @@ if grep -Fq 'Running build hook: [autodetect]' "$out/mkinitcpio.log"; then
 fi
 phase initramfs-content
 chroot "$root" lsinitcpio /boot/initramfs-linux-lts.img > "$out/initramfs-contents.txt"
-for module in btrfs virtio_pci virtio_blk; do
-    grep -Eq "(^|/)${module//_/-}\.ko(\.(zst|xz|gz))?$|(^|/)$module\.ko(\.(zst|xz|gz))?$" "$out/initramfs-contents.txt" || {
-        echo "Missing required initramfs module: $module" >&2
-        exit 1
-    }
-done
+# The preparation VM runs the same previously verified target kernel.
+release=$(uname -r)
+test -s "$root/usr/lib/modules/$release/modules.builtin"
+cmp "$root/boot/vmlinuz-linux-lts" "/boot/vmlinuz-linux-lts"
+cp "$root/usr/lib/modules/$release/modules.builtin" "$out/modules.builtin"
+bash /usr/local/libexec/supra-initramfs-drivers "$release" "$out/modules.builtin" \
+    "$out/initramfs-contents.txt" | tee "$out/driver-evidence.tsv"
 phase inventory
 chroot "$root" pacman -Q > "$out/installed-packages.txt"
 (cd "$out" && sha256sum installed-packages.txt | awk '{print $1 "  -"}') > "$root/etc/supra-lab-inventory.sha256"

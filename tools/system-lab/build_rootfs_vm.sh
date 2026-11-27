@@ -27,6 +27,7 @@ sudo install -m 0755 tools/system-lab/rootfs_boot_probe.sh "$stage/boot-probe.sh
 sudo install -m 0755 tools/system-lab/rootfs_btrfs_guest.sh "$stage/btrfs-probe.sh"
 sudo install -m 0755 tools/system-lab/rootfs_btrfs_prepare_guest.sh "$stage/btrfs-prepare.sh"
 sudo install -m 0644 tools/system-lab/rootfs_btrfs_mkinitcpio.conf "$stage/btrfs-mkinitcpio.conf"
+sudo install -m 0755 tools/system-lab/rootfs_initramfs_drivers.sh "$stage/initramfs-drivers.sh"
 disk="$work/builder.ext4"
 truncate -s 10G "$disk"
 sudo mke2fs -q -t ext4 -F -d "$stage" "$disk"
