@@ -42,6 +42,7 @@ PY
 sha256sum "$lab/layer.qcow2" > "$out/rootfs-layer-checkpoint.sha256"
 # Boot independently using transient overlays; never change shared checkpoint.
 for deployment in staged layer; do
+    bash tools/system-lab/rootfs_kvm_access.sh "$out/rootfs-layer-$deployment-kvm.txt"
     timeout 240 qemu-system-x86_64 -accel kvm -machine q35 -cpu host -m 2048 -smp 2 \
         -display none -monitor none -serial stdio -nic none -no-reboot -snapshot \
         -kernel "$work/target-kernel" -initrd "$work/target-initrd" \
@@ -52,3 +53,6 @@ done
 sha256sum -c "$out/rootfs-layer-source.sha256"
 sha256sum -c "$out/rootfs-layer-checkpoint.sha256"
 python3 tools/layer-lab/layer_evidence.py "$out"
+
+# Run the next firmware gate only after direct boot evidence is validated.
+bash tools/layer-lab/run_layer_uefi.sh "$work" "$out"
