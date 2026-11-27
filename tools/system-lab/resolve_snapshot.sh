@@ -19,7 +19,7 @@ Server = https://archive.archlinux.org/repos/$date_path/\$repo/os/\$arch
 EOF
 args=(--config /tmp/supra-pacman.conf --root /tmp/supra-root --dbpath /tmp/supra-root/var/lib/pacman --cachedir /tmp/supra-cache --gpgdir /etc/pacman.d/gnupg --noconfirm)
 pacman --version > /out/pacman-version.txt
-pacman "${args[@]}" -Sy
+pacman "${args[@]}" --disable-download-timeout -Sy
 pacman "${args[@]}" -Sp --print-format '%r|%n|%v|%a|%h|%f|%l' "$@" > /out/transaction.txt
 for repo in core extra; do
     cp "/tmp/supra-root/var/lib/pacman/sync/$repo.db" "/out/$repo.db"

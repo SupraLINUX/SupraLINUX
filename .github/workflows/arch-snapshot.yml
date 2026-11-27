@@ -38,7 +38,7 @@ jobs:
           if-no-files-found: warn
   repeat:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - name: Independent fresh resolution

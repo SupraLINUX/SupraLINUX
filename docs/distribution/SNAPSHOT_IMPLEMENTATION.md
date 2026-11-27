@@ -40,3 +40,6 @@ Run [45545883555](https://github.com/SupraLINUX/SupraLINUX/actions/runs/45545883
 
 ## Resolver transport correction
 [Run 45997977617](https://github.com/SupraLINUX/SupraLINUX/actions/runs/45997977617): both independent resolution jobs failed on Arch Linux Archive connection timeouts for core.db and extra.db; 25 unit tests PASS, Btrfs fixture NOT_RUN. Bounded four-attempt retry in fresh containers and per-attempt evidence, only for observed network errors, no retry for structural validation errors, no rolling fallback or signature policy change. Repeat job uploads failure logs as well. CI pending.
+
+## Archive slow-transfer correction
+[Run 45998170694](https://github.com/SupraLINUX/SupraLINUX/actions/runs/45998170694): both resolution jobs blocked; Pacman reported `Operation too slow` (10-second low-speed cutoff), which previous retry classifier missed. Disable Pacman's short internal download timeout only for metadata synchronization; retain an external 240-second deadline per fresh container, maximum four attempts, explicit container cleanup and 25-minute independent job budget. Retry slow transfers and deadline expiration; retain structural and signature gates, fixed URLs/date, independent fresh resolution. This is a transport correction, not a validated Btrfs run. Btrfs NOT_RUN. CI pending.
