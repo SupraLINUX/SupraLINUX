@@ -24,6 +24,7 @@ sudo install -m 0755 tools/system-lab/build_rootfs.sh "$stage/build.sh"
 sudo install -m 0755 tools/system-lab/rootfs_guest_init.sh "$stage/supra-init"
 sudo install -m 0644 tools/system-lab/rootfs_boot_probe.service "$stage/boot-probe.service"
 sudo install -m 0755 tools/system-lab/rootfs_boot_probe.sh "$stage/boot-probe.sh"
+sudo install -m 0755 tools/system-lab/rootfs_btrfs_guest.sh "$stage/btrfs-probe.sh"
 disk="$work/builder.ext4"
 truncate -s 10G "$disk"
 sudo mke2fs -q -t ext4 -F -d "$stage" "$disk"
@@ -63,3 +64,5 @@ python3 tools/system-lab/prepare_rootfs.py distribution/images/experimental-base
 bash tools/system-lab/boot_rootfs.sh "$target" "$work" evidence
 
 bash tools/system-lab/boot_rootfs_uefi.sh "$target" "$work" evidence
+
+bash tools/system-lab/boot_rootfs_btrfs.sh "$target" "$work" evidence
