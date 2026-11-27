@@ -33,7 +33,7 @@ cat > "$work/supra.conf" <<'CONF'
 title SupraLINUX experimental single-disk Btrfs
 linux /vmlinuz-linux-lts
 initrd /initramfs-linux-lts.img
-options root=LABEL=SUPRA_BTRFS_ROOT rootfstype=btrfs rootflags=subvol=deployments/staged rw console=ttyS0 systemd.unit=multi-user.target systemd.mask=serial-getty@ttyS0.service supra_btrfs_root_probe=1 supra_uefi_probe=1 supra_btrfs_gpt_probe=1
+options systemd.gpt_auto=0 root=LABEL=SUPRA_BTRFS_ROOT rootfstype=btrfs rootflags=subvol=deployments/staged rw console=ttyS0 systemd.unit=multi-user.target systemd.mask=serial-getty@ttyS0.service supra_btrfs_root_probe=1 supra_uefi_probe=1 supra_btrfs_gpt_probe=1
 CONF
 mcopy -i "$esp" "$work/loader.conf" ::/loader/loader.conf
 mcopy -i "$esp" "$work/supra.conf" ::/loader/entries/supra.conf

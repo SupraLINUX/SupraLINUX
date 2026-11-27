@@ -43,8 +43,17 @@ if grep -qw supra_btrfs_gpt_probe=1 /proc/cmdline; then
     test "$(blkid -s TYPE -o value /dev/vda1)" = vfat
     test "$(blkid -s LABEL -o value /dev/vda1)" = SUPRA_ESP
     test "$(lsblk -dn -o TYPE | grep -cx disk)" = 1
+    # The disposable GPT entry disables automatic GPT mounts so this probe
+    # is the sole ESP mount owner. Never remount an already active ESP.
+    grep -qw systemd.gpt_auto=0 /proc/cmdline
+    if findmnt -rn -S /dev/vda1; then
+        echo "Unexpected pre-existing ESP mount" >&2
+        exit 1
+    fi
     esp=$(mktemp -d)
     mount -t vfat -o ro /dev/vda1 "$esp"
+    test "$(findmnt -n -o SOURCE --mountpoint "$esp")" = /dev/vda1
+    findmnt -n -o OPTIONS --mountpoint "$esp" | tr , '\n' | grep -Fx ro
     cmp "$esp/vmlinuz-linux-lts" /boot/vmlinuz-linux-lts
     cmp "$esp/initramfs-linux-lts.img" /boot/initramfs-linux-lts.img
     umount "$esp"
