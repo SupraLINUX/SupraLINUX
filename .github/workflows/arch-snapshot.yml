@@ -44,6 +44,7 @@ jobs:
       - name: Independent fresh resolution
         run: bash tools/system-lab/resolve_ci_snapshot.sh
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: repeated-arch-snapshot
           path: evidence/

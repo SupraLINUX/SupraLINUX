@@ -37,3 +37,6 @@ Run [45545883555](https://github.com/SupraLINUX/SupraLINUX/actions/runs/45545883
 
 ## S05 UEFI PASS / D03 Btrfs fixture
 [Run 45933973506](https://github.com/SupraLINUX/SupraLINUX/actions/runs/45933973506/job/140294661542): all jobs PASS; direct KVM boot and OVMF/systemd-boot reached the independent EFI and multi-user markers. First Btrfs experiment adds a separate labelled disposable disk to the verified Arch target VM, tests readonly base, writable CoW stage, per-deployment synthetic inventory, independent persistent home fixture, rollback snapshot and discarded failed staging, then remounts and rechecks. No real layer transaction, power-loss simulation, boot switch, Btrfs-root boot or Arkdep adoption. Retain ext4 and UEFI baseline; CI pending. Only logs and JSON published.
+
+## Resolver transport correction
+[Run 45997977617](https://github.com/SupraLINUX/SupraLINUX/actions/runs/45997977617): both independent resolution jobs failed on Arch Linux Archive connection timeouts for core.db and extra.db; 25 unit tests PASS, Btrfs fixture NOT_RUN. Bounded four-attempt retry in fresh containers and per-attempt evidence, only for observed network errors, no retry for structural validation errors, no rolling fallback or signature policy change. Repeat job uploads failure logs as well. CI pending.
