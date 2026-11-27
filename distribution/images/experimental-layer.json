@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "snapshot": "2026/11/24",
+  "base_lock_sha256": "49422709f06ff5bfa9a432ee980eb040be6db808c3442b5f1ad186a4cbc0f7e7",
+  "package": {
+    "repository": "extra",
+    "name": "tree",
+    "version": "2.3.2-1",
+    "arch": "x86_64",
+    "sha256": "8a6230468cc31a2c984a41c092035dd16bf97e737ec3241490724a5419903739",
+    "filename": "tree-2.3.2-1-x86_64.pkg.tar.zst",
+    "url": "https://archive.archlinux.org/repos/2026/11/24/extra/os/x86_64/tree-2.3.2-1-x86_64.pkg.tar.zst"
+  },
+  "depends": [
+    "glibc"
+  ],
+  "compressed_bytes": 44562,
+  "installed_bytes": 96252
+}
