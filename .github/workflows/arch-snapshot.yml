@@ -2,7 +2,7 @@ name: Frozen Arch snapshot probe
 on:
   push:
     branches: ['research/d00-atomic-validation']
-    paths: ['distribution/images/experimental-base.json', 'tools/system-lab/*snapshot*', 'tools/system-lab/*rootfs*', '.github/workflows/arch-snapshot.yml']
+    paths: ['distribution/images/experimental-base.json', 'tools/system-lab/*snapshot*', 'tools/system-lab/*rootfs*', 'tools/ci/install-ubuntu-vm-tools.sh', '.github/workflows/arch-snapshot.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -18,22 +18,10 @@ jobs:
         shell: bash
         run: |
           bash tools/system-lab/resolve_ci_snapshot.sh
-      - name: Verify full candidate closure
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 tools/system-lab/verify_snapshot.py prepare distribution/images/experimental-base.json evidence
-          builder=$(head -n 1 evidence/build-input.txt)
-          docker run --rm --platform linux/amd64 --security-opt no-new-privileges \
-            --mount "type=bind,source=$PWD/tools/system-lab/verify_snapshot.sh,target=/verify.sh,readonly" \
-            --mount "type=bind,source=$PWD/tools/system-lab/snapshot_download.sh,target=/snapshot_download.sh,readonly" \
-            --mount "type=bind,source=$PWD/evidence,target=/out" \
-            "$builder" bash /verify.sh
-          python3 tools/system-lab/verify_snapshot.py report distribution/images/experimental-base.json evidence
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: frozen-arch-snapshot
+          name: candidate-arch-snapshot
           path: evidence/
           retention-days: 7
           if-no-files-found: warn
@@ -51,50 +39,40 @@ jobs:
           path: evidence/
           retention-days: 7
           if-no-files-found: error
-  compare:
-    needs: [resolve, repeat]
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: frozen-arch-snapshot
-          path: first
-      - uses: actions/download-artifact@v4
-        with:
-          name: repeated-arch-snapshot
-          path: second
-      - name: Compare validated candidate locks
-        run: python3 tools/system-lab/compare_snapshot.py distribution/images/experimental-base.json first second evidence
-      - uses: actions/upload-artifact@v4
-        with:
-          name: snapshot-reproducibility
-          path: evidence/
-          retention-days: 7
-          if-no-files-found: error
   rootfs:
-    needs: [compare]
+    needs: [resolve, repeat]
     runs-on: ubuntu-24.04
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: frozen-arch-snapshot
+          name: candidate-arch-snapshot
           path: evidence
       - uses: actions/download-artifact@v4
         with:
-          name: snapshot-reproducibility
-          path: comparison
-      - name: Prepare and verify locked packages
+          name: repeated-arch-snapshot
+          path: second
+      - name: Check independent metadata before downloading packages
+        run: |
+          python3 - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools/system-lab')
+          from verify_snapshot import candidate
+          config = Path('distribution/images/experimental-base.json')
+          if candidate(config, Path('evidence')) != candidate(config, Path('second')):
+              raise SystemExit('Independent snapshot locks differ')
+          PY
+      - name: Authenticate and retain locked packages privately
         shell: bash
         run: |
           set -euo pipefail
-          python3 tools/system-lab/prepare_rootfs.py distribution/images/experimental-base.json evidence comparison
+          python3 tools/system-lab/verify_snapshot.py prepare distribution/images/experimental-base.json evidence
           mkdir packages
           builder=$(head -n 1 evidence/build-input.txt)
           docker pull --platform linux/amd64 "$builder"
+          start=$SECONDS
           docker run --rm --platform linux/amd64 --security-opt no-new-privileges \
             --mount "type=bind,source=$PWD/tools/system-lab/verify_snapshot.sh,target=/verify.sh,readonly" \
             --mount "type=bind,source=$PWD/tools/system-lab/snapshot_download.sh,target=/snapshot_download.sh,readonly" \
@@ -102,10 +80,26 @@ jobs:
             --mount "type=bind,source=$PWD/packages,target=/packages" \
             "$builder" bash /verify.sh
           python3 tools/system-lab/verify_snapshot.py report distribution/images/experimental-base.json evidence
+          printf 'package_authentication_elapsed_seconds=%s\n' "$((SECONDS-start))" | tee evidence/package-authentication-timing.txt
+      - name: Compare authenticated candidate and prepare offline build
+        run: |
+          python3 tools/system-lab/compare_snapshot.py distribution/images/experimental-base.json evidence second comparison
+          python3 tools/system-lab/prepare_rootfs.py distribution/images/experimental-base.json evidence comparison
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frozen-arch-snapshot
+          path: evidence/
+          retention-days: 7
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-reproducibility
+          path: comparison/
+          retention-days: 7
+          if-no-files-found: error
       - name: Install isolated VM tooling
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends qemu-system-x86 qemu-utils linux-image-virtual initramfs-tools e2fsprogs ovmf gdisk dosfstools mtools btrfs-progs
+          bash tools/ci/install-ubuntu-vm-tools.sh qemu-system-x86 qemu-utils linux-image-virtual initramfs-tools e2fsprogs ovmf gdisk dosfstools mtools btrfs-progs
           command -v qemu-img
           qemu-img --version
           test -c /dev/kvm
@@ -120,5 +114,16 @@ jobs:
           path: |
             evidence/rootfs-*
             evidence/installed-packages.txt
+          retention-days: 7
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: snapshot-rootfs-failure-metadata
+          path: |
+            evidence/verification-*
+            evidence/verified-packages.tsv
+            evidence/snapshot-verification.json
+            evidence/package-authentication-timing.txt
           retention-days: 7
           if-no-files-found: warn
