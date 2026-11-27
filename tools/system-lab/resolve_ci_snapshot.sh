@@ -22,15 +22,19 @@ cleanup() {
     rm -rf -- "$attempt_dir"
 }
 trap cleanup EXIT
+source tools/system-lab/snapshot_retry_policy.sh
 for attempt in 1 2 3 4; do
     mkdir "$attempt_dir/$attempt"
     log="evidence/resolver-attempt-$attempt.log"
     status=0
     container="supra-resolve-$-$attempt"
-    timeout --kill-after=10 240 docker run --name "$container" --rm --platform linux/amd64 --security-opt no-new-privileges \
+    start=$SECONDS
+    timeout --foreground --kill-after=10 240 docker run --name "$container" --rm --platform linux/amd64 --security-opt no-new-privileges \
       --mount "type=bind,source=$PWD/tools/system-lab/resolve_snapshot.sh,target=/resolve.sh,readonly" \
       --mount "type=bind,source=$attempt_dir/$attempt,target=/out" \
       "${config[0]}" bash /resolve.sh "${config[1]}" "${config[@]:2}" 2>&1 | tee "$log" || status=$?
+    elapsed=$((SECONDS-start))
+    printf 'Resolver attempt=%s exit=%s elapsed_seconds=%s\n' "$attempt" "$status" "$elapsed" | tee -a "$log"
     if docker container inspect "$container" >/dev/null 2>&1; then
         docker rm -f "$container" >/dev/null
     fi
@@ -42,8 +46,11 @@ for attempt in 1 2 3 4; do
         done
         break
     fi
-    if (( attempt == 4 )); then exit "$status"; fi
-    if (( status != 124 )) && ! grep -Eqi 'connection timed out|operation timed out|operation too slow|could not resolve host|failed to connect|connection reset|HTTP.*(502|503|504)|requested URL returned error: (502|503|504)' "$log"; then
+    if ! resolver_retryable "$status" "$elapsed" "$log"; then
+        exit "$status"
+    fi
+    if (( attempt == 4 )); then
+        echo "INFRA_INVALID: bounded snapshot transport attempts exhausted" >&2
         exit "$status"
     fi
     sleep "$((attempt * 15))"

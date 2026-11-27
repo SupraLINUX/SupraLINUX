@@ -48,15 +48,7 @@ printf 'staged\n' > "$root/etc/supra-lab-deployment"
 # Explicit root filesystem and virtio modules for the new boot path.
 mkdir -p "$root/etc/mkinitcpio.conf.d"
 # This image targets the guest, not the builder's detected hardware/root.
-cat > "$root/etc/mkinitcpio.conf.d/99-supra-btrfs-lab.conf" <<'CONF'
-MODULES+=(btrfs virtio_pci virtio_blk)
-supra_hooks=()
-for supra_hook in "${HOOKS[@]}"; do
-    [[ "$supra_hook" == autodetect ]] || supra_hooks+=("$supra_hook")
-done
-HOOKS=("${supra_hooks[@]}")
-unset supra_hooks supra_hook
-CONF
+install -m 0644 /usr/local/share/supra-lab/btrfs-mkinitcpio.conf "$root/etc/mkinitcpio.conf.d/99-supra-btrfs-lab.conf"
 printf 'LABEL=SUPRA_BTRFS_ROOT / btrfs rw,subvol=deployments/staged 0 0\n' > "$root/etc/fstab"
 mount -t proc proc "$root/proc"
 mount -t sysfs sysfs "$root/sys"

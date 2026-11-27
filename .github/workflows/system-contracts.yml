@@ -1,0 +1,23 @@
+name: Offline system lab contracts
+on:
+  push:
+    branches: ['research/d00-atomic-validation']
+    paths: ['tools/system-lab/**', '.github/workflows/system-contracts.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Syntax checks
+        run: |
+          for script in tools/system-lab/*.sh tools/system-lab/rootfs_btrfs_mkinitcpio.conf; do
+            bash -n "$script"
+          done
+      - name: Offline unit tests
+        run: python3 -m unittest discover -s tools/system-lab -p 'test_*.py'
