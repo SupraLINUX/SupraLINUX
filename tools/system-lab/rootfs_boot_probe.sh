@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Test-only boot evidence, not a distribution service.
-set -euo pipefail
+set -Eeuo pipefail
+trap 'rc=$?; printf "SUPRA_BOOT_PROBE_ERROR line=%s exit=%s command=%s\n" "$LINENO" "$rc" "$BASH_COMMAND" >&2' ERR
 export LC_ALL=C
 test "$(cat /proc/1/comm)" = systemd
 systemctl is-active --quiet multi-user.target

@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 # Only the disposable, offline target VM with four explicitly labelled disks.
-set -euo pipefail
+set -Eeuo pipefail
 export LC_ALL=C
+trap 'rc=$?; printf "BTRFS_PREP_ERROR line=%s exit=%s command=%s\n" "$LINENO" "$rc" "$BASH_COMMAND" >&2' ERR
+phase() { printf 'BTRFS_PREP_PHASE=%s\n' "$1"; }
+phase device-checks
+lsblk -o NAME,TYPE,FSTYPE,LABEL,RO,MAJ:MIN
+findmnt -n -o SOURCE,FSTYPE,MAJ:MIN /
 for device in vdb vdc vdd; do test -b "/dev/$device"; done
 test "$(blkid -s TYPE -o value /dev/vdb)" = ext4
 test "$(blkid -s LABEL -o value /dev/vdb)" = SUPRA_TARGET
@@ -25,14 +30,18 @@ cleanup() {
     return "$rc"
 }
 trap cleanup EXIT
+phase mount-source
 mount -t ext4 -o ro,noload /dev/vdb "$src"
+phase mount-destination
 mount -t btrfs -o subvolid=5 /dev/vdc "$top"
 mount -t ext4 /dev/vdd "$out"
 mkdir "$top/deployments"
 btrfs subvolume create "$root"
 # Preserve ownership, modes, hardlinks, ACLs and xattrs from the inactive root.
+phase copy-root
 tar --numeric-owner --acls --xattrs --xattrs-include='*' --one-file-system -cpf - -C "$src" . | \
     tar --numeric-owner --same-owner --same-permissions --acls --xattrs --xattrs-include='*' -xpf - -C "$root"
+phase configure-root
 printf 'staged\n' > "$root/etc/supra-lab-deployment"
 # Explicit root filesystem and virtio modules for the new boot path.
 mkdir -p "$root/etc/mkinitcpio.conf.d"
@@ -41,21 +50,27 @@ printf 'LABEL=SUPRA_BTRFS_ROOT / btrfs rw,subvol=deployments/staged 0 0\n' > "$r
 mount -t proc proc "$root/proc"
 mount -t sysfs sysfs "$root/sys"
 mount --bind /dev "$root/dev"
-chroot "$root" mkinitcpio -P 2>&1 | tee "$out/mkinitcpio.log"
+phase initramfs
+# Avoid a blocked initramfs tool consuming the whole guest budget.
+timeout --kill-after=10 150 chroot "$root" mkinitcpio -P 2>&1 | tee "$out/mkinitcpio.log"
 if grep -Ei '(^|[[:space:]])ERROR:' "$out/mkinitcpio.log"; then exit 1; fi
+phase inventory
 chroot "$root" pacman -Q > "$out/installed-packages.txt"
 (cd "$out" && sha256sum installed-packages.txt | awk '{print $1 "  -"}') > "$root/etc/supra-lab-inventory.sha256"
 cp "$root/boot/vmlinuz-linux-lts" "$out/target-kernel"
 cp "$root/boot/initramfs-linux-lts.img" "$out/target-initrd"
 (cd "$out" && sha256sum target-kernel target-initrd > boot.sha256)
 for path in "$root/dev" "$root/sys" "$root/proc"; do umount "$path"; done
+phase snapshot
 btrfs subvolume snapshot -r "$root" "$top/deployments/base"
 test "$(btrfs property get -ts "$top/deployments/base" ro)" = ro=true
 test "$(btrfs property get -ts "$root" ro)" = ro=false
 # This base is a snapshot of the prepared lab root, not a promoted deployment.
 printf 'base_created=true\n' > "$out/layout.txt"
+phase sync
 sync
 btrfs filesystem sync "$top"
+phase cleanup
 cleanup
 trap - EXIT
 printf '%s\n' SUPRA_BTRFS_ROOT_PREPARED > /dev/ttyS0

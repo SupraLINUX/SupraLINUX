@@ -13,6 +13,7 @@ truncate -s 256M "$work/output.raw"
 mke2fs -q -F -t ext4 -L SUPRA_LAB_OUTPUT "$work/output.raw"
 python3 tools/system-lab/rootfs_evidence.py hashes "$out" "$(dirname "$work")"
 bash tools/system-lab/rootfs_kvm_access.sh "$out/rootfs-btrfs-root-prepare-kvm.txt"
+prepare_rc=0
 timeout 360 qemu-system-x86_64 -accel kvm -machine q35 -cpu host -m 3072 -smp 2 \
     -display none -monitor none -serial stdio -nic none -no-reboot \
     -kernel "$(dirname "$work")/target-kernel" -initrd "$(dirname "$work")/target-initrd" \
@@ -21,7 +22,18 @@ timeout 360 qemu-system-x86_64 -accel kvm -machine q35 -cpu host -m 3072 -smp 2 
     -drive "file=$base,format=raw,if=virtio,index=1,readonly=on" \
     -drive "file=$work/root.raw,format=raw,if=virtio,index=2" \
     -drive "file=$work/output.raw,format=raw,if=virtio,index=3" \
-    2>&1 | tee "$out/rootfs-btrfs-root-prepare-console.log"
+    2>&1 | tee "$out/rootfs-btrfs-root-prepare-console.log" || prepare_rc=$?
+# Preserve partial diagnostics even if the guest failed before export completed.
+debugfs -R "dump /mkinitcpio.log $out/rootfs-btrfs-root-mkinitcpio-partial.log" "$work/output.raw" 2>/dev/null || true
+sha256sum -c "$out/rootfs-btrfs-root-source.sha256"
+(( prepare_rc == 0 ))
+python3 - "$out/rootfs-btrfs-root-prepare-console.log" <<'PY'
+import sys
+from pathlib import Path
+sys.path.insert(0, "tools/system-lab")
+from rootfs_btrfs_root_evidence import ordered_marker
+ordered_marker(Path(sys.argv[1]).read_text(errors="replace"), "SUPRA_BTRFS_ROOT_PREPARED")
+PY
 for name in target-kernel target-initrd boot.sha256 installed-packages.txt layout.txt mkinitcpio.log; do
     debugfs -R "dump /$name $work/$name" "$work/output.raw" 2>/dev/null
     test -s "$work/$name"
