@@ -3,9 +3,22 @@
 set -euo pipefail
 test "$(cat /proc/1/comm)" = systemd
 systemctl is-active --quiet multi-user.target
-test "$(findmnt --noheadings --output FSTYPE /)" = ext4
 test "$(findmnt --noheadings --output MAJ:MIN /)" = "$(lsblk -dn -o MAJ:MIN /dev/vda)"
-test "$(blkid -s LABEL -o value /dev/vda)" = SUPRA_TARGET
+if grep -qw supra_btrfs_root_probe=1 /proc/cmdline; then
+    test "$(findmnt -n -o FSTYPE /)" = btrfs
+    test "$(findmnt -n -o FSROOT /)" = /deployments/staged
+    test "$(blkid -s LABEL -o value /dev/vda)" = SUPRA_BTRFS_ROOT
+    test "$(btrfs property get -ts / ro)" = ro=false
+    test "$(cat /etc/supra-lab-deployment)" = staged
+    pacman -Q | sha256sum --check /etc/supra-lab-inventory.sha256
+    printf '%s\n' SUPRA_BTRFS_ROOT_READY > /dev/ttyS0
+else
+    test "$(findmnt -n -o FSTYPE /)" = ext4
+    test "$(blkid -s LABEL -o value /dev/vda)" = SUPRA_TARGET
+fi
+if grep -qw supra_btrfs_root_prepare=1 /proc/cmdline; then
+    /usr/local/libexec/supra-btrfs-prepare
+fi
 if grep -qw supra_btrfs_probe=1 /proc/cmdline; then
     /usr/local/libexec/supra-btrfs-probe
 fi

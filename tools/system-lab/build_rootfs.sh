@@ -59,6 +59,7 @@ test -s "$root/usr/lib/systemd/boot/efi/systemd-bootx64.efi"
 install -D -m 0644 /boot-probe.service "$root/etc/systemd/system/supra-boot-probe.service"
 install -D -m 0755 /boot-probe.sh "$root/usr/local/libexec/supra-boot-probe"
 install -D -m 0755 /btrfs-probe.sh "$root/usr/local/libexec/supra-btrfs-probe"
+install -D -m 0755 /btrfs-prepare.sh "$root/usr/local/libexec/supra-btrfs-prepare"
 mkdir -p "$root/etc/systemd/system/multi-user.target.wants"
 ln -s ../supra-boot-probe.service "$root/etc/systemd/system/multi-user.target.wants/supra-boot-probe.service"
 sync

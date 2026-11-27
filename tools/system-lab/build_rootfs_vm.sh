@@ -25,6 +25,7 @@ sudo install -m 0755 tools/system-lab/rootfs_guest_init.sh "$stage/supra-init"
 sudo install -m 0644 tools/system-lab/rootfs_boot_probe.service "$stage/boot-probe.service"
 sudo install -m 0755 tools/system-lab/rootfs_boot_probe.sh "$stage/boot-probe.sh"
 sudo install -m 0755 tools/system-lab/rootfs_btrfs_guest.sh "$stage/btrfs-probe.sh"
+sudo install -m 0755 tools/system-lab/rootfs_btrfs_prepare_guest.sh "$stage/btrfs-prepare.sh"
 disk="$work/builder.ext4"
 truncate -s 10G "$disk"
 sudo mke2fs -q -t ext4 -F -d "$stage" "$disk"
@@ -65,3 +66,6 @@ bash tools/system-lab/boot_rootfs.sh "$target" "$work" evidence
 
 # Reuse the verified powered-off root for isolated post-build probes.
 bash tools/system-lab/run_rootfs_probes.sh "$target" "$work" evidence
+
+# New experimental root layout, independent of the existing ext4 regressions.
+bash tools/system-lab/boot_rootfs_btrfs_root.sh "$target" "$work" evidence
