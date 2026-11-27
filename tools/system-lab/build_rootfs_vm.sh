@@ -50,7 +50,7 @@ timeout 1200 qemu-system-x86_64 -accel kvm -machine q35 -cpu host -m 4096 -smp 2
     -drive "file=$target,format=raw,if=virtio,index=1" \
     2>&1 | tee evidence/rootfs-vm-console.log || status=$?
 # Extract only named evidence files after the guest exits, never mount the disk on host.
-for name in rootfs-vm-status.txt rootfs-install.log installed-packages.txt rootfs-boot-files.sha256; do
+for name in rootfs-vm-status.txt rootfs-install.log installed-packages.txt rootfs-boot-files.sha256 rootfs-efi.sha256; do
     debugfs -R "dump /out/$name evidence/$name" "$disk" 2>/dev/null || true
 done
 (( status == 0 ))
@@ -61,3 +61,5 @@ test -s evidence/rootfs-boot-files.sha256
 # Validate the build closure BEFORE starting a separate target-kernel VM.
 python3 tools/system-lab/prepare_rootfs.py distribution/images/experimental-base.json evidence comparison --check-installed
 bash tools/system-lab/boot_rootfs.sh "$target" "$work" evidence
+
+bash tools/system-lab/boot_rootfs_uefi.sh "$target" "$work" evidence

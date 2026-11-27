@@ -52,6 +52,8 @@ test -x "$root/usr/lib/systemd/systemd"
 test -s "$root/boot/vmlinuz-linux-lts"
 test -s "$root/boot/initramfs-linux-lts.img"
 (cd "$root" && sha256sum boot/vmlinuz-linux-lts boot/initramfs-linux-lts.img) > /out/rootfs-boot-files.sha256
+test -s "$root/usr/lib/systemd/boot/efi/systemd-bootx64.efi"
+(cd "$root" && sha256sum usr/lib/systemd/boot/efi/systemd-bootx64.efi) > /out/rootfs-efi.sha256
 # Test-only service: prove a fresh systemd boot reached multi-user prerequisites.
 # It is never shipped as a release component.
 install -D -m 0644 /boot-probe.service "$root/etc/systemd/system/supra-boot-probe.service"

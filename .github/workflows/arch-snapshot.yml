@@ -102,7 +102,7 @@ jobs:
       - name: Install isolated VM tooling
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends qemu-system-x86 linux-image-virtual initramfs-tools e2fsprogs
+          sudo apt-get install -y --no-install-recommends qemu-system-x86 linux-image-virtual initramfs-tools e2fsprogs ovmf gdisk dosfstools mtools
           test -c /dev/kvm
           sudo setfacl -m "u:$(id -un):rw" /dev/kvm
       - name: Build disposable root offline in KVM
