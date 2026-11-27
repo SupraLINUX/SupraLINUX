@@ -2,6 +2,7 @@
 # Reuse one powered-off, verified raw image in separate disposable QCOW2 overlays.
 # No package or disk image is published; no persistent runner state is required.
 set -euo pipefail
+command -v qemu-img >/dev/null || { echo 'INFRA_INVALID: qemu-img unavailable' >&2; exit 127; }
 base=$(realpath "$1")
 work=$(realpath "$2")
 out=$(realpath "$3")
