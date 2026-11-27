@@ -58,3 +58,6 @@ timeout 240 qemu-system-x86_64 -accel kvm -machine q35 -cpu host -m 2048 -smp 2 
     -drive "file=$work/root.raw,format=raw,if=virtio,index=0" \
     2>&1 | tee "$out/rootfs-btrfs-root-console.log"
 python3 tools/system-lab/rootfs_btrfs_root_evidence.py "$out"
+
+# Preserve the direct-boot gate before testing the same root through firmware.
+bash tools/system-lab/boot_rootfs_btrfs_gpt.sh "$base" "$work" "$out"
