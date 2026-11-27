@@ -14,11 +14,7 @@ gpg --version > "$work/verification-gpg.txt"
 # Publish only non-secret metadata, readable by the unprivileged CI runner.
 install -m 0644 "$work/verification-keyring.txt" /out/verification-keyring.txt
 install -m 0644 "$work/verification-gpg.txt" /out/verification-gpg.txt
-download() {
-    curl --fail --silent --show-error --location --retry 4 --retry-max-time 600 \
-        --proto '=https' --proto-redir '=https' --connect-timeout 30 \
-        --max-time 300 --output "$2" "$1"
-}
+source /snapshot_download.sh
 report="$work/verified.tsv"
 count=0
 while IFS=$'\t' read -r name hash url; do

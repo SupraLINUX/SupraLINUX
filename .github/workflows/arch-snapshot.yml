@@ -26,6 +26,7 @@ jobs:
           builder=$(head -n 1 evidence/build-input.txt)
           docker run --rm --platform linux/amd64 --security-opt no-new-privileges \
             --mount "type=bind,source=$PWD/tools/system-lab/verify_snapshot.sh,target=/verify.sh,readonly" \
+            --mount "type=bind,source=$PWD/tools/system-lab/snapshot_download.sh,target=/snapshot_download.sh,readonly" \
             --mount "type=bind,source=$PWD/evidence,target=/out" \
             "$builder" bash /verify.sh
           python3 tools/system-lab/verify_snapshot.py report distribution/images/experimental-base.json evidence
@@ -96,6 +97,7 @@ jobs:
           docker pull --platform linux/amd64 "$builder"
           docker run --rm --platform linux/amd64 --security-opt no-new-privileges \
             --mount "type=bind,source=$PWD/tools/system-lab/verify_snapshot.sh,target=/verify.sh,readonly" \
+            --mount "type=bind,source=$PWD/tools/system-lab/snapshot_download.sh,target=/snapshot_download.sh,readonly" \
             --mount "type=bind,source=$PWD/evidence,target=/out" \
             --mount "type=bind,source=$PWD/packages,target=/packages" \
             "$builder" bash /verify.sh
