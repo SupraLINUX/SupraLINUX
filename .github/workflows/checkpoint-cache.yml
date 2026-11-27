@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       key: ${{ steps.identity.outputs.key }}
-      cache-hit: ${{ steps.restore.outputs.cache-hit }}
+      cache-hit: ${{ steps.classify.outputs.hit }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,6 +25,16 @@ jobs:
         with:
           path: checkpoint/base.raw
           key: ${{ steps.identity.outputs.key }}
+      - name: Record normalized cache result
+        id: classify
+        env:
+          CACHE_HIT: ${{ steps.restore.outputs.cache-hit }}
+        run: |
+          if [[ "$CACHE_HIT" == true ]]; then
+            echo "hit=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "hit=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Build only on exact cache miss
         if: steps.restore.outputs.cache-hit != 'true'
         run: python3 tools/system-lab/checkpoint_fixture.py create checkpoint/base.raw
