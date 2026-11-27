@@ -61,3 +61,6 @@ python3 tools/system-lab/rootfs_btrfs_root_evidence.py "$out"
 
 # Preserve the direct-boot gate before testing the same root through firmware.
 bash tools/system-lab/boot_rootfs_btrfs_gpt.sh "$base" "$work" "$out"
+
+# Reuse the same prepared root only after all baseline gates succeed.
+bash tools/layer-lab/run_layer_vm.sh "$base" "$work" "$out"

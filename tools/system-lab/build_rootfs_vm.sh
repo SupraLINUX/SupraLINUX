@@ -28,6 +28,8 @@ sudo install -m 0755 tools/system-lab/rootfs_btrfs_guest.sh "$stage/btrfs-probe.
 sudo install -m 0755 tools/system-lab/rootfs_btrfs_prepare_guest.sh "$stage/btrfs-prepare.sh"
 sudo install -m 0644 tools/system-lab/rootfs_btrfs_mkinitcpio.conf "$stage/btrfs-mkinitcpio.conf"
 sudo install -m 0755 tools/system-lab/rootfs_initramfs_drivers.sh "$stage/initramfs-drivers.sh"
+sudo install -m 0755 tools/layer-lab/layer_guest.sh "$stage/layer-guest.sh"
+sudo install -m 0755 tools/layer-lab/layer_boot_guest.sh "$stage/layer-boot-guest.sh"
 disk="$work/builder.ext4"
 truncate -s 10G "$disk"
 sudo mke2fs -q -t ext4 -F -d "$stage" "$disk"

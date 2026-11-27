@@ -2,7 +2,7 @@ name: Frozen Arch snapshot probe
 on:
   push:
     branches: ['research/d00-atomic-validation']
-    paths: ['distribution/images/experimental-base.json', 'tools/system-lab/*snapshot*', 'tools/system-lab/*rootfs*', 'tools/ci/install-ubuntu-vm-tools.sh', '.github/workflows/arch-snapshot.yml']
+    paths: ['distribution/images/experimental-base.json', 'tools/system-lab/*snapshot*', 'tools/system-lab/*rootfs*', 'tools/layer-lab/**', 'distribution/images/experimental-layer.json', 'tools/ci/install-ubuntu-vm-tools.sh', '.github/workflows/arch-snapshot.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -97,6 +97,30 @@ jobs:
           path: comparison/
           retention-days: 7
           if-no-files-found: error
+      - name: Validate and authenticate additive layer fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/layer-lab/layer_plan.py distribution/images/experimental-base.json distribution/images/experimental-layer.json evidence comparison evidence/rootfs-layer-plan.json
+          mkdir layer-input layer-packages
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          plan = json.loads(Path('evidence/rootfs-layer-plan.json').read_text())
+          pkg = plan['addition']
+          Path('layer-input/verification-input.tsv').write_text('\t'.join(pkg[k] for k in ('name', 'sha256', 'url')) + '\n')
+          Path('layer-input/layer.tsv').write_text('\t'.join(pkg[k] for k in ('name', 'version', 'filename', 'sha256')) + '\n')
+          Path('layer-input/expected.txt').write_text(''.join(f'{n} {v}\n' for n, v in sorted(plan['expected_inventory'].items())))
+          PY
+          builder=$(head -n 1 evidence/build-input.txt)
+          docker run --rm --platform linux/amd64 --security-opt no-new-privileges \
+            --mount "type=bind,source=$PWD/tools/system-lab/verify_snapshot.sh,target=/verify.sh,readonly" \
+            --mount "type=bind,source=$PWD/tools/system-lab/snapshot_download.sh,target=/snapshot_download.sh,readonly" \
+            --mount "type=bind,source=$PWD/layer-input,target=/out" \
+            --mount "type=bind,source=$PWD/layer-packages,target=/packages" \
+            "$builder" bash /verify.sh
+          cp layer-input/verified-packages.tsv evidence/rootfs-layer-signature.tsv
+          cp layer-input/verification-keyring.txt evidence/rootfs-layer-keyring.txt
       - name: Install isolated VM tooling
         run: |
           bash tools/ci/install-ubuntu-vm-tools.sh qemu-system-x86 qemu-utils linux-image-virtual initramfs-tools e2fsprogs ovmf gdisk dosfstools mtools btrfs-progs

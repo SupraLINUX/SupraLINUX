@@ -5,7 +5,9 @@ trap 'rc=$?; printf "SUPRA_BOOT_PROBE_ERROR line=%s exit=%s command=%s\n" "$LINE
 export LC_ALL=C
 test "$(cat /proc/1/comm)" = systemd
 systemctl is-active --quiet multi-user.target
-if grep -qw supra_btrfs_root_probe=1 /proc/cmdline; then
+if grep -qw supra_layer_boot=1 /proc/cmdline; then
+    /usr/local/libexec/supra-layer-boot-guest
+elif grep -qw supra_btrfs_root_probe=1 /proc/cmdline; then
     source=$(findmnt -n -o SOURCE /)
     device=/dev/vda
     if grep -qw supra_btrfs_gpt_probe=1 /proc/cmdline; then device=/dev/vda2; fi
@@ -21,6 +23,9 @@ else
     test "$(findmnt --noheadings --output MAJ:MIN /)" = "$(lsblk -dn -o MAJ:MIN /dev/vda)"
     test "$(findmnt -n -o FSTYPE /)" = ext4
     test "$(blkid -s LABEL -o value /dev/vda)" = SUPRA_TARGET
+fi
+if grep -qw supra_layer_prepare=1 /proc/cmdline; then
+    /usr/local/libexec/supra-layer-guest
 fi
 if grep -qw supra_btrfs_root_prepare=1 /proc/cmdline; then
     /usr/local/libexec/supra-btrfs-prepare
