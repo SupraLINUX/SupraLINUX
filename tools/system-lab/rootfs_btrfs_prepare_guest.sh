@@ -16,17 +16,17 @@ test "$(blkid -s LABEL -o value /dev/vdc)" = SUPRA_BTRFS_ROOT
 test "$(blkid -s LABEL -o value /dev/vdd)" = SUPRA_LAB_OUTPUT
 test "$(findmnt -n -o MAJ:MIN /)" != "$(lsblk -dn -o MAJ:MIN /dev/vdb)"
 work=$(mktemp -d)
-mkdir "$work/source" "$work/top" "$work/out"
+mkdir "$work/source" "$work/top" "$work/out" "$work/root"
 src="$work/source"
 top="$work/top"
 out="$work/out"
-root="$top/deployments/staged"
+root="$work/root"
 cleanup() {
     local rc=0
-    for path in "$root/dev" "$root/sys" "$root/proc" "$out" "$top" "$src"; do
+    for path in "$root/dev" "$root/sys" "$root/proc" "$root" "$out" "$top" "$src"; do
         if mountpoint -q "$path"; then umount "$path" || rc=1; fi
     done
-    rmdir "$work/source" "$work/top" "$work/out" "$work" || rc=1
+    rmdir "$work/source" "$work/top" "$work/out" "$work/root" "$work" || rc=1
     return "$rc"
 }
 trap cleanup EXIT
@@ -36,7 +36,9 @@ phase mount-destination
 mount -t btrfs -o subvolid=5 /dev/vdc "$top"
 mount -t ext4 /dev/vdd "$out"
 mkdir "$top/deployments"
-btrfs subvolume create "$root"
+btrfs subvolume create "$top/deployments/staged"
+mount -t btrfs -o subvol=deployments/staged /dev/vdc "$root"
+test "$(findmnt -n -o FSROOT --mountpoint "$root")" = /deployments/staged
 # Preserve ownership, modes, hardlinks, ACLs and xattrs from the inactive root.
 phase copy-root
 tar --numeric-owner --acls --xattrs --xattrs-include='*' --one-file-system -cpf - -C "$src" . | \
@@ -45,7 +47,16 @@ phase configure-root
 printf 'staged\n' > "$root/etc/supra-lab-deployment"
 # Explicit root filesystem and virtio modules for the new boot path.
 mkdir -p "$root/etc/mkinitcpio.conf.d"
-printf 'MODULES+=(btrfs virtio_pci virtio_blk)\n' > "$root/etc/mkinitcpio.conf.d/99-supra-btrfs-lab.conf"
+# This image targets the guest, not the builder's detected hardware/root.
+cat > "$root/etc/mkinitcpio.conf.d/99-supra-btrfs-lab.conf" <<'CONF'
+MODULES+=(btrfs virtio_pci virtio_blk)
+supra_hooks=()
+for supra_hook in "${HOOKS[@]}"; do
+    [[ "$supra_hook" == autodetect ]] || supra_hooks+=("$supra_hook")
+done
+HOOKS=("${supra_hooks[@]}")
+unset supra_hooks supra_hook
+CONF
 printf 'LABEL=SUPRA_BTRFS_ROOT / btrfs rw,subvol=deployments/staged 0 0\n' > "$root/etc/fstab"
 mount -t proc proc "$root/proc"
 mount -t sysfs sysfs "$root/sys"
@@ -54,6 +65,18 @@ phase initramfs
 # Avoid a blocked initramfs tool consuming the whole guest budget.
 timeout --kill-after=10 150 chroot "$root" mkinitcpio -P 2>&1 | tee "$out/mkinitcpio.log"
 if grep -Ei '(^|[[:space:]])ERROR:' "$out/mkinitcpio.log"; then exit 1; fi
+if grep -Fq 'Running build hook: [autodetect]' "$out/mkinitcpio.log"; then
+    echo 'Unexpected host-dependent autodetect hook' >&2
+    exit 1
+fi
+phase initramfs-content
+chroot "$root" lsinitcpio /boot/initramfs-linux-lts.img > "$out/initramfs-contents.txt"
+for module in btrfs virtio_pci virtio_blk; do
+    grep -Eq "(^|/)${module//_/-}\.ko(\.(zst|xz|gz))?$|(^|/)$module\.ko(\.(zst|xz|gz))?$" "$out/initramfs-contents.txt" || {
+        echo "Missing required initramfs module: $module" >&2
+        exit 1
+    }
+done
 phase inventory
 chroot "$root" pacman -Q > "$out/installed-packages.txt"
 (cd "$out" && sha256sum installed-packages.txt | awk '{print $1 "  -"}') > "$root/etc/supra-lab-inventory.sha256"
@@ -62,7 +85,7 @@ cp "$root/boot/initramfs-linux-lts.img" "$out/target-initrd"
 (cd "$out" && sha256sum target-kernel target-initrd > boot.sha256)
 for path in "$root/dev" "$root/sys" "$root/proc"; do umount "$path"; done
 phase snapshot
-btrfs subvolume snapshot -r "$root" "$top/deployments/base"
+btrfs subvolume snapshot -r "$top/deployments/staged" "$top/deployments/base"
 test "$(btrfs property get -ts "$top/deployments/base" ro)" = ro=true
 test "$(btrfs property get -ts "$root" ro)" = ro=false
 # This base is a snapshot of the prepared lab root, not a promoted deployment.

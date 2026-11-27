@@ -11,4 +11,4 @@ StandardOutput=journal+console
 StandardError=journal+console
 TimeoutStartSec=300
 # Failure must be visible and must not leave the disposable guest at login.
-ExecStopPost=/bin/sh -c 'if [ "$$SERVICE_RESULT" != success ]; then printf "SUPRA_BOOT_PROBE_FAILED result=%s status=%s\n" "$$SERVICE_RESULT" "$$EXIT_STATUS" > /dev/ttyS0; /usr/bin/systemctl --no-block poweroff; fi'
+ExecStopPost=/bin/sh -c 'if [ "$$SERVICE_RESULT" != success ]; then printf "SUPRA_BOOT_PROBE_FAILED result=%%s status=%%s\n" "$$SERVICE_RESULT" "$$EXIT_STATUS" > /dev/ttyS0; /usr/bin/systemctl --no-block poweroff; fi'
