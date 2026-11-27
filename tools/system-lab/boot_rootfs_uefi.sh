@@ -4,8 +4,9 @@ set -euo pipefail
 target="$1"
 work="$2"
 out="$3"
+base="$4"
 python3 tools/system-lab/rootfs_evidence.py hashes "$out" "$work"
-debugfs -R "dump /usr/lib/systemd/boot/efi/systemd-bootx64.efi $work/bootx64.efi" "$target" 2>/dev/null
+debugfs -R "dump /usr/lib/systemd/boot/efi/systemd-bootx64.efi $work/bootx64.efi" "$base" 2>/dev/null
 test -s "$work/bootx64.efi"
 expected=$(awk '$2=="usr/lib/systemd/boot/efi/systemd-bootx64.efi" {print $1}' "$out/rootfs-efi.sha256")
 [[ "$expected" =~ ^[a-f0-9]{64}$ ]]
@@ -43,7 +44,7 @@ timeout 240 qemu-system-x86_64 -accel kvm -machine q35 -cpu host -m 2048 -smp 2 
     -display none -monitor none -serial stdio -nic none -no-reboot \
     -drive "if=pflash,format=raw,readonly=on,file=$code" \
     -drive "if=pflash,format=raw,file=$work/uefi-vars.fd" \
-    -drive "if=none,id=target,format=raw,file=$target,snapshot=on" \
+    -drive "if=none,id=target,format=qcow2,file=$target" \
     -device virtio-blk-pci,drive=target,addr=0x5 \
     -drive "if=none,id=esp,format=raw,file=$gpt,snapshot=on" \
     -device virtio-blk-pci,drive=esp,addr=0x6,bootindex=1 \

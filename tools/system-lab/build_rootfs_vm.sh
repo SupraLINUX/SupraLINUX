@@ -63,6 +63,5 @@ test -s evidence/rootfs-boot-files.sha256
 python3 tools/system-lab/prepare_rootfs.py distribution/images/experimental-base.json evidence comparison --check-installed
 bash tools/system-lab/boot_rootfs.sh "$target" "$work" evidence
 
-bash tools/system-lab/boot_rootfs_uefi.sh "$target" "$work" evidence
-
-bash tools/system-lab/boot_rootfs_btrfs.sh "$target" "$work" evidence
+# Reuse the verified powered-off root for isolated post-build probes.
+bash tools/system-lab/run_rootfs_probes.sh "$target" "$work" evidence
