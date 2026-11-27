@@ -1,0 +1,76 @@
+name: Synthetic checkpoint cache lab
+on:
+  push:
+    branches: ['research/d00-atomic-validation']
+    paths: ['tools/system-lab/checkpoint_fixture.py', '.github/workflows/checkpoint-cache.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  base:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      key: ${{ steps.identity.outputs.key }}
+      cache-hit: ${{ steps.restore.outputs.cache-hit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Exact fixture identity
+        id: identity
+        run: echo "key=synthetic-checkpoint-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('tools/system-lab/checkpoint_fixture.py') }}" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache/restore@v4
+        id: restore
+        with:
+          path: checkpoint/base.raw
+          key: ${{ steps.identity.outputs.key }}
+      - name: Build only on exact cache miss
+        if: steps.restore.outputs.cache-hit != 'true'
+        run: python3 tools/system-lab/checkpoint_fixture.py create checkpoint/base.raw
+      - name: Independently verify fixture bytes
+        run: python3 tools/system-lab/checkpoint_fixture.py verify checkpoint/base.raw
+      - uses: actions/cache/save@v4
+        if: steps.restore.outputs.cache-hit != 'true'
+        with:
+          path: checkpoint/base.raw
+          key: ${{ steps.identity.outputs.key }}
+  overlays:
+    needs: base
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        pattern: ['0x11', '0x22']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/cache/restore@v4
+        id: restore
+        with:
+          path: checkpoint/base.raw
+          key: ${{ needs.base.outputs.key }}
+          fail-on-cache-miss: true
+      - name: Install image tooling
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends qemu-utils
+          qemu-img --version
+      - name: Validate independent writable overlay
+        env:
+          PATTERN: ${{ matrix.pattern }}
+          BASE_HIT: ${{ needs.base.outputs.cache-hit }}
+        run: |
+          set -euo pipefail
+          test "${{ steps.restore.outputs.cache-hit }}" = true
+          python3 tools/system-lab/checkpoint_fixture.py verify checkpoint/base.raw
+          chmod a-w checkpoint/base.raw
+          qemu-img create -f qcow2 -F raw -b "$PWD/checkpoint/base.raw" overlay.qcow2
+          qemu-io -f qcow2 -c 'read -P 0x5a 0 4096' overlay.qcow2
+          qemu-io -f qcow2 -c "write -P $PATTERN 0 4096" -c flush overlay.qcow2
+          qemu-io -f qcow2 -c "read -P $PATTERN 0 4096" -c 'read -P 0x5a 4096 4096' overlay.qcow2
+          qemu-img check overlay.qcow2
+          python3 tools/system-lab/checkpoint_fixture.py verify checkpoint/base.raw
+          printf 'base_job_cache_hit=%s overlay_job_cache_hit=true pattern=%s base_unchanged=true\n' "$BASE_HIT" "$PATTERN"
