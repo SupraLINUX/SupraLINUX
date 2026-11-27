@@ -63,6 +63,7 @@ install -D -m 0755 /btrfs-prepare.sh "$root/usr/local/libexec/supra-btrfs-prepar
 install -D -m 0644 /btrfs-mkinitcpio.conf "$root/usr/local/share/supra-lab/btrfs-mkinitcpio.conf"
 install -D -m 0755 /initramfs-drivers.sh "$root/usr/local/libexec/supra-initramfs-drivers"
 install -D -m 0755 /layer-guest.sh "$root/usr/local/libexec/supra-layer-guest"
+install -D -m 0755 /layer-digest.sh "$root/usr/local/libexec/supra-layer-digest"
 install -D -m 0755 /layer-boot-guest.sh "$root/usr/local/libexec/supra-layer-boot-guest"
 mkdir -p "$root/etc/systemd/system/multi-user.target.wants"
 ln -s ../supra-boot-probe.service "$root/etc/systemd/system/multi-user.target.wants/supra-boot-probe.service"

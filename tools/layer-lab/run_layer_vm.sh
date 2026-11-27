@@ -27,7 +27,7 @@ timeout 360 qemu-system-x86_64 -accel kvm -machine q35 -cpu host -m 3072 -smp 2 
     -drive "file=$lab/input.raw,format=raw,if=virtio,index=2,readonly=on" \
     -drive "file=$lab/output.raw,format=raw,if=virtio,index=3" \
     2>&1 | tee "$out/rootfs-layer-prepare-console.log" || status=$?
-for name in active-before.txt active-after.txt base-before.txt base-after.txt previous-before.txt previous-after.txt base-before-subvolume.txt base-after-subvolume.txt install.log layer-installed.txt tree-version.txt; do
+for name in active-before.txt active-after.txt base-before.txt base-after.txt previous-before.txt previous-after.txt base-before-subvolume.txt base-after-subvolume.txt base-before-content.sha256 base-after-content.sha256 previous-before-content.sha256 previous-after-content.sha256 install.log layer-installed.txt tree-version.txt; do
     debugfs -R "dump /$name $out/rootfs-layer-$name" "$lab/output.raw" 2>/dev/null || true
 done
 sha256sum -c "$out/rootfs-layer-source.sha256"

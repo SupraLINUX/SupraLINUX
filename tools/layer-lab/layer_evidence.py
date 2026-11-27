@@ -35,6 +35,12 @@ def report(plan, files):
         for phase in ("before", "after"):
             if inventory(files(f"{role}-{phase}.txt")) != base:
                 raise ValueError("Prior inventory changed")
+    import re
+    for role in ("base", "previous"):
+        before = files(role + "-before-content.sha256").strip()
+        after = files(role + "-after-content.sha256").strip()
+        if not re.fullmatch(r"[0-9a-f]{64}  -", before) or before != after:
+            raise ValueError("Prior filesystem content changed: " + role)
     if inventory(files("layer-installed.txt")) != expected:
         raise ValueError("Layer inventory mismatch")
     rows = files("signature.tsv").splitlines()
@@ -48,7 +54,7 @@ def report(plan, files):
     return {"schema_version": 1, "accelerator": "kvm",
             "base_package_count": len(base), "layer_package_count": len(expected),
             "layer_signature_verified": True, "transaction_verified": True,
-            "prior_inventory_preserved": True, "previous_boot_verified": True,
+            "prior_inventory_preserved": True, "prior_content_digest_preserved": True, "previous_boot_verified": True,
             "stage_boot_verified": True, "direct_kernel_boot_verified": True,
             "atomic_activation_verified": False, "immutable_active_root_verified": False,
             "layer_uefi_boot_verified": False, "release_signed": False}

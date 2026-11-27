@@ -40,7 +40,11 @@ chroot "$previous" pacman -Q > "$out/previous-before.txt"
 cmp "$out/active-before.txt" "$out/base-before.txt"
 cmp "$out/base-before.txt" "$out/previous-before.txt"
 btrfs subvolume show "$base" > "$out/base-before-subvolume.txt"
-# Generation and UUID of the immutable source must remain unchanged.
+# Snapshot creation legitimately updates source root metadata. Compare the
+# stable identity and logical filesystem contents, excluding atime/ctime.
+source /usr/local/libexec/supra-layer-digest
+layer_digest "$base" > "$out/base-before-content.sha256"
+layer_digest "$previous" > "$out/previous-before-content.sha256"
 btrfs subvolume snapshot "$base" "$top/deployments/layer"
 mount -t btrfs -o subvol=deployments/layer /dev/vdb "$root"
 test "$(findmnt -n -o FSROOT --mountpoint "$root")" = /deployments/layer
@@ -90,9 +94,14 @@ cmp "$out/base-before.txt" "$out/base-after.txt"
 cmp "$out/previous-before.txt" "$out/previous-after.txt"
 cmp "$out/active-before.txt" "$out/active-after.txt"
 btrfs subvolume show "$base" > "$out/base-after-subvolume.txt"
-for field in UUID Generation; do
+for field in UUID "Gen at creation" "Subvolume ID" Flags; do
     cmp <(grep -E "^[[:space:]]*$field:" "$out/base-before-subvolume.txt") \
         <(grep -E "^[[:space:]]*$field:" "$out/base-after-subvolume.txt")
+done
+layer_digest "$base" > "$out/base-after-content.sha256"
+layer_digest "$previous" > "$out/previous-after-content.sha256"
+for role in base previous; do
+    cmp "$out/$role-before-content.sha256" "$out/$role-after-content.sha256"
 done
 cleanup
 trap - EXIT
