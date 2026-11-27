@@ -54,3 +54,6 @@ done
 sha256sum -c "$out/rootfs-layer-checkpoint.sha256"
 sha256sum -c "$out/rootfs-btrfs-gpt-image.sha256"
 python3 tools/layer-lab/layer_uefi_evidence.py "$out"
+
+# Runtime selection is a separate gate after independent firmware boots.
+bash tools/layer-lab/run_layer_oneshot.sh "$work" "$out"

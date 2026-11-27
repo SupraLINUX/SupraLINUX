@@ -43,3 +43,7 @@ case "$(cat /etc/supra-lab-deployment)" in
         ;;
     *) exit 1 ;;
 esac
+
+if grep -qw supra_layer_oneshot=1 /proc/cmdline; then
+    /usr/local/libexec/supra-layer-oneshot
+fi
