@@ -60,3 +60,8 @@ done
 sgdisk --verify "$lab/disk.raw" | tee "$out/rootfs-bless-gpt.txt"
 sha256sum -c "$out/rootfs-layer-checkpoint.sha256"
 python3 tools/layer-lab/bless_evidence.py "$out"
+
+# Independent native service dependency tests.
+for mode in accept reject; do
+    bash tools/layer-lab/run_immutable_auto_bless.sh "$work" "$out" "$mode"
+done

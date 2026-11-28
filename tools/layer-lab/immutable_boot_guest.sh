@@ -31,13 +31,17 @@ if grep -qw supra_immutable_uefi=1 /proc/cmdline; then
     cmp "$esp/initramfs-linux-lts.img" /boot/initramfs-linux-lts.img
     selected=$(tail -c +5 /sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f | iconv -f UTF-16LE -t UTF-8 | tr -d '\000')
     printf 'SUPRA_IMMUTABLE_ENTRY=%s\n' "$selected"
-    if grep -qw supra_immutable_bless=1 /proc/cmdline; then
+    if grep -qw supra_immutable_bless=1 /proc/cmdline || grep -qw supra_immutable_auto_bless=1 /proc/cmdline; then
         test "$role" = layer
         test "$selected" = supra-immutable-layer.conf
         count_var=/sys/firmware/efi/efivars/LoaderBootCountPath-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f
         if [[ -e "$count_var" ]]; then
             count_path=$(tail -c +5 "$count_var" | iconv -f UTF-16LE -t UTF-8 | tr -d '\000' | tr '\\' '/')
-            test "$count_path" = /loader/entries/supra-immutable-layer+1-1.conf
+            expected_count=/loader/entries/supra-immutable-layer+1-1.conf
+            if grep -qw supra_immutable_reject=1 /proc/cmdline; then
+                expected_count=/loader/entries/supra-immutable-layer+0-1.conf
+            fi
+            test "$count_path" = "$expected_count"
             test -f "$esp$count_path"
             test ! -e "$esp/loader/entries/supra-immutable-layer.conf"
             printf '%s\n' SUPRA_BLESS_COUNTED > /dev/ttyS0
@@ -97,13 +101,13 @@ test ! -e /tmp/supra-ephemeral-probe
 touch /run/supra-ephemeral-probe /tmp/supra-ephemeral-probe
 step phase-argument
 phase=
-for candidate in first next return count-trial count-return bless; do
+for candidate in first next return count-trial count-return bless auto-bless; do
     if grep -qw "supra_immutable_phase=$candidate" /proc/cmdline; then
         test -z "$phase"
         phase=$candidate
     fi
 done
-case "$phase:$role" in first:staged|next:layer|return:staged|count-trial:layer|count-return:staged|bless:layer) ;; *) exit 1 ;; esac
+case "$phase:$role" in first:staged|next:layer|return:staged|count-trial:layer|count-return:staged|bless:layer|auto-bless:layer) ;; *) exit 1 ;; esac
 if [[ "$phase" = count-* ]]; then
     grep -qw supra_immutable_bootcount=1 /proc/cmdline
     grep -qw supra_immutable_uefi=1 /proc/cmdline
@@ -127,7 +131,7 @@ for entry in "${immutable_domains[@]}"; do
     case "$phase" in
         first) test ! -e "$sentinel"; printf 'first:%s\n' "$domain" > "$sentinel" ;;
         next) test "$(cat "$sentinel")" = "first:$domain"; printf 'next:%s\n' "$domain" > "$sentinel" ;;
-        return|count-trial|count-return|bless) test "$(cat "$sentinel")" = "next:$domain" ;;
+        return|count-trial|count-return|bless|auto-bless) test "$(cat "$sentinel")" = "next:$domain" ;;
     esac
 done
 # No masking system services or ignoring failed units to make a boot green.
@@ -136,6 +140,28 @@ systemctl list-units --state=failed --no-legend --plain --no-pager > /run/supra-
 cat /run/supra-failed-units
 test "$(systemctl show --property=NFailedUnits --value)" = 0
 sync
+if [[ "$phase" = auto-bless ]]; then
+    step automatic-health
+    grep -qw supra_immutable_auto_bless=1 /proc/cmdline
+    grep -qw supra_immutable_uefi=1 /proc/cmdline
+    test "$(systemctl show --property=LoadState --value systemd-bless-boot.service)" = loaded
+    mkdir /run/supra-auto-esp
+    mount -t vfat -o rw,nosuid,nodev,noexec /dev/vda1 /run/supra-auto-esp
+    test "$(findmnt -n -o SOURCE --mountpoint /run/supra-auto-esp)" = /dev/vda1
+    export SYSTEMD_ESP_PATH=/run/supra-auto-esp
+    if [[ -e "$count_var" ]]; then
+        test "$(/usr/lib/systemd/systemd-bless-boot status)" = indeterminate
+    else
+        test "$(/usr/lib/systemd/systemd-bless-boot status)" = clean
+    fi
+    printf '%s\n' SUPRA_AUTO_HEALTH_CHECKS_PASSED > /dev/ttyS0
+    if grep -qw supra_immutable_reject=1 /proc/cmdline; then
+        printf '%s\n' SUPRA_AUTO_HEALTH_REJECTED > /dev/ttyS0
+        exit 23
+    fi
+    printf '%s\n' SUPRA_AUTO_HEALTH_ACCEPTED > /dev/ttyS0
+    exit 0
+fi
 if [[ "$phase" = bless ]]; then
     step health-gated-bless
     grep -qw supra_immutable_bless=1 /proc/cmdline

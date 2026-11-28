@@ -40,6 +40,7 @@ sudo install -m 0755 tools/layer-lab/install_recover_guest.sh "$stage/install-re
 sudo install -m 0644 tools/layer-lab/immutable_layout.sh "$stage/immutable-layout.sh"
 sudo install -m 0755 tools/layer-lab/immutable_prepare_guest.sh "$stage/immutable-prepare.sh"
 sudo install -m 0755 tools/layer-lab/immutable_boot_guest.sh "$stage/immutable-boot.sh"
+sudo install -m 0644 tools/layer-lab/immutable_auto.sh "$stage/immutable-auto.sh"
 disk="$work/builder.ext4"
 truncate -s 10G "$disk"
 sudo mke2fs -q -t ext4 -F -d "$stage" "$disk"

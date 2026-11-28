@@ -45,6 +45,10 @@ for role in staged layer; do
     done
     test -d "$root/tmp"
     test -d "$root/run"
+    if [[ "$role" = layer ]]; then
+        source /usr/local/libexec/supra-immutable-auto
+        immutable_auto_units "$root"
+    fi
     btrfs property set -ts "$root" ro true
     test "$(btrfs property get -ts "$root" ro)" = ro=true
 done

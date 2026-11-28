@@ -5,7 +5,10 @@ trap 'rc=$?; printf "SUPRA_BOOT_PROBE_ERROR line=%s exit=%s command=%s\n" "$LINE
 export LC_ALL=C
 test "$(cat /proc/1/comm)" = systemd
 systemctl is-active --quiet multi-user.target
-if grep -qw supra_immutable_boot=1 /proc/cmdline; then
+if grep -qw supra_immutable_auto_bless=1 /proc/cmdline; then
+    source /usr/local/libexec/supra-immutable-auto
+    immutable_auto_observe
+elif grep -qw supra_immutable_boot=1 /proc/cmdline; then
     /usr/local/libexec/supra-immutable-boot
 elif grep -qw supra_layer_boot=1 /proc/cmdline; then
     /usr/local/libexec/supra-layer-boot-guest

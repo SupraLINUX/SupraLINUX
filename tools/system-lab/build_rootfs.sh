@@ -74,6 +74,7 @@ install -D -m 0755 /install-recover-guest.sh "$root/usr/local/libexec/supra-inst
 install -D -m 0644 /immutable-layout.sh "$root/usr/local/libexec/supra-immutable-layout"
 install -D -m 0755 /immutable-prepare.sh "$root/usr/local/libexec/supra-immutable-prepare"
 install -D -m 0755 /immutable-boot.sh "$root/usr/local/libexec/supra-immutable-boot"
+install -D -m 0644 /immutable-auto.sh "$root/usr/local/libexec/supra-immutable-auto"
 mkdir -p "$root/etc/systemd/system/multi-user.target.wants"
 ln -s ../supra-boot-probe.service "$root/etc/systemd/system/multi-user.target.wants/supra-boot-probe.service"
 sync
