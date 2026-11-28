@@ -58,16 +58,18 @@ test -s "$input/$filename.sig"
 mkdir -m 700 "$keyring"
 pacman-key --gpgdir "$keyring" --init
 pacman-key --gpgdir "$keyring" --populate archlinux
-cat > "$work/pacman.conf" <<'CONF'
-[options]
-Architecture = x86_64
-SigLevel = Required
-LocalFileSigLevel = Required
-CONF
+source /usr/local/libexec/supra-layer-pacman-config
+write_layer_pacman_config "$root" "$work/pacman.conf"
+# Resolve the actual configuration with the installed pacman version.
+hookdir=$(pacman-conf --config "$work/pacman.conf" --rootdir "$root" HookDir)
+printf 'Layer HookDir: %s\n' "$hookdir"
+test "$hookdir" = "$root/etc/pacman.d/hooks" || test "$hookdir" = "$root/etc/pacman.d/hooks/"
+interrupt=0
 mount -t proc proc "$root/proc"
 mount -t sysfs sysfs "$root/sys"
 mount --bind /dev "$root/dev"
 if grep -qw supra_install_interrupt=1 /proc/cmdline; then
+    interrupt=1
     # Test-only hook inside the unapproved target, never in the old root.
     mkdir -p "$root/etc/pacman.d/hooks"
     cat > "$root/etc/pacman.d/hooks/zz-supra-interrupt.hook" <<'HOOK'
@@ -81,12 +83,25 @@ When = PostTransaction
 Exec = /usr/local/libexec/supra-install-interrupt-hook
 HOOK
     install -m 0755 /usr/local/libexec/supra-install-interrupt-hook "$root/usr/local/libexec/supra-install-interrupt-hook"
+    test -s "$hookdir/zz-supra-interrupt.hook"
+    test -x "$root/usr/local/libexec/supra-install-interrupt-hook"
+    test -c "$root/dev/ttyS0"
+    printf '%s\n' 'Layer interruption hook configured'
+else
+    test ! -e "$hookdir/zz-supra-interrupt.hook"
+    printf '%s\n' 'Layer normal transaction'
 fi
 # Use libalpm for actual dependency/conflict, signature and hook enforcement.
 timeout --kill-after=5 120 pacman --config "$work/pacman.conf" --root "$root" \
     --dbpath "$root/var/lib/pacman" --cachedir "$root/var/cache/pacman/pkg" \
     --gpgdir "$keyring" --logfile "$root/var/log/pacman.log" --noconfirm \
     -U "$input/$filename" 2>&1 | tee "$out/install.log"
+# Returning from a transaction in interruption mode is a failed fixture,
+# even if libalpm reports success after a failed post-transaction hook.
+if (( interrupt )); then
+    echo 'Interruption hook returned without VM termination; refusing publication' >&2
+    exit 1
+fi
 if grep -Ei '(^|[[:space:]])(error:|failed to execute|failed to run)' "$out/install.log"; then exit 1; fi
 chroot "$root" pacman -Q > "$out/layer-installed.txt"
 cmp "$input/expected.txt" "$out/layer-installed.txt"

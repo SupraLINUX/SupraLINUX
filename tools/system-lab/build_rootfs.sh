@@ -63,6 +63,7 @@ install -D -m 0755 /btrfs-prepare.sh "$root/usr/local/libexec/supra-btrfs-prepar
 install -D -m 0644 /btrfs-mkinitcpio.conf "$root/usr/local/share/supra-lab/btrfs-mkinitcpio.conf"
 install -D -m 0755 /initramfs-drivers.sh "$root/usr/local/libexec/supra-initramfs-drivers"
 install -D -m 0755 /layer-guest.sh "$root/usr/local/libexec/supra-layer-guest"
+install -D -m 0644 /layer-pacman-config.sh "$root/usr/local/libexec/supra-layer-pacman-config"
 install -D -m 0755 /layer-digest.sh "$root/usr/local/libexec/supra-layer-digest"
 install -D -m 0755 /layer-boot-guest.sh "$root/usr/local/libexec/supra-layer-boot-guest"
 install -D -m 0755 /layer-oneshot-guest.sh "$root/usr/local/libexec/supra-layer-oneshot"
