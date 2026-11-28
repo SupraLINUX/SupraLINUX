@@ -149,10 +149,17 @@ if [[ "$phase" = auto-bless ]]; then
     mount -t vfat -o rw,nosuid,nodev,noexec /dev/vda1 /run/supra-auto-esp
     test "$(findmnt -n -o SOURCE --mountpoint /run/supra-auto-esp)" = /dev/vda1
     export SYSTEMD_ESP_PATH=/run/supra-auto-esp
-    if [[ -e "$count_var" ]]; then
-        test "$(/usr/lib/systemd/systemd-bless-boot status)" = indeterminate
+    # v262.2 status returns dirty when the firmware decremented the
+    # counter to zero on this boot, even before any explicit decision.
+    status=$(/usr/lib/systemd/systemd-bless-boot status)
+    printf 'SUPRA_AUTO_HEALTH_STATUS=%s\n' "$status" > /dev/ttyS0
+    if grep -qw supra_immutable_reject=1 /proc/cmdline; then
+        test -e "$count_var"
+        test "$status" = dirty
+    elif [[ -e "$count_var" ]]; then
+        test "$status" = indeterminate
     else
-        test "$(/usr/lib/systemd/systemd-bless-boot status)" = clean
+        test "$status" = clean
     fi
     printf '%s\n' SUPRA_AUTO_HEALTH_CHECKS_PASSED > /dev/ttyS0
     if grep -qw supra_immutable_reject=1 /proc/cmdline; then

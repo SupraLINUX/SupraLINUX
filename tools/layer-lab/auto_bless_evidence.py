@@ -24,7 +24,11 @@ def verify(mode, phase, listing, console=""):
     else:
         decision = "SUPRA_AUTO_HEALTH_ACCEPTED" if mode == "accept" else "SUPRA_AUTO_HEALTH_REJECTED"
         outcome = ("SUPRA_AUTO_BLESS_NATIVE_GOOD" if phase == "first" else "SUPRA_AUTO_BLESS_PERSISTED") if mode == "accept" else "SUPRA_AUTO_BLESS_BLOCKED"
-        sequence = ("SUPRA_IMMUTABLE_UEFI_READY", "SUPRA_AUTO_HEALTH_CHECKS_PASSED", decision, outcome, "SUPRA_AUTO_BLESS_READY")
+        status = ("dirty" if mode == "reject" else ("indeterminate" if phase == "first" else "clean"))
+        sequence = ("SUPRA_IMMUTABLE_UEFI_READY", f"SUPRA_AUTO_HEALTH_STATUS={status}", "SUPRA_AUTO_HEALTH_CHECKS_PASSED", decision)
+        if mode == "reject":
+            sequence += ("SUPRA_AUTO_OBSERVER_STATUS=dirty",)
+        sequence += (outcome, "SUPRA_AUTO_BLESS_READY")
     lines = console.splitlines()
     for marker in sequence:
         ordered_marker(console, marker)

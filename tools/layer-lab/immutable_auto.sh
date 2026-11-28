@@ -57,7 +57,9 @@ immutable_auto_observe() {
         test "$i" -lt 30
         if systemctl is-active --quiet boot-complete.target; then return 1; fi
         test "$(systemctl show -p ExecMainStartTimestampMonotonic --value "$native")" = 0
-        test "$(/usr/lib/systemd/systemd-bless-boot status)" = indeterminate
+        status=$(/usr/lib/systemd/systemd-bless-boot status)
+        printf 'SUPRA_AUTO_OBSERVER_STATUS=%s\n' "$status" > /dev/ttyS0
+        test "$status" = dirty
         test -f "$esp/loader/entries/supra-immutable-layer+0-1.conf"
         test ! -e "$esp/loader/entries/supra-immutable-layer.conf"
         printf '%s\n' SUPRA_AUTO_BLESS_BLOCKED > /dev/ttyS0
