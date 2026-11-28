@@ -14,7 +14,30 @@ test "$(findmnt -n -o FSROOT /)" = "/immutable/$role"
 test "$(findmnt -n -o FSTYPE /)" = btrfs
 test "$(btrfs property get -ts / ro)" = ro=true
 findmnt -n -o VFS-OPTIONS / | tr ',' '\n' | grep -Fx ro
-test "$(blkid -s LABEL -o value /dev/vda)" = SUPRA_BTRFS_ROOT
+root_device=/dev/vda
+if grep -qw supra_immutable_uefi=1 /proc/cmdline; then
+    step firmware
+    root_device=/dev/vda2
+    test -d /sys/firmware/efi
+    test "$(cat /sys/firmware/efi/fw_platform_size)" = 64
+    test "$(lsblk -dn -o PTTYPE /dev/vda)" = gpt
+    test "$(lsblk -dn -o PARTTYPE /dev/vda1)" = c12a7328-f81f-11d2-ba4b-00a0c93ec93b
+    test "$(blkid -s LABEL -o value /dev/vda1)" = SUPRA_ESP
+    grep -qw systemd.gpt_auto=0 /proc/cmdline
+    if findmnt -rn -S /dev/vda1; then exit 1; fi
+    esp=$(mktemp -d /run/supra-esp.XXXXXX)
+    mount -t vfat -o ro /dev/vda1 "$esp"
+    cmp "$esp/vmlinuz-linux-lts" /boot/vmlinuz-linux-lts
+    cmp "$esp/initramfs-linux-lts.img" /boot/initramfs-linux-lts.img
+    selected=$(tail -c +5 /sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f | iconv -f UTF-16LE -t UTF-8 | tr -d '\000')
+    printf 'SUPRA_IMMUTABLE_ENTRY=%s\n' "$selected"
+    test "$selected" = "supra-immutable-$role.conf"
+    umount "$esp"
+    rmdir "$esp"
+    printf '%s\n' SUPRA_IMMUTABLE_UEFI_READY > /dev/ttyS0
+fi
+test "$(findmnt -n --nofsroot -o SOURCE --mountpoint /)" = "$root_device"
+test "$(blkid -s LABEL -o value "$root_device")" = SUPRA_BTRFS_ROOT
 test "$(blkid -s LABEL -o value /dev/vdb)" = SUPRA_LAB_STATE
 step readonly-paths
 # The root may not merely be a writable snapshot with a temporary overlay.

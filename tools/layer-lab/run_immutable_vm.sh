@@ -24,6 +24,9 @@ timeout 240 qemu-system-x86_64 "${common[@]}" \
     -drive "file=$lab/state.raw,format=raw,if=virtio,index=2,cache=none" \
     2>&1 | tee "$out/rootfs-immutable-prepare-console.log"
 python3 tools/layer-lab/immutable_evidence.py "$out" prepare
+# Powered-off pristine state for independent firmware trial, before sentinels.
+cp --reflink=auto --sparse=always "$lab/state.raw" "$lab/uefi-state.raw"
+sha256sum "$lab/uefi-state.raw" > "$out/rootfs-immutable-uefi-state-initial.sha256"
 for phase in first next return; do
     role=staged
     if [[ "$phase" = next ]]; then role=layer; fi
@@ -40,3 +43,6 @@ qemu-img check "$lab/root.qcow2" | tee "$out/rootfs-immutable-image-check.txt"
 sha256sum -c "$out/rootfs-layer-source.sha256"
 sha256sum -c "$out/rootfs-layer-checkpoint.sha256"
 python3 tools/layer-lab/immutable_evidence.py "$out"
+
+# Independently validate the same frozen layout through real EFI firmware.
+bash tools/layer-lab/run_immutable_uefi.sh "$work" "$out"
