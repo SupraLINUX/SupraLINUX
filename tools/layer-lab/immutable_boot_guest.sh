@@ -31,7 +31,22 @@ if grep -qw supra_immutable_uefi=1 /proc/cmdline; then
     cmp "$esp/initramfs-linux-lts.img" /boot/initramfs-linux-lts.img
     selected=$(tail -c +5 /sys/firmware/efi/efivars/LoaderEntrySelected-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f | iconv -f UTF-16LE -t UTF-8 | tr -d '\000')
     printf 'SUPRA_IMMUTABLE_ENTRY=%s\n' "$selected"
-    if grep -qw supra_immutable_bootcount=1 /proc/cmdline && [[ "$role" = layer ]]; then
+    if grep -qw supra_immutable_bless=1 /proc/cmdline; then
+        test "$role" = layer
+        test "$selected" = supra-immutable-layer.conf
+        count_var=/sys/firmware/efi/efivars/LoaderBootCountPath-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f
+        if [[ -e "$count_var" ]]; then
+            count_path=$(tail -c +5 "$count_var" | iconv -f UTF-16LE -t UTF-8 | tr -d '\000' | tr '\\' '/')
+            test "$count_path" = /loader/entries/supra-immutable-layer+1-1.conf
+            test -f "$esp$count_path"
+            test ! -e "$esp/loader/entries/supra-immutable-layer.conf"
+            printf '%s\n' SUPRA_BLESS_COUNTED > /dev/ttyS0
+        else
+            test -f "$esp/loader/entries/supra-immutable-layer.conf"
+            test ! -e "$esp/loader/entries/supra-immutable-layer+1-1.conf"
+            printf '%s\n' SUPRA_BLESS_ALREADY_GOOD > /dev/ttyS0
+        fi
+    elif grep -qw supra_immutable_bootcount=1 /proc/cmdline && [[ "$role" = layer ]]; then
         # Counted entry ID is normalized by some systemd-boot versions.
         count_path=$(tail -c +5 /sys/firmware/efi/efivars/LoaderBootCountPath-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f | iconv -f UTF-16LE -t UTF-8 | tr -d '\000' | tr '\\' '/')
         case "$count_path" in
@@ -82,13 +97,13 @@ test ! -e /tmp/supra-ephemeral-probe
 touch /run/supra-ephemeral-probe /tmp/supra-ephemeral-probe
 step phase-argument
 phase=
-for candidate in first next return count-trial count-return; do
+for candidate in first next return count-trial count-return bless; do
     if grep -qw "supra_immutable_phase=$candidate" /proc/cmdline; then
         test -z "$phase"
         phase=$candidate
     fi
 done
-case "$phase:$role" in first:staged|next:layer|return:staged|count-trial:layer|count-return:staged) ;; *) exit 1 ;; esac
+case "$phase:$role" in first:staged|next:layer|return:staged|count-trial:layer|count-return:staged|bless:layer) ;; *) exit 1 ;; esac
 if [[ "$phase" = count-* ]]; then
     grep -qw supra_immutable_bootcount=1 /proc/cmdline
     grep -qw supra_immutable_uefi=1 /proc/cmdline
@@ -112,7 +127,7 @@ for entry in "${immutable_domains[@]}"; do
     case "$phase" in
         first) test ! -e "$sentinel"; printf 'first:%s\n' "$domain" > "$sentinel" ;;
         next) test "$(cat "$sentinel")" = "first:$domain"; printf 'next:%s\n' "$domain" > "$sentinel" ;;
-        return|count-trial|count-return) test "$(cat "$sentinel")" = "next:$domain" ;;
+        return|count-trial|count-return|bless) test "$(cat "$sentinel")" = "next:$domain" ;;
     esac
 done
 # No masking system services or ignoring failed units to make a boot green.
@@ -121,6 +136,37 @@ systemctl list-units --state=failed --no-legend --plain --no-pager > /run/supra-
 cat /run/supra-failed-units
 test "$(systemctl show --property=NFailedUnits --value)" = 0
 sync
+if [[ "$phase" = bless ]]; then
+    step health-gated-bless
+    grep -qw supra_immutable_bless=1 /proc/cmdline
+    grep -qw supra_immutable_uefi=1 /proc/cmdline
+    # Explicit lab policy: mask automatic service only in this test, and
+    # call its native executable AFTER all existing health checks succeed.
+    test "$(systemctl show --property=LoadState --value systemd-bless-boot.service)" = masked
+    esp=$(mktemp -d /run/supra-bless.XXXXXX)
+    mount -t vfat -o rw,nosuid,nodev,noexec /dev/vda1 "$esp"
+    test "$(findmnt -n -o SOURCE --mountpoint "$esp")" = /dev/vda1
+    export SYSTEMD_ESP_PATH="$esp"
+    bless=/usr/lib/systemd/systemd-bless-boot
+    test -x "$bless"
+    printf '%s\n' SUPRA_BLESS_HEALTH_READY > /dev/ttyS0
+    if [[ -e "$count_var" ]]; then
+        test "$("$bless" status)" = indeterminate
+        "$bless" good
+        test "$("$bless" status)" = good
+        printf '%s\n' SUPRA_BLESS_MARKED_GOOD > /dev/ttyS0
+    else
+        test "$("$bless" status)" = clean
+        printf '%s\n' SUPRA_BLESS_CLEAN_BOOT > /dev/ttyS0
+    fi
+    test -f "$esp/loader/entries/supra-immutable-layer.conf"
+    test ! -e "$esp/loader/entries/supra-immutable-layer+1-1.conf"
+    sync
+    umount "$esp"
+    rmdir "$esp"
+    printf '%s\n' SUPRA_BLESS_READY > /dev/ttyS0
+    exit 0
+fi
 if [[ "$phase" = count-trial ]]; then
     # Lab-only fault injection: never bless a candidate intended to fail.
     # The host kills this QEMU child only after the durable firmware decrement.

@@ -71,3 +71,6 @@ done
 sgdisk --verify "$lab/disk.raw" | tee "$out/rootfs-bootcount-gpt.txt"
 sha256sum -c "$out/rootfs-layer-checkpoint.sha256"
 python3 tools/layer-lab/bootcount_evidence.py "$out"
+
+# Test healthy confirmation on an independent copy.
+bash tools/layer-lab/run_immutable_bless.sh "$work" "$out"
