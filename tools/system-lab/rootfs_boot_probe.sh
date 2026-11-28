@@ -24,6 +24,9 @@ else
     test "$(findmnt -n -o FSTYPE /)" = ext4
     test "$(blkid -s LABEL -o value /dev/vda)" = SUPRA_TARGET
 fi
+if grep -qw supra_install_recover=1 /proc/cmdline; then
+    /usr/local/libexec/supra-install-recover
+fi
 if grep -qw supra_layer_prepare=1 /proc/cmdline; then
     /usr/local/libexec/supra-layer-guest
 fi

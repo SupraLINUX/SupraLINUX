@@ -68,6 +68,8 @@ install -D -m 0755 /layer-boot-guest.sh "$root/usr/local/libexec/supra-layer-boo
 install -D -m 0755 /layer-oneshot-guest.sh "$root/usr/local/libexec/supra-layer-oneshot"
 install -D -m 0755 /layer-promotion-guest.sh "$root/usr/local/libexec/supra-layer-promotion"
 install -D -m 0755 /layer-interrupt-guest.sh "$root/usr/local/libexec/supra-layer-interrupt"
+install -D -m 0755 /install-interrupt-hook.sh "$root/usr/local/libexec/supra-install-interrupt-hook"
+install -D -m 0755 /install-recover-guest.sh "$root/usr/local/libexec/supra-install-recover"
 mkdir -p "$root/etc/systemd/system/multi-user.target.wants"
 ln -s ../supra-boot-probe.service "$root/etc/systemd/system/multi-user.target.wants/supra-boot-probe.service"
 sync

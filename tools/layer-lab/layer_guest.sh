@@ -67,6 +67,21 @@ CONF
 mount -t proc proc "$root/proc"
 mount -t sysfs sysfs "$root/sys"
 mount --bind /dev "$root/dev"
+if grep -qw supra_install_interrupt=1 /proc/cmdline; then
+    # Test-only hook inside the unapproved target, never in the old root.
+    mkdir -p "$root/etc/pacman.d/hooks"
+    cat > "$root/etc/pacman.d/hooks/zz-supra-interrupt.hook" <<'HOOK'
+[Trigger]
+Operation = Install
+Type = Package
+Target = tree
+[Action]
+Description = SupraLINUX lab interruption before publication
+When = PostTransaction
+Exec = /usr/local/libexec/supra-install-interrupt-hook
+HOOK
+    install -m 0755 /usr/local/libexec/supra-install-interrupt-hook "$root/usr/local/libexec/supra-install-interrupt-hook"
+fi
 # Use libalpm for actual dependency/conflict, signature and hook enforcement.
 timeout --kill-after=5 120 pacman --config "$work/pacman.conf" --root "$root" \
     --dbpath "$root/var/lib/pacman" --cachedir "$root/var/cache/pacman/pkg" \

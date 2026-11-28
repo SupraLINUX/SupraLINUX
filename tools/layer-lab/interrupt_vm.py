@@ -11,7 +11,9 @@ import os
 MARKER = b"SUPRA_TRIAL_INTERRUPT_POINT"
 
 
-def interrupt(command, log, timeout=150):
+def interrupt(command, log, timeout=150, marker=MARKER):
+    if marker not in (MARKER, b'SUPRA_INSTALL_INTERRUPT_POINT'):
+        raise ValueError('Unknown laboratory checkpoint')
     deadline = time.monotonic() + timeout
     pending = b""
     with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT) as proc, selectors.DefaultSelector() as sel:
@@ -30,7 +32,7 @@ def interrupt(command, log, timeout=150):
                 pending = lines.pop()
                 if len(pending) > 1024 * 1024:
                     raise RuntimeError("Unbounded console line")
-                if any(line.rstrip(b"\r") == MARKER for line in lines):
+                if any(line.rstrip(b"\r") == marker for line in lines):
                     proc.kill()
                     code = proc.wait(timeout=10)
                     tail = proc.stdout.read()
@@ -38,7 +40,7 @@ def interrupt(command, log, timeout=150):
                     log.flush()
                     if code != -signal.SIGKILL:
                         raise RuntimeError("Child did not terminate by injected SIGKILL")
-                    return {"marker": MARKER.decode(), "signal": "SIGKILL", "returncode": code}
+                    return {"marker": marker.decode(), "signal": "SIGKILL", "returncode": code}
             raise RuntimeError("Guest did not reach interruption checkpoint")
         finally:
             if proc.poll() is None:
@@ -47,9 +49,14 @@ def interrupt(command, log, timeout=150):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 5 or sys.argv[3] != "--" or sys.argv[4] != "qemu-system-x86_64":
+    args = sys.argv[3:]
+    marker = MARKER
+    if args and args[0] == "--install":
+        marker = b"SUPRA_INSTALL_INTERRUPT_POINT"
+        args = args[1:]
+    if len(args) < 2 or args[0] != "--" or args[1] != "qemu-system-x86_64":
         raise SystemExit("Expected disposable QEMU invocation")
     with Path(sys.argv[1]).open("wb") as log:
-        evidence = interrupt(sys.argv[4:], log)
+        evidence = interrupt(args[1:], log, timeout=300, marker=marker)
     Path(sys.argv[2]).write_text(json.dumps(evidence, sort_keys=True) + "\n")
     print(json.dumps(evidence, sort_keys=True))

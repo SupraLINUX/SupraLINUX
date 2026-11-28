@@ -56,3 +56,6 @@ python3 tools/layer-lab/layer_evidence.py "$out"
 
 # Run the next firmware gate only after direct boot evidence is validated.
 bash tools/layer-lab/run_layer_uefi.sh "$work" "$out"
+
+# Separate private overlay: interrupt actual package hook before publication.
+bash tools/layer-lab/run_install_interruption.sh "$base" "$work" "$out"

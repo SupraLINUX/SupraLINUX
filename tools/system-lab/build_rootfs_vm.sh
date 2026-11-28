@@ -34,6 +34,8 @@ sudo install -m 0755 tools/layer-lab/layer_boot_guest.sh "$stage/layer-boot-gues
 sudo install -m 0755 tools/layer-lab/layer_oneshot_guest.sh "$stage/layer-oneshot-guest.sh"
 sudo install -m 0755 tools/layer-lab/layer_promotion_guest.sh "$stage/layer-promotion-guest.sh"
 sudo install -m 0755 tools/layer-lab/layer_interrupt_guest.sh "$stage/layer-interrupt-guest.sh"
+sudo install -m 0755 tools/layer-lab/install_interrupt_hook.sh "$stage/install-interrupt-hook.sh"
+sudo install -m 0755 tools/layer-lab/install_recover_guest.sh "$stage/install-recover-guest.sh"
 disk="$work/builder.ext4"
 truncate -s 10G "$disk"
 sudo mke2fs -q -t ext4 -F -d "$stage" "$disk"
