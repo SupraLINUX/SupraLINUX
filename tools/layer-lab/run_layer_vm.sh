@@ -59,3 +59,6 @@ bash tools/layer-lab/run_layer_uefi.sh "$work" "$out"
 
 # Separate private overlay: interrupt actual package hook before publication.
 bash tools/layer-lab/run_install_interruption.sh "$base" "$work" "$out"
+
+# Independent read-only root and state persistence gate.
+bash tools/layer-lab/run_immutable_vm.sh "$base" "$work" "$out"

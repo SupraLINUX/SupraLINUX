@@ -71,6 +71,9 @@ install -D -m 0755 /layer-promotion-guest.sh "$root/usr/local/libexec/supra-laye
 install -D -m 0755 /layer-interrupt-guest.sh "$root/usr/local/libexec/supra-layer-interrupt"
 install -D -m 0755 /install-interrupt-hook.sh "$root/usr/local/libexec/supra-install-interrupt-hook"
 install -D -m 0755 /install-recover-guest.sh "$root/usr/local/libexec/supra-install-recover"
+install -D -m 0644 /immutable-layout.sh "$root/usr/local/libexec/supra-immutable-layout"
+install -D -m 0755 /immutable-prepare.sh "$root/usr/local/libexec/supra-immutable-prepare"
+install -D -m 0755 /immutable-boot.sh "$root/usr/local/libexec/supra-immutable-boot"
 mkdir -p "$root/etc/systemd/system/multi-user.target.wants"
 ln -s ../supra-boot-probe.service "$root/etc/systemd/system/multi-user.target.wants/supra-boot-probe.service"
 sync
