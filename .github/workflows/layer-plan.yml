@@ -1,0 +1,38 @@
+name: Experimental package layer plan
+on:
+  push:
+    branches: ['research/d00-atomic-validation']
+    paths: ['tools/layer-lab/**', 'distribution/images/experimental-layer.json', '.github/workflows/layer-plan.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Offline contract tests
+        run: python3 -m unittest discover -s tools/layer-lab -p 'test_*.py'
+      - name: Retrieve verified frozen metadata from approved GPT experiment
+        uses: actions/download-artifact@v4
+        with:
+          name: frozen-arch-snapshot
+          path: first
+          github-token: ${{ github.token }}
+          run-id: 46050297598
+      - uses: actions/download-artifact@v4
+        with:
+          name: snapshot-reproducibility
+          path: comparison
+          github-token: ${{ github.token }}
+          run-id: 46050297598
+      - name: Validate fixed additive fixture against real frozen databases
+        run: python3 tools/layer-lab/layer_plan.py distribution/images/experimental-base.json distribution/images/experimental-layer.json first comparison evidence/layer-plan.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: experimental-layer-plan
+          path: evidence/layer-plan.json
+          retention-days: 7
+          if-no-files-found: error

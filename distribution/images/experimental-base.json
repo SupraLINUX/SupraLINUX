@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "architecture": "x86_64",
+  "snapshot": "2026/11/24",
+  "repositories": [
+    "core",
+    "extra"
+  ],
+  "packages": [
+    "base",
+    "linux-lts",
+    "btrfs-progs"
+  ],
+  "builder": "docker.io/library/archlinux@sha256:bddb91b7a73f31ed6be307fc8ec75e5dd59ff8ccf6c5a1bbb8205f14702c6b4a"
+}

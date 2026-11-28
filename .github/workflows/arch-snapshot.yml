@@ -1,0 +1,153 @@
+name: Frozen Arch snapshot probe
+on:
+  push:
+    branches: ['research/d00-atomic-validation']
+    paths: ['distribution/images/experimental-base.json', 'tools/system-lab/*snapshot*', 'tools/system-lab/*rootfs*', 'tools/layer-lab/**', 'distribution/images/experimental-layer.json', 'tools/ci/install-ubuntu-vm-tools.sh', '.github/workflows/arch-snapshot.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  resolve:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unit tests
+        run: python3 -m unittest discover -s tools/system-lab -p 'test_*.py'
+      - name: Resolve dated snapshot in disposable builder
+        shell: bash
+        run: |
+          bash tools/system-lab/resolve_ci_snapshot.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: candidate-arch-snapshot
+          path: evidence/
+          retention-days: 7
+          if-no-files-found: warn
+  repeat:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Independent fresh resolution
+        run: bash tools/system-lab/resolve_ci_snapshot.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: repeated-arch-snapshot
+          path: evidence/
+          retention-days: 7
+          if-no-files-found: error
+  rootfs:
+    needs: [resolve, repeat]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: candidate-arch-snapshot
+          path: evidence
+      - uses: actions/download-artifact@v4
+        with:
+          name: repeated-arch-snapshot
+          path: second
+      - name: Check independent metadata before downloading packages
+        run: |
+          python3 - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools/system-lab')
+          from verify_snapshot import candidate
+          config = Path('distribution/images/experimental-base.json')
+          if candidate(config, Path('evidence')) != candidate(config, Path('second')):
+              raise SystemExit('Independent snapshot locks differ')
+          PY
+      - name: Authenticate and retain locked packages privately
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/system-lab/verify_snapshot.py prepare distribution/images/experimental-base.json evidence
+          mkdir packages
+          builder=$(head -n 1 evidence/build-input.txt)
+          docker pull --platform linux/amd64 "$builder"
+          start=$SECONDS
+          docker run --rm --platform linux/amd64 --security-opt no-new-privileges \
+            --mount "type=bind,source=$PWD/tools/system-lab/verify_snapshot.sh,target=/verify.sh,readonly" \
+            --mount "type=bind,source=$PWD/tools/system-lab/snapshot_download.sh,target=/snapshot_download.sh,readonly" \
+            --mount "type=bind,source=$PWD/evidence,target=/out" \
+            --mount "type=bind,source=$PWD/packages,target=/packages" \
+            "$builder" bash /verify.sh
+          python3 tools/system-lab/verify_snapshot.py report distribution/images/experimental-base.json evidence
+          printf 'package_authentication_elapsed_seconds=%s\n' "$((SECONDS-start))" | tee evidence/package-authentication-timing.txt
+      - name: Compare authenticated candidate and prepare offline build
+        run: |
+          python3 tools/system-lab/compare_snapshot.py distribution/images/experimental-base.json evidence second comparison
+          python3 tools/system-lab/prepare_rootfs.py distribution/images/experimental-base.json evidence comparison
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frozen-arch-snapshot
+          path: evidence/
+          retention-days: 7
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-reproducibility
+          path: comparison/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Validate and authenticate additive layer fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/layer-lab/layer_plan.py distribution/images/experimental-base.json distribution/images/experimental-layer.json evidence comparison evidence/rootfs-layer-plan.json
+          mkdir layer-input layer-packages
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          plan = json.loads(Path('evidence/rootfs-layer-plan.json').read_text())
+          pkg = plan['addition']
+          Path('layer-input/verification-input.tsv').write_text('\t'.join(pkg[k] for k in ('name', 'sha256', 'url')) + '\n')
+          Path('layer-input/layer.tsv').write_text('\t'.join(pkg[k] for k in ('name', 'version', 'filename', 'sha256')) + '\n')
+          Path('layer-input/expected.txt').write_text(''.join(f'{n} {v}\n' for n, v in sorted(plan['expected_inventory'].items())))
+          PY
+          builder=$(head -n 1 evidence/build-input.txt)
+          docker run --rm --platform linux/amd64 --security-opt no-new-privileges \
+            --mount "type=bind,source=$PWD/tools/system-lab/verify_snapshot.sh,target=/verify.sh,readonly" \
+            --mount "type=bind,source=$PWD/tools/system-lab/snapshot_download.sh,target=/snapshot_download.sh,readonly" \
+            --mount "type=bind,source=$PWD/layer-input,target=/out" \
+            --mount "type=bind,source=$PWD/layer-packages,target=/packages" \
+            "$builder" bash /verify.sh
+          cp layer-input/verified-packages.tsv evidence/rootfs-layer-signature.tsv
+          cp layer-input/verification-keyring.txt evidence/rootfs-layer-keyring.txt
+      - name: Install isolated VM tooling
+        run: |
+          bash tools/ci/install-ubuntu-vm-tools.sh qemu-system-x86 qemu-utils linux-image-virtual initramfs-tools e2fsprogs ovmf gdisk dosfstools mtools btrfs-progs
+          command -v qemu-img
+          qemu-img --version
+          test -c /dev/kvm
+          sudo setfacl -m "u:$(id -un):rw" /dev/kvm
+      - name: Build disposable root offline in KVM
+        run: |
+          bash tools/system-lab/build_rootfs_vm.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rootfs-build-evidence
+          path: |
+            evidence/rootfs-*
+            evidence/installed-packages.txt
+          retention-days: 7
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: snapshot-rootfs-failure-metadata
+          path: |
+            evidence/verification-*
+            evidence/verified-packages.tsv
+            evidence/snapshot-verification.json
+            evidence/package-authentication-timing.txt
+          retention-days: 7
+          if-no-files-found: warn

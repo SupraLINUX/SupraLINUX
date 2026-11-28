@@ -1,0 +1,34 @@
+name: KVM capability probe
+on:
+  push:
+    branches: ['research/d00-atomic-validation']
+    paths: ['.github/workflows/kvm-probe.yml', 'tools/system-lab/**', 'tools/ci/install-ubuntu-vm-tools.sh']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unit tests
+        run: python3 -m unittest discover -s tools/system-lab -p 'test_*.py'
+      - name: Install QEMU
+        run: |
+          bash tools/ci/install-ubuntu-vm-tools.sh qemu-system-x86
+      - name: Inspect runner and boot disposable guest
+        run: |
+          mkdir -p evidence
+          if [ -e /dev/kvm ]; then
+            sudo setfacl -m "u:$(id -un):rw" /dev/kvm
+          fi
+          python3 tools/system-lab/kvm_probe.py evidence
+      - name: Publish evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kvm-probe-evidence
+          path: evidence/
+          retention-days: 7
+          if-no-files-found: warn
