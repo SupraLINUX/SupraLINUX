@@ -37,3 +37,6 @@ done
 sha256sum "$lab/vars.fd" >> "$out/rootfs-layer-promotion-vars-history.sha256"
 sha256sum -c "$out/rootfs-layer-uefi-layer.sha256"
 python3 tools/layer-lab/promotion_evidence.py "$out"
+
+# Independently interrupt an unpromoted one-shot trial before health checks.
+bash tools/layer-lab/run_layer_interruption.sh "$work" "$out"

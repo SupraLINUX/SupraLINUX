@@ -26,6 +26,10 @@ fi
 test "$(findmnt -n -o SOURCE / | cut -d '[' -f1)" = "$device"
 test "$(blkid -s LABEL -o value "$device")" = SUPRA_BTRFS_ROOT
 test "$(btrfs property get -ts / ro)" = ro=false
+if grep -qw supra_layer_interrupt=1 /proc/cmdline && [[ "$(cat /etc/supra-lab-deployment)" = layer ]]; then
+    /usr/local/libexec/supra-layer-interrupt
+    exit 1
+fi
 case "$(cat /etc/supra-lab-deployment)" in
     staged)
         test "$(findmnt -n -o FSROOT /)" = /deployments/staged
@@ -50,4 +54,8 @@ fi
 
 if grep -qw supra_layer_promotion=1 /proc/cmdline; then
     /usr/local/libexec/supra-layer-promotion
+fi
+
+if grep -qw supra_layer_interrupt=1 /proc/cmdline; then
+    /usr/local/libexec/supra-layer-oneshot
 fi
