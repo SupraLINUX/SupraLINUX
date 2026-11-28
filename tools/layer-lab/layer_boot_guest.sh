@@ -47,3 +47,7 @@ esac
 if grep -qw supra_layer_oneshot=1 /proc/cmdline; then
     /usr/local/libexec/supra-layer-oneshot
 fi
+
+if grep -qw supra_layer_promotion=1 /proc/cmdline; then
+    /usr/local/libexec/supra-layer-promotion
+fi

@@ -37,3 +37,6 @@ done
 sha256sum "$lab/vars.fd" >> "$out/rootfs-layer-oneshot-vars-history.sha256"
 sha256sum -c "$out/rootfs-layer-uefi-layer.sha256"
 python3 tools/layer-lab/oneshot_evidence.py "$out"
+
+# Explicit promotion and reversal, separate from the unpromoted trial.
+bash tools/layer-lab/run_layer_promotion.sh "$work" "$out"
