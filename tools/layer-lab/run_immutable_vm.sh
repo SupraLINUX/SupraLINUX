@@ -23,7 +23,7 @@ timeout 240 qemu-system-x86_64 "${common[@]}" \
     -drive "file=$lab/root.qcow2,format=qcow2,if=virtio,index=1,cache=none" \
     -drive "file=$lab/state.raw,format=raw,if=virtio,index=2,cache=none" \
     2>&1 | tee "$out/rootfs-immutable-prepare-console.log"
-grep -Fxq SUPRA_IMMUTABLE_PREPARED "$out/rootfs-immutable-prepare-console.log"
+python3 tools/layer-lab/immutable_evidence.py "$out" prepare
 for phase in first next return; do
     role=staged
     if [[ "$phase" = next ]]; then role=layer; fi
@@ -34,7 +34,7 @@ for phase in first next return; do
         -drive "file=$lab/root.qcow2,format=qcow2,if=virtio,index=0,cache=none" \
         -drive "file=$lab/state.raw,format=raw,if=virtio,index=1,cache=none" \
         2>&1 | tee "$out/rootfs-immutable-$phase-console.log"
-    grep -Fxq "SUPRA_IMMUTABLE_${phase^^}_READY" "$out/rootfs-immutable-$phase-console.log"
+    python3 tools/layer-lab/immutable_evidence.py "$out" "$phase"
 done
 qemu-img check "$lab/root.qcow2" | tee "$out/rootfs-immutable-image-check.txt"
 sha256sum -c "$out/rootfs-layer-source.sha256"

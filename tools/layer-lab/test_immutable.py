@@ -1,7 +1,7 @@
 import subprocess
 import unittest
 from pathlib import Path
-from immutable_evidence import report
+from immutable_evidence import report, validate_phase
 
 
 class ImmutableTests(unittest.TestCase):
@@ -25,3 +25,17 @@ class ImmutableTests(unittest.TestCase):
         self.assertFalse(report(logs)["atomic_activation_verified"])
         with self.assertRaises(ValueError):
             report(dict(logs, next="SUPRA_TARGET_BOOT_READY\n"))
+
+    def test_serial_crlf_and_strict_marker_order(self):
+        marker = "SUPRA_IMMUTABLE_PREPARED"
+        ready = "SUPRA_TARGET_BOOT_READY"
+        validate_phase("prepare", f"{marker}\r\n{ready}\r\n")
+        for bad in (
+            f"{ready}\r\n{marker}\r\n",
+            f"{marker}\r\n{marker}\r\n{ready}\r\n",
+            f"prefix {marker}\r\n{ready}\r\n",
+            f"{marker}\r\n{ready}\r\nSUPRA_BOOT_PROBE_FAILED\r\n",
+            f"{marker}\r\n",
+        ):
+            with self.subTest(log=bad), self.assertRaises(ValueError):
+                validate_phase("prepare", bad)

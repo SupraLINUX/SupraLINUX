@@ -6,19 +6,24 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "system-lab"))
 from rootfs_btrfs_root_evidence import ordered_marker
 
 
+PHASE_MARKERS = {
+    "prepare": "SUPRA_IMMUTABLE_PREPARED",
+    "first": "SUPRA_IMMUTABLE_FIRST_READY",
+    "next": "SUPRA_IMMUTABLE_NEXT_READY",
+    "return": "SUPRA_IMMUTABLE_RETURN_READY",
+}
+
+
+def validate_phase(phase, log):
+    marker = PHASE_MARKERS[phase]
+    ordered_marker(log, marker)
+    if any(bad in log for bad in ("SUPRA_BOOT_PROBE_ERROR", "SUPRA_BOOT_PROBE_FAILED")):
+        raise ValueError(f"Invalid immutable boot evidence: {phase}")
+
+
 def report(logs):
-    for phase, marker in (
-        ("prepare", "SUPRA_IMMUTABLE_PREPARED"),
-        ("first", "SUPRA_IMMUTABLE_FIRST_READY"),
-        ("next", "SUPRA_IMMUTABLE_NEXT_READY"),
-        ("return", "SUPRA_IMMUTABLE_RETURN_READY"),
-    ):
-        log = logs[phase]
-        ordered_marker(log, marker)
-        if log.splitlines().count(marker) != 1 or any(
-            bad in log for bad in ("SUPRA_BOOT_PROBE_ERROR", "SUPRA_BOOT_PROBE_FAILED")
-        ):
-            raise ValueError(f"Invalid immutable boot evidence: {phase}")
+    for phase in PHASE_MARKERS:
+        validate_phase(phase, logs[phase])
     return {
         "schema_version": 1, "accelerator": "kvm",
         "readonly_deployment_boot_verified": True,
@@ -33,6 +38,11 @@ def report(logs):
 
 if __name__ == "__main__":
     out = Path(sys.argv[1])
+    if len(sys.argv) == 3:
+        phase = sys.argv[2]
+        validate_phase(phase, (out / f"rootfs-immutable-{phase}-console.log").read_text(errors="replace"))
+        print(f"Validated immutable phase: {phase}")
+        sys.exit(0)
     logs = {p: (out / f"rootfs-immutable-{p}-console.log").read_text(errors="replace")
             for p in ("prepare", "first", "next", "return")}
     result = json.dumps(report(logs), sort_keys=True) + "\n"
