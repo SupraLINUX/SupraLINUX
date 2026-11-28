@@ -61,3 +61,6 @@ sgdisk --verify "$lab/disk.raw" | tee "$out/rootfs-immutable-uefi-final-gpt.txt"
 sha256sum -c "$out/rootfs-btrfs-gpt-image.sha256"
 sha256sum -c "$out/rootfs-layer-checkpoint.sha256"
 python3 tools/layer-lab/immutable_uefi_evidence.py "$out"
+
+# Firmware-owned trial exhaustion and automatic previous deployment selection.
+bash tools/layer-lab/run_immutable_bootcount.sh "$work" "$out"

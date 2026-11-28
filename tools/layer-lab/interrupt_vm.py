@@ -12,7 +12,7 @@ MARKER = b"SUPRA_TRIAL_INTERRUPT_POINT"
 
 
 def interrupt(command, log, timeout=150, marker=MARKER):
-    if marker not in (MARKER, b'SUPRA_INSTALL_INTERRUPT_POINT'):
+    if marker not in (MARKER, b'SUPRA_INSTALL_INTERRUPT_POINT', b'SUPRA_BOOTCOUNT_INTERRUPT_POINT'):
         raise ValueError('Unknown laboratory checkpoint')
     deadline = time.monotonic() + timeout
     pending = b""
@@ -53,6 +53,9 @@ if __name__ == "__main__":
     marker = MARKER
     if args and args[0] == "--install":
         marker = b"SUPRA_INSTALL_INTERRUPT_POINT"
+        args = args[1:]
+    if args and args[0] == "--bootcount":
+        marker = b"SUPRA_BOOTCOUNT_INTERRUPT_POINT"
         args = args[1:]
     if len(args) < 2 or args[0] != "--" or args[1] != "qemu-system-x86_64":
         raise SystemExit("Expected disposable QEMU invocation")
